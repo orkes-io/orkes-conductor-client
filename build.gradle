@@ -60,27 +60,10 @@ repositories {
             includeGroup "io.orkes.conductor"
         }
     }
-    maven {
-        url "https://artifactory-oss.prod.netflix.net/artifactory/required-jcenter-modules-backup"
-        content {
-            includeGroup "com.github.vmg.protogen"
-        }
-    }
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+java {
+    withSourcesJar()
 }
 
 publishing {
