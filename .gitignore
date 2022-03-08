@@ -1,0 +1,23 @@
+# Java Build
+.gradle
+.classpath
+dump.rdb
+out
+bin
+target
+buildscan.log
+/docs/site
+
+# OS & IDE
+.DS_Store
+.settings
+.vscode
+.idea
+.project
+*.iml
+
+# local builds
+lib/
+build/
+*/build/
+

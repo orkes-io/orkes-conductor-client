@@ -1,0 +1,106 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.3.12.RELEASE'
+    }
+}
+
+plugins {
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'application'
+    id 'maven-publish'
+}
+
+ext {
+    appVersion = '0.0.1-SNAPSHOT'
+    springBootVersion = '2.5.6'
+    versions = [
+            conductor       : '3.5.0',
+            revSpectator    : '0.122.0',
+            revJersey       : '1.19.4',
+            revEurekaClient : '1.10.10'
+    ]
+}
+
+group = 'io.orkes.conductor'
+version = "${appVersion}"
+
+dependencies {
+    implementation "com.netflix.conductor:conductor-common:${versions.conductor}"
+    implementation "com.netflix.conductor:conductor-client:${versions.conductor}"
+    implementation "com.sun.jersey:jersey-client:${versions.revJersey}"
+
+    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.slf4j:slf4j-api'
+
+    implementation "com.netflix.spectator:spectator-api:${versions.revSpectator}"
+    implementation "com.netflix.eureka:eureka-client:${versions.revEurekaClient}"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:2.3.12.RELEASE")
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal() {
+        content {
+            includeGroup "com.netflix.conductor"
+            includeGroup "io.orkes.conductor"
+        }
+    }
+    maven {
+        url "https://artifactory-oss.prod.netflix.net/artifactory/required-jcenter-modules-backup"
+        content {
+            includeGroup "com.github.vmg.protogen"
+        }
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url "s3://orkes-artifacts-repo/releases"
+            authentication {
+                awsIm(AwsImAuthentication)
+            }
+        }
+    }
+}
+
+compileJava {
+    sourceCompatibility = 11
+    targetCompatibility = 11
+}
