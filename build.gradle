@@ -44,6 +44,9 @@ dependencies {
 
     implementation "com.netflix.spectator:spectator-api:${versions.revSpectator}"
     implementation "com.netflix.eureka:eureka-client:${versions.revEurekaClient}"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
 dependencyManagement {
@@ -81,6 +84,10 @@ publishing {
             }
         }
     }
+}
+
+test {
+    useJUnitPlatform()
 }
 
 compileJava {

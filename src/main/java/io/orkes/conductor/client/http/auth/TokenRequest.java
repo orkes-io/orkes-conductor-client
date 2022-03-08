@@ -1,6 +1,8 @@
 package io.orkes.conductor.client.http.auth;
 
 
+import java.util.Objects;
+
 class TokenRequest {
 
     private final String keyId;
@@ -31,12 +33,12 @@ class TokenRequest {
         }
 
         public TokenRequestBuilder withKeyId(String keyId) {
-            this.keyId = keyId;
+            this.keyId = Objects.requireNonNull(keyId);
             return this;
         }
 
         public TokenRequestBuilder withKeySecret(String keySecret) {
-            this.keySecret = keySecret;
+            this.keySecret = Objects.requireNonNull(keySecret);
             return this;
         }
 
