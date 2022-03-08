@@ -18,7 +18,7 @@ plugins {
 }
 
 ext {
-    appVersion = '0.1.1-SNAPSHOT'
+    appVersion = '0.1.2-SNAPSHOT'
     springBootVersion = '2.5.6'
     versions = [
             conductor      : '3.5.0',
@@ -80,13 +80,21 @@ publishing {
                 url = 'https://github.com/orkes-io/orkes-conductor-client'
                 scm {
                     connection = 'scm:git:git://github.com/orkes-io/orkes-conductor-client.git'
-                    developerConnection = 'scm:git:ssh://github.com/orkes-io/orkes-conductor-client.git'
+                    developerConnection = 'scm:git:ssh://github.com:orkes-io/orkes-conductor-client.git'
                     url = 'https://github.com/orkes-io/orkes-conductor-client'
                 }
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
                         url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        organization = 'Orkes'
+                        organizationUrl = 'https://orkes.io'
+                        name = 'Orkes Development Team'
+                        email = 'developers@orkes.io'
                     }
                 }
             }
