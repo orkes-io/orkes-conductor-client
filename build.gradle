@@ -18,13 +18,13 @@ plugins {
 }
 
 ext {
-    appVersion = '0.1.0'
+    appVersion = '0.1.1-SNAPSHOT'
     springBootVersion = '2.5.6'
     versions = [
-            conductor       : '3.5.0',
-            revSpectator    : '0.122.0',
-            revJersey       : '1.19.4',
-            revEurekaClient : '1.10.10'
+            conductor      : '3.5.0',
+            revSpectator   : '0.122.0',
+            revJersey      : '1.19.4',
+            revEurekaClient: '1.10.10'
     ]
 }
 
@@ -67,12 +67,29 @@ repositories {
 
 java {
     withSourcesJar()
+    withJavadocJar()
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            pom {
+                name = 'Orkes Conductor Client'
+                description = 'Netflix Conductor OSS client wrapper that provides support for Orkes Conductor features'
+                url = 'https://github.com/orkes-io/orkes-conductor-client'
+                scm {
+                    connection = 'scm:git:git://github.com/orkes-io/orkes-conductor-client.git'
+                    developerConnection = 'scm:git:ssh://github.com/orkes-io/orkes-conductor-client.git'
+                    url = 'https://github.com/orkes-io/orkes-conductor-client'
+                }
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+            }
         }
     }
 
