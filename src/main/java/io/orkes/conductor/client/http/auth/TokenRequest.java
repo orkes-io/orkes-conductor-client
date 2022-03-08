@@ -36,7 +36,7 @@ class TokenRequest {
         }
 
         public TokenRequestBuilder withKeySecret(String keySecret) {
-            this.keySecret = this.keySecret;
+            this.keySecret = keySecret;
             return this;
         }
 
