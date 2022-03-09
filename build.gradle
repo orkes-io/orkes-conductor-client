@@ -102,9 +102,19 @@ publishing {
 
     repositories {
         maven {
-            url "s3://orkes-artifacts-repo/releases"
-            authentication {
-                awsIm(AwsImAuthentication)
+            if (project.hasProperty("mavenCentral")) {
+                println "Publishing to Sonatype Repository"
+                url = "https://s01.oss.sonatype.org/${project.version.endsWith('-SNAPSHOT') ? "content/repositories/snapshots/" : "service/local/staging/deploy/maven2/"}"
+                credentials {
+                    username project.properties.username
+                    password project.properties.password
+                }
+            } else {
+                println "Publishing to S3 bucket"
+                url = "s3://orkes-artifacts-repo/${project.version.endsWith('-SNAPSHOT') ? "snapshots" : "releases"}"
+                authentication {
+                    awsIm(AwsImAuthentication)
+                }
             }
         }
     }
@@ -120,6 +130,6 @@ compileJava {
 }
 
 signing {
-    sign configurations.archives
+    sign publishing.publications
 }
 
