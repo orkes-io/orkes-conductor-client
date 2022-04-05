@@ -21,7 +21,7 @@ plugins {
 ext {
     springBootVersion = '2.5.6'
     versions = [
-            conductor      : '3.5.0',
+            conductor      : '3.5.3-orkes-a',
             revSpectator   : '0.122.0',
             revJersey      : '1.19.4',
             revEurekaClient: '1.10.10'
@@ -61,6 +61,9 @@ repositories {
             includeGroup "com.netflix.conductor"
             includeGroup "io.orkes.conductor"
         }
+    }
+    maven {
+        url "https://orkes-artifacts-repo.s3.amazonaws.com/releases"
     }
 }
 
