@@ -19,6 +19,7 @@ import org.springframework.core.env.Environment;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootApplication
 public class Main {
@@ -65,7 +66,11 @@ public class Main {
 
     @Bean
     public TaskRunnerConfigurer taskRunnerConfigurer(List<Worker> workersList, TaskClient taskClient) {
-        TaskRunnerConfigurer runnerConfigurer = new TaskRunnerConfigurer.Builder(taskClient, workersList).build();
+        TaskRunnerConfigurer runnerConfigurer = new TaskRunnerConfigurer.Builder(taskClient, workersList)
+                .withTaskToThreadCount(
+                        Map.of(
+                                "java_task_example", 5))
+                .build();
         runnerConfigurer.init();
         return runnerConfigurer;
     }

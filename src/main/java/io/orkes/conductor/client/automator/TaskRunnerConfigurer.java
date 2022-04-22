@@ -27,6 +27,7 @@ public class TaskRunnerConfigurer {
     private final int shutdownGracePeriodSeconds;
     private final String workerNamePrefix;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
+    private final Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount;
     private final List<TaskRunner> taskRunners;
 
     private ScheduledExecutorService scheduledExecutorService;
@@ -42,6 +43,7 @@ public class TaskRunnerConfigurer {
         this.updateRetryCount = builder.updateRetryCount;
         this.workerNamePrefix = builder.workerNamePrefix;
         this.taskToDomain = builder.taskToDomain;
+        this.taskToThreadCount = builder.taskToThreadCount;
         this.shutdownGracePeriodSeconds = builder.shutdownGracePeriodSeconds;
         this.workers = new LinkedList<>();
         builder.workers.forEach(this.workers::add);
@@ -58,6 +60,7 @@ public class TaskRunnerConfigurer {
         private EurekaClient eurekaClient;
         private final TaskClient taskClient;
         private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
+        private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount = new HashMap<>();
 
         public Builder(TaskClient taskClient, Iterable<Worker> workers) {
             Preconditions.checkNotNull(taskClient, "TaskClient cannot be null");
@@ -131,6 +134,11 @@ public class TaskRunnerConfigurer {
             return this;
         }
 
+        public TaskRunnerConfigurer.Builder withTaskToThreadCount(Map<String, Integer> taskToThreadCount) {
+            this.taskToThreadCount = taskToThreadCount;
+            return this;
+        }
+
         /**
          * Builds an instance of the TaskRunnerConfigurer.
          *
@@ -196,14 +204,16 @@ public class TaskRunnerConfigurer {
 
     private void startWorker(Worker worker) {
         LOGGER.warn("Starting worker: {} with ", worker.getTaskDefName());
+        Integer threadCountForTask = this.taskToThreadCount.getOrDefault(
+                worker.getTaskDefName(),
+                1);
         TaskRunner taskRunner = new TaskRunner(
                 eurekaClient,
                 taskClient,
                 updateRetryCount,
                 taskToDomain,
                 workerNamePrefix,
-                5 // TODO change this to use new field inside worker
-        );
+                threadCountForTask);
         this.taskRunners.add(taskRunner);
         this.scheduledExecutorService.scheduleWithFixedDelay(
                 () -> taskRunner.poll(worker),

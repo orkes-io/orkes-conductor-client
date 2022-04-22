@@ -66,10 +66,9 @@ class TaskRunner {
     }
 
     public void poll(Worker worker) {
-        for (Task task : pollTasksForWorker(worker)) {
-            this.executorService.submit(
-                    () -> this.processTask(task, worker));
-        }
+        pollTasksForWorker(worker).forEach(
+                task -> this.executorService.submit(
+                        () -> this.processTask(task, worker)));
     }
 
     public void shutdown(int timeout) {
@@ -137,13 +136,12 @@ class TaskRunner {
         } catch (Exception e) {
             MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), e);
             LOGGER.error("Error when polling for tasks", e);
-            return List.of();
         }
         return tasks;
     }
 
     private int getAvailableWorkers() {
-        return this.threadCount - this.executorService.getActiveCount();
+        return (this.threadCount << 1) - this.executorService.getActiveCount();
     }
 
     private List<Task> pollTask(String taskType, String workerId, String domain, int count) {
