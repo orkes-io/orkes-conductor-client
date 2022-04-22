@@ -38,6 +38,7 @@ class TaskRunner {
     private final ThreadPoolExecutor executorService;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
     private final int threadCount;
+    private final int taskPollTimeout;
 
     private static final String DOMAIN = "domain";
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
@@ -49,12 +50,14 @@ class TaskRunner {
             int updateRetryCount,
             Map<String, String> taskToDomain,
             String workerNamePrefix,
-            int threadCount) {
+            int threadCount,
+            int taskPollTimeout) {
         this.eurekaClient = eurekaClient;
         this.taskClient = taskClient;
         this.updateRetryCount = updateRetryCount;
         this.taskToDomain = taskToDomain;
         this.threadCount = threadCount;
+        this.taskPollTimeout = taskPollTimeout;
         this.executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(
                 threadCount,
                 new BasicThreadFactory.Builder()
@@ -155,8 +158,7 @@ class TaskRunner {
             }
             return List.of(task);
         }
-        // TODO change this to use new field inside worker
-        return taskClient.batchPollTasksByTaskType(taskType, workerId, count, 5000);
+        return taskClient.batchPollTasksByTaskType(taskType, workerId, count, this.taskPollTimeout);
     }
 
     @SuppressWarnings("FieldCanBeLocal")
