@@ -25,7 +25,8 @@ ext {
             conductor      : '3.5.0',
             revSpectator   : '0.122.0',
             revJersey      : '1.19.4',
-            revEurekaClient: '1.10.10'
+            revEurekaClient: '1.10.10',
+            log4j      : '2.17.1'
     ]
 }
 
@@ -33,6 +34,34 @@ group = 'io.orkes.conductor'
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation('org.apache.logging.log4j:log4j-api') {
+        version {
+            strictly "${versions.log4j}"
+        }
+    }
+    implementation('org.apache.logging.log4j:log4j-core') {
+        version {
+            strictly "${versions.log4j}"
+        }
+    }
+    implementation('org.apache.logging.log4j:log4j-jul') {
+        version {
+            strictly "${versions.log4j}"
+        }
+    }
+    implementation('org.apache.logging.log4j:log4j-to-slf4j') {
+        version {
+            strictly "${versions.log4j}"
+        }
+    }
+    implementation('org.apache.logging.log4j:log4j-web') {
+        version {
+            strictly "${versions.log4j}"
+        }
+    }
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
     implementation "com.netflix.conductor:conductor-common:${versions.conductor}"
     implementation "com.netflix.conductor:conductor-client:${versions.conductor}"

@@ -13,6 +13,8 @@ import com.netflix.discovery.EurekaClient;
 import com.netflix.spectator.api.Registry;
 import com.netflix.spectator.api.Spectator;
 import com.netflix.spectator.api.patterns.ThreadPoolMonitor;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.*;
 
@@ -73,7 +76,7 @@ class TaskRunner {
         try {
             this.executorService.shutdown();
             if (executorService.awaitTermination(timeout, TimeUnit.SECONDS)) {
-                LOGGER.debug("tasks completed, shutting down");
+                LOGGER.info("tasks completed, shutting down");
             } else {
                 LOGGER.warn(String.format("forcing shutdown after waiting for %s second", timeout));
                 executorService.shutdownNow();
@@ -86,6 +89,7 @@ class TaskRunner {
     }
 
     private List<Task> pollTasksForWorker(Worker worker) {
+        List<Task> tasks = new LinkedList<>();
         Boolean discoveryOverride = Optional.ofNullable(
                 PropertyFactory.getBoolean(
                         worker.getTaskDefName(), OVERRIDE_DISCOVERY, null))
@@ -95,16 +99,15 @@ class TaskRunner {
         if (eurekaClient != null
                 && !eurekaClient.getInstanceRemoteStatus().equals(InstanceInfo.InstanceStatus.UP)
                 && !discoveryOverride) {
-            LOGGER.debug("Instance is NOT UP in discovery - will not poll");
-            return null;
+            LOGGER.info("Instance is NOT UP in discovery - will not poll");
+            return tasks;
         }
         if (worker.paused()) {
             MetricsContainer.incrementTaskPausedCount(worker.getTaskDefName());
-            LOGGER.debug("Worker {} has been paused. Not polling anymore!", worker.getClass());
-            return null;
+            LOGGER.info("Worker {} has been paused. Not polling anymore!", worker.getClass());
+            return tasks;
         }
         String taskType = worker.getTaskDefName();
-        List<Task> tasks = new LinkedList<>();
         try {
             String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
                     .orElseGet(
@@ -112,26 +115,29 @@ class TaskRunner {
                                     PropertyFactory.getString(
                                             ALL_WORKERS, DOMAIN, null))
                                     .orElse(taskToDomain.get(taskType)));
-            LOGGER.debug("Polling task of type: {} in domain: '{}'", taskType, domain);
-            tasks = MetricsContainer.getPollTimer(taskType)
+            LOGGER.info("Polling task of type: {} in domain: '{}'", taskType, domain);
+            List<Task> polledTasks = MetricsContainer.getPollTimer(taskType)
                     .record(
                             () -> pollTask(
                                     taskType,
                                     worker.getIdentity(),
                                     domain,
                                     this.getAvailableWorkers()));
-            if (tasks != null && !tasks.isEmpty()) {
-                MetricsContainer.incrementTaskPollCount(taskType, 1);
-                LOGGER.debug(
-                        "Polled task: {} of type: {} in domain: '{}', from worker: {}",
-                        tasks.get(0).getTaskId(),
-                        taskType,
-                        domain,
-                        worker.getIdentity());
+            for (Task task : polledTasks) {
+                if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
+                    LOGGER.info(
+                            "Polled task: {} of type: {} in domain: '{}', from worker: {}",
+                            task.getTaskId(),
+                            taskType,
+                            domain,
+                            worker.getIdentity());
+                    tasks.add(task);
+                }
             }
         } catch (Exception e) {
             MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), e);
             LOGGER.error("Error when polling for tasks", e);
+            return List.of();
         }
         return tasks;
     }
@@ -145,8 +151,11 @@ class TaskRunner {
             return List.of();
         }
         if (count == 1) {
-            return List.of(
-                    taskClient.pollTask(taskType, workerId, domain));
+            Task task = taskClient.pollTask(taskType, workerId, domain);
+            if (task == null) {
+                return List.of();
+            }
+            return List.of(task);
         }
         // TODO change this to use new field inside worker
         return taskClient.batchPollTasksByTaskType(taskType, workerId, count, 5000);
@@ -160,7 +169,7 @@ class TaskRunner {
     };
 
     private void processTask(Task task, Worker worker) {
-        LOGGER.debug(
+        LOGGER.info(
                 "Executing task: {} of type: {} in worker: {} at {}",
                 task.getTaskId(),
                 task.getTaskDefName(),
@@ -176,10 +185,14 @@ class TaskRunner {
     }
 
     private void executeTask(Worker worker, Task task) {
+        if (task == null || task.getTaskDefName().isEmpty()) {
+            LOGGER.info("Empty task");
+            return;
+        }
         Stopwatch stopwatch = Stopwatch.createStarted();
         TaskResult result = null;
         try {
-            LOGGER.debug(
+            LOGGER.info(
                     "Executing task: {} in worker: {} at {}",
                     task.getTaskId(),
                     worker.getClass().getSimpleName(),
@@ -205,7 +218,7 @@ class TaskRunner {
             MetricsContainer.getExecutionTimer(worker.getTaskDefName())
                     .record(stopwatch.elapsed(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
         }
-        LOGGER.debug(
+        LOGGER.info(
                 "Task: {} executed by worker: {} at {} with status: {}",
                 task.getTaskId(),
                 worker.getClass().getSimpleName(),

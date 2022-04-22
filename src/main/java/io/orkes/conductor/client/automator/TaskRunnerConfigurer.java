@@ -5,6 +5,9 @@ import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.discovery.EurekaClient;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +17,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class TaskRunnerConfigurer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunnerConfigurer.class);
+
     private final EurekaClient eurekaClient;
     private final TaskClient taskClient;
     private final List<Worker> workers;
@@ -190,13 +195,14 @@ public class TaskRunnerConfigurer {
     }
 
     private void startWorker(Worker worker) {
+        LOGGER.warn("Starting worker: {} with ", worker.getTaskDefName());
         TaskRunner taskRunner = new TaskRunner(
                 eurekaClient,
                 taskClient,
                 updateRetryCount,
                 taskToDomain,
                 workerNamePrefix,
-                1 // TODO change this to use new field inside worker
+                5 // TODO change this to use new field inside worker
         );
         this.taskRunners.add(taskRunner);
         this.scheduledExecutorService.scheduleWithFixedDelay(
