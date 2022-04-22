@@ -16,6 +16,7 @@ plugins {
     id 'application'
     id 'maven-publish'
     id 'signing'
+    id 'org.springframework.boot' version '2.5.5'
 }
 
 ext {
@@ -31,6 +32,8 @@ ext {
 group = 'io.orkes.conductor'
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+
     implementation "com.netflix.conductor:conductor-common:${versions.conductor}"
     implementation "com.netflix.conductor:conductor-client:${versions.conductor}"
     implementation "com.sun.jersey:jersey-client:${versions.revJersey}"
