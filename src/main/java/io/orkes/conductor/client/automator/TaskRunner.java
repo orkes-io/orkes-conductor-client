@@ -146,7 +146,7 @@ class TaskRunner {
     }
 
     private int getAvailableWorkers() {
-        return (this.threadCount << 1) - this.executorService.getActiveCount();
+        return this.threadCount - this.executorService.getActiveCount();
     }
 
     private List<Task> pollTask(String taskType, String workerId, String domain, int count) {
