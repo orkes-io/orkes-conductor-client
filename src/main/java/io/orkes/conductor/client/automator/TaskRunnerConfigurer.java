@@ -27,7 +27,7 @@ public class TaskRunnerConfigurer {
     private final int shutdownGracePeriodSeconds;
     private final String workerNamePrefix;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
-    private final Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount;
+    private final Map<String /* taskType */, Integer /* threadCount */> taskThreadCount;
     private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskToTimeout;
     private final List<TaskRunner> taskRunners;
 
@@ -44,7 +44,7 @@ public class TaskRunnerConfigurer {
         this.updateRetryCount = builder.updateRetryCount;
         this.workerNamePrefix = builder.workerNamePrefix;
         this.taskToDomain = builder.taskToDomain;
-        this.taskToThreadCount = builder.taskToThreadCount;
+        this.taskThreadCount = builder.taskThreadCount;
         this.taskToTimeout = builder.taskToTimeout;
         this.shutdownGracePeriodSeconds = builder.shutdownGracePeriodSeconds;
         this.workers = new LinkedList<>();
@@ -62,7 +62,7 @@ public class TaskRunnerConfigurer {
         private EurekaClient eurekaClient;
         private final TaskClient taskClient;
         private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
-        private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount = new HashMap<>();
+        private Map<String /* taskType */, Integer /* threadCount */> taskThreadCount = new HashMap<>();
         private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskToTimeout = new HashMap<>();
 
         public Builder(TaskClient taskClient, Iterable<Worker> workers) {
@@ -137,8 +137,8 @@ public class TaskRunnerConfigurer {
             return this;
         }
 
-        public TaskRunnerConfigurer.Builder withTaskToThreadCount(Map<String, Integer> taskToThreadCount) {
-            this.taskToThreadCount = taskToThreadCount;
+        public TaskRunnerConfigurer.Builder withTaskThreadCount(Map<String, Integer> taskThreadCount) {
+            this.taskThreadCount = taskThreadCount;
             return this;
         }
 
@@ -212,7 +212,7 @@ public class TaskRunnerConfigurer {
 
     private void startWorker(Worker worker) {
         LOGGER.warn("Starting worker: {} with ", worker.getTaskDefName());
-        final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(
+        final Integer threadCountForTask = this.taskThreadCount.getOrDefault(
                 worker.getTaskDefName(),
                 1);
         final Integer taskPollTimeout = this.taskToTimeout.getOrDefault(
