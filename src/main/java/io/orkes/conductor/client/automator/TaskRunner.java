@@ -117,14 +117,16 @@ class TaskRunner {
                                     PropertyFactory.getString(
                                             ALL_WORKERS, DOMAIN, null))
                                     .orElse(taskToDomain.get(taskType)));
-            LOGGER.info("Polling task of type: {} in domain: '{}'", taskType, domain);
+            final Integer taskPollQuantity = this.getAvailableWorkers();
+            LOGGER.debug("Polling for tasks of type: {}, in domain: '{}' with batch of size: ", taskType, domain,
+                    taskPollQuantity);
             List<Task> polledTasks = MetricsContainer.getPollTimer(taskType)
                     .record(
                             () -> pollTask(
                                     taskType,
                                     worker.getIdentity(),
                                     domain,
-                                    this.getAvailableWorkers()));
+                                    taskPollQuantity));
             for (Task task : polledTasks) {
                 if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
                     LOGGER.info(
