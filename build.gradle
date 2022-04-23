@@ -5,13 +5,9 @@ buildscript {
             url 'https://plugins.gradle.org/m2/'
         }
     }
-    dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.3.12.RELEASE'
-    }
 }
 
 plugins {
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'application'
     id 'maven-publish'
@@ -19,12 +15,15 @@ plugins {
 }
 
 ext {
-    springBootVersion = '2.5.6'
     versions = [
             conductor      : '3.5.0',
             revSpectator   : '0.122.0',
             revJersey      : '1.19.4',
-            revEurekaClient: '1.10.10'
+            revEurekaClient: '1.10.10',
+            jackson        : '2.13.2',
+            slf4j          : '2.0.0-alpha7',
+            apacheCommons  : '3.12.0',
+            junit          : '5.8.2'
     ]
 }
 
@@ -35,23 +34,17 @@ dependencies {
     implementation "com.netflix.conductor:conductor-client:${versions.conductor}"
     implementation "com.sun.jersey:jersey-client:${versions.revJersey}"
 
-    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
-    implementation 'org.apache.commons:commons-lang3'
-    implementation 'org.slf4j:slf4j-api'
-
     implementation "com.netflix.spectator:spectator-api:${versions.revSpectator}"
     implementation "com.netflix.eureka:eureka-client:${versions.revEurekaClient}"
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-}
+    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
+    
+    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+    implementation "org.apache.commons:commons-lang3:${versions.apacheCommons}"
 
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.boot:spring-boot-dependencies:2.3.12.RELEASE")
-    }
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
 }
 
 repositories {

@@ -146,6 +146,8 @@ public class TaskRunnerConfigurer {
          * Please see {@link TaskRunnerConfigurer#init()} method. The method must be
          * called after
          * this constructor for the polling to start.
+         * 
+         * @return TaskRunnerConfigurer instance
          */
         public TaskRunnerConfigurer build() {
             return new TaskRunnerConfigurer(this);
