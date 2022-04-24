@@ -153,13 +153,6 @@ class TaskRunner {
         if (count < 1) {
             return List.of();
         }
-        if (count == 1) {
-            Task task = taskClient.pollTask(taskType, workerId, domain);
-            if (task == null) {
-                return List.of();
-            }
-            return List.of(task);
-        }
         return taskClient.batchPollTasksByTaskType(taskType, workerId, count, this.taskPollTimeout);
     }
 
