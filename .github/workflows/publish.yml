@@ -21,4 +21,8 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
       - name: Publish
-        run: ./gradlew publish -PmavenCentral -Pusername=${{ secrets.SONATYPE_USERNAME }} -Ppassword=${{ secrets.SONATYPE_PASSWORD }} -PsigningKeyId=${{ secrets.SIGNING_KEY_ID }} -PsigningKey=${{ secrets.SIGNING_KEY }} -PsigningPassword=${{secrets.SIGNING_PASSWORD}}
+        run: ./gradlew publish -PmavenCentral -Pusername=${{ secrets.SONATYPE_USERNAME }} -Ppassword=${{ secrets.SONATYPE_PASSWORD }}
+    env:
+      ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.SIGNING_KEY_ID }}
+      ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+      ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
