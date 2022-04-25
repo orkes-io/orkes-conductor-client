@@ -131,5 +131,8 @@ compileJava {
 
 signing {
     sign publishing.publications
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
 }
 
