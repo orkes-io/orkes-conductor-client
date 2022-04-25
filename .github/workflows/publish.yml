@@ -14,6 +14,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: prod
     name: Gradle Build and Publish
     steps:
       - name: Checkout repo
@@ -26,5 +27,4 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
       - name: Publish
-        run: ./gradlew publish -PmavenCentral -Pusername=${{ secrets.ORG_SONATYPE_USERNAME }} -Ppassword=${{ secrets.ORG_SONATYPE_PASSWORD }} -PsigningKey=${{ secrets.ORG_SIGNING_KEY }} -PsigningPassword=${{secrets.ORG_SIGNING_PASSWORD}}
-
+        run: ./gradlew publish -PmavenCentral -Pusername=${{ secrets.SONATYPE_USERNAME }} -Ppassword=${{ secrets.SONATYPE_PASSWORD }} -PsigningKey=${{ secrets.SIGNING_KEY }} -PsigningPassword=${{secrets.SIGNING_PASSWORD}}
