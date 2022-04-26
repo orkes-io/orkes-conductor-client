@@ -1,0 +1,33 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Publish release to Maven Central
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: prod
+    name: Gradle Build and Publish
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Set up Zulu JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - name: Publish
+        run: |
+          export ORKES_CLIENT_VERSION="$(git describe --tags --abbrev=0)"
+          echo Publishing version $ORKES_CLIENT_VERSION
+          ./gradlew publish -Pversion=$ORKES_CLIENT_VERSION -PmavenCentral -Pusername=${{ secrets.SONATYPE_USERNAME }} -Ppassword=${{ secrets.SONATYPE_PASSWORD }}
+    env:
+      ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.SIGNING_KEY_ID }}
+      ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+      ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
