@@ -8,6 +8,7 @@ buildscript {
 }
 
 plugins {
+    id 'org.springframework.boot' version '2.5.5'
     id 'java'
     id 'application'
     id 'maven-publish'
@@ -21,7 +22,6 @@ ext {
             revJersey      : '1.19.4',
             revEurekaClient: '1.10.10',
             jackson        : '2.13.2',
-            slf4j          : '2.0.0-alpha7',
             apacheCommons  : '3.12.0',
             junit          : '5.8.2'
     ]
@@ -30,6 +30,8 @@ ext {
 group = 'io.orkes.conductor'
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter:2.5.5'
+
     implementation "com.netflix.conductor:conductor-common:${versions.conductor}"
     implementation "com.netflix.conductor:conductor-client:${versions.conductor}"
     implementation "com.sun.jersey:jersey-client:${versions.revJersey}"
@@ -40,7 +42,7 @@ dependencies {
     implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
     
-    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation "org.apache.commons:commons-lang3:${versions.apacheCommons}"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
@@ -126,3 +128,8 @@ signing {
     sign publishing.publications
 }
 
+configurations {
+    all {
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
+    }
+}
