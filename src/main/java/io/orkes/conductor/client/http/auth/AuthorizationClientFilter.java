@@ -33,12 +33,14 @@ public class AuthorizationClientFilter extends ClientFilter {
     private final ObjectMapper objectMapper;
     private final String keyId;
     private final String secret;
+    private final TokenHolder tokenHolder;
 
     public AuthorizationClientFilter(String rootUri, String keyId, String secret) {
         this.rootUri = Objects.requireNonNull(rootUri).replaceAll("/$", "");
         this.keyId = Objects.requireNonNull(keyId);
         this.secret = Objects.requireNonNull(secret);
         this.objectMapper = new ObjectMapperProvider().getObjectMapper();
+        this.tokenHolder = new TokenHolder();
         this.client = initClient();
     }
 
@@ -72,13 +74,13 @@ public class AuthorizationClientFilter extends ClientFilter {
     }
 
     private String getToken() {
-        String token = TokenHolder.getToken();
+        String token = tokenHolder.getToken();
         if (token == null) {
             synchronized (LOCK) {
-                token = TokenHolder.getToken();
+                token = tokenHolder.getToken();
                 if (token == null) {
                     token = postForToken();
-                    TokenHolder.setToken(token);
+                    tokenHolder.setToken(token);
                 }
             }
         }

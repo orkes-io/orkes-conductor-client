@@ -1,13 +1,13 @@
 package io.orkes.conductor.client.http.auth;
 
 public class TokenHolder {
-    private static volatile String TOKEN;
+    private volatile String token;
 
-    public static void setToken(String token) {
-        TOKEN = token;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public static String getToken() {
-        return TOKEN;
+    public String getToken() {
+        return token;
     }
 }

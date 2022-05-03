@@ -16,6 +16,7 @@ plugins {
     id 'application'
     id 'maven-publish'
     id 'signing'
+    id 'groovy'
 }
 
 ext {
@@ -24,7 +25,10 @@ ext {
             conductor      : '3.5.0',
             revSpectator   : '0.122.0',
             revJersey      : '1.19.4',
-            revEurekaClient: '1.10.10'
+            revEurekaClient: '1.10.10',
+            spock          : '2.1-groovy-2.5',
+            awaitility     : '3.1.6',
+            wiremock       : '2.33.2'
     ]
 }
 
@@ -46,6 +50,12 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    testImplementation 'org.codehaus.groovy:groovy'
+    testImplementation 'org.codehaus.groovy:groovy-json'
+    testImplementation "org.spockframework:spock-core:${versions.spock}"
+    testImplementation "org.awaitility:awaitility-groovy:${versions.awaitility}"
+    testImplementation "com.github.tomakehurst:wiremock-jre8:${versions.wiremock}"
 }
 
 dependencyManagement {
