@@ -5,62 +5,60 @@ buildscript {
             url 'https://plugins.gradle.org/m2/'
         }
     }
-    dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.3.12.RELEASE'
-    }
 }
 
 plugins {
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'application'
     id 'maven-publish'
     id 'signing'
     id 'groovy'
+    id 'java-library'
 }
 
 ext {
-    springBootVersion = '2.5.6'
     versions = [
-            conductor      : '3.5.0',
-            revSpectator   : '0.122.0',
-            revJersey      : '1.19.4',
-            revEurekaClient: '1.10.10',
-            spock          : '2.1-groovy-2.5',
-            awaitility     : '3.1.6',
-            wiremock       : '2.33.2'
+            awaitility : '3.1.6',
+            commonsLang: '3.12.0',
+            conductor  : '3.5.0',
+            eureka     : '1.10.10',
+            groovy     : '2.5.15',
+            jackson    : '2.11.4!!',
+            jersey     : '1.19.4',
+            junit      : '5.6.3!!',
+            slf4j      : '1.7.36',
+            spectator  : '0.122.0',
+            spock      : '2.1-groovy-2.5',
+            wiremock   : '2.33.2'
     ]
 }
 
 group = 'io.orkes.conductor'
 
 dependencies {
-    implementation "com.netflix.conductor:conductor-common:${versions.conductor}"
-    implementation "com.netflix.conductor:conductor-client:${versions.conductor}"
-    implementation "com.sun.jersey:jersey-client:${versions.revJersey}"
+    api "com.netflix.conductor:conductor-common:${versions.conductor}"
+    api("com.netflix.conductor:conductor-client:${versions.conductor}") {
+        exclude group: "com.netflix.eureka", module: "eureka-client"
+    }
+    api "com.sun.jersey:jersey-client:${versions.jersey}"
+    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
+    implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
+    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+    implementation "com.netflix.spectator:spectator-api:${versions.spectator}"
+    implementation("com.netflix.eureka:eureka-client:${versions.eureka}") {
+        exclude group: "javax.servlet", module: "servlet-api"
+    }
 
-    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
-    implementation 'org.apache.commons:commons-lang3'
-    implementation 'org.slf4j:slf4j-api'
-
-    implementation "com.netflix.spectator:spectator-api:${versions.revSpectator}"
-    implementation "com.netflix.eureka:eureka-client:${versions.revEurekaClient}"
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-
-    testImplementation 'org.codehaus.groovy:groovy'
-    testImplementation 'org.codehaus.groovy:groovy-json'
+    // test dependencies
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+    testImplementation "org.codehaus.groovy:groovy:${versions.groovy}"
+    testImplementation "org.codehaus.groovy:groovy-json:${versions.groovy}"
     testImplementation "org.spockframework:spock-core:${versions.spock}"
     testImplementation "org.awaitility:awaitility-groovy:${versions.awaitility}"
-    testImplementation "com.github.tomakehurst:wiremock-jre8:${versions.wiremock}"
-}
-
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.boot:spring-boot-dependencies:2.3.12.RELEASE")
+    testImplementation("com.github.tomakehurst:wiremock-jre8:${versions.wiremock}") {
+        exclude group: 'com.fasterxml.jackson'
     }
 }
 
@@ -120,7 +118,6 @@ publishing {
                     password project.properties.password
                 }
             } else {
-                println "Publishing to S3 bucket"
                 url = "s3://orkes-artifacts-repo/${project.version.endsWith('-SNAPSHOT') ? "snapshots" : "releases"}"
                 authentication {
                     awsIm(AwsImAuthentication)
@@ -149,4 +146,3 @@ signing {
 
     sign publishing.publications
 }
-
