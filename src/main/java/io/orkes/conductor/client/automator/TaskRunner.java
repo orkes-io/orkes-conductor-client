@@ -117,14 +117,16 @@ class TaskRunner {
                                     PropertyFactory.getString(
                                             ALL_WORKERS, DOMAIN, null))
                                     .orElse(taskToDomain.get(taskType)));
-            LOGGER.info("Polling task of type: {} in domain: '{}'", taskType, domain);
+            final Integer taskPollQuantity = this.getAvailableWorkers();
+            LOGGER.debug("Polling for tasks of type: {}, in domain: '{}' with batch of size: ", taskType, domain,
+                    taskPollQuantity);
             List<Task> polledTasks = MetricsContainer.getPollTimer(taskType)
                     .record(
                             () -> pollTask(
                                     taskType,
                                     worker.getIdentity(),
                                     domain,
-                                    this.getAvailableWorkers()));
+                                    taskPollQuantity));
             for (Task task : polledTasks) {
                 if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
                     LOGGER.info(
@@ -144,19 +146,12 @@ class TaskRunner {
     }
 
     private int getAvailableWorkers() {
-        return (this.threadCount << 1) - this.executorService.getActiveCount();
+        return this.threadCount - this.executorService.getActiveCount();
     }
 
     private List<Task> pollTask(String taskType, String workerId, String domain, int count) {
         if (count < 1) {
             return List.of();
-        }
-        if (count == 1) {
-            Task task = taskClient.pollTask(taskType, workerId, domain);
-            if (task == null) {
-                return List.of();
-            }
-            return List.of(task);
         }
         return taskClient.batchPollTasksByTaskType(taskType, workerId, count, this.taskPollTimeout);
     }
