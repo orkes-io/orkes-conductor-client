@@ -27,8 +27,7 @@ public class TaskRunnerConfigurer {
     private final int shutdownGracePeriodSeconds;
     private final String workerNamePrefix;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
-    private final Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount;
-    private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskToTimeout;
+    private final Map<String /* taskType */, Integer /* threadCount */> taskThreadCount;
     private final List<TaskRunner> taskRunners;
 
     private ScheduledExecutorService scheduledExecutorService;
@@ -44,8 +43,7 @@ public class TaskRunnerConfigurer {
         this.updateRetryCount = builder.updateRetryCount;
         this.workerNamePrefix = builder.workerNamePrefix;
         this.taskToDomain = builder.taskToDomain;
-        this.taskToThreadCount = builder.taskToThreadCount;
-        this.taskToTimeout = builder.taskToTimeout;
+        this.taskThreadCount = builder.taskThreadCount;
         this.shutdownGracePeriodSeconds = builder.shutdownGracePeriodSeconds;
         this.workers = new LinkedList<>();
         builder.workers.forEach(this.workers::add);
@@ -62,8 +60,7 @@ public class TaskRunnerConfigurer {
         private EurekaClient eurekaClient;
         private final TaskClient taskClient;
         private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
-        private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount = new HashMap<>();
-        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskToTimeout = new HashMap<>();
+        private Map<String /* taskType */, Integer /* threadCount */> taskThreadCount = new HashMap<>();
 
         public Builder(TaskClient taskClient, Iterable<Worker> workers) {
             Preconditions.checkNotNull(taskClient, "TaskClient cannot be null");
@@ -137,13 +134,8 @@ public class TaskRunnerConfigurer {
             return this;
         }
 
-        public TaskRunnerConfigurer.Builder withTaskToThreadCount(Map<String, Integer> taskToThreadCount) {
-            this.taskToThreadCount = taskToThreadCount;
-            return this;
-        }
-
-        public TaskRunnerConfigurer.Builder withTaskToTimeout(Map<String, Integer> taskToTimeout) {
-            this.taskToTimeout = taskToTimeout;
+        public TaskRunnerConfigurer.Builder withTaskThreadCount(Map<String, Integer> taskThreadCount) {
+            this.taskThreadCount = taskThreadCount;
             return this;
         }
 
@@ -154,6 +146,8 @@ public class TaskRunnerConfigurer {
          * Please see {@link TaskRunnerConfigurer#init()} method. The method must be
          * called after
          * this constructor for the polling to start.
+         * 
+         * @return TaskRunnerConfigurer instance
          */
         public TaskRunnerConfigurer build() {
             return new TaskRunnerConfigurer(this);
@@ -212,12 +206,9 @@ public class TaskRunnerConfigurer {
 
     private void startWorker(Worker worker) {
         LOGGER.warn("Starting worker: {} with ", worker.getTaskDefName());
-        final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(
+        final Integer threadCountForTask = this.taskThreadCount.getOrDefault(
                 worker.getTaskDefName(),
                 1);
-        final Integer taskPollTimeout = this.taskToTimeout.getOrDefault(
-                worker.getTaskDefName(),
-                5000);
         final TaskRunner taskRunner = new TaskRunner(
                 eurekaClient,
                 taskClient,
@@ -225,7 +216,7 @@ public class TaskRunnerConfigurer {
                 taskToDomain,
                 workerNamePrefix,
                 threadCountForTask,
-                taskPollTimeout);
+                1000);
         this.taskRunners.add(taskRunner);
         this.scheduledExecutorService.scheduleWithFixedDelay(
                 () -> taskRunner.poll(worker),
