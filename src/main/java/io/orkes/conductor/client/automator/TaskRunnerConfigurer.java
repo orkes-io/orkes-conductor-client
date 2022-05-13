@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.discovery.EurekaClient;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,10 +136,16 @@ public class TaskRunnerConfigurer {
             return this;
         }
 
+        public TaskRunnerConfigurer.Builder withTaskThreadCount(Map<String, Integer> taskToThreadCount) {
+            this.taskToThreadCount = taskToThreadCount;
+            return this;
+        }
+
         public TaskRunnerConfigurer.Builder withTaskToThreadCount(Map<String, Integer> taskToThreadCount) {
             this.taskToThreadCount = taskToThreadCount;
             return this;
         }
+
 
         public TaskRunnerConfigurer.Builder withTaskToTimeout(Map<String, Integer> taskToTimeout) {
             this.taskToTimeout = taskToTimeout;
@@ -154,6 +159,7 @@ public class TaskRunnerConfigurer {
          * Please see {@link TaskRunnerConfigurer#init()} method. The method must be
          * called after
          * this constructor for the polling to start.
+         * @return Builder instance
          */
         public TaskRunnerConfigurer build() {
             return new TaskRunnerConfigurer(this);

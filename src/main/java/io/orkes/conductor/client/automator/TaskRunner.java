@@ -8,7 +8,6 @@ import com.netflix.conductor.client.telemetry.MetricsContainer;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.common.utils.RetryUtil;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.spectator.api.Registry;
 import com.netflix.spectator.api.Spectator;
@@ -27,6 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.*;
+import java.util.function.Function;
 
 class TaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunner.class);
@@ -224,43 +224,32 @@ class TaskRunner {
                 worker.getClass().getSimpleName(),
                 worker.getIdentity(),
                 result.getStatus());
-        updateWithRetry(updateRetryCount, task, result, worker);
+        updateTaskResult(updateRetryCount, task, result, worker);
     }
 
-    private void updateWithRetry(int count, Task task, TaskResult result, Worker worker) {
+    private void updateTaskResult(int count, Task task, TaskResult result, Worker worker) {
         try {
-            String updateTaskDesc = String.format(
-                    "Retry updating task result: %s for task: %s in worker: %s",
-                    result.toString(), task.getTaskDefName(), worker.getIdentity());
-            String evaluatePayloadDesc = String.format(
-                    "Evaluate Task payload for task: %s in worker: %s",
-                    task.getTaskDefName(), worker.getIdentity());
-            String methodName = "updateWithRetry";
-            TaskResult finalResult = new RetryUtil<TaskResult>()
-                    .retryOnException(
-                            () -> {
-                                TaskResult taskResult = result.copy();
-                                taskClient.evaluateAndUploadLargePayload(
-                                        taskResult, task.getTaskType());
-                                return taskResult;
-                            },
-                            null,
-                            null,
+            // upload if necessary
+            Optional<String> optionalExternalStorageLocation =
+                    retryOperation(
+                            (TaskResult taskResult) -> upload(taskResult, task.getTaskType()),
                             count,
-                            evaluatePayloadDesc,
-                            methodName);
+                            result,
+                            "evaluateAndUploadLargePayload");
 
-            new RetryUtil<>()
-                    .retryOnException(
-                            () -> {
-                                taskClient.updateTask(finalResult);
-                                return null;
-                            },
-                            null,
-                            null,
-                            count,
-                            updateTaskDesc,
-                            methodName);
+            if (optionalExternalStorageLocation.isPresent()) {
+                result.setExternalOutputPayloadStoragePath(optionalExternalStorageLocation.get());
+                result.setOutputData(null);
+            }
+
+            retryOperation(
+                    (TaskResult taskResult) -> {
+                        taskClient.updateTask(taskResult);
+                        return null;
+                    },
+                    count,
+                    result,
+                    "updateTask");
         } catch (Exception e) {
             worker.onErrorUpdate(task);
             MetricsContainer.incrementTaskUpdateErrorCount(worker.getTaskDefName(), e);
@@ -272,6 +261,34 @@ class TaskRunner {
         }
     }
 
+    private Optional<String> upload(TaskResult result, String taskType) {
+        try {
+            return taskClient.evaluateAndUploadLargePayload(result.getOutputData(), taskType);
+        } catch (IllegalArgumentException iae) {
+            result.setReasonForIncompletion(iae.getMessage());
+            result.setOutputData(null);
+            result.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
+            return Optional.empty();
+        }
+    }
+
+    private <T, R> R retryOperation(Function<T, R> operation, int count, T input, String opName) {
+        int index = 0;
+        while (index < count) {
+            try {
+                return operation.apply(input);
+            } catch (Exception e) {
+                index++;
+                try {
+                    Thread.sleep(500L);
+                } catch (InterruptedException ie) {
+                    LOGGER.error("Retry interrupted", ie);
+                }
+            }
+        }
+        throw new RuntimeException("Exhausted retries performing " + opName);
+    }
+
     private void handleException(Throwable t, TaskResult result, Worker worker, Task task) {
         LOGGER.error(String.format("Error while executing task %s", task.toString()), t);
         MetricsContainer.incrementTaskExecutionErrorCount(worker.getTaskDefName(), t);
@@ -280,6 +297,6 @@ class TaskRunner {
         StringWriter stringWriter = new StringWriter();
         t.printStackTrace(new PrintWriter(stringWriter));
         result.log(stringWriter.toString());
-        updateWithRetry(updateRetryCount, task, result, worker);
+        updateTaskResult(updateRetryCount, task, result, worker);
     }
 }
