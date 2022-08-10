@@ -35,6 +35,8 @@ jobs:
           echo "Updating build.gradle - and printing its content"
           cat ../deploy.gradle
           cp ../deploy.gradle .
+          sed '/nebula.netflixoss/d;' build.gradle > build2.gradle
+          mv build2.gradle build.gradle
           echo "apply from: "\"\$rootDir/deploy.gradle\""" >> build.gradle
           cat build.gradle
           cat deploy.gradle
