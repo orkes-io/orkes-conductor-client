@@ -6,12 +6,14 @@
 name: Publish OSS Conductor release to Maven Central
 on:
   workflow_dispatch:
-
+    inputs:
+      version:
+        required: true
 jobs:
   publish:
     runs-on: ubuntu-latest
     environment: prod
-    name: Gradle Build and Publish OSS Conductor Fork
+    name: Gradle Build and Publish OSS Conductor Main Fork
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -22,7 +24,7 @@ jobs:
           java-version: '11'
       - name: Publish
         run: |
-          export CONDUCTOR_VERSION=0.0.0.6
+          export CONDUCTOR_VERSION=${{ github.event.inputs.version }}
           echo "CONDUCTOR_VERSION is $CONDUCTOR_VERSION"
           echo "Tag to checkout and publish v$CONDUCTOR_VERSION"
           git clone -b v$CONDUCTOR_VERSION https://github.com/orkes-io/conductor.git
