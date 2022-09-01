@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,8 @@ class TaskRunner {
     private final EurekaClient eurekaClient;
     private final TaskClient taskClient;
     private final int updateRetryCount;
-    private final ThreadPoolExecutor executorService;
+    private final Map<String, ThreadPoolExecutor> executorService;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
-    private final int threadCount;
     private final int taskPollTimeout;
 
     private static final String DOMAIN = "domain";
@@ -50,43 +50,31 @@ class TaskRunner {
             int updateRetryCount,
             Map<String, String> taskToDomain,
             String workerNamePrefix,
-            int threadCount,
+            Map<String, Integer> taskThreadCount,
             int taskPollTimeout) {
         this.eurekaClient = eurekaClient;
         this.taskClient = taskClient;
         this.updateRetryCount = updateRetryCount;
         this.taskToDomain = taskToDomain;
-        this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
-        this.executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(
-                threadCount,
-                new BasicThreadFactory.Builder()
-                        .namingPattern(workerNamePrefix)
-                        .uncaughtExceptionHandler(uncaughtExceptionHandler)
-                        .build());
-        ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
-        LOGGER.info("Initialized the TaskPollExecutor for {} with {} threads", threadCount);
+        this.executorService = new HashMap<>();
+        for (Map.Entry<String, Integer> i : taskThreadCount.entrySet()) {
+            final ThreadPoolExecutor es = (ThreadPoolExecutor) Executors.newFixedThreadPool(
+                    i.getValue(),
+                    new BasicThreadFactory.Builder()
+                            .namingPattern(workerNamePrefix)
+                            .uncaughtExceptionHandler(uncaughtExceptionHandler)
+                            .build());
+            this.executorService.put(i.getKey(), es);
+            ThreadPoolMonitor.attach(REGISTRY, es, workerNamePrefix);
+            LOGGER.info("Initialized the TaskPollExecutor for {} with {} threads", i.getKey(), i.getValue());
+        }
     }
 
-    public void poll(Worker worker) {
-        pollTasksForWorker(worker).forEach(
-                task -> this.executorService.submit(
-                        () -> this.processTask(task, worker)));
-    }
-
-    public void shutdown(int timeout) {
-        try {
-            this.executorService.shutdown();
-            if (executorService.awaitTermination(timeout, TimeUnit.SECONDS)) {
-                LOGGER.info("tasks completed, shutting down");
-            } else {
-                LOGGER.warn(String.format("forcing shutdown after waiting for %s second", timeout));
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException ie) {
-            LOGGER.warn("shutdown interrupted, invoking shutdownNow");
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
+    public void run(Worker worker) {
+        for (Task task : pollTasksForWorker(worker)) {
+            final ThreadPoolExecutor es = this.executorService.get(task.getTaskDefName());
+            es.submit(() -> this.processTask(task, worker));
         }
     }
 
@@ -124,7 +112,7 @@ class TaskRunner {
                                     taskType,
                                     worker.getIdentity(),
                                     domain,
-                                    this.getAvailableWorkers()));
+                                    this.getAvailableWorkers(taskType)));
             for (Task task : polledTasks) {
                 if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
                     LOGGER.info(
@@ -143,8 +131,9 @@ class TaskRunner {
         return tasks;
     }
 
-    private int getAvailableWorkers() {
-        return this.threadCount - this.executorService.getActiveCount();
+    private int getAvailableWorkers(String taskType) {
+        final ThreadPoolExecutor executorService = this.executorService.get(taskType);
+        return executorService.getMaximumPoolSize() - executorService.getActiveCount();
     }
 
     private List<Task> pollTask(String taskType, String workerId, String domain, int count) {
@@ -290,5 +279,27 @@ class TaskRunner {
         t.printStackTrace(new PrintWriter(stringWriter));
         result.log(stringWriter.toString());
         updateTaskResult(updateRetryCount, task, result, worker);
+    }
+
+    void shutdownAndAwaitTermination(ExecutorService executorService, int timeout) {
+        try {
+            executorService.shutdown();
+            if (executorService.awaitTermination(timeout, TimeUnit.SECONDS)) {
+                LOGGER.debug("tasks completed, shutting down");
+            } else {
+                LOGGER.warn(String.format("forcing shutdown after waiting for %s second", timeout));
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException ie) {
+            LOGGER.warn("shutdown interrupted, invoking shutdownNow");
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    void shutdown(int timeout) {
+        for (ExecutorService es : this.executorService.values()) {
+            shutdownAndAwaitTermination(es, timeout);
+        }
     }
 }
