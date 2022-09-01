@@ -144,19 +144,12 @@ class TaskRunner {
     }
 
     private int getAvailableWorkers() {
-        return (this.threadCount << 1) - this.executorService.getActiveCount();
+        return this.threadCount - this.executorService.getActiveCount();
     }
 
     private List<Task> pollTask(String taskType, String workerId, String domain, int count) {
         if (count < 1) {
             return List.of();
-        }
-        if (count == 1) {
-            Task task = taskClient.pollTask(taskType, workerId, domain);
-            if (task == null) {
-                return List.of();
-            }
-            return List.of(task);
         }
         return taskClient.batchPollTasksByTaskType(taskType, workerId, count, this.taskPollTimeout);
     }
@@ -230,12 +223,11 @@ class TaskRunner {
     private void updateTaskResult(int count, Task task, TaskResult result, Worker worker) {
         try {
             // upload if necessary
-            Optional<String> optionalExternalStorageLocation =
-                    retryOperation(
-                            (TaskResult taskResult) -> upload(taskResult, task.getTaskType()),
-                            count,
-                            result,
-                            "evaluateAndUploadLargePayload");
+            Optional<String> optionalExternalStorageLocation = retryOperation(
+                    (TaskResult taskResult) -> upload(taskResult, task.getTaskType()),
+                    count,
+                    result,
+                    "evaluateAndUploadLargePayload");
 
             if (optionalExternalStorageLocation.isPresent()) {
                 result.setExternalOutputPayloadStoragePath(optionalExternalStorageLocation.get());
