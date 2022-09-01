@@ -33,7 +33,6 @@ public class TaskRunnerConfigurer {
     private final List<Worker> workers = new LinkedList<>();
     private final int sleepWhenRetry;
     private final int updateRetryCount;
-    private final int threadCount;
     private final int shutdownGracePeriodSeconds;
     private final String workerNamePrefix;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
@@ -47,26 +46,19 @@ public class TaskRunnerConfigurer {
      */
     private TaskRunnerConfigurer(Builder builder) {
         // only allow either shared thread pool or per task thread pool
-        if (builder.threadCount != -1 && !builder.taskThreadCount.isEmpty()) {
+        if (builder.taskThreadCount.isEmpty()) {
             LOGGER.error(INVALID_THREAD_COUNT);
             throw new ConductorClientException(INVALID_THREAD_COUNT);
-        } else if (!builder.taskThreadCount.isEmpty()) {
-            for (Worker worker : builder.workers) {
-                if (!builder.taskThreadCount.containsKey(worker.getTaskDefName())) {
-                    String message = String.format(MISSING_TASK_THREAD_COUNT, worker.getTaskDefName());
-                    LOGGER.error(message);
-                    throw new ConductorClientException(message);
-                }
-                workers.add(worker);
-            }
-            this.taskThreadCount = builder.taskThreadCount;
-            this.threadCount = -1;
-        } else {
-            builder.workers.forEach(workers::add);
-            this.taskThreadCount = builder.taskThreadCount;
-            this.threadCount = (builder.threadCount == -1) ? workers.size() : builder.threadCount;
         }
-
+        for (Worker worker : builder.workers) {
+            if (!builder.taskThreadCount.containsKey(worker.getTaskDefName())) {
+                String message = String.format(MISSING_TASK_THREAD_COUNT, worker.getTaskDefName());
+                LOGGER.error(message);
+                throw new ConductorClientException(message);
+            }
+            workers.add(worker);
+        }
+        this.taskThreadCount = builder.taskThreadCount;
         this.eurekaClient = builder.eurekaClient;
         this.taskClient = builder.taskClient;
         this.sleepWhenRetry = builder.sleepWhenRetry;
@@ -82,7 +74,6 @@ public class TaskRunnerConfigurer {
         private String workerNamePrefix = "workflow-worker-%d";
         private int sleepWhenRetry = 500;
         private int updateRetryCount = 3;
-        private int threadCount = -1;
         private int shutdownGracePeriodSeconds = 10;
         private final Iterable<Worker> workers;
         private EurekaClient eurekaClient;
@@ -127,20 +118,6 @@ public class TaskRunnerConfigurer {
          */
         public Builder withUpdateRetryCount(int updateRetryCount) {
             this.updateRetryCount = updateRetryCount;
-            return this;
-        }
-
-        /**
-         * @param threadCount # of threads assigned to the workers. Should be at-least
-         *                    the size of
-         *                    taskWorkers to avoid starvation in a busy system.
-         * @return Builder instance
-         */
-        public Builder withThreadCount(int threadCount) {
-            if (threadCount < 1) {
-                throw new IllegalArgumentException("No. of threads cannot be less than 1");
-            }
-            this.threadCount = threadCount;
             return this;
         }
 
@@ -192,13 +169,6 @@ public class TaskRunnerConfigurer {
         public TaskRunnerConfigurer build() {
             return new TaskRunnerConfigurer(this);
         }
-    }
-
-    /**
-     * @return Thread Count for the shared executor pool
-     */
-    public int getThreadCount() {
-        return threadCount;
     }
 
     /**
