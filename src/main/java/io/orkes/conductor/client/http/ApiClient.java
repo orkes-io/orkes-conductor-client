@@ -14,13 +14,14 @@ package io.orkes.conductor.client.http;
 
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 import okio.BufferedSink;
 import okio.Okio;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.io.File;
@@ -53,18 +54,16 @@ import io.orkes.conductor.client.http.auth.OAuth;
 import io.orkes.conductor.client.http.model.GenerateTokenRequest;
 
 public class ApiClient {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
 
-    private String basePath = "https://pg-staging.orkesconductor.com/";
-    private boolean debugging = false;
-    private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
+    private final String basePath;
+    private final boolean debugging;
+    private final Map<String, String> defaultHeaderMap = new HashMap<String, String>();
     private String tempFolderPath = null;
 
     private Map<String, Authentication> authentications;
 
     private DateFormat dateFormat;
-    private DateFormat datetimeFormat;
-    private boolean lenientDatetimeFormat;
-    private int dateLength;
 
     private InputStream sslCaCert;
     private boolean verifyingSsl;
@@ -73,12 +72,22 @@ public class ApiClient {
     private OkHttpClient httpClient;
     private JSON json;
 
-    private HttpLoggingInterceptor loggingInterceptor;
-
     /*
      * Constructor for ApiClient
      */
+
     public ApiClient() {
+        this("https://play.orkes.io/api", false);
+    }
+
+    public ApiClient(boolean debugging) {
+        this("https://play.orkes.io/api", debugging);
+    }
+
+    public ApiClient(String basePath, boolean debugging) {
+        this.basePath = basePath;
+        this.debugging = debugging;
+
         httpClient = new OkHttpClient();
 
         verifyingSsl = true;
@@ -90,19 +99,20 @@ public class ApiClient {
 
         // Setup authentications (key: authentication name, value: authentication).
         authentications = new HashMap<String, Authentication>();
+    }
 
+    public ApiClient(String basePath, boolean debugging, String keyId, String keySecret) {
+        this(basePath, debugging);
         try {
-            final String token = this.getNewToken();
+            final String token = this.getNewToken(keyId, keySecret);
             authentications.put(
                     token,
                     new ApiKeyAuth(
                             "header",
                             "X-Authorization"));
         } catch (Exception e) {
-            System.out.println("Failed to refresh token");
+            LOGGER.info("Failed to refresh token");
         }
-
-        authentications = Collections.unmodifiableMap(authentications);
     }
 
     /**
@@ -112,18 +122,6 @@ public class ApiClient {
      */
     public String getBasePath() {
         return basePath;
-    }
-
-    /**
-     * Set base path
-     *
-     * @param basePath Base path of the URL (e.g
-     *                 https://pg-staging.orkesconductor.com/
-     * @return An instance of OkHttpClient
-     */
-    public ApiClient setBasePath(String basePath) {
-        this.basePath = basePath;
-        return this;
     }
 
     /**
@@ -383,27 +381,6 @@ public class ApiClient {
      */
     public boolean isDebugging() {
         return debugging;
-    }
-
-    /**
-     * Enable/disable debugging for this API client.
-     *
-     * @param debugging To enable (true) or disable (false) debugging
-     * @return ApiClient
-     */
-    public ApiClient setDebugging(boolean debugging) {
-        if (debugging != this.debugging) {
-            if (debugging) {
-                loggingInterceptor = new HttpLoggingInterceptor();
-                loggingInterceptor.setLevel(Level.BODY);
-                httpClient.interceptors().add(loggingInterceptor);
-            } else {
-                httpClient.interceptors().remove(loggingInterceptor);
-                loggingInterceptor = null;
-            }
-        }
-        this.debugging = debugging;
-        return this;
     }
 
     /**
@@ -1251,10 +1228,10 @@ public class ApiClient {
         }
     }
 
-    private String getNewToken() throws Exception {
-        final GenerateTokenRequest generateTokenRequest = new GenerateTokenRequest()
-                .keyId("key")
-                .keySecret("secret");
+    private String getNewToken(String keyId, String keySecret) throws Exception {
+        GenerateTokenRequest generateTokenRequest = new GenerateTokenRequest()
+                .keyId(keyId)
+                .keySecret(keySecret);
         Request request = this.buildRequest(
                 "/api/token",
                 "POST",

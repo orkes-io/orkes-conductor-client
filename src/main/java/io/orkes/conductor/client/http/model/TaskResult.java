@@ -47,6 +47,31 @@ public class TaskResult {
   @SerializedName("reasonForIncompletion")
   private String reasonForIncompletion = null;
 
+  public TaskResult(Task task) {
+    this.workflowInstanceId = task.getWorkflowInstanceId();
+    this.taskId = task.getTaskId();
+    this.reasonForIncompletion = task.getReasonForIncompletion();
+    this.callbackAfterSeconds = task.getCallbackAfterSeconds();
+    this.workerId = task.getWorkerId();
+    this.outputData = task.getOutputData();
+    this.externalOutputPayloadStoragePath = task.getExternalOutputPayloadStoragePath();
+    this.subWorkflowId = task.getSubWorkflowId();
+    switch (task.getStatus()) {
+        case CANCELED:
+        case COMPLETED_WITH_ERRORS:
+        case TIMED_OUT:
+        case SKIPPED:
+            this.status = StatusEnum.FAILED;
+            break;
+        case SCHEDULED:
+            this.status = StatusEnum.IN_PROGRESS;
+            break;
+        default:
+            this.status = StatusEnum.valueOf(task.getStatus().name());
+            break;
+    }
+}
+
   /**
    * Gets or Sets status
    */

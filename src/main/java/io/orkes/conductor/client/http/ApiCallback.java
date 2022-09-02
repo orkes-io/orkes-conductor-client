@@ -12,8 +12,6 @@
 
 package io.orkes.conductor.client.http;
 
-import java.io.IOException;
-
 import java.util.Map;
 import java.util.List;
 
