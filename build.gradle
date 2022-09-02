@@ -40,21 +40,30 @@ dependencies {
     api("com.netflix.conductor:conductor-client:${versions.conductor}") {
         exclude group: "com.netflix.eureka", module: "eureka-client"
     }
+    
     api "com.sun.jersey:jersey-client:${versions.jersey}"
+    
     implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
-    implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
+    
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+    
     implementation "com.netflix.spectator:spectator-api:${versions.spectator}"
     implementation("com.netflix.eureka:eureka-client:${versions.eureka}") {
         exclude group: "javax.servlet", module: "servlet-api"
     }
     
-    implementation 'io.swagger.core.v3:swagger-annotations:2.0.0'
     implementation 'com.squareup.okhttp:okhttp:2.7.5'
     implementation 'com.squareup.okhttp:logging-interceptor:2.7.5'
+    
     implementation 'com.google.code.gson:gson:2.8.1'
+    
     implementation 'io.gsonfire:gson-fire:1.8.3'
+    
+    implementation 'io.swagger.core.v3:swagger-annotations:2.0.0'
+    
+    implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
+
     implementation 'org.threeten:threetenbp:1.3.5'
 
     // test dependencies
@@ -152,4 +161,9 @@ signing {
     }
 
     sign publishing.publications
+}
+
+
+springBoot {
+    buildInfo()
 }
