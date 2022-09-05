@@ -2,93 +2,43 @@ package io.orkes.conductor.client;
 
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.http.ApiClient;
-import io.orkes.conductor.client.http.api.TaskResourceApi;
-import io.orkes.conductor.client.http.model.Task;
-import io.orkes.conductor.client.http.model.TaskResult;
 import io.orkes.conductor.client.worker.Worker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Workers {
     private static final Logger LOGGER = LoggerFactory.getLogger(Workers.class);
 
-    private final List<Worker> workers = new ArrayList<>();
-    private String rootUri;
-    private boolean started = false;
-    private String keyId;
-    private String secret;
+    private final ApiClient apiClient;
 
-    public Workers register(String name, WorkerFn workerFn) {
-        workers.add(new Worker() {
-            @Override
-            public String getTaskDefName() {
-                return name;
-            }
+    private TaskRunnerConfigurer taskRunnerConfigurer;
 
-            @Override
-            public TaskResult execute(Task task) {
-                return workerFn.execute(task);
-            }
-        });
-        return this;
+    public Workers() {
+        this.apiClient = new ApiClient();
     }
 
-    public Workers rootUri(String rootUri) {
-        this.rootUri = rootUri;
-        return this;
+    public Workers(String basePath) {
+        this.apiClient = new ApiClient(basePath, false);
     }
 
-    public Workers keyId(String keyId) {
-        this.keyId = keyId;
-        return this;
+    public Workers(String basePath, boolean debug) {
+        this.apiClient = new ApiClient(basePath, debug);
     }
 
-    public Workers secret(String secret) {
-        this.secret = secret;
-        return this;
+    public Workers(String basePath, boolean debug, String keyId, String keySecret) {
+        this.apiClient = new ApiClient(basePath, debug, keyId, keySecret);
     }
 
-    public Workers startAll() {
-        if (started) {
-            LOGGER.warn("Workers have already been started");
-            return this;
-        }
-        LOGGER.info("Conductor Server URL: {}", rootUri);
+    public void startWorkers(List<Worker> workers) {
+        LOGGER.info("Conductor Server URL: {}", this.apiClient.getBasePath());
         LOGGER.info("Starting workers : {}", workers);
-        ApiClient apiClient = null;
-        if (keyId == null || secret == null) {
-            apiClient = new ApiClient();
-        } else {
-            apiClient = new ApiClient(
-                    rootUri,
-                    true,
-                    keyId,
-                    secret);
-        }
-        TaskResourceApi taskClient = new TaskResourceApi(apiClient);
-        TaskRunnerConfigurer runnerConfigurer = new TaskRunnerConfigurer(
-                taskClient,
-                workers);
-        started = true;
-        return this;
+        this.taskRunnerConfigurer = new TaskRunnerConfigurer(this.apiClient, workers);
     }
 
-    public void start(String name, WorkerFn workerFn) {
-        workers.add(new Worker() {
-            @Override
-            public String getTaskDefName() {
-                return name;
-            }
-
-            @Override
-            public TaskResult execute(Task task) {
-                return workerFn.execute(task);
-            }
-        });
-        startAll();
+    public void shutdown() {
+        this.taskRunnerConfigurer.shutdown();
     }
 }

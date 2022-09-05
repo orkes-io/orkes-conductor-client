@@ -73,7 +73,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/decide/{workflowId}"
+        String localVarPath = "/workflow/decide/{workflowId}"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -194,7 +194,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/remove"
+        String localVarPath = "/workflow/{workflowId}/remove"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -320,7 +320,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}"
+        String localVarPath = "/workflow/{workflowId}"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -451,7 +451,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/externalstoragelocation";
+        String localVarPath = "/workflow/externalstoragelocation";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -597,7 +597,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/running/{name}"
+        String localVarPath = "/workflow/running/{name}"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -738,7 +738,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/status"
+        String localVarPath = "/workflow/{workflowId}/status"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -875,7 +875,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{name}/correlated"
+        String localVarPath = "/workflow/{name}/correlated"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1019,7 +1019,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{name}/correlated/{correlationId}"
+        String localVarPath = "/workflow/{name}/correlated/{correlationId}"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()))
             .replaceAll("\\{" + "correlationId" + "\\}", apiClient.escapeString(correlationId.toString()));
 
@@ -1161,7 +1161,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/pause"
+        String localVarPath = "/workflow/{workflowId}/pause"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1282,7 +1282,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/rerun"
+        String localVarPath = "/workflow/{workflowId}/rerun"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1413,7 +1413,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/resetcallbacks"
+        String localVarPath = "/workflow/{workflowId}/resetcallbacks"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1534,7 +1534,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/restart"
+        String localVarPath = "/workflow/{workflowId}/restart"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1659,7 +1659,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/resume"
+        String localVarPath = "/workflow/{workflowId}/resume"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1780,7 +1780,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/retry"
+        String localVarPath = "/workflow/{workflowId}/retry"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1911,7 +1911,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/search";
+        String localVarPath = "/workflow/search";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -2066,7 +2066,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/search-v2";
+        String localVarPath = "/workflow/search-v2";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -2211,7 +2211,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/search-by-tasks";
+        String localVarPath = "/workflow/search-by-tasks";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -2356,7 +2356,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/search-by-tasks-v2";
+        String localVarPath = "/workflow/search-by-tasks-v2";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -2499,7 +2499,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/skiptask/{taskReferenceName}"
+        String localVarPath = "/workflow/{workflowId}/skiptask/{taskReferenceName}"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()))
             .replaceAll("\\{" + "taskReferenceName" + "\\}", apiClient.escapeString(taskReferenceName.toString()));
 
@@ -2636,7 +2636,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/workflow";
+        String localVarPath = "/workflow";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -2763,7 +2763,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{name}"
+        String localVarPath = "/workflow/{name}"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -2910,7 +2910,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}"
+        String localVarPath = "/workflow/{workflowId}"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -3034,7 +3034,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/document-store/upload";
+        String localVarPath = "/workflow/document-store/upload";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();

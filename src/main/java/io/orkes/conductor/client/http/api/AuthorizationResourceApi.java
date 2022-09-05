@@ -67,7 +67,7 @@ public class AuthorizationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/auth/authorization/{type}/{id}"
+        String localVarPath = "/auth/authorization/{type}/{id}"
             .replaceAll("\\{" + "type" + "\\}", apiClient.escapeString(type.toString()))
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
@@ -199,7 +199,7 @@ public class AuthorizationResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/auth/authorization";
+        String localVarPath = "/auth/authorization";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -322,7 +322,7 @@ public class AuthorizationResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/auth/authorization";
+        String localVarPath = "/auth/authorization";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();

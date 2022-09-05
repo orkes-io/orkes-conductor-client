@@ -2,6 +2,7 @@ package io.orkes.conductor.client.automator;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.orkes.conductor.client.http.ApiClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 import io.orkes.conductor.client.worker.Worker;
 
@@ -25,7 +27,8 @@ public class TaskRunnerConfigurer {
     private final List<TaskRunner> taskRunners;
     private final ScheduledExecutorService scheduledExecutorService;
 
-    public TaskRunnerConfigurer(TaskResourceApi taskClient, List<Worker> workers) {
+    public TaskRunnerConfigurer(ApiClient apiClient, List<Worker> workers) {
+        final TaskResourceApi taskClient = new TaskResourceApi(apiClient);
         taskRunners = new LinkedList<>();
         this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
         for (Worker worker : workers) {
@@ -50,8 +53,26 @@ public class TaskRunnerConfigurer {
      * shutdown of your worker, during process termination.
      */
     public void shutdown() {
-        this.taskRunners.get(0).shutdownAndAwaitTermination(scheduledExecutorService, shutdownGracePeriodSeconds);
+        this.shutdownAndAwaitTermination(this.scheduledExecutorService, this.shutdownGracePeriodSeconds);
         this.taskRunners.forEach(
-                taskRunner -> taskRunner.shutdown(shutdownGracePeriodSeconds));
+                taskRunner -> this.shutdownAndAwaitTermination(
+                        taskRunner.getExecutorService(),
+                        this.shutdownGracePeriodSeconds));
+    }
+
+    private void shutdownAndAwaitTermination(ExecutorService executorService, int timeout) {
+        try {
+            executorService.shutdown();
+            if (executorService.awaitTermination(timeout, TimeUnit.SECONDS)) {
+                LOGGER.debug("tasks completed, shutting down");
+            } else {
+                LOGGER.warn(String.format("forcing shutdown after waiting for %s second", timeout));
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException ie) {
+            LOGGER.warn("shutdown interrupted, invoking shutdownNow");
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 }

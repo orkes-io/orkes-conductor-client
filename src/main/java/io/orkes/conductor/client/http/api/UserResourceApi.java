@@ -67,7 +67,7 @@ public class UserResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/users/{id}"
+        String localVarPath = "/users/{id}"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -191,7 +191,7 @@ public class UserResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/users/{userId}/permissions"
+        String localVarPath = "/users/{userId}/permissions"
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -315,7 +315,7 @@ public class UserResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/users/{id}"
+        String localVarPath = "/users/{id}"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -439,7 +439,7 @@ public class UserResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/users";
+        String localVarPath = "/users";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -561,7 +561,7 @@ public class UserResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/users/{id}/sendInviteEmail"
+        String localVarPath = "/users/{id}/sendInviteEmail"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -689,7 +689,7 @@ public class UserResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/users/{id}"
+        String localVarPath = "/users/{id}"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();

@@ -63,7 +63,7 @@ public class VersionResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/version";
+        String localVarPath = "/version";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();

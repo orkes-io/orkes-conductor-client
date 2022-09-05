@@ -67,7 +67,7 @@ public class TagsApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/task/{taskName}/tags"
+        String localVarPath = "/metadata/task/{taskName}/tags"
             .replaceAll("\\{" + "taskName" + "\\}", apiClient.escapeString(taskName.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -199,7 +199,7 @@ public class TagsApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/workflow/{name}/tags"
+        String localVarPath = "/metadata/workflow/{name}/tags"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -331,7 +331,7 @@ public class TagsApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/task/{taskName}/tags"
+        String localVarPath = "/metadata/task/{taskName}/tags"
             .replaceAll("\\{" + "taskName" + "\\}", apiClient.escapeString(taskName.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -463,7 +463,7 @@ public class TagsApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/workflow/{name}/tags"
+        String localVarPath = "/metadata/workflow/{name}/tags"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -593,7 +593,7 @@ public class TagsApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/tags";
+        String localVarPath = "/metadata/tags";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -709,7 +709,7 @@ public class TagsApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/task/{taskName}/tags"
+        String localVarPath = "/metadata/task/{taskName}/tags"
             .replaceAll("\\{" + "taskName" + "\\}", apiClient.escapeString(taskName.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -833,7 +833,7 @@ public class TagsApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/workflow/{name}/tags"
+        String localVarPath = "/metadata/workflow/{name}/tags"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -958,7 +958,7 @@ public class TagsApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/task/{taskName}/tags"
+        String localVarPath = "/metadata/task/{taskName}/tags"
             .replaceAll("\\{" + "taskName" + "\\}", apiClient.escapeString(taskName.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1090,7 +1090,7 @@ public class TagsApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/workflow/{name}/tags"
+        String localVarPath = "/metadata/workflow/{name}/tags"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();

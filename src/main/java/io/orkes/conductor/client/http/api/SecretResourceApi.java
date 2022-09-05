@@ -64,7 +64,7 @@ public class SecretResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/secrets/{key}"
+        String localVarPath = "/secrets/{key}"
             .replaceAll("\\{" + "key" + "\\}", apiClient.escapeString(key.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -188,7 +188,7 @@ public class SecretResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/secrets/{key}"
+        String localVarPath = "/secrets/{key}"
             .replaceAll("\\{" + "key" + "\\}", apiClient.escapeString(key.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -311,7 +311,7 @@ public class SecretResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/secrets";
+        String localVarPath = "/secrets";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -426,7 +426,7 @@ public class SecretResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/secrets";
+        String localVarPath = "/secrets";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -543,7 +543,7 @@ public class SecretResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/secrets/{key}"
+        String localVarPath = "/secrets/{key}"
             .replaceAll("\\{" + "key" + "\\}", apiClient.escapeString(key.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -674,7 +674,7 @@ public class SecretResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/secrets/{key}/exists"
+        String localVarPath = "/secrets/{key}/exists"
             .replaceAll("\\{" + "key" + "\\}", apiClient.escapeString(key.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();

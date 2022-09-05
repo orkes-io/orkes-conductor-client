@@ -1233,7 +1233,7 @@ public class ApiClient {
                 .keyId(keyId)
                 .keySecret(keySecret);
         Request request = this.buildRequest(
-                "/api/token",
+                "/token",
                 "POST",
                 null,
                 null,

@@ -63,6 +63,10 @@ class TaskRunner {
         }
     }
 
+    public ExecutorService getExecutorService() {
+        return this.executorService;
+    }
+
     private List<Task> pollTasks() {
         List<Task> tasks = new LinkedList<>();
         if (worker.paused()) {
@@ -232,25 +236,5 @@ class TaskRunner {
         t.printStackTrace(new PrintWriter(stringWriter));
         result.addLogsItem(new TaskExecLog().log(stringWriter.toString()));
         updateTaskResult(updateRetryCount, task, result);
-    }
-
-    void shutdownAndAwaitTermination(ExecutorService executorService, int timeout) {
-        try {
-            executorService.shutdown();
-            if (executorService.awaitTermination(timeout, TimeUnit.SECONDS)) {
-                LOGGER.debug("tasks completed, shutting down");
-            } else {
-                LOGGER.warn(String.format("forcing shutdown after waiting for %s second", timeout));
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException ie) {
-            LOGGER.warn("shutdown interrupted, invoking shutdownNow");
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    void shutdown(int timeout) {
-        shutdownAndAwaitTermination(this.executorService, timeout);
     }
 }

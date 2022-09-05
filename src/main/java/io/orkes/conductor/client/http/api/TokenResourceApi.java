@@ -66,7 +66,7 @@ public class TokenResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/token";
+        String localVarPath = "/token";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -188,7 +188,7 @@ public class TokenResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/token/userInfo";
+        String localVarPath = "/token/userInfo";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();

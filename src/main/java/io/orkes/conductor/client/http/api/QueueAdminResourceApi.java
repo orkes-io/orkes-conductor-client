@@ -63,7 +63,7 @@ public class QueueAdminResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/queue/";
+        String localVarPath = "/queue/";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -178,7 +178,7 @@ public class QueueAdminResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/queue/size";
+        String localVarPath = "/queue/size";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -297,7 +297,7 @@ public class QueueAdminResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/queue/update/{workflowId}/{taskRefName}/{status}"
+        String localVarPath = "/queue/update/{workflowId}/{taskRefName}/{status}"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()))
             .replaceAll("\\{" + "taskRefName" + "\\}", apiClient.escapeString(taskRefName.toString()))
             .replaceAll("\\{" + "status" + "\\}", apiClient.escapeString(status.toString()));
@@ -443,7 +443,7 @@ public class QueueAdminResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/queue/update/{workflowId}/task/{taskId}/{status}"
+        String localVarPath = "/queue/update/{workflowId}/task/{taskId}/{status}"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()))
             .replaceAll("\\{" + "taskId" + "\\}", apiClient.escapeString(taskId.toString()))
             .replaceAll("\\{" + "status" + "\\}", apiClient.escapeString(status.toString()));

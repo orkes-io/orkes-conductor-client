@@ -65,7 +65,7 @@ public class WorkflowBulkResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/bulk/pause";
+        String localVarPath = "/workflow/bulk/pause";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -189,7 +189,7 @@ public class WorkflowBulkResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/bulk/restart";
+        String localVarPath = "/workflow/bulk/restart";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -317,7 +317,7 @@ public class WorkflowBulkResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/bulk/resume";
+        String localVarPath = "/workflow/bulk/resume";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -440,7 +440,7 @@ public class WorkflowBulkResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/bulk/retry";
+        String localVarPath = "/workflow/bulk/retry";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -564,7 +564,7 @@ public class WorkflowBulkResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/workflow/bulk/terminate";
+        String localVarPath = "/workflow/bulk/terminate";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
