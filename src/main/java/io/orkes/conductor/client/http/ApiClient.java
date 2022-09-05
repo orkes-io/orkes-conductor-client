@@ -57,7 +57,6 @@ public class ApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
 
     private final String basePath;
-    private final boolean debugging;
     private final Map<String, String> defaultHeaderMap = new HashMap<String, String>();
     private String tempFolderPath = null;
 
@@ -77,16 +76,11 @@ public class ApiClient {
      */
 
     public ApiClient() {
-        this("https://play.orkes.io/api", false);
+        this("https://play.orkes.io/api");
     }
 
-    public ApiClient(boolean debugging) {
-        this("https://play.orkes.io/api", debugging);
-    }
-
-    public ApiClient(String basePath, boolean debugging) {
+    public ApiClient(String basePath) {
         this.basePath = basePath;
-        this.debugging = debugging;
 
         httpClient = new OkHttpClient();
 
@@ -101,8 +95,8 @@ public class ApiClient {
         authentications = new HashMap<String, Authentication>();
     }
 
-    public ApiClient(String basePath, boolean debugging, String keyId, String keySecret) {
-        this(basePath, debugging);
+    public ApiClient(String basePath, String keyId, String keySecret) {
+        this(basePath);
         try {
             final String token = this.getNewToken(keyId, keySecret);
             authentications.put(
@@ -372,15 +366,6 @@ public class ApiClient {
     public ApiClient addDefaultHeader(String key, String value) {
         defaultHeaderMap.put(key, value);
         return this;
-    }
-
-    /**
-     * Check that whether debugging is enabled for this API client.
-     *
-     * @return True if debugging is enabled, false otherwise.
-     */
-    public boolean isDebugging() {
-        return debugging;
     }
 
     /**
