@@ -36,8 +36,8 @@ ext {
 group = 'io.orkes.conductor'
 
 dependencies {
-    api "com.netflix.conductor:conductor-common:${versions.conductor}"
-    api("com.netflix.conductor:conductor-client:${versions.conductor}") {
+    implementation "com.netflix.conductor:conductor-common:${versions.conductor}"
+    implementation("com.netflix.conductor:conductor-client:${versions.conductor}") {
         exclude group: "com.netflix.eureka", module: "eureka-client"
     }
     

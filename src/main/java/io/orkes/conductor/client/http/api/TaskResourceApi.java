@@ -12,6 +12,8 @@
 
 package io.orkes.conductor.client.http.api;
 
+import com.netflix.conductor.common.metadata.tasks.Task;
+import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import io.orkes.conductor.client.http.ApiCallback;
 import io.orkes.conductor.client.http.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
@@ -30,9 +32,7 @@ import io.orkes.conductor.client.http.model.ExternalStorageLocation;
 import io.orkes.conductor.client.http.model.PollData;
 import io.orkes.conductor.client.http.model.SearchResultTask;
 import io.orkes.conductor.client.http.model.SearchResultTaskSummary;
-import io.orkes.conductor.client.http.model.Task;
 import io.orkes.conductor.client.http.model.TaskExecLog;
-import io.orkes.conductor.client.http.model.TaskResult;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
