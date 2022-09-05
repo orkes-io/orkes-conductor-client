@@ -1,8 +1,5 @@
-import com.netflix.conductor.client.http.MetadataClient;
 import io.orkes.conductor.client.http.ApiClient;
 import io.orkes.conductor.client.http.api.*;
-import io.orkes.conductor.client.http.model.Group;
-import org.eclipse.jetty.webapp.AbsoluteOrdering;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +43,6 @@ public class Examples {
     @Test
     @DisplayName("tag a user and group")
     public void tagUserAndGroup() {
-            tagsApi.
     }
 
     @Test
