@@ -25,7 +25,7 @@ public class Examples {
 
     @BeforeAll
     public void init() {
-        ApiClient apiClient = new ApiClient("https://play.orkes.io/api", false, keyId, keySecret);
+        ApiClient apiClient = new ApiClient("https://play.orkes.io/api", keyId, keySecret);
         metadataResourceApi = new MetadataResourceApi(apiClient);
         groupResourceApi = new GroupResourceApi(apiClient);
         applicationResourceApi = new ApplicationResourceApi(apiClient);

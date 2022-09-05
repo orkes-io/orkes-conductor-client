@@ -15,6 +15,7 @@ package io.orkes.conductor.client.http.model;
 import java.util.Objects;
 
 import com.google.gson.annotations.SerializedName;
+import com.netflix.conductor.common.metadata.tasks.Task;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.ArrayList;

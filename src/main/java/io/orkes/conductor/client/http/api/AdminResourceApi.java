@@ -12,6 +12,7 @@
 
 package io.orkes.conductor.client.http.api;
 
+import com.netflix.conductor.common.metadata.tasks.Task;
 import io.orkes.conductor.client.http.ApiCallback;
 import io.orkes.conductor.client.http.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
