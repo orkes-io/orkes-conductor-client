@@ -20,9 +20,9 @@ class WorkersTest {
             task.getOutputData().put("key2", 42);
             return new TaskResult(task);
         });
-        workers.rootUri("https://pg-staging.orkesconductor.com/api");
-        workers.keyId("key");
-        workers.secret("secret");
+        workers.rootUri("http://localhost:8080/api");
+        workers.keyId("");
+        workers.secret("");
 
 
 

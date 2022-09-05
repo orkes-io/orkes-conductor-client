@@ -11,14 +11,14 @@ import java.util.Map;
 public class WorkflowClientTest {
 
     public static void main(String[] args) {
-        ApiClient apiClient = new ApiClient("https://pg-staging.orkesconductor.com/api","key", "secret");
+        ApiClient apiClient = new ApiClient();
         WorkflowResourceApi workflowClient = new WorkflowResourceApi(apiClient);
         StartWorkflowRequest request = new StartWorkflowRequest();
         request.setCorrelationId("virenx");
         Map<String, Object> input = new HashMap<>();
         input.put("input_key", "input value");
         request.setInput(input);
-        request.setName("load_test");
+        request.setName("http_perf_test");
         String workflowId = workflowClient.startWorkflow(request);
         System.out.println("workflow Id " + workflowId);
 

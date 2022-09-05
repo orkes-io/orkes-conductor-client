@@ -17,6 +17,7 @@ import com.squareup.okhttp.internal.http.HttpMethod;
 import io.orkes.conductor.client.http.api.TokenResourceApi;
 import okio.BufferedSink;
 import okio.Okio;
+import org.apache.commons.lang3.StringUtils;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
@@ -77,7 +78,7 @@ public class ApiClient {
      */
 
     public ApiClient() {
-        this("https://play.orkes.io/api");
+        this("http://localhost:8080/api");
     }
 
     public ApiClient(String basePath) {
@@ -89,9 +90,6 @@ public class ApiClient {
 
         json = new JSON();
 
-        // Set default User-Agent.
-        setUserAgent("Swagger-Codegen/1.0.0/java");
-
         // Setup authentications (key: authentication name, value: authentication).
         authentications = new HashMap<String, Authentication>();
     }
@@ -99,12 +97,13 @@ public class ApiClient {
     public ApiClient(String basePath, String keyId, String keySecret) {
         this(basePath);
         try {
-            final String token = this.getNewToken(keyId, keySecret);
-            ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
-            apiKeyAuth.setApiKey(token);
-            authentications.put("api_key", apiKeyAuth);
+            if (StringUtils.isNotBlank(keyId) && StringUtils.isNotBlank(keySecret)) {
+                final String token = this.getNewToken(keyId, keySecret);
+                ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
+                apiKeyAuth.setApiKey(token);
+                authentications.put("api_key", apiKeyAuth);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
             LOGGER.error("Failed to refresh token {}", e.getMessage(), e);
         }
     }
