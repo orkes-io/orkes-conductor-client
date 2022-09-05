@@ -22,6 +22,7 @@ public class Workers {
     private String keyId;
     private String secret;
 
+
     public Workers register(String name, WorkerFn workerFn) {
         workers.add(new Worker() {
             @Override
@@ -32,6 +33,11 @@ public class Workers {
             @Override
             public TaskResult execute(Task task) {
                 return workerFn.execute(task);
+            }
+
+            @Override
+            public int getPollingInterval() {
+                return 100;
             }
         });
         return this;
@@ -61,15 +67,17 @@ public class Workers {
             LOGGER.info("Conductor Server URL: {}", rootUri);
             LOGGER.info("Starting workers : {}", workers);
 
-            TaskResourceApi taskClient = new TaskResourceApi();
+
             ApiClient apiClient = new ApiClient(rootUri);
             if (keyId != null && secret != null) {
                 apiClient = new ApiClient(rootUri, keyId, secret);
             }
+            TaskResourceApi taskClient = new TaskResourceApi(apiClient);
 
             TaskRunnerConfigurer runnerConfigurer = new TaskRunnerConfigurer
                     .Builder(taskClient, workers)
                     .withThreadCount(Math.max(1, workers.size()))
+                    .withTaskPollTimeout(100)
                     .build();
             runnerConfigurer.init();
             started = true;

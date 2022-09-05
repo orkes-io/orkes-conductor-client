@@ -23,7 +23,7 @@ public class Examples {
     String keyId = "keyId";
     String keySecret = "keySecret";
 
-    @BeforeAll
+    @BeforeEach
     public void init() {
         ApiClient apiClient = new ApiClient("https://play.orkes.io/api", keyId, keySecret);
         metadataResourceApi = new MetadataResourceApi(apiClient);

@@ -2,7 +2,10 @@ package io.orkes.conductor.client.automator;
 
 import com.google.common.base.Stopwatch;
 import com.netflix.appinfo.InstanceInfo;
+import com.netflix.conductor.client.config.ConductorClientConfiguration;
+import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
 import com.netflix.conductor.client.config.PropertyFactory;
+import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.telemetry.MetricsContainer;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -11,6 +14,8 @@ import com.netflix.discovery.EurekaClient;
 import com.netflix.spectator.api.Registry;
 import com.netflix.spectator.api.Spectator;
 import com.netflix.spectator.api.patterns.ThreadPoolMonitor;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
@@ -41,9 +46,13 @@ class TaskRunner {
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
     private static final String ALL_WORKERS = "all";
 
+    //used or managing external payload
+    private TaskClient taskClientForExternalPayload;
+
     TaskRunner(
             EurekaClient eurekaClient,
             TaskResourceApi taskClient,
+            ConductorClientConfiguration conductorClientConfiguration,
             int updateRetryCount,
             Map<String, String> taskToDomain,
             String workerNamePrefix,
@@ -55,6 +64,7 @@ class TaskRunner {
         this.taskToDomain = taskToDomain;
         this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
+        this.taskClientForExternalPayload = new TaskClient(new DefaultClientConfig(), conductorClientConfiguration, null);
         this.executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(
                 threadCount,
                 new BasicThreadFactory.Builder()
@@ -88,6 +98,7 @@ class TaskRunner {
     }
 
     private List<Task> pollTasksForWorker(Worker worker) {
+        LOGGER.info("Polling for {}", worker.getTaskDefName());
         List<Task> tasks = new LinkedList<>();
         Boolean discoveryOverride = Optional.ofNullable(
                         PropertyFactory.getBoolean(
@@ -133,7 +144,10 @@ class TaskRunner {
                     tasks.add(task);
                 }
             }
-        } catch (Exception e) {
+        } catch (ApiException ae) {
+            MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), ae);
+            LOGGER.error("Error when polling for tasks {} - {}", ae.getCode(), ae.getResponseBody(), ae);
+        }catch (Exception e) {
             MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), e);
             LOGGER.error("Error when polling for tasks", e);
         }
@@ -253,8 +267,7 @@ class TaskRunner {
 
     private Optional<String> upload(TaskResult result, String taskType) {
         try {
-            //return evaluateAndUploadLargePayload(result.getOutputData(), taskType);
-            throw new UnsupportedOperationException("external payload storage is not yet supported.  Please use Netflix/Conductor/client");
+            return taskClientForExternalPayload.evaluateAndUploadLargePayload(result.getOutputData(), taskType);
         } catch (IllegalArgumentException iae) {
             result.setReasonForIncompletion(iae.getMessage());
             result.setOutputData(null);

@@ -14,6 +14,7 @@ package io.orkes.conductor.client.http;
 
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
+import io.orkes.conductor.client.http.api.TokenResourceApi;
 import okio.BufferedSink;
 import okio.Okio;
 import org.threeten.bp.LocalDate;
@@ -99,13 +100,12 @@ public class ApiClient {
         this(basePath);
         try {
             final String token = this.getNewToken(keyId, keySecret);
-            authentications.put(
-                    token,
-                    new ApiKeyAuth(
-                            "header",
-                            "X-Authorization"));
+            ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
+            apiKeyAuth.setApiKey(token);
+            authentications.put("api_key", apiKeyAuth);
         } catch (Exception e) {
-            LOGGER.info("Failed to refresh token");
+            e.printStackTrace();
+            LOGGER.error("Failed to refresh token {}", e.getMessage(), e);
         }
     }
 
@@ -1220,15 +1220,15 @@ public class ApiClient {
         Request request = this.buildRequest(
                 "/token",
                 "POST",
-                null,
-                null,
+                Collections.emptyList(),
+                Collections.emptyList(),
                 generateTokenRequest,
-                null,
-                null,
-                null,
+                Collections.emptyMap(),
+                Collections.emptyMap(),
+                new String[0],
                 null);
         Call call = httpClient.newCall(request);
-        Response response = call.execute();
-        return response.body().string();
+        ApiResponse<Map<String, String>> response = execute(call, Map.class);
+        return response.getData().get("token");
     }
 }

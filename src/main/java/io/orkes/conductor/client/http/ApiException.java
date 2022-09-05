@@ -86,4 +86,9 @@ public class ApiException extends RuntimeException {
     public String getResponseBody() {
         return responseBody;
     }
+
+    @Override
+    public String getMessage() {
+        return getCode() + ":" + responseBody;
+    }
 }

@@ -1,6 +1,8 @@
 package io.orkes.conductor.client.automator;
 
 import com.google.common.base.Preconditions;
+import com.netflix.conductor.client.config.ConductorClientConfiguration;
+import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
 import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.discovery.EurekaClient;
@@ -28,13 +30,16 @@ public class TaskRunnerConfigurer {
     private final String workerNamePrefix;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
     private final Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount;
-    private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskToTimeout;
+    private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout;
 
+    private final ConductorClientConfiguration conductorClientConfiguration;
+    private Integer defaultPollTimeout;
     private final int threadCount;
 
     private final List<TaskRunner> taskRunners;
 
     private ScheduledExecutorService scheduledExecutorService;
+
 
     /**
      * @see TaskRunnerConfigurer.Builder
@@ -48,8 +53,10 @@ public class TaskRunnerConfigurer {
         this.workerNamePrefix = builder.workerNamePrefix;
         this.taskToDomain = builder.taskToDomain;
         this.taskToThreadCount = builder.taskToThreadCount;
-        this.taskToTimeout = builder.taskToTimeout;
+        this.taskPollTimeout = builder.taskPollTimeout;
+        this.defaultPollTimeout = builder.defaultPollTimeout;
         this.shutdownGracePeriodSeconds = builder.shutdownGracePeriodSeconds;
+        this.conductorClientConfiguration = builder.conductorClientConfiguration;
         this.workers = new LinkedList<>();
         this.threadCount = builder.threadCount;
         builder.workers.forEach(this.workers::add);
@@ -68,7 +75,10 @@ public class TaskRunnerConfigurer {
         private final TaskResourceApi taskClient;
         private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
         private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount = new HashMap<>();
-        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskToTimeout = new HashMap<>();
+        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout = new HashMap<>();
+
+        private ConductorClientConfiguration conductorClientConfiguration = new DefaultConductorClientConfiguration();
+        private Integer defaultPollTimeout;
 
         public Builder(TaskResourceApi taskClient, Iterable<Worker> workers) {
             Preconditions.checkNotNull(taskClient, "TaskClient cannot be null");
@@ -109,6 +119,17 @@ public class TaskRunnerConfigurer {
             this.updateRetryCount = updateRetryCount;
             return this;
         }
+
+        /**
+         *
+         * @param conductorClientConfiguration client configuration to handle external payloads
+         * @return Builder instance
+         */
+        public TaskRunnerConfigurer.Builder withConductorClientConfiguration(ConductorClientConfiguration conductorClientConfiguration) {
+            this.conductorClientConfiguration = conductorClientConfiguration;
+            return this;
+        }
+
 
         /**
          * @param shutdownGracePeriodSeconds waiting seconds before forcing shutdown of
@@ -153,8 +174,13 @@ public class TaskRunnerConfigurer {
         }
 
 
-        public TaskRunnerConfigurer.Builder withTaskToTimeout(Map<String, Integer> taskToTimeout) {
-            this.taskToTimeout = taskToTimeout;
+        public TaskRunnerConfigurer.Builder withTaskPollTimeout(Map<String, Integer> taskPollTimeout) {
+            this.taskPollTimeout = taskPollTimeout;
+            return this;
+        }
+
+        public TaskRunnerConfigurer.Builder withTaskPollTimeout(Integer taskPollTimeout) {
+            this.defaultPollTimeout = taskPollTimeout;
             return this;
         }
 
@@ -236,16 +262,17 @@ public class TaskRunnerConfigurer {
     }
 
     private void startWorker(Worker worker) {
-        LOGGER.warn("Starting worker: {} with ", worker.getTaskDefName());
+        LOGGER.info("Starting worker: {} with ", worker.getTaskDefName());
         final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(
                 worker.getTaskDefName(),
-                1);
-        final Integer taskPollTimeout = this.taskToTimeout.getOrDefault(
+                threadCount);
+        final Integer taskPollTimeout = this.taskPollTimeout.getOrDefault(
                 worker.getTaskDefName(),
-                5000);
+                defaultPollTimeout);
         final TaskRunner taskRunner = new TaskRunner(
                 eurekaClient,
                 taskClient,
+                conductorClientConfiguration,
                 updateRetryCount,
                 taskToDomain,
                 workerNamePrefix,
