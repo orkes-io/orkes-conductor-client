@@ -65,7 +65,7 @@ public class EventResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/event";
+        String localVarPath = "/event";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -185,7 +185,7 @@ public class EventResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/event/queue/config/{queueType}/{queueName}"
+        String localVarPath = "/event/queue/config/{queueType}/{queueName}"
             .replaceAll("\\{" + "queueType" + "\\}", apiClient.escapeString(queueType.toString()))
             .replaceAll("\\{" + "queueName" + "\\}", apiClient.escapeString(queueName.toString()));
 
@@ -316,7 +316,7 @@ public class EventResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/event";
+        String localVarPath = "/event";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -433,7 +433,7 @@ public class EventResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/event/{event}"
+        String localVarPath = "/event/{event}"
             .replaceAll("\\{" + "event" + "\\}", apiClient.escapeString(event.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -563,7 +563,7 @@ public class EventResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/event/queue/config/{queueType}/{queueName}"
+        String localVarPath = "/event/queue/config/{queueType}/{queueName}"
             .replaceAll("\\{" + "queueType" + "\\}", apiClient.escapeString(queueType.toString()))
             .replaceAll("\\{" + "queueName" + "\\}", apiClient.escapeString(queueName.toString()));
 
@@ -694,7 +694,7 @@ public class EventResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/event/queue/config";
+        String localVarPath = "/event/queue/config";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -812,7 +812,7 @@ public class EventResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/event/queue/config/{queueType}/{queueName}"
+        String localVarPath = "/event/queue/config/{queueType}/{queueName}"
             .replaceAll("\\{" + "queueType" + "\\}", apiClient.escapeString(queueType.toString()))
             .replaceAll("\\{" + "queueName" + "\\}", apiClient.escapeString(queueName.toString()));
 
@@ -951,7 +951,7 @@ public class EventResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/event/{name}"
+        String localVarPath = "/event/{name}"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1071,7 +1071,7 @@ public class EventResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/event";
+        String localVarPath = "/event";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();

@@ -162,8 +162,3 @@ signing {
 
     sign publishing.publications
 }
-
-
-springBoot {
-    buildInfo()
-}

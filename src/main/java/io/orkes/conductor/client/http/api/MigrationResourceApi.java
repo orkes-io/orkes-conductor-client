@@ -63,7 +63,7 @@ public class MigrationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/admin/migrate_index";
+        String localVarPath = "/admin/migrate_index";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -178,7 +178,7 @@ public class MigrationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/admin/migrate_metadata";
+        String localVarPath = "/admin/migrate_metadata";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -291,7 +291,7 @@ public class MigrationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/admin/migrate_workflow";
+        String localVarPath = "/admin/migrate_workflow";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();

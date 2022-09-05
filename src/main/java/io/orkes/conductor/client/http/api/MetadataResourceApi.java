@@ -67,7 +67,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/workflow";
+        String localVarPath = "/metadata/workflow";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -197,7 +197,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/workflow/{name}"
+        String localVarPath = "/metadata/workflow/{name}"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -334,7 +334,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/workflow";
+        String localVarPath = "/metadata/workflow";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -471,7 +471,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/taskdefs/{tasktype}"
+        String localVarPath = "/metadata/taskdefs/{tasktype}"
             .replaceAll("\\{" + "tasktype" + "\\}", apiClient.escapeString(tasktype.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -603,7 +603,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/taskdefs";
+        String localVarPath = "/metadata/taskdefs";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -739,7 +739,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/taskdefs";
+        String localVarPath = "/metadata/taskdefs";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -862,7 +862,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/taskdefs/{tasktype}"
+        String localVarPath = "/metadata/taskdefs/{tasktype}"
             .replaceAll("\\{" + "tasktype" + "\\}", apiClient.escapeString(tasktype.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -983,7 +983,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/workflow/{name}/{version}"
+        String localVarPath = "/metadata/workflow/{name}/{version}"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()))
             .replaceAll("\\{" + "version" + "\\}", apiClient.escapeString(version.toString()));
 
@@ -1112,7 +1112,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/workflow";
+        String localVarPath = "/metadata/workflow";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1240,7 +1240,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/metadata/taskdefs";
+        String localVarPath = "/metadata/taskdefs";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();

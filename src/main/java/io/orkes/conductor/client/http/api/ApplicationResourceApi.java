@@ -67,7 +67,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/applications/{applicationId}/roles/{role}"
+        String localVarPath = "/applications/{applicationId}/roles/{role}"
             .replaceAll("\\{" + "applicationId" + "\\}", apiClient.escapeString(applicationId.toString()))
             .replaceAll("\\{" + "role" + "\\}", apiClient.escapeString(role.toString()));
 
@@ -199,7 +199,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/applications/{id}/accessKeys"
+        String localVarPath = "/applications/{id}/accessKeys"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -323,7 +323,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/applications";
+        String localVarPath = "/applications";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -447,7 +447,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/applications/{applicationId}/accessKeys/{keyId}"
+        String localVarPath = "/applications/{applicationId}/accessKeys/{keyId}"
             .replaceAll("\\{" + "applicationId" + "\\}", apiClient.escapeString(applicationId.toString()))
             .replaceAll("\\{" + "keyId" + "\\}", apiClient.escapeString(keyId.toString()));
 
@@ -579,7 +579,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/applications/{id}"
+        String localVarPath = "/applications/{id}"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -703,7 +703,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/applications/{id}/accessKeys"
+        String localVarPath = "/applications/{id}/accessKeys"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -827,7 +827,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/applications/{id}"
+        String localVarPath = "/applications/{id}"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -950,7 +950,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/applications";
+        String localVarPath = "/applications";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1067,7 +1067,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/applications/{applicationId}/roles/{role}"
+        String localVarPath = "/applications/{applicationId}/roles/{role}"
             .replaceAll("\\{" + "applicationId" + "\\}", apiClient.escapeString(applicationId.toString()))
             .replaceAll("\\{" + "role" + "\\}", apiClient.escapeString(role.toString()));
 
@@ -1200,7 +1200,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/applications/{applicationId}/accessKeys/{keyId}/status"
+        String localVarPath = "/applications/{applicationId}/accessKeys/{keyId}/status"
             .replaceAll("\\{" + "applicationId" + "\\}", apiClient.escapeString(applicationId.toString()))
             .replaceAll("\\{" + "keyId" + "\\}", apiClient.escapeString(keyId.toString()));
 
@@ -1333,7 +1333,7 @@ public class ApplicationResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/applications/{id}"
+        String localVarPath = "/applications/{id}"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();

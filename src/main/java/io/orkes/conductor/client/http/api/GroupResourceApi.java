@@ -68,7 +68,7 @@ public class GroupResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/groups/{groupId}/users/{userId}"
+        String localVarPath = "/groups/{groupId}/users/{userId}"
             .replaceAll("\\{" + "groupId" + "\\}", apiClient.escapeString(groupId.toString()))
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId.toString()));
 
@@ -200,7 +200,7 @@ public class GroupResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/groups/{id}"
+        String localVarPath = "/groups/{id}"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -324,7 +324,7 @@ public class GroupResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/groups/{groupId}/permissions"
+        String localVarPath = "/groups/{groupId}/permissions"
             .replaceAll("\\{" + "groupId" + "\\}", apiClient.escapeString(groupId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -448,7 +448,7 @@ public class GroupResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/groups/{id}"
+        String localVarPath = "/groups/{id}"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -572,7 +572,7 @@ public class GroupResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/groups/{id}/users"
+        String localVarPath = "/groups/{id}/users"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -695,7 +695,7 @@ public class GroupResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/groups";
+        String localVarPath = "/groups";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -812,7 +812,7 @@ public class GroupResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/groups/{groupId}/users/{userId}"
+        String localVarPath = "/groups/{groupId}/users/{userId}"
             .replaceAll("\\{" + "groupId" + "\\}", apiClient.escapeString(groupId.toString()))
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId.toString()));
 
@@ -945,7 +945,7 @@ public class GroupResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/groups/{id}"
+        String localVarPath = "/groups/{id}"
             .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();

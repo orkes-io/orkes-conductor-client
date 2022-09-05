@@ -67,7 +67,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/schedules/{name}"
+        String localVarPath = "/scheduler/schedules/{name}"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -191,7 +191,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/schedules";
+        String localVarPath = "/scheduler/schedules";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -315,7 +315,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/nextFewSchedules";
+        String localVarPath = "/scheduler/nextFewSchedules";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -455,7 +455,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/schedules/{name}"
+        String localVarPath = "/scheduler/schedules/{name}"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -578,7 +578,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/admin/pause";
+        String localVarPath = "/scheduler/admin/pause";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -694,7 +694,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/schedules/{name}/pause"
+        String localVarPath = "/scheduler/schedules/{name}/pause"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -817,7 +817,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/admin/requeue";
+        String localVarPath = "/scheduler/admin/requeue";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -932,7 +932,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/admin/resume";
+        String localVarPath = "/scheduler/admin/resume";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1048,7 +1048,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/schedules/{name}/resume"
+        String localVarPath = "/scheduler/schedules/{name}/resume"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1172,7 +1172,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/schedules";
+        String localVarPath = "/scheduler/schedules";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1299,7 +1299,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/search/executions";
+        String localVarPath = "/scheduler/search/executions";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1439,7 +1439,7 @@ public class SchedulerResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/scheduler/test/timeout";
+        String localVarPath = "/scheduler/test/timeout";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();

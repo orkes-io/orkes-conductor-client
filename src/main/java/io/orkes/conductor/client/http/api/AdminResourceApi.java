@@ -65,7 +65,7 @@ public class AdminResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/admin/queues";
+        String localVarPath = "/admin/queues";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -185,7 +185,7 @@ public class AdminResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/admin/redisUsage";
+        String localVarPath = "/admin/redisUsage";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -301,7 +301,7 @@ public class AdminResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/admin/sweep/requeue/{workflowId}"
+        String localVarPath = "/admin/sweep/requeue/{workflowId}"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -425,7 +425,7 @@ public class AdminResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/admin/consistency/verifyAndRepair/{workflowId}"
+        String localVarPath = "/admin/consistency/verifyAndRepair/{workflowId}"
             .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -551,7 +551,7 @@ public class AdminResourceApi {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/api/admin/task/{tasktype}"
+        String localVarPath = "/admin/task/{tasktype}"
             .replaceAll("\\{" + "tasktype" + "\\}", apiClient.escapeString(tasktype.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
