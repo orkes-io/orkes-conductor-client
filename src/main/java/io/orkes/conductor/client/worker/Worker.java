@@ -12,8 +12,6 @@ import com.netflix.conductor.client.config.PropertyFactory;
 import io.orkes.conductor.client.http.model.Task;
 import io.orkes.conductor.client.http.model.TaskResult;
 
-import com.amazonaws.util.EC2MetadataUtils;
-
 public interface Worker {
 
     /**
@@ -65,11 +63,6 @@ public interface Worker {
             serverId = InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e) {
             serverId = System.getenv("HOSTNAME");
-        }
-        if (serverId == null) {
-            serverId = (EC2MetadataUtils.getInstanceId() == null)
-                    ? System.getProperty("user.name")
-                    : EC2MetadataUtils.getInstanceId();
         }
         LoggerHolder.logger.debug("Setting worker id to {}", serverId);
         return serverId;
