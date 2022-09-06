@@ -13,6 +13,8 @@
 package io.orkes.conductor.client;
 
 import io.orkes.conductor.client.http.model.*;
+import io.orkes.conductor.client.http.model.UpsertGroupRequest.RolesEnum;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,11 +22,19 @@ import org.junit.jupiter.api.Test;
 import io.orkes.conductor.client.http.ApiClient;
 import io.orkes.conductor.client.http.api.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Examples {
+    private static final String ENV_ROOT_URI = "SDK_INTEGRATION_TESTS_SERVER_API_URL";
+    private static final String ENV_SECRET = "SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
+    private static final String ENV_KEY_ID = "SDK_INTEGRATION_TESTS_SERVER_KEY_ID";
 
     MetadataResourceApi metadataResourceApi;
     GroupResourceApi groupResourceApi;
@@ -44,7 +54,7 @@ public class Examples {
 
     @BeforeEach
     public void init() {
-        ApiClient apiClient = new ApiClient("https://play.orkes.io/api", keyId, keySecret);
+        ApiClient apiClient = getApiClientWithCredentials();
         metadataResourceApi = new MetadataResourceApi(apiClient);
         groupResourceApi = new GroupResourceApi(apiClient);
         applicationResourceApi = new ApplicationResourceApi(apiClient);
@@ -75,7 +85,6 @@ public class Examples {
         tagObject.setValue("account");
         tagsApi.addTaskTag(tagObject, taskName);
 
-
         // Tag a workflow
         tagsApi.addWorkflowTag(tagObject, workflowName);
     }
@@ -83,15 +92,15 @@ public class Examples {
     @Test
     @DisplayName("add auth to tags")
     public void addAuthToTags() {
-        //Create a tag
+        // Create a tag
         TagObject tagObject = new TagObject();
         tagObject.setKey("department");
         tagObject.setValue("HR");
 
-        //Add auth to tags
+        // Add auth to tags
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
         authorizationRequest.access(Arrays.asList(AuthorizationRequest.AccessEnum.EXECUTE));
-//        authorizationResourceApi.grantPermissions();
+        // authorizationResourceApi.grantPermissions();
     }
 
     @Test
@@ -133,9 +142,10 @@ public class Examples {
     @Test
     @DisplayName("auto assign group permission on workflow creation by any group member")
     public void autoAssignWorkflowPermissions() {
-
+        giveApplicationPermissions("46f0bf10-b59d-4fbd-a053-935307c8cb86");
+        Group group = groupResourceApi.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
+        validateGroupPermissions(group.getId());
     }
-
 
     WorkflowDef getWorkflowDef(String workflowName, String taskName) {
         WorkflowDef workflowDef = new WorkflowDef();
@@ -146,5 +156,50 @@ public class Examples {
         workflowTask.setName(taskName);
         workflowDef.setTasks(Arrays.asList(workflowTask));
         return workflowDef;
+    }
+
+    void giveApplicationPermissions(String applicationId) {
+        applicationResourceApi.addRoleToApplicationUser(applicationId, "ADMIN");
+    }
+
+    void validateGroupPermissions(String id) {
+        Group group = groupResourceApi.getGroup(id);
+        for (Map.Entry<String, List<String>> entry : group.getDefaultAccess().entrySet()) {
+            List<String> expectedList = new ArrayList<>(getAccessListAll());
+            List<String> actualList = new ArrayList<>(entry.getValue());
+            Collections.sort(expectedList);
+            Collections.sort(actualList);
+            assertEquals(expectedList, actualList);
+        }
+    }
+
+    UpsertGroupRequest getUpsertGroupRequest() {
+        return new UpsertGroupRequest()
+                .defaultAccess(
+                        Map.of(
+                                "WORKFLOW_DEF", getAccessListAll(),
+                                "TASK_DEF", getAccessListAll()))
+                .description("Group used for SDK testing")
+                .roles(List.of(RolesEnum.ADMIN));
+    }
+
+    List<String> getAccessListAll() {
+        return List.of(
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "EXECUTE",
+                "DELETE");
+    }
+
+    ApiClient getApiClientWithCredentials() {
+        return new ApiClient(
+                getEnv(ENV_ROOT_URI),
+                getEnv(ENV_KEY_ID),
+                getEnv(ENV_SECRET));
+    }
+
+    String getEnv(String key) {
+        return System.getenv(key);
     }
 }
