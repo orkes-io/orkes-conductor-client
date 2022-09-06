@@ -130,6 +130,12 @@ public class Examples {
         workflowResourceApi.startWorkflow(startWorkflowRequest);
     }
 
+    @Test
+    @DisplayName("auto assign group permission on workflow creation by any group member")
+    public void autoAssignWorkflowPermissions() {
+
+    }
+
 
     WorkflowDef getWorkflowDef(String workflowName, String taskName) {
         WorkflowDef workflowDef = new WorkflowDef();
