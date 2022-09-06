@@ -12,29 +12,16 @@
 
 package io.orkes.conductor.client.http.api;
 
-import io.orkes.conductor.client.http.ApiCallback;
-import io.orkes.conductor.client.http.ApiClient;
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Configuration;
-import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
-
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.http.model.*;
 
 import java.io.IOException;
-
-
-import io.orkes.conductor.client.http.model.GenerateTokenRequest;
-import io.orkes.conductor.client.http.model.Response;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import io.orkes.conductor.client.http.*;
 public class TokenResourceApi {
     private ApiClient apiClient;
 
@@ -103,6 +90,7 @@ public class TokenResourceApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call generateTokenValidateBeforeCall(GenerateTokenRequest body, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -225,6 +213,7 @@ public class TokenResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getUserInfoValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         com.squareup.okhttp.Call call = getUserInfoCall(progressListener, progressRequestListener);

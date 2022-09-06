@@ -3,7 +3,6 @@ package io.orkes.conductor.client.automator;
 import com.google.common.base.Stopwatch;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.conductor.client.config.ConductorClientConfiguration;
-import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
 import com.netflix.conductor.client.config.PropertyFactory;
 import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.telemetry.MetricsContainer;

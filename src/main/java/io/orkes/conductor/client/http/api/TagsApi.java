@@ -12,29 +12,17 @@
 
 package io.orkes.conductor.client.http.api;
 
-import io.orkes.conductor.client.http.ApiCallback;
-import io.orkes.conductor.client.http.ApiClient;
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Configuration;
-import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
-
 import com.google.gson.reflect.TypeToken;
-
-import java.io.IOException;
-
-
+import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.model.TagObject;
 import io.orkes.conductor.client.http.model.TagString;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class TagsApi {
     private ApiClient apiClient;
 
@@ -67,7 +55,7 @@ public class TagsApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/metadata/task/{taskName}/tags"
+        String localVarPath = "/api/metadata/task/{taskName}/tags"
             .replaceAll("\\{" + "taskName" + "\\}", apiClient.escapeString(taskName.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -78,7 +66,7 @@ public class TagsApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -105,6 +93,7 @@ public class TagsApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call addTaskTagValidateBeforeCall(TagObject body, String taskName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -129,12 +118,10 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param taskName  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object addTaskTag(TagObject body, String taskName) throws ApiException {
-        ApiResponse<Object> resp = addTaskTagWithHttpInfo(body, taskName);
-        return resp.getData();
+    public void addTaskTag(TagObject body, String taskName) throws ApiException {
+        addTaskTagWithHttpInfo(body, taskName);
     }
 
     /**
@@ -142,13 +129,12 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param taskName  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> addTaskTagWithHttpInfo(TagObject body, String taskName) throws ApiException {
+    public ApiResponse<Void> addTaskTagWithHttpInfo(TagObject body, String taskName) throws ApiException {
         com.squareup.okhttp.Call call = addTaskTagValidateBeforeCall(body, taskName, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -160,7 +146,7 @@ public class TagsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call addTaskTagAsync(TagObject body, String taskName, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call addTaskTagAsync(TagObject body, String taskName, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -182,8 +168,7 @@ public class TagsApi {
         }
 
         com.squareup.okhttp.Call call = addTaskTagValidateBeforeCall(body, taskName, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -199,7 +184,7 @@ public class TagsApi {
         Object localVarPostBody = body;
         
         // create path and map variables
-        String localVarPath = "/metadata/workflow/{name}/tags"
+        String localVarPath = "/api/metadata/workflow/{name}/tags"
             .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -210,7 +195,7 @@ public class TagsApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -237,6 +222,7 @@ public class TagsApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call addWorkflowTagValidateBeforeCall(TagObject body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -261,12 +247,10 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param name  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object addWorkflowTag(TagObject body, String name) throws ApiException {
-        ApiResponse<Object> resp = addWorkflowTagWithHttpInfo(body, name);
-        return resp.getData();
+    public void addWorkflowTag(TagObject body, String name) throws ApiException {
+        addWorkflowTagWithHttpInfo(body, name);
     }
 
     /**
@@ -274,13 +258,12 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param name  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> addWorkflowTagWithHttpInfo(TagObject body, String name) throws ApiException {
+    public ApiResponse<Void> addWorkflowTagWithHttpInfo(TagObject body, String name) throws ApiException {
         com.squareup.okhttp.Call call = addWorkflowTagValidateBeforeCall(body, name, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -292,7 +275,7 @@ public class TagsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call addWorkflowTagAsync(TagObject body, String name, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call addWorkflowTagAsync(TagObject body, String name, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -314,8 +297,7 @@ public class TagsApi {
         }
 
         com.squareup.okhttp.Call call = addWorkflowTagValidateBeforeCall(body, name, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -342,7 +324,7 @@ public class TagsApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -369,6 +351,7 @@ public class TagsApi {
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteTaskTagValidateBeforeCall(TagString body, String taskName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -393,12 +376,10 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param taskName  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object deleteTaskTag(TagString body, String taskName) throws ApiException {
-        ApiResponse<Object> resp = deleteTaskTagWithHttpInfo(body, taskName);
-        return resp.getData();
+    public void deleteTaskTag(TagString body, String taskName) throws ApiException {
+        deleteTaskTagWithHttpInfo(body, taskName);
     }
 
     /**
@@ -406,13 +387,12 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param taskName  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> deleteTaskTagWithHttpInfo(TagString body, String taskName) throws ApiException {
+    public ApiResponse<Void> deleteTaskTagWithHttpInfo(TagString body, String taskName) throws ApiException {
         com.squareup.okhttp.Call call = deleteTaskTagValidateBeforeCall(body, taskName, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -424,7 +404,7 @@ public class TagsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call deleteTaskTagAsync(TagString body, String taskName, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call deleteTaskTagAsync(TagString body, String taskName, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -446,8 +426,7 @@ public class TagsApi {
         }
 
         com.squareup.okhttp.Call call = deleteTaskTagValidateBeforeCall(body, taskName, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -474,7 +453,7 @@ public class TagsApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -501,6 +480,7 @@ public class TagsApi {
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteWorkflowTagValidateBeforeCall(TagObject body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -525,12 +505,10 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param name  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object deleteWorkflowTag(TagObject body, String name) throws ApiException {
-        ApiResponse<Object> resp = deleteWorkflowTagWithHttpInfo(body, name);
-        return resp.getData();
+    public void deleteWorkflowTag(TagObject body, String name) throws ApiException {
+        deleteWorkflowTagWithHttpInfo(body, name);
     }
 
     /**
@@ -538,13 +516,12 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param name  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> deleteWorkflowTagWithHttpInfo(TagObject body, String name) throws ApiException {
+    public ApiResponse<Void> deleteWorkflowTagWithHttpInfo(TagObject body, String name) throws ApiException {
         com.squareup.okhttp.Call call = deleteWorkflowTagValidateBeforeCall(body, name, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -556,7 +533,7 @@ public class TagsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call deleteWorkflowTagAsync(TagObject body, String name, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call deleteWorkflowTagAsync(TagObject body, String name, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -578,8 +555,7 @@ public class TagsApi {
         }
 
         com.squareup.okhttp.Call call = deleteWorkflowTagValidateBeforeCall(body, name, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -630,6 +606,7 @@ public class TagsApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTagsValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         com.squareup.okhttp.Call call = getTagsCall(progressListener, progressRequestListener);
@@ -747,6 +724,7 @@ public class TagsApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTaskTagsValidateBeforeCall(String taskName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'taskName' is set
         if (taskName == null) {
@@ -871,6 +849,7 @@ public class TagsApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getWorkflowTagsValidateBeforeCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'name' is set
         if (name == null) {
@@ -969,7 +948,7 @@ public class TagsApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -996,6 +975,7 @@ public class TagsApi {
         return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call setTaskTagsValidateBeforeCall(List<TagObject> body, String taskName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -1020,12 +1000,10 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param taskName  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object setTaskTags(List<TagObject> body, String taskName) throws ApiException {
-        ApiResponse<Object> resp = setTaskTagsWithHttpInfo(body, taskName);
-        return resp.getData();
+    public void setTaskTags(List<TagObject> body, String taskName) throws ApiException {
+        setTaskTagsWithHttpInfo(body, taskName);
     }
 
     /**
@@ -1033,13 +1011,12 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param taskName  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> setTaskTagsWithHttpInfo(List<TagObject> body, String taskName) throws ApiException {
+    public ApiResponse<Void> setTaskTagsWithHttpInfo(List<TagObject> body, String taskName) throws ApiException {
         com.squareup.okhttp.Call call = setTaskTagsValidateBeforeCall(body, taskName, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -1051,7 +1028,7 @@ public class TagsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call setTaskTagsAsync(List<TagObject> body, String taskName, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call setTaskTagsAsync(List<TagObject> body, String taskName, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1073,8 +1050,7 @@ public class TagsApi {
         }
 
         com.squareup.okhttp.Call call = setTaskTagsValidateBeforeCall(body, taskName, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -1101,7 +1077,7 @@ public class TagsApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -1128,6 +1104,7 @@ public class TagsApi {
         return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call setWorkflowTagsValidateBeforeCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -1152,12 +1129,10 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param name  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object setWorkflowTags(List<TagObject> body, String name) throws ApiException {
-        ApiResponse<Object> resp = setWorkflowTagsWithHttpInfo(body, name);
-        return resp.getData();
+    public void setWorkflowTags(List<TagObject> body, String name) throws ApiException {
+        setWorkflowTagsWithHttpInfo(body, name);
     }
 
     /**
@@ -1165,13 +1140,12 @@ public class TagsApi {
      * 
      * @param body  (required)
      * @param name  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> setWorkflowTagsWithHttpInfo(List<TagObject> body, String name) throws ApiException {
+    public ApiResponse<Void> setWorkflowTagsWithHttpInfo(List<TagObject> body, String name) throws ApiException {
         com.squareup.okhttp.Call call = setWorkflowTagsValidateBeforeCall(body, name, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -1183,7 +1157,7 @@ public class TagsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call setWorkflowTagsAsync(List<TagObject> body, String name, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call setWorkflowTagsAsync(List<TagObject> body, String name, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1205,8 +1179,7 @@ public class TagsApi {
         }
 
         com.squareup.okhttp.Call call = setWorkflowTagsValidateBeforeCall(body, name, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
 }

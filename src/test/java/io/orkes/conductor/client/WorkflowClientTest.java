@@ -1,6 +1,5 @@
 package io.orkes.conductor.client;
 
-import com.netflix.conductor.client.http.WorkflowClient;
 import io.orkes.conductor.client.http.ApiClient;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.http.model.StartWorkflowRequest;
@@ -12,6 +11,7 @@ public class WorkflowClientTest {
 
     public static void main(String[] args) {
         ApiClient apiClient = new ApiClient();
+
         WorkflowResourceApi workflowClient = new WorkflowResourceApi(apiClient);
         StartWorkflowRequest request = new StartWorkflowRequest();
         request.setCorrelationId("virenx");

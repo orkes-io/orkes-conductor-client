@@ -12,23 +12,12 @@
 
 package io.orkes.conductor.client.http.api;
 
-import io.orkes.conductor.client.http.ApiCallback;
-import io.orkes.conductor.client.http.ApiClient;
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Configuration;
-import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
-
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.http.model.Subject;
+import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.http.model.*;
 
 import java.io.IOException;
-
-
-import io.orkes.conductor.client.http.model.AuthorizationRequest;
-import io.orkes.conductor.client.http.model.Response;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,6 +95,7 @@ public class AuthorizationResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getPermissionsValidateBeforeCall(String type, String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'type' is set
         if (type == null) {
@@ -130,11 +120,11 @@ public class AuthorizationResourceApi {
      * 
      * @param type  (required)
      * @param id  (required)
-     * @return Object
+     * @return Map&lt;String, List&lt;Subject&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object getPermissions(String type, String id) throws ApiException {
-        ApiResponse<Object> resp = getPermissionsWithHttpInfo(type, id);
+    public Map<String, List<Subject>> getPermissions(String type, String id) throws ApiException {
+        ApiResponse<Map<String, List<Subject>>> resp = getPermissionsWithHttpInfo(type, id);
         return resp.getData();
     }
 
@@ -143,12 +133,12 @@ public class AuthorizationResourceApi {
      * 
      * @param type  (required)
      * @param id  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Map&lt;String, List&lt;Subject&gt;&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> getPermissionsWithHttpInfo(String type, String id) throws ApiException {
+    public ApiResponse<Map<String, List<Subject>>> getPermissionsWithHttpInfo(String type, String id) throws ApiException {
         com.squareup.okhttp.Call call = getPermissionsValidateBeforeCall(type, id, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<Map<String, List<Subject>>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -161,7 +151,7 @@ public class AuthorizationResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getPermissionsAsync(String type, String id, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call getPermissionsAsync(String type, String id, final ApiCallback<Map<String, List<Subject>>> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -183,7 +173,7 @@ public class AuthorizationResourceApi {
         }
 
         com.squareup.okhttp.Call call = getPermissionsValidateBeforeCall(type, id, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<Map<String, List<Subject>>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
@@ -209,7 +199,7 @@ public class AuthorizationResourceApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "application/json"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -236,6 +226,7 @@ public class AuthorizationResourceApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call grantPermissionsValidateBeforeCall(AuthorizationRequest body, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -255,25 +246,22 @@ public class AuthorizationResourceApi {
      * Grant access to a user over the target
      * 
      * @param body  (required)
-     * @return Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Response grantPermissions(AuthorizationRequest body) throws ApiException {
-        ApiResponse<Response> resp = grantPermissionsWithHttpInfo(body);
-        return resp.getData();
+    public void grantPermissions(AuthorizationRequest body) throws ApiException {
+        grantPermissionsWithHttpInfo(body);
     }
 
     /**
      * Grant access to a user over the target
      * 
      * @param body  (required)
-     * @return ApiResponse&lt;Response&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Response> grantPermissionsWithHttpInfo(AuthorizationRequest body) throws ApiException {
+    public ApiResponse<Void> grantPermissionsWithHttpInfo(AuthorizationRequest body) throws ApiException {
         com.squareup.okhttp.Call call = grantPermissionsValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<Response>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -284,7 +272,7 @@ public class AuthorizationResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call grantPermissionsAsync(AuthorizationRequest body, final ApiCallback<Response> callback) throws ApiException {
+    public com.squareup.okhttp.Call grantPermissionsAsync(AuthorizationRequest body, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -306,8 +294,7 @@ public class AuthorizationResourceApi {
         }
 
         com.squareup.okhttp.Call call = grantPermissionsValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Response>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -332,7 +319,7 @@ public class AuthorizationResourceApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "application/json"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -359,6 +346,7 @@ public class AuthorizationResourceApi {
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call removePermissionsValidateBeforeCall(AuthorizationRequest body, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -378,25 +366,22 @@ public class AuthorizationResourceApi {
      * Remove user&#x27;s access over the target
      * 
      * @param body  (required)
-     * @return Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Response removePermissions(AuthorizationRequest body) throws ApiException {
-        ApiResponse<Response> resp = removePermissionsWithHttpInfo(body);
-        return resp.getData();
+    public void removePermissions(AuthorizationRequest body) throws ApiException {
+        removePermissionsWithHttpInfo(body);
     }
 
     /**
      * Remove user&#x27;s access over the target
      * 
      * @param body  (required)
-     * @return ApiResponse&lt;Response&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Response> removePermissionsWithHttpInfo(AuthorizationRequest body) throws ApiException {
+    public ApiResponse<Void> removePermissionsWithHttpInfo(AuthorizationRequest body) throws ApiException {
         com.squareup.okhttp.Call call = removePermissionsValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<Response>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -407,7 +392,7 @@ public class AuthorizationResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call removePermissionsAsync(AuthorizationRequest body, final ApiCallback<Response> callback) throws ApiException {
+    public com.squareup.okhttp.Call removePermissionsAsync(AuthorizationRequest body, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -429,8 +414,7 @@ public class AuthorizationResourceApi {
         }
 
         com.squareup.okhttp.Call call = removePermissionsValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Response>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
 }

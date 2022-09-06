@@ -12,24 +12,11 @@
 
 package io.orkes.conductor.client.http.api;
 
-import io.orkes.conductor.client.http.ApiCallback;
-import io.orkes.conductor.client.http.ApiClient;
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Configuration;
-import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
-
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.http.model.*;
 
 import java.io.IOException;
-
-
-import io.orkes.conductor.client.http.model.Group;
-import io.orkes.conductor.client.http.model.Response;
-import io.orkes.conductor.client.http.model.UpsertGroupRequest;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,7 +67,7 @@ public class GroupResourceApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "application/json"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -107,6 +94,7 @@ public class GroupResourceApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call addUserToGroupValidateBeforeCall(String groupId, String userId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'groupId' is set
         if (groupId == null) {
@@ -131,12 +119,10 @@ public class GroupResourceApi {
      * 
      * @param groupId  (required)
      * @param userId  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object addUserToGroup(String groupId, String userId) throws ApiException {
-        ApiResponse<Object> resp = addUserToGroupWithHttpInfo(groupId, userId);
-        return resp.getData();
+    public void addUserToGroup(String groupId, String userId) throws ApiException {
+        addUserToGroupWithHttpInfo(groupId, userId);
     }
 
     /**
@@ -144,13 +130,12 @@ public class GroupResourceApi {
      * 
      * @param groupId  (required)
      * @param userId  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> addUserToGroupWithHttpInfo(String groupId, String userId) throws ApiException {
+    public ApiResponse<Void> addUserToGroupWithHttpInfo(String groupId, String userId) throws ApiException {
         com.squareup.okhttp.Call call = addUserToGroupValidateBeforeCall(groupId, userId, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -162,7 +147,7 @@ public class GroupResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call addUserToGroupAsync(String groupId, String userId, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call addUserToGroupAsync(String groupId, String userId, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -184,8 +169,7 @@ public class GroupResourceApi {
         }
 
         com.squareup.okhttp.Call call = addUserToGroupValidateBeforeCall(groupId, userId, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -211,7 +195,7 @@ public class GroupResourceApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "application/json"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -238,6 +222,7 @@ public class GroupResourceApi {
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteGroupValidateBeforeCall(String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -257,25 +242,22 @@ public class GroupResourceApi {
      * Delete a group
      * 
      * @param id  (required)
-     * @return Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Response deleteGroup(String id) throws ApiException {
-        ApiResponse<Response> resp = deleteGroupWithHttpInfo(id);
-        return resp.getData();
+    public void deleteGroup(String id) throws ApiException {
+        deleteGroupWithHttpInfo(id);
     }
 
     /**
      * Delete a group
      * 
      * @param id  (required)
-     * @return ApiResponse&lt;Response&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Response> deleteGroupWithHttpInfo(String id) throws ApiException {
+    public ApiResponse<Void> deleteGroupWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = deleteGroupValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Response>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -286,7 +268,7 @@ public class GroupResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call deleteGroupAsync(String id, final ApiCallback<Response> callback) throws ApiException {
+    public com.squareup.okhttp.Call deleteGroupAsync(String id, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -308,8 +290,7 @@ public class GroupResourceApi {
         }
 
         com.squareup.okhttp.Call call = deleteGroupValidateBeforeCall(id, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Response>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -362,6 +343,7 @@ public class GroupResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getGrantedPermissions1ValidateBeforeCall(String groupId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'groupId' is set
         if (groupId == null) {
@@ -381,11 +363,11 @@ public class GroupResourceApi {
      * Get the permissions this group has over workflows and tasks
      * 
      * @param groupId  (required)
-     * @return Object
+     * @return GrantedAccessResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object getGrantedPermissions1(String groupId) throws ApiException {
-        ApiResponse<Object> resp = getGrantedPermissions1WithHttpInfo(groupId);
+    public GrantedAccessResponse getGrantedPermissions1(String groupId) throws ApiException {
+        ApiResponse<GrantedAccessResponse> resp = getGrantedPermissions1WithHttpInfo(groupId);
         return resp.getData();
     }
 
@@ -393,12 +375,12 @@ public class GroupResourceApi {
      * Get the permissions this group has over workflows and tasks
      * 
      * @param groupId  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;GrantedAccessResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> getGrantedPermissions1WithHttpInfo(String groupId) throws ApiException {
+    public ApiResponse<GrantedAccessResponse> getGrantedPermissions1WithHttpInfo(String groupId) throws ApiException {
         com.squareup.okhttp.Call call = getGrantedPermissions1ValidateBeforeCall(groupId, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<GrantedAccessResponse>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -410,7 +392,7 @@ public class GroupResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getGrantedPermissions1Async(String groupId, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call getGrantedPermissions1Async(String groupId, final ApiCallback<GrantedAccessResponse> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -432,7 +414,7 @@ public class GroupResourceApi {
         }
 
         com.squareup.okhttp.Call call = getGrantedPermissions1ValidateBeforeCall(groupId, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<GrantedAccessResponse>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
@@ -486,6 +468,7 @@ public class GroupResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getGroupValidateBeforeCall(String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -505,11 +488,11 @@ public class GroupResourceApi {
      * Get a group by id
      * 
      * @param id  (required)
-     * @return Object
+     * @return Group
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object getGroup(String id) throws ApiException {
-        ApiResponse<Object> resp = getGroupWithHttpInfo(id);
+    public Group getGroup(String id) throws ApiException {
+        ApiResponse<Group> resp = getGroupWithHttpInfo(id);
         return resp.getData();
     }
 
@@ -517,12 +500,12 @@ public class GroupResourceApi {
      * Get a group by id
      * 
      * @param id  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Group&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> getGroupWithHttpInfo(String id) throws ApiException {
+    public ApiResponse<Group> getGroupWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = getGroupValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<Group>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -534,7 +517,7 @@ public class GroupResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getGroupAsync(String id, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call getGroupAsync(String id, final ApiCallback<Group> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -556,7 +539,7 @@ public class GroupResourceApi {
         }
 
         com.squareup.okhttp.Call call = getGroupValidateBeforeCall(id, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<Group>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
@@ -610,6 +593,7 @@ public class GroupResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getUsersInGroupValidateBeforeCall(String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -629,11 +613,11 @@ public class GroupResourceApi {
      * Get all users in group
      * 
      * @param id  (required)
-     * @return Object
+     * @return List&lt;ConductorUser&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object getUsersInGroup(String id) throws ApiException {
-        ApiResponse<Object> resp = getUsersInGroupWithHttpInfo(id);
+    public List<ConductorUser> getUsersInGroup(String id) throws ApiException {
+        ApiResponse<List<ConductorUser>> resp = getUsersInGroupWithHttpInfo(id);
         return resp.getData();
     }
 
@@ -641,12 +625,12 @@ public class GroupResourceApi {
      * Get all users in group
      * 
      * @param id  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;List&lt;ConductorUser&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> getUsersInGroupWithHttpInfo(String id) throws ApiException {
+    public ApiResponse<List<ConductorUser>> getUsersInGroupWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = getUsersInGroupValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<List<ConductorUser>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -658,7 +642,7 @@ public class GroupResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getUsersInGroupAsync(String id, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call getUsersInGroupAsync(String id, final ApiCallback<List<ConductorUser>> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -680,7 +664,7 @@ public class GroupResourceApi {
         }
 
         com.squareup.okhttp.Call call = getUsersInGroupValidateBeforeCall(id, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<List<ConductorUser>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
@@ -732,6 +716,7 @@ public class GroupResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call listGroupsValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         com.squareup.okhttp.Call call = listGroupsCall(progressListener, progressRequestListener);
@@ -824,7 +809,7 @@ public class GroupResourceApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "application/json"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -851,6 +836,7 @@ public class GroupResourceApi {
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call removeUserFromGroupValidateBeforeCall(String groupId, String userId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'groupId' is set
         if (groupId == null) {
@@ -875,12 +861,10 @@ public class GroupResourceApi {
      * 
      * @param groupId  (required)
      * @param userId  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object removeUserFromGroup(String groupId, String userId) throws ApiException {
-        ApiResponse<Object> resp = removeUserFromGroupWithHttpInfo(groupId, userId);
-        return resp.getData();
+    public void removeUserFromGroup(String groupId, String userId) throws ApiException {
+        removeUserFromGroupWithHttpInfo(groupId, userId);
     }
 
     /**
@@ -888,13 +872,12 @@ public class GroupResourceApi {
      * 
      * @param groupId  (required)
      * @param userId  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> removeUserFromGroupWithHttpInfo(String groupId, String userId) throws ApiException {
+    public ApiResponse<Void> removeUserFromGroupWithHttpInfo(String groupId, String userId) throws ApiException {
         com.squareup.okhttp.Call call = removeUserFromGroupValidateBeforeCall(groupId, userId, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -906,7 +889,7 @@ public class GroupResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call removeUserFromGroupAsync(String groupId, String userId, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call removeUserFromGroupAsync(String groupId, String userId, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -928,8 +911,7 @@ public class GroupResourceApi {
         }
 
         com.squareup.okhttp.Call call = removeUserFromGroupValidateBeforeCall(groupId, userId, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -983,6 +965,7 @@ public class GroupResourceApi {
         return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call upsertGroupValidateBeforeCall(UpsertGroupRequest body, String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -1007,11 +990,11 @@ public class GroupResourceApi {
      * 
      * @param body  (required)
      * @param id  (required)
-     * @return Object
+     * @return Group
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object upsertGroup(UpsertGroupRequest body, String id) throws ApiException {
-        ApiResponse<Object> resp = upsertGroupWithHttpInfo(body, id);
+    public Group upsertGroup(UpsertGroupRequest body, String id) throws ApiException {
+        ApiResponse<Group> resp = upsertGroupWithHttpInfo(body, id);
         return resp.getData();
     }
 
@@ -1020,12 +1003,12 @@ public class GroupResourceApi {
      * 
      * @param body  (required)
      * @param id  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Group&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> upsertGroupWithHttpInfo(UpsertGroupRequest body, String id) throws ApiException {
+    public ApiResponse<Group> upsertGroupWithHttpInfo(UpsertGroupRequest body, String id) throws ApiException {
         com.squareup.okhttp.Call call = upsertGroupValidateBeforeCall(body, id, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<Group>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1038,7 +1021,7 @@ public class GroupResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call upsertGroupAsync(UpsertGroupRequest body, String id, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call upsertGroupAsync(UpsertGroupRequest body, String id, final ApiCallback<Group> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1060,7 +1043,7 @@ public class GroupResourceApi {
         }
 
         com.squareup.okhttp.Call call = upsertGroupValidateBeforeCall(body, id, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<Group>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }

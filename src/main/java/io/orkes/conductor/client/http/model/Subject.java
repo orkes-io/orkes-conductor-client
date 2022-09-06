@@ -12,31 +12,31 @@
 
 package io.orkes.conductor.client.http.model;
 
-import java.util.Objects;
-
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.IOException;
+import java.util.Objects;
 /**
- * TagObject
+ * Subject
  */
 
-
-public class TagObject {
-  @SerializedName("key")
-  private String key = null;
+public class Subject {
+  @SerializedName("id")
+  private String id = null;
 
   /**
    * Gets or Sets type
    */
   @JsonAdapter(TypeEnum.Adapter.class)
   public enum TypeEnum {
-    METADATA("METADATA"),
-    RATE_LIMIT("RATE_LIMIT");
+    USER("USER"),
+    ROLE("ROLE"),
+    GROUP("GROUP");
 
     private String value;
 
@@ -74,28 +74,25 @@ public class TagObject {
   }  @SerializedName("type")
   private TypeEnum type = null;
 
-  @SerializedName("value")
-  private Object value = null;
-
-  public TagObject key(String key) {
-    this.key = key;
+  public Subject id(String id) {
+    this.id = id;
     return this;
   }
 
    /**
-   * Get key
-   * @return key
+   * Get id
+   * @return id
   **/
   @Schema(description = "")
-  public String getKey() {
-    return key;
+  public String getId() {
+    return id;
   }
 
-  public void setKey(String key) {
-    this.key = key;
+  public void setId(String id) {
+    this.id = id;
   }
 
-  public TagObject type(TypeEnum type) {
+  public Subject type(TypeEnum type) {
     this.type = type;
     return this;
   }
@@ -113,53 +110,33 @@ public class TagObject {
     this.type = type;
   }
 
-  public TagObject value(Object value) {
-    this.value = value;
-    return this;
-  }
-
-   /**
-   * Get value
-   * @return value
-  **/
-  @Schema(description = "")
-  public Object getValue() {
-    return value;
-  }
-
-  public void setValue(Object value) {
-    this.value = value;
-  }
-
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TagObject tagObject = (TagObject) o;
-    return Objects.equals(this.key, tagObject.key) &&
-        Objects.equals(this.type, tagObject.type) &&
-        Objects.equals(this.value, tagObject.value);
+    Subject subject = (Subject) o;
+    return Objects.equals(this.id, subject.id) &&
+        Objects.equals(this.type, subject.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(key, type, value);
+    return Objects.hash(id, type);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class TagObject {\n");
+    sb.append("class Subject {\n");
     
-    sb.append("    key: ").append(toIndentedString(key)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    value: ").append(toIndentedString(value)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -168,7 +145,7 @@ public class TagObject {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

@@ -12,25 +12,24 @@
 
 package io.orkes.conductor.client.http.model;
 
-import java.util.Objects;
-
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 /**
- * AuthorizationRequest
+ * GrantedAccess
  */
 
-
-public class AuthorizationRequest {
+public class GrantedAccess {
   /**
-   * The set of access which is granted or removed
+   * Gets or Sets access
    */
   @JsonAdapter(AccessEnum.Adapter.class)
   public enum AccessEnum {
@@ -74,29 +73,29 @@ public class AuthorizationRequest {
       }
     }
   }  @SerializedName("access")
-  private List<AccessEnum> access = new ArrayList<AccessEnum>();
-
-  @SerializedName("subject")
-  private SubjectRef subject = null;
+  private List<AccessEnum> access = null;
 
   @SerializedName("target")
   private TargetRef target = null;
 
-  public AuthorizationRequest access(List<AccessEnum> access) {
+  public GrantedAccess access(List<AccessEnum> access) {
     this.access = access;
     return this;
   }
 
-  public AuthorizationRequest addAccessItem(AccessEnum accessItem) {
+  public GrantedAccess addAccessItem(AccessEnum accessItem) {
+    if (this.access == null) {
+      this.access = new ArrayList<AccessEnum>();
+    }
     this.access.add(accessItem);
     return this;
   }
 
    /**
-   * The set of access which is granted or removed
+   * Get access
    * @return access
   **/
-  @Schema(required = true, description = "The set of access which is granted or removed")
+  @Schema(description = "")
   public List<AccessEnum> getAccess() {
     return access;
   }
@@ -105,25 +104,7 @@ public class AuthorizationRequest {
     this.access = access;
   }
 
-  public AuthorizationRequest subject(SubjectRef subject) {
-    this.subject = subject;
-    return this;
-  }
-
-   /**
-   * Get subject
-   * @return subject
-  **/
-  @Schema(required = true, description = "")
-  public SubjectRef getSubject() {
-    return subject;
-  }
-
-  public void setSubject(SubjectRef subject) {
-    this.subject = subject;
-  }
-
-  public AuthorizationRequest target(TargetRef target) {
+  public GrantedAccess target(TargetRef target) {
     this.target = target;
     return this;
   }
@@ -132,7 +113,7 @@ public class AuthorizationRequest {
    * Get target
    * @return target
   **/
-  @Schema(required = true, description = "")
+  @Schema(description = "")
   public TargetRef getTarget() {
     return target;
   }
@@ -143,32 +124,30 @@ public class AuthorizationRequest {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AuthorizationRequest authorizationRequest = (AuthorizationRequest) o;
-    return Objects.equals(this.access, authorizationRequest.access) &&
-        Objects.equals(this.subject, authorizationRequest.subject) &&
-        Objects.equals(this.target, authorizationRequest.target);
+    GrantedAccess grantedAccess = (GrantedAccess) o;
+    return Objects.equals(this.access, grantedAccess.access) &&
+        Objects.equals(this.target, grantedAccess.target);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(access, subject, target);
+    return Objects.hash(access, target);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AuthorizationRequest {\n");
+    sb.append("class GrantedAccess {\n");
     
     sb.append("    access: ").append(toIndentedString(access)).append("\n");
-    sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
     sb.append("    target: ").append(toIndentedString(target)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -178,7 +157,7 @@ public class AuthorizationRequest {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

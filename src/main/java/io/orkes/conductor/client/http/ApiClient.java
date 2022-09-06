@@ -14,7 +14,6 @@ package io.orkes.conductor.client.http;
 
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
-import io.orkes.conductor.client.http.api.TokenResourceApi;
 import okio.BufferedSink;
 import okio.Okio;
 import org.apache.commons.lang3.StringUtils;

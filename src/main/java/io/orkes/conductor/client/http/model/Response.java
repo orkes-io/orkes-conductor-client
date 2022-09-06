@@ -13,7 +13,7 @@
 package io.orkes.conductor.client.http.model;
 
 import java.util.Objects;
-import java.util.Arrays;
+
 /**
  * Response
  */

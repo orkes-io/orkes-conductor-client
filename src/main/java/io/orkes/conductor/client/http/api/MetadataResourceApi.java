@@ -12,23 +12,10 @@
 
 package io.orkes.conductor.client.http.api;
 
-import io.orkes.conductor.client.http.ApiCallback;
-import io.orkes.conductor.client.http.ApiClient;
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Configuration;
-import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
-
 import com.google.gson.reflect.TypeToken;
-
+import io.orkes.conductor.client.http.model.*;
+import io.orkes.conductor.client.http.*;
 import java.io.IOException;
-
-
-import io.orkes.conductor.client.http.model.TaskDef;
-import io.orkes.conductor.client.http.model.WorkflowDef;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +66,7 @@ public class MetadataResourceApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -106,6 +93,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call createValidateBeforeCall(WorkflowDef body, Boolean overwrite, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -126,12 +114,10 @@ public class MetadataResourceApi {
      * 
      * @param body  (required)
      * @param overwrite  (optional, default to false)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object create(WorkflowDef body, Boolean overwrite) throws ApiException {
-        ApiResponse<Object> resp = createWithHttpInfo(body, overwrite);
-        return resp.getData();
+    public void create(WorkflowDef body, Boolean overwrite) throws ApiException {
+        createWithHttpInfo(body, overwrite);
     }
 
     /**
@@ -139,13 +125,12 @@ public class MetadataResourceApi {
      * 
      * @param body  (required)
      * @param overwrite  (optional, default to false)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> createWithHttpInfo(WorkflowDef body, Boolean overwrite) throws ApiException {
+    public ApiResponse<Void> createWithHttpInfo(WorkflowDef body, Boolean overwrite) throws ApiException {
         com.squareup.okhttp.Call call = createValidateBeforeCall(body, overwrite, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -157,7 +142,7 @@ public class MetadataResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call createAsync(WorkflowDef body, Boolean overwrite, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call createAsync(WorkflowDef body, Boolean overwrite, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -179,8 +164,7 @@ public class MetadataResourceApi {
         }
 
         com.squareup.okhttp.Call call = createValidateBeforeCall(body, overwrite, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -239,6 +223,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getValidateBeforeCall(String name, Integer version, Boolean metadata, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'name' is set
         if (name == null) {
@@ -379,6 +364,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getAllWorkflowsValidateBeforeCall(String access, Boolean metadata, String tagKey, String tagValue, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         com.squareup.okhttp.Call call = getAllWorkflowsCall(access, metadata, tagKey, tagValue, progressListener, progressRequestListener);
@@ -511,6 +497,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTaskDefValidateBeforeCall(String tasktype, Boolean metadata, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'tasktype' is set
         if (tasktype == null) {
@@ -531,11 +518,11 @@ public class MetadataResourceApi {
      * 
      * @param tasktype  (required)
      * @param metadata  (optional, default to false)
-     * @return Object
+     * @return TaskDef
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object getTaskDef(String tasktype, Boolean metadata) throws ApiException {
-        ApiResponse<Object> resp = getTaskDefWithHttpInfo(tasktype, metadata);
+    public TaskDef getTaskDef(String tasktype, Boolean metadata) throws ApiException {
+        ApiResponse<TaskDef> resp = getTaskDefWithHttpInfo(tasktype, metadata);
         return resp.getData();
     }
 
@@ -544,12 +531,12 @@ public class MetadataResourceApi {
      * 
      * @param tasktype  (required)
      * @param metadata  (optional, default to false)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;TaskDef&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> getTaskDefWithHttpInfo(String tasktype, Boolean metadata) throws ApiException {
+    public ApiResponse<TaskDef> getTaskDefWithHttpInfo(String tasktype, Boolean metadata) throws ApiException {
         com.squareup.okhttp.Call call = getTaskDefValidateBeforeCall(tasktype, metadata, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<TaskDef>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -562,7 +549,7 @@ public class MetadataResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getTaskDefAsync(String tasktype, Boolean metadata, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call getTaskDefAsync(String tasktype, Boolean metadata, final ApiCallback<TaskDef> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -584,7 +571,7 @@ public class MetadataResourceApi {
         }
 
         com.squareup.okhttp.Call call = getTaskDefValidateBeforeCall(tasktype, metadata, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<TaskDef>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
@@ -648,6 +635,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTaskDefsValidateBeforeCall(String access, Boolean metadata, String tagKey, String tagValue, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         com.squareup.okhttp.Call call = getTaskDefsCall(access, metadata, tagKey, tagValue, progressListener, progressRequestListener);
@@ -749,7 +737,7 @@ public class MetadataResourceApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -776,6 +764,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call registerTaskDefValidateBeforeCall(List<TaskDef> body, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -795,25 +784,22 @@ public class MetadataResourceApi {
      * Create or update task definition(s)
      * 
      * @param body  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object registerTaskDef(List<TaskDef> body) throws ApiException {
-        ApiResponse<Object> resp = registerTaskDefWithHttpInfo(body);
-        return resp.getData();
+    public void registerTaskDef(List<TaskDef> body) throws ApiException {
+        registerTaskDefWithHttpInfo(body);
     }
 
     /**
      * Create or update task definition(s)
      * 
      * @param body  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> registerTaskDefWithHttpInfo(List<TaskDef> body) throws ApiException {
+    public ApiResponse<Void> registerTaskDefWithHttpInfo(List<TaskDef> body) throws ApiException {
         com.squareup.okhttp.Call call = registerTaskDefValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -824,7 +810,7 @@ public class MetadataResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call registerTaskDefAsync(List<TaskDef> body, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call registerTaskDefAsync(List<TaskDef> body, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -846,8 +832,7 @@ public class MetadataResourceApi {
         }
 
         com.squareup.okhttp.Call call = registerTaskDefValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -900,6 +885,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call unregisterTaskDefValidateBeforeCall(String tasktype, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'tasktype' is set
         if (tasktype == null) {
@@ -1022,6 +1008,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call unregisterWorkflowDefValidateBeforeCall(String name, Integer version, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'name' is set
         if (name == null) {
@@ -1124,7 +1111,7 @@ public class MetadataResourceApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -1151,6 +1138,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateValidateBeforeCall(List<WorkflowDef> body, Boolean overwrite, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -1171,12 +1159,10 @@ public class MetadataResourceApi {
      * 
      * @param body  (required)
      * @param overwrite  (optional, default to true)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object update(List<WorkflowDef> body, Boolean overwrite) throws ApiException {
-        ApiResponse<Object> resp = updateWithHttpInfo(body, overwrite);
-        return resp.getData();
+    public void update(List<WorkflowDef> body, Boolean overwrite) throws ApiException {
+        updateWithHttpInfo(body, overwrite);
     }
 
     /**
@@ -1184,13 +1170,12 @@ public class MetadataResourceApi {
      * 
      * @param body  (required)
      * @param overwrite  (optional, default to true)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> updateWithHttpInfo(List<WorkflowDef> body, Boolean overwrite) throws ApiException {
+    public ApiResponse<Void> updateWithHttpInfo(List<WorkflowDef> body, Boolean overwrite) throws ApiException {
         com.squareup.okhttp.Call call = updateValidateBeforeCall(body, overwrite, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -1202,7 +1187,7 @@ public class MetadataResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call updateAsync(List<WorkflowDef> body, Boolean overwrite, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call updateAsync(List<WorkflowDef> body, Boolean overwrite, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1224,8 +1209,7 @@ public class MetadataResourceApi {
         }
 
         com.squareup.okhttp.Call call = updateValidateBeforeCall(body, overwrite, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
     /**
@@ -1250,7 +1234,7 @@ public class MetadataResourceApi {
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
-            "*/*"
+            
         };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
@@ -1277,6 +1261,7 @@ public class MetadataResourceApi {
         return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
+    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateTaskDefValidateBeforeCall(TaskDef body, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -1296,25 +1281,22 @@ public class MetadataResourceApi {
      * Update an existing task
      * 
      * @param body  (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Object updateTaskDef(TaskDef body) throws ApiException {
-        ApiResponse<Object> resp = updateTaskDefWithHttpInfo(body);
-        return resp.getData();
+    public void updateTaskDef(TaskDef body) throws ApiException {
+        updateTaskDefWithHttpInfo(body);
     }
 
     /**
      * Update an existing task
      * 
      * @param body  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Object> updateTaskDefWithHttpInfo(TaskDef body) throws ApiException {
+    public ApiResponse<Void> updateTaskDefWithHttpInfo(TaskDef body) throws ApiException {
         com.squareup.okhttp.Call call = updateTaskDefValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call);
     }
 
     /**
@@ -1325,7 +1307,7 @@ public class MetadataResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call updateTaskDefAsync(TaskDef body, final ApiCallback<Object> callback) throws ApiException {
+    public com.squareup.okhttp.Call updateTaskDefAsync(TaskDef body, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1347,8 +1329,7 @@ public class MetadataResourceApi {
         }
 
         com.squareup.okhttp.Call call = updateTaskDefValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
+        apiClient.executeAsync(call, callback);
         return call;
     }
 }

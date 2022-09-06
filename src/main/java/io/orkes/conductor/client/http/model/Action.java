@@ -13,16 +13,12 @@
 package io.orkes.conductor.client.http.model;
 
 import java.util.Objects;
-import java.util.Arrays;
+
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.orkes.conductor.client.http.model.StartWorkflow;
-import io.orkes.conductor.client.http.model.TaskDetails;
-import io.orkes.conductor.client.http.model.TerminateWorkflow;
-import io.orkes.conductor.client.http.model.UpdateWorkflowVariables;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.IOException;
 /**

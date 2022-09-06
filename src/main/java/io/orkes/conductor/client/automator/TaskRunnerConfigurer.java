@@ -3,7 +3,6 @@ package io.orkes.conductor.client.automator;
 import com.google.common.base.Preconditions;
 import com.netflix.conductor.client.config.ConductorClientConfiguration;
 import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
-import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.discovery.EurekaClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
