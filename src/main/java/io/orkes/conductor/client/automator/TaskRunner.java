@@ -78,23 +78,22 @@ class TaskRunner {
         this.taskToDomain = taskToDomain;
         this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
-        this.taskClientForExternalPayload =
-                new TaskClient(new DefaultClientConfig(), conductorClientConfiguration, null);
-        this.executorService =
-                (ThreadPoolExecutor)
-                        Executors.newFixedThreadPool(
-                                threadCount,
-                                new BasicThreadFactory.Builder()
-                                        .namingPattern(workerNamePrefix)
-                                        .uncaughtExceptionHandler(uncaughtExceptionHandler)
-                                        .build());
+        this.taskClientForExternalPayload = new TaskClient(new DefaultClientConfig(), conductorClientConfiguration,
+                null);
+        this.executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(
+                threadCount,
+                new BasicThreadFactory.Builder()
+                        .namingPattern(workerNamePrefix)
+                        .uncaughtExceptionHandler(uncaughtExceptionHandler)
+                        .build());
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
         LOGGER.info("Initialized the TaskPollExecutor for {} with {} threads", threadCount);
     }
 
     public void poll(Worker worker) {
         pollTasksForWorker(worker)
-                .forEach(task -> this.executorService.submit(() -> this.processTask(task, worker)));
+                .forEach(
+                        task -> this.executorService.submit(() -> this.processTask(task, worker)));
     }
 
     public void shutdown(int timeout) {
@@ -116,14 +115,12 @@ class TaskRunner {
     private List<Task> pollTasksForWorker(Worker worker) {
         LOGGER.info("Polling for {}", worker.getTaskDefName());
         List<Task> tasks = new LinkedList<>();
-        Boolean discoveryOverride =
-                Optional.ofNullable(
-                                PropertyFactory.getBoolean(
-                                        worker.getTaskDefName(), OVERRIDE_DISCOVERY, null))
-                        .orElseGet(
-                                () ->
-                                        PropertyFactory.getBoolean(
-                                                ALL_WORKERS, OVERRIDE_DISCOVERY, false));
+        Boolean discoveryOverride = Optional.ofNullable(
+                PropertyFactory.getBoolean(
+                        worker.getTaskDefName(), OVERRIDE_DISCOVERY, null))
+                .orElseGet(
+                        () -> PropertyFactory.getBoolean(
+                                ALL_WORKERS, OVERRIDE_DISCOVERY, false));
         if (eurekaClient != null
                 && !eurekaClient.getInstanceRemoteStatus().equals(InstanceInfo.InstanceStatus.UP)
                 && !discoveryOverride) {
@@ -137,24 +134,20 @@ class TaskRunner {
         }
         String taskType = worker.getTaskDefName();
         try {
-            String domain =
-                    Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
-                            .orElseGet(
-                                    () ->
-                                            Optional.ofNullable(
-                                                            PropertyFactory.getString(
-                                                                    ALL_WORKERS, DOMAIN, null))
-                                                    .orElse(taskToDomain.get(taskType)));
+            String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
+                    .orElseGet(
+                            () -> Optional.ofNullable(
+                                    PropertyFactory.getString(
+                                            ALL_WORKERS, DOMAIN, null))
+                                    .orElse(taskToDomain.get(taskType)));
             LOGGER.info("Polling task of type: {} in domain: '{}'", taskType, domain);
-            List<Task> polledTasks =
-                    MetricsContainer.getPollTimer(taskType)
-                            .record(
-                                    () ->
-                                            pollTask(
-                                                    taskType,
-                                                    worker.getIdentity(),
-                                                    domain,
-                                                    this.getAvailableWorkers()));
+            List<Task> polledTasks = MetricsContainer.getPollTimer(taskType)
+                    .record(
+                            () -> pollTask(
+                                    taskType,
+                                    worker.getIdentity(),
+                                    domain,
+                                    this.getAvailableWorkers()));
             for (Task task : polledTasks) {
                 if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
                     LOGGER.info(
@@ -189,12 +182,11 @@ class TaskRunner {
     }
 
     @SuppressWarnings("FieldCanBeLocal")
-    private final Thread.UncaughtExceptionHandler uncaughtExceptionHandler =
-            (thread, error) -> {
-                // JVM may be in unstable state, try to send metrics then exit
-                MetricsContainer.incrementUncaughtExceptionCount();
-                LOGGER.error("Uncaught exception. Thread {} will exit now", thread, error);
-            };
+    private final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = (thread, error) -> {
+        // JVM may be in unstable state, try to send metrics then exit
+        MetricsContainer.incrementUncaughtExceptionCount();
+        LOGGER.error("Uncaught exception. Thread {} will exit now", thread, error);
+    };
 
     private void processTask(Task task, Worker worker) {
         LOGGER.info(
@@ -258,12 +250,11 @@ class TaskRunner {
     private void updateTaskResult(int count, Task task, TaskResult result, Worker worker) {
         try {
             // upload if necessary
-            Optional<String> optionalExternalStorageLocation =
-                    retryOperation(
-                            (TaskResult taskResult) -> upload(taskResult, task.getTaskType()),
-                            count,
-                            result,
-                            "evaluateAndUploadLargePayload");
+            Optional<String> optionalExternalStorageLocation = retryOperation(
+                    (TaskResult taskResult) -> upload(taskResult, task.getTaskType()),
+                    count,
+                    result,
+                    "evaluateAndUploadLargePayload");
 
             if (optionalExternalStorageLocation.isPresent()) {
                 result.setExternalOutputPayloadStoragePath(optionalExternalStorageLocation.get());

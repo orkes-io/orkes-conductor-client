@@ -1259,6 +1259,7 @@ public class ApiClient {
                         Collections.emptyMap(),
                         new String[0],
                         null);
+        System.out.println("trying to refresh new token: " + ", keyId: " + keyId +", keyScret: " + keySecret);
         Call call = httpClient.newCall(request);
         ApiResponse<Map<String, String>> response = execute(call, Map.class);
         return response.getData().get("token");

@@ -87,13 +87,10 @@ public class TaskRunnerConfigurer {
         private EurekaClient eurekaClient;
         private final TaskResourceApi taskClient;
         private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
-        private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount =
-                new HashMap<>();
-        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout =
-                new HashMap<>();
+        private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount = new HashMap<>();
+        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout = new HashMap<>();
 
-        private ConductorClientConfiguration conductorClientConfiguration =
-                new DefaultConductorClientConfiguration();
+        private ConductorClientConfiguration conductorClientConfiguration = new DefaultConductorClientConfiguration();
         private Integer defaultPollTimeout;
 
         public Builder(TaskResourceApi taskClient, Iterable<Worker> workers) {
@@ -104,8 +101,9 @@ public class TaskRunnerConfigurer {
         }
 
         /**
-         * @param workerNamePrefix prefix to be used for worker names, defaults to workflow-worker-
-         *     if not supplied.
+         * @param workerNamePrefix prefix to be used for worker names, defaults to
+         *                         workflow-worker-
+         *                         if not supplied.
          * @return Returns the current instance.
          */
         public TaskRunnerConfigurer.Builder withWorkerNamePrefix(String workerNamePrefix) {
@@ -114,8 +112,9 @@ public class TaskRunnerConfigurer {
         }
 
         /**
-         * @param sleepWhenRetry time in milliseconds, for which the thread should sleep when task
-         *     update call fails, before retrying the operation.
+         * @param sleepWhenRetry time in milliseconds, for which the thread should sleep
+         *                       when task
+         *                       update call fails, before retrying the operation.
          * @return Returns the current instance.
          */
         public TaskRunnerConfigurer.Builder withSleepWhenRetry(int sleepWhenRetry) {
@@ -124,7 +123,8 @@ public class TaskRunnerConfigurer {
         }
 
         /**
-         * @param updateRetryCount number of times to retry the failed updateTask operation
+         * @param updateRetryCount number of times to retry the failed updateTask
+         *                         operation
          * @return Builder instance
          * @see #withSleepWhenRetry(int)
          */
@@ -134,7 +134,8 @@ public class TaskRunnerConfigurer {
         }
 
         /**
-         * @param conductorClientConfiguration client configuration to handle external payloads
+         * @param conductorClientConfiguration client configuration to handle external
+         *                                     payloads
          * @return Builder instance
          */
         public TaskRunnerConfigurer.Builder withConductorClientConfiguration(
@@ -144,7 +145,8 @@ public class TaskRunnerConfigurer {
         }
 
         /**
-         * @param shutdownGracePeriodSeconds waiting seconds before forcing shutdown of your worker
+         * @param shutdownGracePeriodSeconds waiting seconds before forcing shutdown of
+         *                                   your worker
          * @return Builder instance
          */
         public TaskRunnerConfigurer.Builder withShutdownGracePeriodSeconds(
@@ -158,9 +160,11 @@ public class TaskRunnerConfigurer {
         }
 
         /**
-         * @param eurekaClient Eureka client - used to identify if the server is in discovery or
-         *     not. When the server goes out of discovery, the polling is terminated. If passed
-         *     null, discovery check is not done.
+         * @param eurekaClient Eureka client - used to identify if the server is in
+         *                     discovery or
+         *                     not. When the server goes out of discovery, the polling
+         *                     is terminated. If passed
+         *                     null, discovery check is not done.
          * @return Builder instance
          */
         public TaskRunnerConfigurer.Builder withEurekaClient(EurekaClient eurekaClient) {
@@ -199,7 +203,9 @@ public class TaskRunnerConfigurer {
         /**
          * Builds an instance of the TaskRunnerConfigurer.
          *
-         * <p>Please see {@link TaskRunnerConfigurer#init()} method. The method must be called after
+         * <p>
+         * Please see {@link TaskRunnerConfigurer#init()} method. The method must be
+         * called after
          * this constructor for the polling to start.
          *
          * @return Builder instance
@@ -209,8 +215,9 @@ public class TaskRunnerConfigurer {
         }
 
         /**
-         * @param threadCount # of threads assigned to the workers. Should be at-least the size of
-         *     taskWorkers to avoid starvation in a busy system.
+         * @param threadCount # of threads assigned to the workers. Should be at-least
+         *                    the size of
+         *                    taskWorkers to avoid starvation in a busy system.
          * @return Builder instance
          */
         public Builder withThreadCount(int threadCount) {
@@ -230,16 +237,18 @@ public class TaskRunnerConfigurer {
     }
 
     /**
-     * @return sleep time in millisecond before task update retry is done when receiving error from
-     *     the Conductor server
+     * @return sleep time in millisecond before task update retry is done when
+     *         receiving error from
+     *         the Conductor server
      */
     public int getSleepWhenRetry() {
         return sleepWhenRetry;
     }
 
     /**
-     * @return Number of times updateTask should be retried when receiving error from Conductor
-     *     server
+     * @return Number of times updateTask should be retried when receiving error
+     *         from Conductor
+     *         server
      */
     public int getUpdateRetryCount() {
         return updateRetryCount;
@@ -253,7 +262,8 @@ public class TaskRunnerConfigurer {
     }
 
     /**
-     * Starts the polling. Must be called after {@link TaskRunnerConfigurer.Builder#build()} method.
+     * Starts the polling. Must be called after
+     * {@link TaskRunnerConfigurer.Builder#build()} method.
      */
     public synchronized void init() {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
@@ -261,7 +271,8 @@ public class TaskRunnerConfigurer {
     }
 
     /**
-     * Invoke this method within a PreDestroy block within your application to facilitate a graceful
+     * Invoke this method within a PreDestroy block within your application to
+     * facilitate a graceful
      * shutdown of your worker, during process termination.
      */
     public void shutdown() {
@@ -271,20 +282,17 @@ public class TaskRunnerConfigurer {
 
     private void startWorker(Worker worker) {
         LOGGER.info("Starting worker: {} with ", worker.getTaskDefName());
-        final Integer threadCountForTask =
-                this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
-        final Integer taskPollTimeout =
-                this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
-        final TaskRunner taskRunner =
-                new TaskRunner(
-                        eurekaClient,
-                        taskClient,
-                        conductorClientConfiguration,
-                        updateRetryCount,
-                        taskToDomain,
-                        workerNamePrefix,
-                        threadCountForTask,
-                        taskPollTimeout);
+        final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
+        final Integer taskPollTimeout = this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
+        final TaskRunner taskRunner = new TaskRunner(
+                eurekaClient,
+                taskClient,
+                conductorClientConfiguration,
+                updateRetryCount,
+                taskToDomain,
+                workerNamePrefix,
+                threadCountForTask,
+                taskPollTimeout);
         this.taskRunners.add(taskRunner);
         this.scheduledExecutorService.scheduleWithFixedDelay(
                 () -> taskRunner.poll(worker),
