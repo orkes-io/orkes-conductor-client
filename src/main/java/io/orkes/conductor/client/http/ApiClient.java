@@ -107,6 +107,13 @@ public class ApiClient {
         }
     }
 
+    public ApiClient(String basePath, String token) {
+        this(basePath);
+        ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
+        apiKeyAuth.setApiKey(token);
+        authentications.put("api_key", apiKeyAuth);
+    }
+
     /**
      * Get base path
      *
