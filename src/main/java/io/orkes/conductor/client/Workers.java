@@ -1,15 +1,30 @@
+/*
+ * Copyright 2022 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.client;
-import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-import io.orkes.conductor.client.http.ApiClient;
-import io.orkes.conductor.client.http.api.TaskResourceApi;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.netflix.conductor.client.worker.Worker;
+import com.netflix.conductor.common.metadata.tasks.Task;
+import com.netflix.conductor.common.metadata.tasks.TaskResult;
+
+import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
+import io.orkes.conductor.client.http.ApiClient;
+import io.orkes.conductor.client.http.api.TaskResourceApi;
 
 public class Workers {
 
@@ -21,24 +36,24 @@ public class Workers {
     private String keyId;
     private String secret;
 
-
     public Workers register(String name, WorkerFn workerFn) {
-        workers.add(new Worker() {
-            @Override
-            public String getTaskDefName() {
-                return name;
-            }
+        workers.add(
+                new Worker() {
+                    @Override
+                    public String getTaskDefName() {
+                        return name;
+                    }
 
-            @Override
-            public TaskResult execute(Task task) {
-                return workerFn.execute(task);
-            }
+                    @Override
+                    public TaskResult execute(Task task) {
+                        return workerFn.execute(task);
+                    }
 
-            @Override
-            public int getPollingInterval() {
-                return 100;
-            }
-        });
+                    @Override
+                    public int getPollingInterval() {
+                        return 100;
+                    }
+                });
         return this;
     }
 
@@ -66,15 +81,14 @@ public class Workers {
             LOGGER.info("Conductor Server URL: {}", rootUri);
             LOGGER.info("Starting workers : {}", workers);
 
-
             ApiClient apiClient = new ApiClient(rootUri, keyId, secret);
             TaskResourceApi taskClient = new TaskResourceApi(apiClient);
 
-            TaskRunnerConfigurer runnerConfigurer = new TaskRunnerConfigurer
-                    .Builder(taskClient, workers)
-                    .withThreadCount(Math.max(1, workers.size()))
-                    .withTaskPollTimeout(100)
-                    .build();
+            TaskRunnerConfigurer runnerConfigurer =
+                    new TaskRunnerConfigurer.Builder(taskClient, workers)
+                            .withThreadCount(Math.max(1, workers.size()))
+                            .withTaskPollTimeout(100)
+                            .build();
             runnerConfigurer.init();
             started = true;
         } else {
@@ -85,17 +99,18 @@ public class Workers {
     }
 
     public void start(String name, WorkerFn workerFn) {
-        workers.add(new Worker() {
-            @Override
-            public String getTaskDefName() {
-                return name;
-            }
+        workers.add(
+                new Worker() {
+                    @Override
+                    public String getTaskDefName() {
+                        return name;
+                    }
 
-            @Override
-            public TaskResult execute(Task task) {
-                return workerFn.execute(task);
-            }
-        });
+                    @Override
+                    public TaskResult execute(Task task) {
+                        return workerFn.execute(task);
+                    }
+                });
         startAll();
     }
 }
