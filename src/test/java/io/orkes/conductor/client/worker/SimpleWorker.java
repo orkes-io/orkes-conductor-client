@@ -16,10 +16,12 @@ import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
+import io.orkes.conductor.client.util.Commons;
+
 public class SimpleWorker implements Worker {
     @Override
     public String getTaskDefName() {
-        return "simple_task_0";
+        return Commons.TASK_NAME;
     }
 
     @Override

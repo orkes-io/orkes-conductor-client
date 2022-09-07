@@ -14,6 +14,9 @@ package io.orkes.conductor.client;
 
 import io.orkes.conductor.client.http.model.*;
 import io.orkes.conductor.client.http.model.UpsertGroupRequest.RolesEnum;
+import io.orkes.conductor.client.util.ApiUtil;
+import io.orkes.conductor.client.util.Commons;
+import io.orkes.conductor.client.util.WorkflowUtil;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,29 +35,17 @@ import java.util.List;
 import java.util.Map;
 
 public class Examples {
-    private static final String ENV_ROOT_URI = "SDK_INTEGRATION_TESTS_SERVER_API_URL";
-    private static final String ENV_SECRET = "SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
-    private static final String ENV_KEY_ID = "SDK_INTEGRATION_TESTS_SERVER_KEY_ID";
-
     MetadataResourceApi metadataResourceApi;
     GroupResourceApi groupResourceApi;
-
     ApplicationResourceApi applicationResourceApi;
-
     WorkflowResourceApi workflowResourceApi;
-
     UserResourceApi userResourceApi;
-
     AuthorizationResourceApi authorizationResourceApi;
-
     TagsApi tagsApi;
-
-    String keyId = "keyId";
-    String keySecret = "keySecret";
 
     @BeforeEach
     public void init() {
-        ApiClient apiClient = getApiClientWithCredentials();
+        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         metadataResourceApi = new MetadataResourceApi(apiClient);
         groupResourceApi = new GroupResourceApi(apiClient);
         applicationResourceApi = new ApplicationResourceApi(apiClient);
@@ -67,26 +58,13 @@ public class Examples {
     @Test
     @DisplayName("tag a workflows and task")
     public void tagWorkflowsAndTasks() {
-        // Create workflow definition
-        String taskName = "trye";
-        String workflowName = "Workflow_klioqa";
-        WorkflowDef workflowDef = getWorkflowDef(workflowName, taskName);
-        // Create workflow definition.
-        metadataResourceApi.create(workflowDef, true);
-
-        // Create task definition
-        TaskDef taskDef = new TaskDef();
-        taskDef.setName(taskName);
-        metadataResourceApi.registerTaskDef(Arrays.asList(taskDef));
-
-        // Tag a task
+        registerTask();
+        registerWorkflow();
         TagObject tagObject = new TagObject();
         tagObject.setKey("department");
         tagObject.setValue("account");
-        tagsApi.addTaskTag(tagObject, taskName);
-
-        // Tag a workflow
-        tagsApi.addWorkflowTag(tagObject, workflowName);
+        tagsApi.addTaskTag(tagObject, Commons.TASK_NAME);
+        tagsApi.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
     }
 
     @Test
@@ -106,33 +84,17 @@ public class Examples {
     @Test
     @DisplayName("create workflow definition")
     public void createWorkflowDef() {
-        // Create workflow definition
-        String workflowName = "Workflow_tweytey";
-        String taskName = "Task_wyuw";
-        WorkflowDef workflowDef = getWorkflowDef(workflowName, taskName);
-        metadataResourceApi.create(workflowDef, true);
-
-        // Create task definition
-        TaskDef taskDef = new TaskDef();
-        taskDef.setName(taskName);
-        metadataResourceApi.registerTaskDef(Arrays.asList(taskDef));
+        registerTask();
+        registerWorkflow();
     }
 
     @Test
     @DisplayName("start workflow")
     public void startWorkflow() {
-        // Create workflow definition
-        String workflowName = "Workflow_wtyet";
-        String taskName = "Task_wyuwew";
-        WorkflowDef workflowDef = getWorkflowDef(workflowName, taskName);
-        metadataResourceApi.create(workflowDef, true);
-
-        // Create task definition
-        TaskDef taskDef = new TaskDef();
-        taskDef.setName(taskName);
-        metadataResourceApi.registerTaskDef(Arrays.asList(taskDef));
+        registerTask();
+        registerWorkflow();
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setName(Commons.WORKFLOW_NAME);
         startWorkflowRequest.setVersion(1);
         Map<String, Object> input = new HashMap<>();
         startWorkflowRequest.setInput(input);
@@ -147,15 +109,15 @@ public class Examples {
         validateGroupPermissions(group.getId());
     }
 
-    WorkflowDef getWorkflowDef(String workflowName, String taskName) {
-        WorkflowDef workflowDef = new WorkflowDef();
-        workflowDef.setName(workflowName);
-        workflowDef.setVersion(1);
-        workflowDef.setOwnerEmail("manan.bhatt@orkes.io");
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.setName(taskName);
-        workflowDef.setTasks(Arrays.asList(workflowTask));
-        return workflowDef;
+    void registerTask() {
+        TaskDef taskDef = new TaskDef();
+        taskDef.setName(Commons.TASK_NAME);
+        this.metadataResourceApi.registerTaskDef(List.of(taskDef));
+    }
+
+    void registerWorkflow() {
+        WorkflowDef workflowDef = WorkflowUtil.getWorkflowDef();
+        metadataResourceApi.create(workflowDef, true);
     }
 
     void giveApplicationPermissions(String applicationId) {
@@ -190,16 +152,5 @@ public class Examples {
                 "UPDATE",
                 "EXECUTE",
                 "DELETE");
-    }
-
-    ApiClient getApiClientWithCredentials() {
-        return new ApiClient(
-                getEnv(ENV_ROOT_URI),
-                getEnv(ENV_KEY_ID),
-                getEnv(ENV_SECRET));
-    }
-
-    String getEnv(String key) {
-        return System.getenv(key);
     }
 }
