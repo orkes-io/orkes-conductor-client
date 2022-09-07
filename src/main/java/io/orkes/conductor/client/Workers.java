@@ -36,6 +36,8 @@ public class Workers {
     private String keyId;
     private String secret;
 
+    private ApiClient apiClient = null;
+
     public Workers register(String name, WorkerFn workerFn) {
         workers.add(
                 new Worker() {
@@ -72,6 +74,11 @@ public class Workers {
         return this;
     }
 
+    public Workers apiClient(ApiClient apiClient) {
+        this.apiClient = apiClient;
+        return this;
+    }
+
     public Workers startAll() {
         if (rootUri == null) {
             throw new IllegalStateException("RootUri is null");
@@ -81,14 +88,16 @@ public class Workers {
             LOGGER.info("Conductor Server URL: {}", rootUri);
             LOGGER.info("Starting workers : {}", workers);
 
-            ApiClient apiClient = new ApiClient(rootUri, keyId, secret);
-            TaskResourceApi taskClient = new TaskResourceApi(apiClient);
+            if (this.apiClient != null) {
+                this.apiClient = new ApiClient(rootUri, keyId, secret);
+            }
 
-            TaskRunnerConfigurer runnerConfigurer =
-                    new TaskRunnerConfigurer.Builder(taskClient, workers)
-                            .withThreadCount(Math.max(1, workers.size()))
-                            .withTaskPollTimeout(100)
-                            .build();
+            TaskResourceApi taskClient = new TaskResourceApi(this.apiClient);
+
+            TaskRunnerConfigurer runnerConfigurer = new TaskRunnerConfigurer.Builder(taskClient, workers)
+                    .withThreadCount(Math.max(1, workers.size()))
+                    .withTaskPollTimeout(100)
+                    .build();
             runnerConfigurer.init();
             started = true;
         } else {

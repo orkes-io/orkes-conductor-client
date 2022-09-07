@@ -83,6 +83,7 @@ public class TaskRunnerConfigurer {
         private int updateRetryCount = 3;
         private int threadCount = -1;
         private int shutdownGracePeriodSeconds = 10;
+        private int defaultPollTimeout = 100;
         private final Iterable<Worker> workers;
         private EurekaClient eurekaClient;
         private final TaskResourceApi taskClient;
@@ -91,7 +92,6 @@ public class TaskRunnerConfigurer {
         private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout = new HashMap<>();
 
         private ConductorClientConfiguration conductorClientConfiguration = new DefaultConductorClientConfiguration();
-        private Integer defaultPollTimeout;
 
         public Builder(TaskResourceApi taskClient, Iterable<Worker> workers) {
             Preconditions.checkNotNull(taskClient, "TaskClient cannot be null");
