@@ -64,7 +64,7 @@ public class TagsApi {
 
         // create path and map variables
         String localVarPath =
-                "/api/metadata/task/{taskName}/tags"
+                "/metadata/task/{taskName}/tags"
                         .replaceAll(
                                 "\\{" + "taskName" + "\\}",
                                 apiClient.escapeString(taskName.toString()));
@@ -232,7 +232,7 @@ public class TagsApi {
 
         // create path and map variables
         String localVarPath =
-                "/api/metadata/workflow/{name}/tags"
+                "/metadata/workflow/{name}/tags"
                         .replaceAll(
                                 "\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
