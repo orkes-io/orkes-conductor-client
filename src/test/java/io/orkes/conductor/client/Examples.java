@@ -112,7 +112,7 @@ public class Examples {
     void registerTask() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName(Commons.TASK_NAME);
-        this.metadataResourceApi.registerTaskDef(List.of(taskDef));
+        this.metadataResourceApi.registerTaskDef(Arrays.asList(taskDef));
     }
 
     void registerWorkflow() {
@@ -142,10 +142,10 @@ public class Examples {
                                 "WORKFLOW_DEF", getAccessListAll(),
                                 "TASK_DEF", getAccessListAll()))
                 .description("Group used for SDK testing")
-                .roles(List.of(RolesEnum.ADMIN));
+                .roles(Arrays.asList(RolesEnum.ADMIN));
     }
 
     List<String> getAccessListAll() {
-        return List.of("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
+        return Arrays.asList("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
     }
 }

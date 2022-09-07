@@ -13,6 +13,7 @@
 package io.orkes.conductor.client.worker;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class FunctionalWorker {
         TaskResourceApi taskClient = new TaskResourceApi(apiClient);
         Worker worker = new SimpleWorker();
         this.taskRunnerConfigurer =
-                new TaskRunnerConfigurer.Builder(taskClient, List.of(worker))
+                new TaskRunnerConfigurer.Builder(taskClient, Arrays.asList(worker))
                         .withTaskThreadCount(Map.of(Commons.TASK_NAME, 10))
                         .build();
     }
