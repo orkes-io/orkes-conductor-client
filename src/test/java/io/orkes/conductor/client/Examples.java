@@ -77,7 +77,8 @@ public class Examples {
 
         // Add auth to tags
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
-        authorizationRequest.access(Arrays.asList(AuthorizationRequest.AccessEnum.EXECUTE));
+        authorizationRequest.access(
+                Collections.singletonList(AuthorizationRequest.AccessEnum.EXECUTE));
         // authorizationResourceApi.grantPermissions();
     }
 
@@ -112,7 +113,9 @@ public class Examples {
     void registerTask() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName(Commons.TASK_NAME);
-        this.metadataResourceApi.registerTaskDef(Arrays.asList(taskDef));
+        List<TaskDef> taskDefs = new ArrayList<>();
+        taskDefs.add(taskDef);
+        this.metadataResourceApi.registerTaskDef(taskDefs);
     }
 
     void registerWorkflow() {
@@ -142,10 +145,11 @@ public class Examples {
                                 "WORKFLOW_DEF", getAccessListAll(),
                                 "TASK_DEF", getAccessListAll()))
                 .description("Group used for SDK testing")
-                .roles(Arrays.asList(RolesEnum.ADMIN));
+                .roles(Collections.singletonList(RolesEnum.ADMIN));
     }
 
     List<String> getAccessListAll() {
-        return Arrays.asList("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
+        return new ArrayList<String>(
+                Arrays.asList("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE"));
     }
 }

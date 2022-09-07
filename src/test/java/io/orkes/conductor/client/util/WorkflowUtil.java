@@ -12,7 +12,7 @@
  */
 package io.orkes.conductor.client.util;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import io.orkes.conductor.client.http.model.WorkflowDef;
 import io.orkes.conductor.client.http.model.WorkflowTask;
@@ -26,7 +26,7 @@ public class WorkflowUtil {
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName(Commons.TASK_NAME);
         workflowTask.setTaskReferenceName(Commons.TASK_NAME);
-        workflowDef.setTasks(Arrays.asList(workflowTask));
+        workflowDef.setTasks(Collections.singletonList(workflowTask));
         return workflowDef;
     }
 }

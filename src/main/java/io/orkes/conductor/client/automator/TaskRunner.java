@@ -183,7 +183,7 @@ class TaskRunner {
 
     private List<Task> pollTask(String taskType, String workerId, String domain, int count) {
         if (count < 1) {
-            return Arrays.asList();
+            return Collections.emptyList();
         }
         return taskClient.batchPoll(taskType, workerId, domain, count, this.taskPollTimeout);
     }
