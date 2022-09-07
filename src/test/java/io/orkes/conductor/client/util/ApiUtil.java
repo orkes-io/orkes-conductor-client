@@ -14,13 +14,21 @@ package io.orkes.conductor.client.util;
 
 import io.orkes.conductor.client.http.ApiClient;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class ApiUtil {
     private static final String ENV_ROOT_URI = "SDK_INTEGRATION_TESTS_SERVER_API_URL";
-    private static final String ENV_SECRET = "SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
     private static final String ENV_KEY_ID = "SDK_INTEGRATION_TESTS_SERVER_KEY_ID";
+    private static final String ENV_SECRET = "SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
 
     public static ApiClient getApiClientWithCredentials() {
-        return new ApiClient(getEnv(ENV_ROOT_URI), getEnv(ENV_KEY_ID), getEnv(ENV_SECRET));
+        String basePath = getEnv(ENV_ROOT_URI);
+        assertNotNull(basePath, ENV_ROOT_URI + " env not set");
+        String keyId = getEnv(ENV_KEY_ID);
+        assertNotNull(keyId, ENV_KEY_ID + " env not set");
+        String keySecret = getEnv(ENV_SECRET);
+        assertNotNull(keyId, ENV_SECRET + " env not set");
+        return new ApiClient(basePath, keyId, keySecret);
     }
 
     static String getEnv(String key) {
