@@ -12,11 +12,12 @@
  */
 package io.orkes.conductor.client;
 
-import io.orkes.conductor.client.http.model.*;
-import io.orkes.conductor.client.http.model.UpsertGroupRequest.RolesEnum;
-import io.orkes.conductor.client.util.ApiUtil;
-import io.orkes.conductor.client.util.Commons;
-import io.orkes.conductor.client.util.WorkflowUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,15 +25,13 @@ import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.http.ApiClient;
 import io.orkes.conductor.client.http.api.*;
+import io.orkes.conductor.client.http.model.*;
+import io.orkes.conductor.client.http.model.UpsertGroupRequest.RolesEnum;
+import io.orkes.conductor.client.util.ApiUtil;
+import io.orkes.conductor.client.util.Commons;
+import io.orkes.conductor.client.util.WorkflowUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Examples {
     MetadataResourceApi metadataResourceApi;
@@ -147,11 +146,6 @@ public class Examples {
     }
 
     List<String> getAccessListAll() {
-        return List.of(
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "EXECUTE",
-                "DELETE");
+        return List.of("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
     }
 }

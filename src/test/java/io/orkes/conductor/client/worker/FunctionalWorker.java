@@ -1,6 +1,16 @@
+/*
+ * Copyright 2022 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.client.worker;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +31,8 @@ import io.orkes.conductor.client.http.model.WorkflowStatus;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class FunctionalWorker {
     WorkflowResourceApi workflowResourceApi;
     TaskRunnerConfigurer taskRunnerConfigurer;
@@ -31,36 +43,29 @@ public class FunctionalWorker {
         workflowResourceApi = new WorkflowResourceApi(apiClient);
         TaskResourceApi taskClient = new TaskResourceApi(apiClient);
         Worker worker = new SimpleWorker();
-        this.taskRunnerConfigurer = new TaskRunnerConfigurer.Builder(
-                taskClient,
-                List.of(worker))
-                .withTaskThreadCount(
-                        Map.of(Commons.TASK_NAME, 10))
-                .build();
+        this.taskRunnerConfigurer =
+                new TaskRunnerConfigurer.Builder(taskClient, List.of(worker))
+                        .withTaskThreadCount(Map.of(Commons.TASK_NAME, 10))
+                        .build();
     }
 
     @Test
     @DisplayName("Test workflow completion")
     public void workflow() throws Exception {
-        List<String> workflowIds = startWorkflows(
-                10,
-                Commons.WORKFLOW_NAME);
+        List<String> workflowIds = startWorkflows(10, Commons.WORKFLOW_NAME);
         workflowIds.add(startWorkflow(Commons.WORKFLOW_NAME));
         this.taskRunnerConfigurer.init();
         Thread.sleep(5 * 1000);
-        workflowIds.forEach(
-                workflowId -> validateCompletedWorkflow(workflowId));
+        workflowIds.forEach(workflowId -> validateCompletedWorkflow(workflowId));
         this.taskRunnerConfigurer.shutdown();
     }
 
     String startWorkflow(String workflowName) {
-        return workflowResourceApi.startWorkflow(
-                new StartWorkflowRequest().name(workflowName));
+        return workflowResourceApi.startWorkflow(new StartWorkflowRequest().name(workflowName));
     }
 
     List<String> startWorkflows(int quantity, String workflowName) {
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest()
-                .name(workflowName);
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest().name(workflowName);
         List<String> workflowIds = new ArrayList<>();
         for (int i = 0; i < quantity; i += 1) {
             String workflowId = workflowResourceApi.startWorkflow(startWorkflowRequest);
@@ -70,10 +75,8 @@ public class FunctionalWorker {
     }
 
     void validateCompletedWorkflow(String workflowId) {
-        WorkflowStatus workflowStatus = workflowResourceApi.getWorkflowStatusSummary(
-                workflowId,
-                false,
-                false);
+        WorkflowStatus workflowStatus =
+                workflowResourceApi.getWorkflowStatusSummary(workflowId, false, false);
         assertEquals(WorkflowStatus.StatusEnum.COMPLETED, workflowStatus.getStatus());
     }
 }
