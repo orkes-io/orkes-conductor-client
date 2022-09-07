@@ -62,6 +62,8 @@ public class Examples {
         registerWorkflow();
         TagObject tagObject = new TagObject();
         tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setKey("a");
+        tagObject.setValue("b");
         tagsApi.addTaskTag(tagObject, Commons.TASK_NAME);
         tagsApi.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
     }
