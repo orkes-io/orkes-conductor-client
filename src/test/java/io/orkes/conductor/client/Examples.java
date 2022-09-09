@@ -70,16 +70,11 @@ public class Examples {
     @Test
     @DisplayName("add auth to tags")
     public void addAuthToTags() {
-        // Create a tag
-        TagObject tagObject = new TagObject();
-        tagObject.setKey("department");
-        tagObject.setValue("HR");
-
         // Add auth to tags
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
         authorizationRequest.access(
                 Collections.singletonList(AuthorizationRequest.AccessEnum.EXECUTE));
-        // authorizationResourceApi.grantPermissions();
+        // authorizationResourceApi.grantPermissions(authorizationRequest);
     }
 
     @Test

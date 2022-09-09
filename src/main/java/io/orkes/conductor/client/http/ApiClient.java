@@ -107,7 +107,7 @@ public class ApiClient {
         this.keyId = keyId;
         this.keySecret = keySecret;
         try {
-            this.setTokenHeader();
+            this.refreshToken();
         } catch (Exception e) {
             LOGGER.warn("Failed to set authentication token. Reason: " + e.getMessage());
         }
@@ -115,9 +115,7 @@ public class ApiClient {
 
     public ApiClient(String basePath, String token) {
         this(basePath);
-        ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
-        apiKeyAuth.setApiKey(token);
-        authentications.put("api_key", apiKeyAuth);
+        this.setToken(token);
     }
 
     /**
@@ -1172,13 +1170,6 @@ public class ApiClient {
         }
     }
 
-    public synchronized String getToken() throws Exception {
-        if (this.token == null && (this.keyId != null && this.keySecret != null)) {
-            return this.refreshToken();
-        }
-        return this.token;
-    }
-
     /**
      * Apply SSL related settings to httpClient according to the current values of verifyingSsl and
      * sslCaCert.
@@ -1256,13 +1247,14 @@ public class ApiClient {
         }
     }
 
-    void setTokenHeader() throws Exception {
-        ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
-        apiKeyAuth.setApiKey(this.getToken());
-        authentications.put("api_key", apiKeyAuth);
-    }
-
-    String refreshToken() throws Exception {
+    public synchronized void refreshToken() throws Exception {
+        if (this.getToken() != null) {
+            return;
+        }
+        if (this.keyId == null || this.keySecret == null) {
+            throw new Exception(
+                    "KeyId and KeySecret must be set in order to get an authentication token");
+        }
         GenerateTokenRequest generateTokenRequest =
                 new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
         Request request =
@@ -1278,7 +1270,21 @@ public class ApiClient {
                         null);
         Call call = httpClient.newCall(request);
         ApiResponse<Map<String, String>> response = execute(call, Map.class);
-        this.token = response.getData().get("token");
+        this.setToken(response.getData().get("token"));
+    }
+
+    public synchronized String getToken() {
         return this.token;
+    }
+
+    synchronized void setToken(String token) {
+        this.token = token;
+        this.setApiKeyHeader(token);
+    }
+
+    void setApiKeyHeader(String token) {
+        ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
+        apiKeyAuth.setApiKey(token);
+        authentications.put("api_key", apiKeyAuth);
     }
 }

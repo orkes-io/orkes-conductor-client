@@ -38,14 +38,14 @@ public class AuthorizationClientFilter extends ClientFilter {
 
     @Override
     public ClientResponse handle(ClientRequest request) throws ClientHandlerException {
-        try {
-            final String token = apiClient.getToken();
-            if (token != null) {
-                request.getHeaders().add(AUTHORIZATION_HEADER, token);
+        if (apiClient.getToken() == null) {
+            try {
+                this.apiClient.refreshToken();
+            } catch (Exception e) {
+                LOGGER.warn("Failed to refresh authentication token, reason: " + e.getMessage());
             }
-        } catch (Exception e) {
-            LOGGER.error("Failed to refresh token. Reason: ", e.getMessage());
         }
+        request.getHeaders().add(AUTHORIZATION_HEADER, apiClient.getToken());
         try {
             ClientResponse clientResponse = getNext().handle(request);
             return clientResponse;
