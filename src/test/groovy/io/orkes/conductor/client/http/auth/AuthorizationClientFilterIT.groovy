@@ -53,7 +53,7 @@ class AuthorizationClientFilterIT extends AbstractIT {
             metadataClient.getTaskDef("task0")
 
         then:
-            verify(1, postRequestedFor(urlEqualTo("/api/token")))
+            verify(2, postRequestedFor(urlEqualTo("/api/token")))
             verify(1, getRequestedFor(urlEqualTo("/api/metadata/taskdefs/task0")))
     }
 
@@ -88,7 +88,7 @@ class AuthorizationClientFilterIT extends AbstractIT {
 
         then:
             await().atMost(5, SECONDS).until {
-                verify(1, postRequestedFor(urlEqualTo("/api/token")))
+                verify(2, postRequestedFor(urlEqualTo("/api/token")))
                 verify(threads, getRequestedFor(urlEqualTo("/api/metadata/taskdefs/task0")))
                 true
             }

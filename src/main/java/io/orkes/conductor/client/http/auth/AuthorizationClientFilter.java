@@ -25,38 +25,33 @@ import com.sun.jersey.api.client.filter.ClientFilter;
 public class AuthorizationClientFilter extends ClientFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationClientFilter.class);
 
-    private final int MAX_ATTEMPTS = 2;
-
     private static final String AUTHORIZATION_HEADER = "X-AUTHORIZATION";
 
     private final ApiClient apiClient;
 
     public AuthorizationClientFilter(String rootUri, String keyId, String secret) {
+        while (rootUri.endsWith("/")) {
+            rootUri = rootUri.replaceAll("/$", "");
+        }
         this.apiClient = new ApiClient(rootUri, keyId, secret);
     }
 
     @Override
     public ClientResponse handle(ClientRequest request) throws ClientHandlerException {
-        for (int attempt = 0; attempt < this.MAX_ATTEMPTS; attempt += 1) {
-            try {
-                final String token = apiClient.getNewToken();
-                if (token != null) {
-                    request.getHeaders().add(AUTHORIZATION_HEADER, token);
-                }
-            } catch (Exception e) {
-                LOGGER.error("Failed to refresh token. Reason: ", e.getMessage());
-                continue;
+        try {
+            final String token = apiClient.getToken();
+            if (token != null) {
+                request.getHeaders().add(AUTHORIZATION_HEADER, token);
             }
-            try {
-                ClientResponse clientResponse = getNext().handle(request);
-                if (clientResponse.getStatus() != 401) {
-                    return clientResponse;
-                }
-            } catch (ClientHandlerException e) {
-                LOGGER.error("Error adding authorization header to request", e);
-                throw e;
-            }
+        } catch (Exception e) {
+            LOGGER.error("Failed to refresh token. Reason: ", e.getMessage());
         }
-        return null;
+        try {
+            ClientResponse clientResponse = getNext().handle(request);
+            return clientResponse;
+        } catch (ClientHandlerException e) {
+            LOGGER.error("Error adding authorization header to request", e);
+            throw e;
+        }
     }
 }
