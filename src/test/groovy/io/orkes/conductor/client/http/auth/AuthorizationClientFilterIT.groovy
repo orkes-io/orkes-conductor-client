@@ -36,7 +36,6 @@ class AuthorizationClientFilterIT extends AbstractIT {
         given:
             def metadataClient = new OrkesMetadataClient()
             metadataClient.setRootURI("http://localhost:${port}/api/")
-            metadataClient.withCredentials(keyId, secret)
 
             stubFor post("/api/token")
                     .withRequestBody(equalToJson(json(keyId: keyId, keySecret: secret)))
@@ -50,10 +49,11 @@ class AuthorizationClientFilterIT extends AbstractIT {
                             .withHeader("Content-Type", "application/json")
                             .withBody(json([:])))
         when:
+            metadataClient.withCredentials(keyId, secret)
             metadataClient.getTaskDef("task0")
 
         then:
-            verify(2, postRequestedFor(urlEqualTo("/api/token")))
+            verify(1, postRequestedFor(urlEqualTo("/api/token")))
             verify(1, getRequestedFor(urlEqualTo("/api/metadata/taskdefs/task0")))
     }
 
@@ -62,7 +62,6 @@ class AuthorizationClientFilterIT extends AbstractIT {
         given:
             def metadataClient = new OrkesMetadataClient()
             metadataClient.setRootURI("http://localhost:${port}/api/")
-            metadataClient.withCredentials(keyId, secret)
 
             stubFor post("/api/token")
                     .withRequestBody(equalToJson(json(keyId: keyId, keySecret: secret)))
@@ -77,6 +76,7 @@ class AuthorizationClientFilterIT extends AbstractIT {
                             .withBody(json([:])))
 
         when:
+            metadataClient.withCredentials(keyId, secret)
             def threads = 10
             def latch = new CountDownLatch(threads)
             threads.times {
@@ -88,7 +88,7 @@ class AuthorizationClientFilterIT extends AbstractIT {
 
         then:
             await().atMost(5, SECONDS).until {
-                verify(2, postRequestedFor(urlEqualTo("/api/token")))
+                verify(1, postRequestedFor(urlEqualTo("/api/token")))
                 verify(threads, getRequestedFor(urlEqualTo("/api/metadata/taskdefs/task0")))
                 true
             }
