@@ -33,22 +33,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class Examples {
     private final MetadataClient metadataClient;
     private final WorkflowClient workflowClient;
-
-    final ApplicationResourceApi applicationResourceApi;
-    final AuthorizationResourceApi authorizationResourceApi;
+    private final AuthorizationClient authorizationClient;
     final TagsApi tagsApi;
-    final GroupResourceApi groupResourceApi;
 
     public Examples() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         OrkesClients orkesClients = ApiUtil.getOrkesClient();
         metadataClient = orkesClients.getMetadataClient();
         workflowClient = orkesClients.getWorkflowClient();
-
-        applicationResourceApi = new ApplicationResourceApi(apiClient);
+        authorizationClient = orkesClients.getAuthorizationClient();
         tagsApi = new TagsApi(apiClient);
-        authorizationResourceApi = new AuthorizationResourceApi(apiClient);
-        groupResourceApi = new GroupResourceApi(apiClient);
     }
 
     @Test
@@ -98,7 +92,7 @@ public class Examples {
     @DisplayName("auto assign group permission on workflow creation by any group member")
     public void autoAssignWorkflowPermissions() {
         giveApplicationPermissions("46f0bf10-b59d-4fbd-a053-935307c8cb86");
-        Group group = groupResourceApi.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
+        Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
         validateGroupPermissions(group.getId());
     }
 
@@ -116,11 +110,11 @@ public class Examples {
     }
 
     void giveApplicationPermissions(String applicationId) {
-        applicationResourceApi.addRoleToApplicationUser(applicationId, "ADMIN");
+        authorizationClient.addRoleToApplicationUser(applicationId, "ADMIN");
     }
 
     void validateGroupPermissions(String id) {
-        Group group = groupResourceApi.getGroup(id);
+        Group group = authorizationClient.getGroup(id);
         for (Map.Entry<String, List<String>> entry : group.getDefaultAccess().entrySet()) {
             List<String> expectedList = new ArrayList<>(getAccessListAll());
             List<String> actualList = new ArrayList<>(entry.getValue());
