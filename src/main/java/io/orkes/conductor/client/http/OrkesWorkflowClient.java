@@ -12,8 +12,9 @@
  */
 package io.orkes.conductor.client.http;
 
-import com.google.common.base.Preconditions;
-import com.netflix.conductor.client.config.ConductorClientConfiguration;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.SkipTaskRequest;
@@ -22,15 +23,11 @@ import com.netflix.conductor.common.model.BulkResponse;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowSummary;
+
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 
-import com.sun.jersey.api.client.ClientHandler;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.filter.ClientFilter;
-import org.apache.commons.lang.StringUtils;
-
-import java.util.List;
+import com.google.common.base.Preconditions;
 
 public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
@@ -44,8 +41,6 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
     }
 
-
-
     @Override
     public String startWorkflow(StartWorkflowRequest startWorkflowRequest) {
         return httpClient.startWorkflow(startWorkflowRequest);
@@ -57,8 +52,10 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public List<Workflow> getWorkflows(String name, String correlationId, boolean includeClosed, boolean includeTasks) {
-        return httpClient.getWorkflowsByCorrelationId(name, correlationId, includeClosed, includeTasks);
+    public List<Workflow> getWorkflows(
+            String name, String correlationId, boolean includeClosed, boolean includeTasks) {
+        return httpClient.getWorkflowsByCorrelationId(
+                name, correlationId, includeClosed, includeTasks);
     }
 
     @Override
@@ -83,7 +80,8 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public List<String> getWorkflowsByTimePeriod(String workflowName, int version, Long startTime, Long endTime) {
+    public List<String> getWorkflowsByTimePeriod(
+            String workflowName, int version, Long startTime, Long endTime) {
         return httpClient.getRunningWorkflow(workflowName, version, startTime, endTime);
     }
 
@@ -148,15 +146,14 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public SearchResult<WorkflowSummary> search(Integer start, Integer size, String sort, String freeText, String query) {
+    public SearchResult<WorkflowSummary> search(
+            Integer start, Integer size, String sort, String freeText, String query) {
         return httpClient.search(null, start, size, sort, freeText, query, null);
     }
 
     @Override
-    public SearchResult<Workflow> searchV2(Integer start, Integer size, String sort, String freeText, String query) {
+    public SearchResult<Workflow> searchV2(
+            Integer start, Integer size, String sort, String freeText, String query) {
         throw new UnsupportedOperationException("Please use search() API");
     }
-
-
-
 }

@@ -12,14 +12,14 @@
  */
 package io.orkes.conductor.client.http.model;
 
-import com.google.gson.annotations.SerializedName;
-import com.netflix.conductor.common.run.SearchResult;
-import com.netflix.conductor.common.run.WorkflowSummary;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.netflix.conductor.common.run.SearchResult;
+import com.netflix.conductor.common.run.WorkflowSummary;
+
+import com.google.gson.annotations.SerializedName;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /** ScrollableSearchResultWorkflowSummary */
 public class ScrollableSearchResultWorkflowSummary extends SearchResult<WorkflowSummary> {
@@ -66,7 +66,8 @@ public class ScrollableSearchResultWorkflowSummary extends SearchResult<Workflow
         ScrollableSearchResultWorkflowSummary scrollableSearchResultWorkflowSummary =
                 (ScrollableSearchResultWorkflowSummary) o;
         return Objects.equals(this.queryId, scrollableSearchResultWorkflowSummary.queryId)
-                && Objects.equals(this.getResults(), scrollableSearchResultWorkflowSummary.getResults());
+                && Objects.equals(
+                        this.getResults(), scrollableSearchResultWorkflowSummary.getResults());
     }
 
     @Override

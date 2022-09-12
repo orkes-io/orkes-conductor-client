@@ -12,13 +12,14 @@
  */
 package io.orkes.conductor.client.http.model;
 
-import com.google.gson.annotations.SerializedName;
-import com.netflix.conductor.common.run.WorkflowSummary;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.netflix.conductor.common.run.WorkflowSummary;
+
+import com.google.gson.annotations.SerializedName;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /** SearchResultWorkflowSummary */
 public class SearchResultWorkflowSummary {

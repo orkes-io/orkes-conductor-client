@@ -12,7 +12,9 @@
  */
 package io.orkes.conductor.client.http;
 
-import com.netflix.conductor.client.config.ConductorClientConfiguration;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import com.netflix.conductor.common.metadata.tasks.PollData;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -20,18 +22,10 @@ import com.netflix.conductor.common.metadata.tasks.TaskExecLog;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.TaskSummary;
+
 import io.orkes.conductor.client.http.api.TaskResourceApi;
-import io.orkes.conductor.client.http.auth.AuthorizationClientFilter;
 
-import com.sun.jersey.api.client.ClientHandler;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.filter.ClientFilter;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-public class OrkesTaskClient extends OrkesClient implements TaskClient  {
+public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
     private TaskResourceApi taskResourceApi;
 
@@ -46,12 +40,14 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient  {
     }
 
     @Override
-    public List<Task> batchPollTasksByTaskType(String taskType, String workerId, int count, int timeoutInMillisecond) {
+    public List<Task> batchPollTasksByTaskType(
+            String taskType, String workerId, int count, int timeoutInMillisecond) {
         return taskResourceApi.batchPoll(taskType, workerId, null, count, timeoutInMillisecond);
     }
 
     @Override
-    public List<Task> batchPollTasksInDomain(String taskType, String domain, String workerId, int count, int timeoutInMillisecond) {
+    public List<Task> batchPollTasksInDomain(
+            String taskType, String domain, String workerId, int count, int timeoutInMillisecond) {
         return taskResourceApi.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
     }
 
@@ -61,7 +57,8 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient  {
     }
 
     @Override
-    public Optional<String> evaluateAndUploadLargePayload(Map<String, Object> taskOutputData, String taskType) {
+    public Optional<String> evaluateAndUploadLargePayload(
+            Map<String, Object> taskOutputData, String taskType) {
         return Optional.empty();
     }
 
@@ -86,9 +83,7 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient  {
     }
 
     @Override
-    public void removeTaskFromQueue(String taskType, String taskId) {
-
-    }
+    public void removeTaskFromQueue(String taskType, String taskId) {}
 
     @Override
     public int getQueueSizeForTask(String taskType) {
@@ -96,7 +91,8 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient  {
     }
 
     @Override
-    public int getQueueSizeForTask(String taskType, String domain, String isolationGroupId, String executionNamespace) {
+    public int getQueueSizeForTask(
+            String taskType, String domain, String isolationGroupId, String executionNamespace) {
         return 0;
     }
 
@@ -131,12 +127,14 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient  {
     }
 
     @Override
-    public SearchResult<TaskSummary> search(Integer start, Integer size, String sort, String freeText, String query) {
+    public SearchResult<TaskSummary> search(
+            Integer start, Integer size, String sort, String freeText, String query) {
         return null;
     }
 
     @Override
-    public SearchResult<Task> searchV2(Integer start, Integer size, String sort, String freeText, String query) {
+    public SearchResult<Task> searchV2(
+            Integer start, Integer size, String sort, String freeText, String query) {
         return null;
     }
 }

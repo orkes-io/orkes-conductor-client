@@ -12,17 +12,11 @@
  */
 package io.orkes.conductor.client.http;
 
-import com.netflix.conductor.client.config.ConductorClientConfiguration;
+import java.util.List;
 
 import com.netflix.conductor.common.metadata.events.EventHandler;
+
 import io.orkes.conductor.client.http.api.EventResourceApi;
-import io.orkes.conductor.client.http.auth.AuthorizationClientFilter;
-
-import com.sun.jersey.api.client.ClientHandler;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.filter.ClientFilter;
-
-import java.util.List;
 
 public class OrkesEventClient extends OrkesClient implements EventClient {
 
