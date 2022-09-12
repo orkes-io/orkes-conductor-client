@@ -14,8 +14,8 @@ package io.orkes.conductor.client.util;
 
 import java.util.Collections;
 
-import io.orkes.conductor.client.http.model.WorkflowDef;
-import io.orkes.conductor.client.http.model.WorkflowTask;
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 
 public class WorkflowUtil {
     public static WorkflowDef getWorkflowDef() {
