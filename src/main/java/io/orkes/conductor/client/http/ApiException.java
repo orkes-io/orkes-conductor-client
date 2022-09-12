@@ -17,7 +17,7 @@ import io.orkes.conductor.client.OrkesClientException;
 import java.util.List;
 import java.util.Map;
 
-public class ApiException extends RuntimeException implements OrkesClientException {
+public class ApiException extends OrkesClientException {
     private int code = 0;
     private Map<String, List<String>> responseHeaders = null;
     private String responseBody = null;
