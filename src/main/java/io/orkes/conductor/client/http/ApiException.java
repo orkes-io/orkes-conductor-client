@@ -12,10 +12,12 @@
  */
 package io.orkes.conductor.client.http;
 
+import io.orkes.conductor.client.OrkesClientException;
+
 import java.util.List;
 import java.util.Map;
 
-public class ApiException extends RuntimeException {
+public class ApiException extends RuntimeException implements OrkesClientException {
     private int code = 0;
     private Map<String, List<String>> responseHeaders = null;
     private String responseBody = null;
@@ -75,6 +77,11 @@ public class ApiException extends RuntimeException {
         this(code, message);
         this.responseHeaders = responseHeaders;
         this.responseBody = responseBody;
+    }
+
+    @Override
+    public boolean isClientError() {
+        return code > 399 && code < 499;
     }
 
     /**

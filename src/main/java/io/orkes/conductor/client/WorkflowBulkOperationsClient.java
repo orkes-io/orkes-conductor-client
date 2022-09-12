@@ -11,11 +11,9 @@ public interface WorkflowBulkOperationsClient {
 
     Call pauseWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback);
 
-    BulkResponse restartWorkflow(List<String> body, Boolean useLatestDefinitions)
-           ;
+    BulkResponse restartWorkflow(List<String> body, Boolean useLatestDefinitions);
 
-    Call restartWorkflowAsync(List<String> body, Boolean useLatestDefinitions, ApiCallback<BulkResponse> callback)
-           ;
+    Call restartWorkflowAsync(List<String> body, Boolean useLatestDefinitions, ApiCallback<BulkResponse> callback);
 
     BulkResponse resumeWorkflow(List<String> body);
 
