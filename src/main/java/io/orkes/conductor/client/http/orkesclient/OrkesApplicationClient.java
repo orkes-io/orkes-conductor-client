@@ -19,8 +19,8 @@ public class OrkesApplicationClient extends OrkesClient implements ApplicationCl
 
 
     @Override
-    public Object addRoleToApplicationUser(String applicationId, String role) throws ApiException {
-        return applicationResourceApi.addRoleToApplicationUser(applicationId, role);
+    public void addRoleToApplicationUser(String applicationId, String role) throws ApiException {
+        applicationResourceApi.addRoleToApplicationUser(applicationId, role);
     }
 
     @Override

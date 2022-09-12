@@ -51,7 +51,7 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public Object getGrantedPermissionsForGroup(String groupId) throws ApiException {
+    public GrantedAccessResponse getGrantedPermissionsForGroup(String groupId) throws ApiException {
         return groupResourceApi.getGrantedPermissions1(groupId);
     }
 
@@ -86,7 +86,7 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public Object getGrantedPermissionsForUser(String userId) throws ApiException {
+    public GrantedAccessResponse getGrantedPermissionsForUser(String userId) throws ApiException {
         return userResourceApi.getGrantedPermissions(userId);
     }
 

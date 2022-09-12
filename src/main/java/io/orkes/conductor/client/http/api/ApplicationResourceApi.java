@@ -154,9 +154,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object addRoleToApplicationUser(String applicationId, String role) throws ApiException {
-        ApiResponse<Object> resp = addRoleToApplicationUserWithHttpInfo(applicationId, role);
-        return resp.getData();
+    public void addRoleToApplicationUser(String applicationId, String role) throws ApiException {
+        addRoleToApplicationUserWithHttpInfo(applicationId, role);
     }
 
     /**
@@ -272,9 +271,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object createAccessKey(String id) throws ApiException {
-        ApiResponse<Object> resp = createAccessKeyWithHttpInfo(id);
-        return resp.getData();
+    public void createAccessKey(String id) throws ApiException {
+        createAccessKeyWithHttpInfo(id);
     }
 
     /**
@@ -386,8 +384,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object createApplication(CreateOrUpdateApplicationRequest body) throws ApiException {
-        ApiResponse<Object> resp = createApplicationWithHttpInfo(body);
+    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest body) throws ApiException {
+        ApiResponse<ConductorApplication> resp = createApplicationWithHttpInfo(body);
         return resp.getData();
     }
 
@@ -399,10 +397,10 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> createApplicationWithHttpInfo(CreateOrUpdateApplicationRequest body)
+    private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(CreateOrUpdateApplicationRequest body)
             throws ApiException {
         com.squareup.okhttp.Call call = createApplicationValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -518,9 +516,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object deleteAccessKey(String applicationId, String keyId) throws ApiException {
-        ApiResponse<Object> resp = deleteAccessKeyWithHttpInfo(applicationId, keyId);
-        return resp.getData();
+    public void deleteAccessKey(String applicationId, String keyId) throws ApiException {
+        deleteAccessKeyWithHttpInfo(applicationId, keyId);
     }
 
     /**
@@ -638,9 +635,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object deleteApplication(String id) throws ApiException {
-        ApiResponse<Object> resp = deleteApplicationWithHttpInfo(id);
-        return resp.getData();
+    public void deleteApplication(String id) throws ApiException {
+        deleteApplicationWithHttpInfo(id);
     }
 
     /**
@@ -755,8 +751,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object getAccessKeys(String id) throws ApiException {
-        ApiResponse<Object> resp = getAccessKeysWithHttpInfo(id);
+    public List<AccessKeyResponse> getAccessKeys(String id) throws ApiException {
+        ApiResponse<List<AccessKeyResponse>> resp = getAccessKeysWithHttpInfo(id);
         return resp.getData();
     }
 
@@ -768,9 +764,9 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> getAccessKeysWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<List<AccessKeyResponse>> getAccessKeysWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = getAccessKeysValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<List<AccessKeyResponse>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -872,8 +868,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object getApplication(String id) throws ApiException {
-        ApiResponse<Object> resp = getApplicationWithHttpInfo(id);
+    public ConductorApplication getApplication(String id) throws ApiException {
+        ApiResponse<ConductorApplication> resp = getApplicationWithHttpInfo(id);
         return resp.getData();
     }
 
@@ -885,9 +881,9 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> getApplicationWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<ConductorApplication> getApplicationWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = getApplicationValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1107,10 +1103,9 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object removeRoleFromApplicationUser(String applicationId, String role)
+    public void removeRoleFromApplicationUser(String applicationId, String role)
             throws ApiException {
-        ApiResponse<Object> resp = removeRoleFromApplicationUserWithHttpInfo(applicationId, role);
-        return resp.getData();
+        removeRoleFromApplicationUserWithHttpInfo(applicationId, role);
     }
 
     /**
@@ -1240,8 +1235,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException {
-        ApiResponse<Object> resp = toggleAccessKeyStatusWithHttpInfo(applicationId, keyId);
+    public AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException {
+        ApiResponse<AccessKeyResponse> resp = toggleAccessKeyStatusWithHttpInfo(applicationId, keyId);
         return resp.getData();
     }
 
@@ -1254,11 +1249,11 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> toggleAccessKeyStatusWithHttpInfo(
+    private ApiResponse<AccessKeyResponse> toggleAccessKeyStatusWithHttpInfo(
             String applicationId, String keyId) throws ApiException {
         com.squareup.okhttp.Call call =
                 toggleAccessKeyStatusValidateBeforeCall(applicationId, keyId, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<AccessKeyResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1368,9 +1363,9 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object updateApplication(CreateOrUpdateApplicationRequest body, String id)
+    public ConductorApplication updateApplication(CreateOrUpdateApplicationRequest body, String id)
             throws ApiException {
-        ApiResponse<Object> resp = updateApplicationWithHttpInfo(body, id);
+        ApiResponse<ConductorApplication> resp = updateApplicationWithHttpInfo(body, id);
         return resp.getData();
     }
 
@@ -1383,10 +1378,10 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> updateApplicationWithHttpInfo(
+    private ApiResponse<ConductorApplication> updateApplicationWithHttpInfo(
             CreateOrUpdateApplicationRequest body, String id) throws ApiException {
         com.squareup.okhttp.Call call = updateApplicationValidateBeforeCall(body, id, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

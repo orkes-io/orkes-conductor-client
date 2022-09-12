@@ -5,6 +5,7 @@ import io.orkes.conductor.client.http.api.*;
 import io.orkes.conductor.client.http.client.SecretClient;
 
 import java.util.List;
+import java.util.Set;
 
 public class OrkesSecretClient extends OrkesClient implements SecretClient {
 
@@ -17,17 +18,17 @@ public class OrkesSecretClient extends OrkesClient implements SecretClient {
 
 
     @Override
-    public Object deleteSecret(String key) throws ApiException {
-        return secretResourceApi.deleteSecret(key);
+    public void deleteSecret(String key) throws ApiException {
+        secretResourceApi.deleteSecret(key);
     }
 
     @Override
-    public Object getSecret(String key) throws ApiException {
+    public String getSecret(String key) throws ApiException {
         return secretResourceApi.getSecret(key);
     }
 
     @Override
-    public Object listAllSecretNames() throws ApiException {
+    public Set<String> listAllSecretNames() throws ApiException {
         return secretResourceApi.listAllSecretNames();
     }
 
@@ -37,12 +38,12 @@ public class OrkesSecretClient extends OrkesClient implements SecretClient {
     }
 
     @Override
-    public Object putSecret(String body, String key) throws ApiException {
-        return secretResourceApi.putSecret(body, key);
+    public void putSecret(String body, String key) throws ApiException {
+        secretResourceApi.putSecret(body, key);
     }
 
     @Override
-    public Object secretExists(String key) throws ApiException {
+    public boolean secretExists(String key) throws ApiException {
         return secretResourceApi.secretExists(key);
     }
 }

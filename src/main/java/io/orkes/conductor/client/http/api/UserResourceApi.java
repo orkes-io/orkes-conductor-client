@@ -261,8 +261,8 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object getGrantedPermissions(String userId) throws ApiException {
-        ApiResponse<Object> resp = getGrantedPermissionsWithHttpInfo(userId);
+    public GrantedAccessResponse getGrantedPermissions(String userId) throws ApiException {
+        ApiResponse<GrantedAccessResponse> resp = getGrantedPermissionsWithHttpInfo(userId);
         return resp.getData();
     }
 
@@ -274,10 +274,10 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> getGrantedPermissionsWithHttpInfo(String userId)
+    private ApiResponse<GrantedAccessResponse> getGrantedPermissionsWithHttpInfo(String userId)
             throws ApiException {
         com.squareup.okhttp.Call call = getGrantedPermissionsValidateBeforeCall(userId, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<GrantedAccessResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
