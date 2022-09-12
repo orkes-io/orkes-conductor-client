@@ -3,8 +3,7 @@ package io.orkes.conductor.client.http.orkesclient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.api.ApplicationResourceApi;
 import io.orkes.conductor.client.http.client.ApplicationClient;
-import io.orkes.conductor.client.http.model.ConductorApplication;
-import io.orkes.conductor.client.http.model.CreateOrUpdateApplicationRequest;
+import io.orkes.conductor.client.http.model.*;
 
 import java.util.List;
 
@@ -24,32 +23,32 @@ public class OrkesApplicationClient extends OrkesClient implements ApplicationCl
     }
 
     @Override
-    public Object createAccessKey(String id) throws ApiException {
+    public CreateAccessKeyResponse createAccessKey(String id) throws ApiException {
         return applicationResourceApi.createAccessKey(id);
     }
 
     @Override
-    public Object createApplication(CreateOrUpdateApplicationRequest body) throws ApiException {
+    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest body) throws ApiException {
         return applicationResourceApi.createApplication(body);
     }
 
     @Override
-    public Object deleteAccessKey(String applicationId, String keyId) throws ApiException {
-        return applicationResourceApi.deleteAccessKey(applicationId, keyId);
+    public void deleteAccessKey(String applicationId, String keyId) throws ApiException {
+        applicationResourceApi.deleteAccessKey(applicationId, keyId);
     }
 
     @Override
-    public Object deleteApplication(String id) throws ApiException {
-        return applicationResourceApi.deleteApplication(id);
+    public void deleteApplication(String id) throws ApiException {
+        applicationResourceApi.deleteApplication(id);
     }
 
     @Override
-    public Object getAccessKeys(String id) throws ApiException {
+    public List<AccessKeyResponse> getAccessKeys(String id) throws ApiException {
         return applicationResourceApi.getAccessKeys(id);
     }
 
     @Override
-    public Object getApplication(String id) throws ApiException {
+    public ConductorApplication getApplication(String id) throws ApiException {
         return applicationResourceApi.getApplication(id);
     }
 
@@ -59,17 +58,17 @@ public class OrkesApplicationClient extends OrkesClient implements ApplicationCl
     }
 
     @Override
-    public Object removeRoleFromApplicationUser(String applicationId, String role) throws ApiException {
-        return applicationResourceApi.removeRoleFromApplicationUser(applicationId, role);
+    public void removeRoleFromApplicationUser(String applicationId, String role) throws ApiException {
+        applicationResourceApi.removeRoleFromApplicationUser(applicationId, role);
     }
 
     @Override
-    public Object toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException {
+    public AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException {
         return applicationResourceApi.toggleAccessKeyStatus(applicationId, keyId);
     }
 
     @Override
-    public Object updateApplication(CreateOrUpdateApplicationRequest body, String id) throws ApiException {
+    public ConductorApplication updateApplication(CreateOrUpdateApplicationRequest body, String id) throws ApiException {
         return applicationResourceApi.updateApplication(body, id);
     }
 }

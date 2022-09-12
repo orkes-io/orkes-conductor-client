@@ -1,33 +1,32 @@
 package io.orkes.conductor.client.http.client;
 
 import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.model.ConductorApplication;
-import io.orkes.conductor.client.http.model.CreateOrUpdateApplicationRequest;
+import io.orkes.conductor.client.http.model.*;
 
 import java.util.List;
 
 public interface ApplicationClient {
-    Object addRoleToApplicationUser(String applicationId, String role) throws ApiException;
+    void addRoleToApplicationUser(String applicationId, String role) throws ApiException;
 
-    Object createAccessKey(String id) throws ApiException;
+    CreateAccessKeyResponse createAccessKey(String id) throws ApiException;
 
-    Object createApplication(CreateOrUpdateApplicationRequest body) throws ApiException;
+    ConductorApplication createApplication(CreateOrUpdateApplicationRequest body) throws ApiException;
 
-    Object deleteAccessKey(String applicationId, String keyId) throws ApiException;
+    void deleteAccessKey(String applicationId, String keyId) throws ApiException;
 
-    Object deleteApplication(String id) throws ApiException;
+    void deleteApplication(String id) throws ApiException;
 
-    Object getAccessKeys(String id) throws ApiException;
+    List<AccessKeyResponse> getAccessKeys(String id) throws ApiException;
 
-    Object getApplication(String id) throws ApiException;
+    ConductorApplication getApplication(String id) throws ApiException;
 
     List<ConductorApplication> listApplications() throws ApiException;
 
-    Object removeRoleFromApplicationUser(String applicationId, String role)
+    void removeRoleFromApplicationUser(String applicationId, String role)
             throws ApiException;
 
-    Object toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException;
+    AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException;
 
-    Object updateApplication(CreateOrUpdateApplicationRequest body, String id)
+    ConductorApplication updateApplication(CreateOrUpdateApplicationRequest body, String id)
             throws ApiException;
 }

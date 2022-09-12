@@ -142,9 +142,8 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Response deleteUser(String id) throws ApiException {
-        ApiResponse<Response> resp = deleteUserWithHttpInfo(id);
-        return resp.getData();
+    public void deleteUser(String id) throws ApiException {
+        deleteUserWithHttpInfo(id);
     }
 
     /**
@@ -378,8 +377,8 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object getUser(String id) throws ApiException {
-        ApiResponse<Object> resp = getUserWithHttpInfo(id);
+    public ConductorUser getUser(String id) throws ApiException {
+        ApiResponse<ConductorUser> resp = getUserWithHttpInfo(id);
         return resp.getData();
     }
 
@@ -391,9 +390,9 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> getUserWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<ConductorUser> getUserWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = getUserValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -610,9 +609,8 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object sendInviteEmail(String id, ConductorUser body) throws ApiException {
-        ApiResponse<Object> resp = sendInviteEmailWithHttpInfo(id, body);
-        return resp.getData();
+    public void sendInviteEmail(String id, ConductorUser body) throws ApiException {
+        sendInviteEmailWithHttpInfo(id, body);
     }
 
     /**
@@ -737,8 +735,8 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object upsertUser(UpsertUserRequest body, String id) throws ApiException {
-        ApiResponse<Object> resp = upsertUserWithHttpInfo(body, id);
+    public ConductorUser upsertUser(UpsertUserRequest body, String id) throws ApiException {
+        ApiResponse<ConductorUser> resp = upsertUserWithHttpInfo(body, id);
         return resp.getData();
     }
 
@@ -751,10 +749,10 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> upsertUserWithHttpInfo(UpsertUserRequest body, String id)
+    private ApiResponse<ConductorUser> upsertUserWithHttpInfo(UpsertUserRequest body, String id)
             throws ApiException {
         com.squareup.okhttp.Call call = upsertUserValidateBeforeCall(body, id, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

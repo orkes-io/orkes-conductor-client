@@ -19,13 +19,13 @@ public interface SchedulerClient {
 
     WorkflowSchedule getSchedule(String name) throws ApiException;
 
-    Map<String, Object> pauseAllSchedules() throws ApiException;
+    void pauseAllSchedules() throws ApiException;
 
     void pauseSchedule(String name) throws ApiException;
 
-    Map<String, Object> requeueAllExecutionRecords() throws ApiException;
+    void requeueAllExecutionRecords() throws ApiException;
 
-    Map<String, Object> resumeAllSchedules() throws ApiException;
+    void resumeAllSchedules() throws ApiException;
 
     void resumeSchedule(String name) throws ApiException;
 

@@ -165,11 +165,11 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> addRoleToApplicationUserWithHttpInfo(
+    private ApiResponse<ConductorUser> addRoleToApplicationUserWithHttpInfo(
             String applicationId, String role) throws ApiException {
         com.squareup.okhttp.Call call =
                 addRoleToApplicationUserValidateBeforeCall(applicationId, role, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -271,8 +271,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void createAccessKey(String id) throws ApiException {
-        createAccessKeyWithHttpInfo(id);
+    public CreateAccessKeyResponse createAccessKey(String id) throws ApiException {
+        return createAccessKeyWithHttpInfo(id).getData();
     }
 
     /**
@@ -283,9 +283,9 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> createAccessKeyWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<CreateAccessKeyResponse> createAccessKeyWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = createAccessKeyValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeToken<CreateAccessKeyResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

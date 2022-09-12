@@ -13,7 +13,7 @@ public interface GroupClient {
 
     void deleteGroup(String id) throws ApiException;
 
-    Object getGrantedPermissionsForGroup(String groupId) throws ApiException;
+    GrantedAccessResponse getGrantedPermissionsForGroup(String groupId) throws ApiException;
 
     Group getGroup(String id) throws ApiException;
 

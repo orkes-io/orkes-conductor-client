@@ -40,8 +40,8 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public Map<String, Object> pauseAllSchedules() throws ApiException {
-        return schedulerResourceApi.pauseAllSchedules();
+    public void pauseAllSchedules() throws ApiException {
+        schedulerResourceApi.pauseAllSchedules();
     }
 
     @Override
@@ -50,13 +50,13 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public Map<String, Object> requeueAllExecutionRecords() throws ApiException {
-        return schedulerResourceApi.requeueAllExecutionRecords();
+    public void requeueAllExecutionRecords() throws ApiException {
+        schedulerResourceApi.requeueAllExecutionRecords();
     }
 
     @Override
-    public Map<String, Object> resumeAllSchedules() throws ApiException {
-        return schedulerResourceApi.resumeAllSchedules();
+    public void resumeAllSchedules() throws ApiException {
+        schedulerResourceApi.resumeAllSchedules();
     }
 
     @Override
