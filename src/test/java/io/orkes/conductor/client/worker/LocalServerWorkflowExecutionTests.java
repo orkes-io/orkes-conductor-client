@@ -23,25 +23,20 @@ import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 
-public class TaskWorkerTests {
+public class LocalServerWorkflowExecutionTests {
     public static void main(String[] args) {
-
         ApiClient apiClient = new ApiClient("http://localhost:8080/api");
         TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
-
         Iterable<Worker> workers = Arrays.asList(new MyWorker());
-        TaskRunnerConfigurer.Builder builder =
-                new TaskRunnerConfigurer.Builder(taskClient, workers);
-
         Map<String, String> taskToDomain = new HashMap<>();
         taskToDomain.put("simple_task_0", "viren");
-        TaskRunnerConfigurer configuruer =
-                builder.withSleepWhenRetry(100)
-                        .withThreadCount(10)
-                        .withWorkerNamePrefix("Hello")
-                        .withTaskToDomain(taskToDomain)
-                        .build();
-        configuruer.init();
+        TaskRunnerConfigurer configurer = new TaskRunnerConfigurer.Builder(taskClient, workers)
+                .withSleepWhenRetry(100)
+                .withThreadCount(10)
+                .withWorkerNamePrefix("Hello")
+                .withTaskToDomain(taskToDomain)
+                .build();
+        configurer.init();
     }
 
     private static class MyWorker implements Worker {
