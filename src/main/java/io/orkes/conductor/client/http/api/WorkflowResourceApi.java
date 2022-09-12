@@ -167,45 +167,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Starts the decision task for a workflow (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call decideAsync(String workflowId, final ApiCallback<Void> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                decideValidateBeforeCall(workflowId, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
-    /**
      * Build call for delete
      *
      * @param workflowId (required)
@@ -332,48 +293,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call);
     }
 
-    /**
-     * Removes the workflow from the system (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param archiveWorkflow (optional, default to true)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call deleteAsync(
-            String workflowId, Boolean archiveWorkflow, final ApiCallback<Void> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                deleteValidateBeforeCall(
-                        workflowId, archiveWorkflow, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
     /**
      * Build call for getExecutionStatus
      *
@@ -504,49 +423,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Gets the workflow by workflow id (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param includeTasks (optional, default to true)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getExecutionStatusAsync(
-            String workflowId, Boolean includeTasks, final ApiCallback<Workflow> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getExecutionStatusValidateBeforeCall(
-                        workflowId, includeTasks, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Workflow>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for getExternalStorageLocation
      *
@@ -693,54 +569,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Get the uri and path of the external storage where the workflow payload is to be stored
-     * (asynchronously)
-     *
-     * @param path (required)
-     * @param operation (required)
-     * @param payloadType (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getExternalStorageLocationAsync(
-            String path,
-            String operation,
-            String payloadType,
-            final ApiCallback<ExternalStorageLocation> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getExternalStorageLocationValidateBeforeCall(
-                        path, operation, payloadType, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<ExternalStorageLocation>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for getRunningWorkflow
      *
@@ -891,60 +719,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Retrieve all the running workflows (asynchronously)
-     *
-     * @param name (required)
-     * @param version (optional, default to 1)
-     * @param startTime (optional)
-     * @param endTime (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getRunningWorkflowAsync(
-            String name,
-            Integer version,
-            Long startTime,
-            Long endTime,
-            final ApiCallback<List<String>> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getRunningWorkflowValidateBeforeCall(
-                        name,
-                        version,
-                        startTime,
-                        endTime,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<List<String>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for getWorkflowStatusSummary
      *
      * @param workflowId (required)
@@ -1090,57 +864,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Gets the workflow by workflow id (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param includeOutput (optional, default to false)
-     * @param includeVariables (optional, default to false)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getWorkflowStatusSummaryAsync(
-            String workflowId,
-            Boolean includeOutput,
-            Boolean includeVariables,
-            final ApiCallback<WorkflowStatus> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getWorkflowStatusSummaryValidateBeforeCall(
-                        workflowId,
-                        includeOutput,
-                        includeVariables,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<WorkflowStatus>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for getWorkflows
      *
@@ -1294,60 +1017,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Lists workflows for the given correlation id list (asynchronously)
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param includeClosed (optional, default to false)
-     * @param includeTasks (optional, default to false)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getWorkflowsAsync(
-            List<String> body,
-            String name,
-            Boolean includeClosed,
-            Boolean includeTasks,
-            final ApiCallback<Map<String, List<Workflow>>> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getWorkflowsValidateBeforeCall(
-                        body,
-                        name,
-                        includeClosed,
-                        includeTasks,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<Map<String, List<Workflow>>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for getWorkflows1
      *
@@ -1506,60 +1175,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Lists workflows for the given correlation id (asynchronously)
-     *
-     * @param name (required)
-     * @param correlationId (required)
-     * @param includeClosed (optional, default to false)
-     * @param includeTasks (optional, default to false)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getWorkflows1Async(
-            String name,
-            String correlationId,
-            Boolean includeClosed,
-            Boolean includeTasks,
-            final ApiCallback<List<Workflow>> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getWorkflows1ValidateBeforeCall(
-                        name,
-                        correlationId,
-                        includeClosed,
-                        includeTasks,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<List<Workflow>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for pauseWorkflow
      *
      * @param workflowId (required)
@@ -1676,46 +1291,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call);
     }
 
-    /**
-     * Pauses the workflow (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call pauseWorkflowAsync(
-            String workflowId, final ApiCallback<Void> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                pauseWorkflowValidateBeforeCall(
-                        workflowId, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
     /**
      * Build call for rerun
      *
@@ -1846,49 +1421,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Reruns the workflow from a specific task (asynchronously)
-     *
-     * @param body (required)
-     * @param workflowId (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call rerunAsync(
-            RerunWorkflowRequest body, String workflowId, final ApiCallback<String> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                rerunValidateBeforeCall(
-                        body, workflowId, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for resetWorkflow
      *
      * @param workflowId (required)
@@ -2005,46 +1537,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call);
     }
 
-    /**
-     * Resets callback times of all non-terminal SIMPLE tasks to 0 (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call resetWorkflowAsync(
-            String workflowId, final ApiCallback<Void> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                resetWorkflowValidateBeforeCall(
-                        workflowId, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
     /**
      * Build call for restart
      *
@@ -2177,51 +1669,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Restarts a completed workflow (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param useLatestDefinitions (optional, default to false)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call restartAsync(
-            String workflowId, Boolean useLatestDefinitions, final ApiCallback<Void> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                restartValidateBeforeCall(
-                        workflowId,
-                        useLatestDefinitions,
-                        progressListener,
-                        progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
-    /**
      * Build call for resumeWorkflow
      *
      * @param workflowId (required)
@@ -2338,46 +1785,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call);
     }
 
-    /**
-     * Resumes the workflow (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call resumeWorkflowAsync(
-            String workflowId, final ApiCallback<Void> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                resumeWorkflowValidateBeforeCall(
-                        workflowId, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
     /**
      * Build call for retry
      *
@@ -2509,51 +1916,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call);
     }
 
-    /**
-     * Retries the last failed task (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param resumeSubworkflowTasks (optional, default to false)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call retryAsync(
-            String workflowId, Boolean resumeSubworkflowTasks, final ApiCallback<Void> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                retryValidateBeforeCall(
-                        workflowId,
-                        resumeSubworkflowTasks,
-                        progressListener,
-                        progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
     /**
      * Build call for search
      *
@@ -2738,72 +2100,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Search for workflows based on payload and other parameters (asynchronously) use sort options
-     * as sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If
-     * order is not specified, defaults to ASC.
-     *
-     * @param queryId (optional)
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param skipCache (optional, default to false)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call searchAsync(
-            String queryId,
-            Integer start,
-            Integer size,
-            String sort,
-            String freeText,
-            String query,
-            Boolean skipCache,
-            final ApiCallback<ScrollableSearchResultWorkflowSummary> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                searchValidateBeforeCall(
-                        queryId,
-                        start,
-                        size,
-                        sort,
-                        freeText,
-                        query,
-                        skipCache,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType =
-                new TypeToken<ScrollableSearchResultWorkflowSummary>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for searchV2
      *
      * @param start (optional, default to 0)
@@ -2956,65 +2252,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Search for workflows based on payload and other parameters (asynchronously) use sort options
-     * as sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If
-     * order is not specified, defaults to ASC.
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call searchV2Async(
-            Integer start,
-            Integer size,
-            String sort,
-            String freeText,
-            String query,
-            final ApiCallback<SearchResultWorkflow> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                searchV2ValidateBeforeCall(
-                        start,
-                        size,
-                        sort,
-                        freeText,
-                        query,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<SearchResultWorkflow>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for searchWorkflowsByTasks
      *
@@ -3170,65 +2407,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Search for workflows based on task parameters (asynchronously) use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call searchWorkflowsByTasksAsync(
-            Integer start,
-            Integer size,
-            String sort,
-            String freeText,
-            String query,
-            final ApiCallback<SearchResultWorkflowSummary> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                searchWorkflowsByTasksValidateBeforeCall(
-                        start,
-                        size,
-                        sort,
-                        freeText,
-                        query,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<SearchResultWorkflowSummary>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for searchWorkflowsByTasksV2
      *
      * @param start (optional, default to 0)
@@ -3382,65 +2560,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Search for workflows based on task parameters (asynchronously) use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call searchWorkflowsByTasksV2Async(
-            Integer start,
-            Integer size,
-            String sort,
-            String freeText,
-            String query,
-            final ApiCallback<SearchResultWorkflow> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                searchWorkflowsByTasksV2ValidateBeforeCall(
-                        start,
-                        size,
-                        sort,
-                        freeText,
-                        query,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<SearchResultWorkflow>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for skipTaskFromWorkflow
      *
@@ -3596,56 +2715,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Skips a given task from a current running workflow (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param taskReferenceName (required)
-     * @param skipTaskRequest (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call skipTaskFromWorkflowAsync(
-            String workflowId,
-            String taskReferenceName,
-            SkipTaskRequest skipTaskRequest,
-            final ApiCallback<Void> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                skipTaskFromWorkflowValidateBeforeCall(
-                        workflowId,
-                        taskReferenceName,
-                        skipTaskRequest,
-                        progressListener,
-                        progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
-    /**
      * Build call for startWorkflow
      *
      * @param body (required)
@@ -3760,47 +2829,6 @@ public class WorkflowResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Start a new workflow with StartWorkflowRequest, which allows task to be executed in a domain
-     * (asynchronously)
-     *
-     * @param body (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call startWorkflowAsync(
-            StartWorkflowRequest body, final ApiCallback<String> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                startWorkflowValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for startWorkflow1
      *
@@ -3974,64 +3002,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Start a new workflow. Returns the ID of the workflow instance that can be later used for
-     * tracking (asynchronously)
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param version (optional)
-     * @param correlationId (optional)
-     * @param priority (optional, default to 0)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call startWorkflow1Async(
-            Map<String, Object> body,
-            String name,
-            Integer version,
-            String correlationId,
-            Integer priority,
-            final ApiCallback<String> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                startWorkflow1ValidateBeforeCall(
-                        body,
-                        name,
-                        version,
-                        correlationId,
-                        priority,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for terminate1
      *
      * @param workflowId (required)
@@ -4157,48 +3127,6 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Terminate workflow execution (asynchronously)
-     *
-     * @param workflowId (required)
-     * @param reason (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call terminate1Async(
-            String workflowId, String reason, final ApiCallback<Void> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                terminate1ValidateBeforeCall(
-                        workflowId, reason, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
-    /**
      * Build call for uploadCompletedWorkflows
      *
      * @param progressListener Progress listener
@@ -4303,44 +3231,4 @@ public class WorkflowResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Force upload all completed workflows to document store (asynchronously)
-     *
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call uploadCompletedWorkflowsAsync(
-            final ApiCallback<Object> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                uploadCompletedWorkflowsValidateBeforeCall(
-                        progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
 }
