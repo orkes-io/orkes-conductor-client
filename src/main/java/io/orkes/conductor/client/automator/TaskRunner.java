@@ -20,6 +20,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import io.orkes.conductor.client.TaskClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
@@ -28,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.conductor.client.config.ConductorClientConfiguration;
 import com.netflix.conductor.client.config.PropertyFactory;
-import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.telemetry.MetricsContainer;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -49,7 +49,7 @@ class TaskRunner {
     private static final Registry REGISTRY = Spectator.globalRegistry();
 
     private final EurekaClient eurekaClient;
-    private final TaskResourceApi taskClient;
+    private final TaskClient taskClient;
     private final int updateRetryCount;
     private final ThreadPoolExecutor executorService;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
@@ -61,11 +61,11 @@ class TaskRunner {
     private static final String ALL_WORKERS = "all";
 
     // used or managing external payload
-    private TaskClient taskClientForExternalPayload;
+    private com.netflix.conductor.client.http.TaskClient taskClientForExternalPayload;
 
     TaskRunner(
             EurekaClient eurekaClient,
-            TaskResourceApi taskClient,
+            TaskClient taskClient,
             ConductorClientConfiguration conductorClientConfiguration,
             int updateRetryCount,
             Map<String, String> taskToDomain,
@@ -79,7 +79,7 @@ class TaskRunner {
         this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
         this.taskClientForExternalPayload =
-                new TaskClient(new DefaultClientConfig(), conductorClientConfiguration, null);
+                new com.netflix.conductor.client.http.TaskClient(new DefaultClientConfig(), conductorClientConfiguration, null);
         this.executorService =
                 (ThreadPoolExecutor)
                         Executors.newFixedThreadPool(
@@ -101,7 +101,7 @@ class TaskRunner {
         try {
             this.executorService.shutdown();
             if (executorService.awaitTermination(timeout, TimeUnit.SECONDS)) {
-                LOGGER.info("tasks completed, shutting down");
+                LOGGER.debug("tasks completed, shutting down");
             } else {
                 LOGGER.warn(String.format("forcing shutdown after waiting for %s second", timeout));
                 executorService.shutdownNow();
@@ -114,7 +114,7 @@ class TaskRunner {
     }
 
     private List<Task> pollTasksForWorker(Worker worker) {
-        LOGGER.info("Polling for {}", worker.getTaskDefName());
+        LOGGER.trace("Polling for {}", worker.getTaskDefName());
         List<Task> tasks = new LinkedList<>();
         Boolean discoveryOverride =
                 Optional.ofNullable(
@@ -127,12 +127,12 @@ class TaskRunner {
         if (eurekaClient != null
                 && !eurekaClient.getInstanceRemoteStatus().equals(InstanceInfo.InstanceStatus.UP)
                 && !discoveryOverride) {
-            LOGGER.info("Instance is NOT UP in discovery - will not poll");
+            LOGGER.trace("Instance is NOT UP in discovery - will not poll");
             return tasks;
         }
         if (worker.paused()) {
             MetricsContainer.incrementTaskPausedCount(worker.getTaskDefName());
-            LOGGER.info("Worker {} has been paused. Not polling anymore!", worker.getClass());
+            LOGGER.trace("Worker {} has been paused. Not polling anymore!", worker.getClass());
             return tasks;
         }
         String taskType = worker.getTaskDefName();
@@ -145,7 +145,7 @@ class TaskRunner {
                                                             PropertyFactory.getString(
                                                                     ALL_WORKERS, DOMAIN, null))
                                                     .orElse(taskToDomain.get(taskType)));
-            LOGGER.info("Polling task of type: {} in domain: '{}'", taskType, domain);
+            LOGGER.trace("Polling task of type: {} in domain: '{}'", taskType, domain);
             List<Task> polledTasks =
                     MetricsContainer.getPollTimer(taskType)
                             .record(
@@ -157,7 +157,7 @@ class TaskRunner {
                                                     this.getAvailableWorkers()));
             for (Task task : polledTasks) {
                 if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
-                    LOGGER.info(
+                    LOGGER.trace(
                             "Polled task: {} of type: {} in domain: '{}', from worker: {}",
                             task.getTaskId(),
                             taskType,
@@ -185,7 +185,7 @@ class TaskRunner {
         if (count < 1) {
             return Collections.emptyList();
         }
-        return taskClient.batchPoll(taskType, workerId, domain, count, this.taskPollTimeout);
+        return taskClient.batchPollTasksInDomain(taskType, domain, workerId, count, this.taskPollTimeout);
     }
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -197,7 +197,7 @@ class TaskRunner {
             };
 
     private void processTask(Task task, Worker worker) {
-        LOGGER.info(
+        LOGGER.trace(
                 "Executing task: {} of type: {} in worker: {} at {}",
                 task.getTaskId(),
                 task.getTaskDefName(),
@@ -214,13 +214,13 @@ class TaskRunner {
 
     private void executeTask(Worker worker, Task task) {
         if (task == null || task.getTaskDefName().isEmpty()) {
-            LOGGER.info("Empty task");
+            LOGGER.warn("Empty task {}", worker.getTaskDefName());
             return;
         }
         Stopwatch stopwatch = Stopwatch.createStarted();
         TaskResult result = null;
         try {
-            LOGGER.info(
+            LOGGER.trace(
                     "Executing task: {} in worker: {} at {}",
                     task.getTaskId(),
                     worker.getClass().getSimpleName(),
@@ -246,7 +246,7 @@ class TaskRunner {
             MetricsContainer.getExecutionTimer(worker.getTaskDefName())
                     .record(stopwatch.elapsed(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
         }
-        LOGGER.info(
+        LOGGER.trace(
                 "Task: {} executed by worker: {} at {} with status: {}",
                 task.getTaskId(),
                 worker.getClass().getSimpleName(),
