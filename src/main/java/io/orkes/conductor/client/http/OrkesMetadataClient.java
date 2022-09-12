@@ -88,39 +88,39 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
     }
 
     // Tags APIs
-    void addTaskTag(TagObject body, String taskName) {
+    public void addTaskTag(TagObject body, String taskName) {
         tagsApi.addTaskTag(body, taskName);
     }
 
-    void addWorkflowTag(TagObject body, String name) {
+    public void addWorkflowTag(TagObject body, String name) {
         tagsApi.addWorkflowTag(body, name);
     }
 
-    void deleteTaskTag(TagString body, String taskName) {
+    public void deleteTaskTag(TagString body, String taskName) {
         tagsApi.deleteTaskTag(body, taskName);
     }
 
-    void deleteWorkflowTag(TagObject body, String name) {
+    public void deleteWorkflowTag(TagObject body, String name) {
         tagsApi.deleteWorkflowTag(body, name);
     }
 
-    List<TagObject> getTags() {
+    public List<TagObject> getTags() {
         return tagsApi.getTags();
     }
 
-    List<TagObject> getTaskTags(String taskName) {
+    public List<TagObject> getTaskTags(String taskName) {
         return tagsApi.getTaskTags(taskName);
     }
 
-    List<TagObject> getWorkflowTags(String name) {
+    public List<TagObject> getWorkflowTags(String name) {
         return tagsApi.getWorkflowTags(name);
     }
 
-    void setTaskTags(List<TagObject> body, String taskName) {
+    public void setTaskTags(List<TagObject> body, String taskName) {
         tagsApi.setTaskTags(body, taskName);
     }
 
-    void setWorkflowTags(List<TagObject> body, String name) {
+    public void setWorkflowTags(List<TagObject> body, String name) {
         tagsApi.setWorkflowTags(body, name);
     }
 }

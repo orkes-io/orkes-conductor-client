@@ -21,7 +21,7 @@ import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
-import io.orkes.conductor.client.http.api.*;
+import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.model.*;
 import io.orkes.conductor.client.http.model.UpsertGroupRequest.RolesEnum;
 import io.orkes.conductor.client.util.ApiUtil;
@@ -34,15 +34,12 @@ public class Examples {
     private final MetadataClient metadataClient;
     private final WorkflowClient workflowClient;
     private final AuthorizationClient authorizationClient;
-    final TagsApi tagsApi;
 
     public Examples() {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         OrkesClients orkesClients = ApiUtil.getOrkesClient();
         metadataClient = orkesClients.getMetadataClient();
         workflowClient = orkesClients.getWorkflowClient();
         authorizationClient = orkesClients.getAuthorizationClient();
-        tagsApi = new TagsApi(apiClient);
     }
 
     @Test
@@ -54,8 +51,8 @@ public class Examples {
         tagObject.setType(TagObject.TypeEnum.METADATA);
         tagObject.setKey("a");
         tagObject.setValue("b");
-        tagsApi.addTaskTag(tagObject, Commons.TASK_NAME);
-        tagsApi.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
+        ((OrkesMetadataClient) metadataClient).addTaskTag(tagObject, Commons.TASK_NAME);
+        ((OrkesMetadataClient) metadataClient).addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
     }
 
     @Test
