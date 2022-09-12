@@ -16,10 +16,10 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 
 import com.google.gson.reflect.TypeToken;
-import io.orkes.conductor.client.ApiClient;
 
 public class SecretResourceApi {
     private ApiClient apiClient;
@@ -724,5 +724,4 @@ public class SecretResourceApi {
         Type localVarReturnType = new TypeToken<Boolean>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
-
 }

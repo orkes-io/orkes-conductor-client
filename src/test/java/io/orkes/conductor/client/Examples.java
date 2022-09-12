@@ -14,7 +14,6 @@ package io.orkes.conductor.client;
 
 import java.util.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +21,7 @@ import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
-import io.orkes.conductor.client.http.api.*;
+import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.model.*;
 import io.orkes.conductor.client.http.model.UpsertGroupRequest.RolesEnum;
 import io.orkes.conductor.client.util.ApiUtil;
@@ -32,24 +31,15 @@ import io.orkes.conductor.client.util.WorkflowUtil;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Examples {
-    MetadataResourceApi metadataResourceApi;
-    GroupResourceApi groupResourceApi;
-    ApplicationResourceApi applicationResourceApi;
-    WorkflowResourceApi workflowResourceApi;
-    UserResourceApi userResourceApi;
-    AuthorizationResourceApi authorizationResourceApi;
-    TagsApi tagsApi;
+    private final MetadataClient metadataClient;
+    private final WorkflowClient workflowClient;
+    private final AuthorizationClient authorizationClient;
 
-    @BeforeEach
-    public void init() {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        metadataResourceApi = new MetadataResourceApi(apiClient);
-        groupResourceApi = new GroupResourceApi(apiClient);
-        applicationResourceApi = new ApplicationResourceApi(apiClient);
-        workflowResourceApi = new WorkflowResourceApi(apiClient);
-        tagsApi = new TagsApi(apiClient);
-        userResourceApi = new UserResourceApi(apiClient);
-        authorizationResourceApi = new AuthorizationResourceApi(apiClient);
+    public Examples() {
+        OrkesClients orkesClients = ApiUtil.getOrkesClient();
+        metadataClient = orkesClients.getMetadataClient();
+        workflowClient = orkesClients.getWorkflowClient();
+        authorizationClient = orkesClients.getAuthorizationClient();
     }
 
     @Test
@@ -61,8 +51,8 @@ public class Examples {
         tagObject.setType(TagObject.TypeEnum.METADATA);
         tagObject.setKey("a");
         tagObject.setValue("b");
-        tagsApi.addTaskTag(tagObject, Commons.TASK_NAME);
-        tagsApi.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
+        ((OrkesMetadataClient) metadataClient).addTaskTag(tagObject, Commons.TASK_NAME);
+        ((OrkesMetadataClient) metadataClient).addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
     }
 
     @Test
@@ -92,14 +82,14 @@ public class Examples {
         startWorkflowRequest.setVersion(1);
         Map<String, Object> input = new HashMap<>();
         startWorkflowRequest.setInput(input);
-        workflowResourceApi.startWorkflow(startWorkflowRequest);
+        workflowClient.startWorkflow(startWorkflowRequest);
     }
 
     @Test
     @DisplayName("auto assign group permission on workflow creation by any group member")
     public void autoAssignWorkflowPermissions() {
         giveApplicationPermissions("46f0bf10-b59d-4fbd-a053-935307c8cb86");
-        Group group = groupResourceApi.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
+        Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
         validateGroupPermissions(group.getId());
     }
 
@@ -108,20 +98,20 @@ public class Examples {
         taskDef.setName(Commons.TASK_NAME);
         List<TaskDef> taskDefs = new ArrayList<>();
         taskDefs.add(taskDef);
-        this.metadataResourceApi.registerTaskDef(taskDefs);
+        this.metadataClient.registerTaskDefs(taskDefs);
     }
 
     void registerWorkflow() {
         WorkflowDef workflowDef = WorkflowUtil.getWorkflowDef();
-        metadataResourceApi.create(workflowDef, true);
+        metadataClient.registerWorkflowDef(workflowDef);
     }
 
     void giveApplicationPermissions(String applicationId) {
-        applicationResourceApi.addRoleToApplicationUser(applicationId, "ADMIN");
+        authorizationClient.addRoleToApplicationUser(applicationId, "ADMIN");
     }
 
     void validateGroupPermissions(String id) {
-        Group group = groupResourceApi.getGroup(id);
+        Group group = authorizationClient.getGroup(id);
         for (Map.Entry<String, List<String>> entry : group.getDefaultAccess().entrySet()) {
             List<String> expectedList = new ArrayList<>(getAccessListAll());
             List<String> actualList = new ArrayList<>(entry.getValue());

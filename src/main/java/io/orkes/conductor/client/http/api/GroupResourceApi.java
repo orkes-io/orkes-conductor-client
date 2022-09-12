@@ -19,11 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.model.*;
 
 import com.google.gson.reflect.TypeToken;
-import io.orkes.conductor.client.ApiClient;
 
 public class GroupResourceApi {
     private ApiClient apiClient;
@@ -1008,5 +1008,4 @@ public class GroupResourceApi {
         Type localVarReturnType = new TypeToken<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
-
 }

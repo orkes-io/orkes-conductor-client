@@ -22,10 +22,10 @@ import java.util.Map;
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 
 import com.google.gson.reflect.TypeToken;
-import io.orkes.conductor.client.ApiClient;
 
 public class MetadataResourceApi {
     private ApiClient apiClient;
@@ -1298,5 +1298,4 @@ public class MetadataResourceApi {
         com.squareup.okhttp.Call call = updateTaskDefValidateBeforeCall(body, null, null);
         return apiClient.execute(call);
     }
-
 }

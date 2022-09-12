@@ -14,9 +14,6 @@ package io.orkes.conductor.client.http;
 
 import java.util.List;
 
-import com.squareup.okhttp.Call;
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.WorkflowClient;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -27,10 +24,13 @@ import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowSummary;
 
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 
 import com.google.common.base.Preconditions;
+import com.squareup.okhttp.Call;
 
 public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
@@ -166,17 +166,21 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public Call pauseWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback) throws ApiException {
+    public Call pauseWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback)
+            throws ApiException {
         return bulkResourceApi.pauseWorkflow1Async(body, callback);
     }
 
     @Override
-    public BulkResponse restartWorkflow(List<String> body, Boolean useLatestDefinitions) throws ApiException {
+    public BulkResponse restartWorkflow(List<String> body, Boolean useLatestDefinitions)
+            throws ApiException {
         return bulkResourceApi.restart1(body, useLatestDefinitions);
     }
 
     @Override
-    public Call restartWorkflowAsync(List<String> body, Boolean useLatestDefinitions, ApiCallback<BulkResponse> callback) throws ApiException {
+    public Call restartWorkflowAsync(
+            List<String> body, Boolean useLatestDefinitions, ApiCallback<BulkResponse> callback)
+            throws ApiException {
         return bulkResourceApi.restart1Async(body, useLatestDefinitions, callback);
     }
 
@@ -186,7 +190,8 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public Call resumeWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback) throws ApiException {
+    public Call resumeWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback)
+            throws ApiException {
         return bulkResourceApi.resumeWorkflow1Async(body, callback);
     }
 
@@ -196,7 +201,8 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public Call retryWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback) throws ApiException {
+    public Call retryWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback)
+            throws ApiException {
         return bulkResourceApi.retry1Async(body, callback);
     }
 
@@ -206,8 +212,9 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public Call terminateWorkflowAsync(List<String> body, String reason, ApiCallback<BulkResponse> callback) throws ApiException {
+    public Call terminateWorkflowAsync(
+            List<String> body, String reason, ApiCallback<BulkResponse> callback)
+            throws ApiException {
         return bulkResourceApi.terminateAsync(body, reason, callback);
     }
-
 }

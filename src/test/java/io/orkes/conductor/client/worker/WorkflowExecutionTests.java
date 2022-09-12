@@ -24,17 +24,18 @@ import org.junit.jupiter.api.Test;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
-import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.http.model.WorkflowStatus;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
+import io.orkes.conductor.client.util.SimpleWorker;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FunctionalWorker {
+public class WorkflowExecutionTests {
     WorkflowResourceApi workflowResourceApi;
     TaskRunnerConfigurer taskRunnerConfigurer;
 

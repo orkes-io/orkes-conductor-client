@@ -17,8 +17,8 @@ import java.util.List;
 import com.netflix.conductor.common.metadata.events.EventHandler;
 
 import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.api.EventResourceApi;
 import io.orkes.conductor.client.EventClient;
+import io.orkes.conductor.client.http.api.EventResourceApi;
 
 public class OrkesEventClient extends OrkesClient implements EventClient {
 
