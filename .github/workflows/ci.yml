@@ -1,21 +1,21 @@
-name: Continuous Integration
+name: Tests
 
 on: pull_request
 
 jobs:
-  test:
+  integration-test:
     runs-on: ubuntu-latest
-    name: Gradle Build
+    name: Integration Tests
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v3
       - name: Set up Zulu JDK 11
         uses: actions/setup-java@v3
         with:
           distribution: "zulu"
           java-version: "11"
-      - name: Build
-        run: ./gradlew clean build
+      - name: Build and run tests
+        run: ./gradlew clean build test
         env:
           SDK_INTEGRATION_TESTS_SERVER_API_URL: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_API_URL }}
           SDK_INTEGRATION_TESTS_SERVER_KEY_ID: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_KEY_ID }}
