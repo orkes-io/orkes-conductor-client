@@ -18,6 +18,8 @@ import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
 import io.orkes.conductor.client.http.api.MetadataResourceApi;
+import io.orkes.conductor.client.http.model.TagObject;
+import io.orkes.conductor.client.http.model.TagString;
 
 public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
 
@@ -71,4 +73,43 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
 
     @Override
     public void unregisterTaskDef(String taskType) {}
+
+    //Tags APIs
+    void addTaskTag(TagObject body, String taskName) {}
+
+
+    void addWorkflowTag(TagObject body, String name){}
+
+
+    void deleteTaskTag(TagString body, String taskName){}
+
+
+
+    void deleteWorkflowTag(TagObject body, String name){}
+
+
+
+    List<TagObject> getTags(){
+        return null;
+    }
+
+
+
+    List<TagObject> getTaskTags(String taskName){
+        return null;
+    }
+
+
+
+    List<TagObject> getWorkflowTags(String name){
+        return null;
+    }
+
+
+
+    void setTaskTags(List<TagObject> body, String taskName){}
+
+
+
+    void setWorkflowTags(List<TagObject> body, String name){}
 }
