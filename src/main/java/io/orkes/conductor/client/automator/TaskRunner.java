@@ -20,7 +20,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import io.orkes.conductor.client.TaskClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
@@ -38,8 +37,8 @@ import com.netflix.spectator.api.Registry;
 import com.netflix.spectator.api.Spectator;
 import com.netflix.spectator.api.patterns.ThreadPoolMonitor;
 
+import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.api.TaskResourceApi;
 
 import com.google.common.base.Stopwatch;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -79,7 +78,8 @@ class TaskRunner {
         this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
         this.taskClientForExternalPayload =
-                new com.netflix.conductor.client.http.TaskClient(new DefaultClientConfig(), conductorClientConfiguration, null);
+                new com.netflix.conductor.client.http.TaskClient(
+                        new DefaultClientConfig(), conductorClientConfiguration, null);
         this.executorService =
                 (ThreadPoolExecutor)
                         Executors.newFixedThreadPool(
@@ -89,7 +89,11 @@ class TaskRunner {
                                         .uncaughtExceptionHandler(uncaughtExceptionHandler)
                                         .build());
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
-        LOGGER.info("Initialized the TaskPollExecutor for {} with {} threads and threadPrefix {}", threadCount, threadCount, workerNamePrefix);
+        LOGGER.info(
+                "Initialized the TaskPollExecutor for {} with {} threads and threadPrefix {}",
+                threadCount,
+                threadCount,
+                workerNamePrefix);
     }
 
     public void poll(Worker worker) {
@@ -186,7 +190,8 @@ class TaskRunner {
             return Collections.emptyList();
         }
         LOGGER.debug("poll {} in the domain {} with batch size {}", taskType, domain, count);
-        return taskClient.batchPollTasksInDomain(taskType, domain, workerId, count, this.taskPollTimeout);
+        return taskClient.batchPollTasksInDomain(
+                taskType, domain, workerId, count, this.taskPollTimeout);
     }
 
     @SuppressWarnings("FieldCanBeLocal")

@@ -14,7 +14,6 @@ package io.orkes.conductor.client.http;
 
 import java.util.List;
 
-import io.orkes.conductor.client.http.model.WorkflowStatus;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -29,6 +28,7 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
+import io.orkes.conductor.client.http.model.WorkflowStatus;
 
 import com.google.common.base.Preconditions;
 import com.squareup.okhttp.Call;
@@ -220,7 +220,8 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public WorkflowStatus getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables) {
+    public WorkflowStatus getWorkflowStatusSummary(
+            String workflowId, Boolean includeOutput, Boolean includeVariables) {
         return httpClient.getWorkflowStatusSummary(workflowId, includeOutput, includeVariables);
     }
 }
