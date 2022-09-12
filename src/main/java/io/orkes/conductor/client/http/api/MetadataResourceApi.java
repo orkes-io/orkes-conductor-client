@@ -23,9 +23,9 @@ import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
 import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.model.*;
 
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
 
 public class MetadataResourceApi {
     private ApiClient apiClient;

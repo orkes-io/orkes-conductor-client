@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.orkesclient;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +24,9 @@ import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.TaskSummary;
 
 import io.orkes.conductor.client.http.api.TaskResourceApi;
+import io.orkes.conductor.client.http.client.TaskClient;
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
+import io.orkes.conductor.client.http.orkesclient.OrkesClient;
 
 public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
@@ -87,54 +90,54 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
     @Override
     public int getQueueSizeForTask(String taskType) {
-        return 0;
+        return taskResourceApi.size(List.of(taskType)).get(taskType);
     }
 
     @Override
     public int getQueueSizeForTask(
             String taskType, String domain, String isolationGroupId, String executionNamespace) {
-        return 0;
+        return taskResourceApi.size(List.of(taskType)).get(taskType);
     }
 
     @Override
     public List<PollData> getPollData(String taskType) {
-        return null;
+        throw new UnsupportedOperationException("get poll data is no longer supported");
     }
 
     @Override
     public List<PollData> getAllPollData() {
-        return null;
+        throw new UnsupportedOperationException("get poll data is no longer supported");
     }
 
     @Override
     public String requeueAllPendingTasks() {
-        return null;
+        throw new UnsupportedOperationException("requeue all pending task is no longer supported");
     }
 
     @Override
     public String requeuePendingTasksByTaskType(String taskType) {
-        return null;
+        return taskResourceApi.requeuePendingTask(taskType);
     }
 
     @Override
     public SearchResult<TaskSummary> search(String query) {
-        return null;
+        throw new UnsupportedOperationException("search operation on tasks is no loinger supported");
     }
 
     @Override
     public SearchResult<Task> searchV2(String query) {
-        return null;
+        throw new UnsupportedOperationException("search operation on tasks is no loinger supported");
     }
 
     @Override
     public SearchResult<TaskSummary> search(
             Integer start, Integer size, String sort, String freeText, String query) {
-        return null;
+        throw new UnsupportedOperationException("search operation on tasks is no loinger supported");
     }
 
     @Override
     public SearchResult<Task> searchV2(
             Integer start, Integer size, String sort, String freeText, String query) {
-        return null;
+        throw new UnsupportedOperationException("search operation on tasks is no loinger supported");
     }
 }

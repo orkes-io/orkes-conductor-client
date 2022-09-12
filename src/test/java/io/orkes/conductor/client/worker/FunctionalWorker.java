@@ -25,7 +25,7 @@ import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-import io.orkes.conductor.client.http.ApiClient;
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.http.model.WorkflowStatus;

@@ -10,10 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.orkesclient;
 
 import java.util.List;
 
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.client.WorkflowBulkOperationsClient;
+import io.orkes.conductor.client.http.client.WorkflowClient;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -29,7 +32,7 @@ import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 
 import com.google.common.base.Preconditions;
 
-public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
+public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient, WorkflowBulkOperationsClient {
 
     private final WorkflowResourceApi httpClient;
 
@@ -155,5 +158,30 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     public SearchResult<Workflow> searchV2(
             Integer start, Integer size, String sort, String freeText, String query) {
         throw new UnsupportedOperationException("Please use search() API");
+    }
+
+    @Override
+    public BulkResponse pauseWorkflow(List<String> body) throws ApiException {
+        return bulkResourceApi.pauseWorkflow1(body);
+    }
+
+    @Override
+    public BulkResponse restartWorkflow(List<String> body, Boolean useLatestDefinitions) throws ApiException {
+        return bulkResourceApi.restart1(body, useLatestDefinitions);
+    }
+
+    @Override
+    public BulkResponse resumeWorkflow(List<String> body) throws ApiException {
+        return bulkResourceApi.resumeWorkflow1(body);
+    }
+
+    @Override
+    public BulkResponse retryWorkflow(List<String> body) throws ApiException {
+        return bulkResourceApi.retry1(body);
+    }
+
+    @Override
+    public BulkResponse terminateWorkflow(List<String> body, String reason) throws ApiException {
+        return bulkResourceApi.terminate(body, reason);
     }
 }

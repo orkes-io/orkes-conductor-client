@@ -24,6 +24,7 @@ import com.netflix.conductor.common.metadata.events.EventHandler;
 import io.orkes.conductor.client.http.*;
 
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
 
 public class EventResourceApi {
     private ApiClient apiClient;

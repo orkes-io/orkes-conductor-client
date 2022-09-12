@@ -22,6 +22,7 @@ import java.util.Map;
 import io.orkes.conductor.client.http.*;
 
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
 
 public class SecretResourceApi {
     private ApiClient apiClient;

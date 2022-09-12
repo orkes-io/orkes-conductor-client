@@ -24,6 +24,7 @@ import io.orkes.conductor.client.http.model.TagObject;
 import io.orkes.conductor.client.http.model.TagString;
 
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
 
 public class TagsApi {
     private ApiClient apiClient;

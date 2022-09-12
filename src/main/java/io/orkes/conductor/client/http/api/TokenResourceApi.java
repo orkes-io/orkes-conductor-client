@@ -23,6 +23,7 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.model.*;
 
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
 
 public class TokenResourceApi {
     /**
@@ -113,21 +114,6 @@ public class TokenResourceApi {
         com.squareup.okhttp.Call call =
                 generateTokenCall(apiClient, body, progressListener, progressRequestListener);
         return call;
-    }
-
-    /**
-     * Generate JWT with the given access key
-     *
-     * @param apiClient ApiClient (required)
-     * @param body (required)
-     * @return Response
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
-    public static Map<String, String> generateToken(ApiClient apiClient, GenerateTokenRequest body)
-            throws ApiException {
-        ApiResponse<Map<String, String>> resp = generateTokenWithHttpInfo(apiClient, body);
-        return resp.getData();
     }
 
     /**
@@ -271,19 +257,6 @@ public class TokenResourceApi {
         com.squareup.okhttp.Call call =
                 getUserInfoCall(apiClient, progressListener, progressRequestListener);
         return call;
-    }
-
-    /**
-     * Get the user info from the token
-     *
-     * @param apiClient ApiClient (required)
-     * @return Object
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
-    public static Object getUserInfo(ApiClient apiClient) throws ApiException {
-        ApiResponse<Object> resp = getUserInfoWithHttpInfo(apiClient);
-        return resp.getData();
     }
 
     /**

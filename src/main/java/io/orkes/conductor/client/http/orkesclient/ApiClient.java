@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.orkesclient;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
+import io.orkes.conductor.client.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.LocalDate;
@@ -1263,7 +1264,7 @@ public class ApiClient {
             GenerateTokenRequest generateTokenRequest =
                     new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
             Map<String, String> response =
-                    TokenResourceApi.generateToken(this, generateTokenRequest);
+                    TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
             final String token = response.get("token");
             this.setToken(token);
         }

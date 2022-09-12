@@ -10,10 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.client;
 
 import java.util.List;
 
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
+import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.api.ApplicationResourceApi;
 import io.orkes.conductor.client.http.model.ConductorApplication;
 import io.orkes.conductor.client.http.model.CreateOrUpdateApplicationRequest;

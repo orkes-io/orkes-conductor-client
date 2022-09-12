@@ -23,7 +23,7 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-import io.orkes.conductor.client.http.ApiClient;
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 
 public class Workers {

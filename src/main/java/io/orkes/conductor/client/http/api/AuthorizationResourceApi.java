@@ -24,6 +24,7 @@ import io.orkes.conductor.client.http.model.*;
 import io.orkes.conductor.client.http.model.Subject;
 
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.http.orkesclient.ApiClient;
 
 public class AuthorizationResourceApi {
     private ApiClient apiClient;
