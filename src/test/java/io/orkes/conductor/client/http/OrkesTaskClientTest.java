@@ -22,9 +22,7 @@ class OrkesTaskClientTest {
 
     @Test
     void testConstructor() {
-        OrkesTaskClient taskClient =
-                new OrkesTaskClient(
-                        new DefaultClientConfig(), new DefaultConductorClientConfiguration(), null);
+        OrkesTaskClient taskClient = new OrkesTaskClient(new DefaultClientConfig(), new DefaultConductorClientConfiguration(), null);
 
         taskClient.setRootURI("/");
         taskClient.withCredentials("key", "secret");
