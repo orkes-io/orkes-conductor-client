@@ -19,9 +19,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.util.Commons;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class WorkflowClientTests extends ClientTest {
     private final WorkflowClient workflowClient;
@@ -38,6 +41,8 @@ public class WorkflowClientTests extends ClientTest {
         startWorkflowRequest.setVersion(1);
         Map<String, Object> input = new HashMap<>();
         startWorkflowRequest.setInput(input);
-        workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        Workflow workflow = workflowClient.getWorkflow(workflowId, false);
+        assertNotNull(workflow, "Workflow should'n be null");
     }
 }
