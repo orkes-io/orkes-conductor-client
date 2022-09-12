@@ -14,6 +14,7 @@ package io.orkes.conductor.client.http;
 
 import java.util.List;
 
+import io.orkes.conductor.client.http.model.WorkflowStatus;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -216,5 +217,10 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
             List<String> body, String reason, ApiCallback<BulkResponse> callback)
             throws ApiException {
         return bulkResourceApi.terminateAsync(body, reason, callback);
+    }
+
+    @Override
+    public WorkflowStatus getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables) {
+        return httpClient.getWorkflowStatusSummary(workflowId, includeOutput, includeVariables);
     }
 }
