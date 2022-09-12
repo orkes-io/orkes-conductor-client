@@ -24,6 +24,7 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 import io.orkes.conductor.client.http.ApiCallback;
 
 import com.squareup.okhttp.Call;
+import io.orkes.conductor.client.http.model.WorkflowStatus;
 
 public interface WorkflowClient {
     String startWorkflow(StartWorkflowRequest startWorkflowRequest);
@@ -94,4 +95,6 @@ public interface WorkflowClient {
 
     Call terminateWorkflowAsync(
             List<String> body, String reason, ApiCallback<BulkResponse> callback);
+
+    WorkflowStatus getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables);
 }

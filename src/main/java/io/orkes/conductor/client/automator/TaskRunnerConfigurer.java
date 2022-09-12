@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import io.orkes.conductor.client.TaskClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ public class TaskRunnerConfigurer {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunnerConfigurer.class);
 
     private final EurekaClient eurekaClient;
-    private final TaskResourceApi taskClient;
+    private final TaskClient taskClient;
     private final List<Worker> workers;
     private final int sleepWhenRetry;
     private final int updateRetryCount;
@@ -86,7 +87,7 @@ public class TaskRunnerConfigurer {
         private int defaultPollTimeout = 100;
         private final Iterable<Worker> workers;
         private EurekaClient eurekaClient;
-        private final TaskResourceApi taskClient;
+        private final TaskClient taskClient;
         private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
         private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount =
                 new HashMap<>();
@@ -96,7 +97,7 @@ public class TaskRunnerConfigurer {
         private ConductorClientConfiguration conductorClientConfiguration =
                 new DefaultConductorClientConfiguration();
 
-        public Builder(TaskResourceApi taskClient, Iterable<Worker> workers) {
+        public Builder(TaskClient taskClient, Iterable<Worker> workers) {
             Preconditions.checkNotNull(taskClient, "TaskClient cannot be null");
             Preconditions.checkNotNull(workers, "Workers cannot be null");
             this.taskClient = taskClient;

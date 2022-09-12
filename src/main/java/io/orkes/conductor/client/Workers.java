@@ -90,8 +90,7 @@ public class Workers {
             if (this.apiClient != null) {
                 this.apiClient = new ApiClient(rootUri, keyId, secret);
             }
-
-            TaskResourceApi taskClient = new TaskResourceApi(this.apiClient);
+            TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
 
             TaskRunnerConfigurer runnerConfigurer =
                     new TaskRunnerConfigurer.Builder(taskClient, workers)

@@ -17,6 +17,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import io.orkes.conductor.client.OrkesClients;
+import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.WorkflowClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,14 +39,14 @@ import io.orkes.conductor.client.util.SimpleWorker;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WorkflowExecutionTests {
-    WorkflowResourceApi workflowResourceApi;
+    WorkflowClient workflowResourceApi;
     TaskRunnerConfigurer taskRunnerConfigurer;
 
     @BeforeEach
     public void init() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        workflowResourceApi = new WorkflowResourceApi(apiClient);
-        TaskResourceApi taskClient = new TaskResourceApi(apiClient);
+        workflowResourceApi = new OrkesClients(apiClient).getWorkflowClient();
+        TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
         Worker worker = new SimpleWorker();
         this.taskRunnerConfigurer =
                 new TaskRunnerConfigurer.Builder(taskClient, Collections.singletonList(worker))
