@@ -12,12 +12,48 @@
  */
 package io.orkes.conductor.client.api;
 
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+
 import io.orkes.conductor.client.MetadataClient;
+import io.orkes.conductor.client.http.OrkesMetadataClient;
+import io.orkes.conductor.client.http.model.TagObject;
+import io.orkes.conductor.client.util.Commons;
+import io.orkes.conductor.client.util.WorkflowUtil;
 
 public class MetadataClientTests extends ClientTest {
     private final MetadataClient metadataClient;
 
     public MetadataClientTests() {
         this.metadataClient = super.orkesClients.getMetadataClient();
+    }
+
+    @Test
+    @DisplayName("tag a workflows and task")
+    public void tagWorkflowsAndTasks() {
+        registerTask();
+        registerWorkflow();
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setKey("a");
+        tagObject.setValue("b");
+        ((OrkesMetadataClient) metadataClient).addTaskTag(tagObject, Commons.TASK_NAME);
+        ((OrkesMetadataClient) metadataClient).addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
+    }
+
+    void registerTask() {
+        TaskDef taskDef = new TaskDef();
+        taskDef.setName(Commons.TASK_NAME);
+        this.metadataClient.registerTaskDefs(List.of(taskDef));
+    }
+
+    void registerWorkflow() {
+        WorkflowDef workflowDef = WorkflowUtil.getWorkflowDef();
+        metadataClient.registerWorkflowDef(workflowDef);
     }
 }
