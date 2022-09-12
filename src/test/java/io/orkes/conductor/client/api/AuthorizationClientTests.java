@@ -12,8 +12,6 @@
  */
 package io.orkes.conductor.client.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +24,8 @@ import io.orkes.conductor.client.AuthorizationClient;
 import io.orkes.conductor.client.http.model.Group;
 import io.orkes.conductor.client.http.model.UpsertGroupRequest;
 import io.orkes.conductor.client.http.model.UpsertGroupRequest.RolesEnum;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AuthorizationClientTests extends ClientTest {
     private final AuthorizationClient authorizationClient;
