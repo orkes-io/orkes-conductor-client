@@ -89,7 +89,7 @@ class TaskRunner {
                                         .uncaughtExceptionHandler(uncaughtExceptionHandler)
                                         .build());
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
-        LOGGER.info("Initialized the TaskPollExecutor for {} with {} threads", threadCount);
+        LOGGER.info("Initialized the TaskPollExecutor for {} with {} threads and threadPrefix {}", threadCount, threadCount, workerNamePrefix);
     }
 
     public void poll(Worker worker) {
@@ -178,13 +178,14 @@ class TaskRunner {
     }
 
     private int getAvailableWorkers() {
-        return (this.threadCount << 1) - this.executorService.getActiveCount();
+        return (this.threadCount) - this.executorService.getActiveCount();
     }
 
     private List<Task> pollTask(String taskType, String workerId, String domain, int count) {
         if (count < 1) {
             return Collections.emptyList();
         }
+        LOGGER.debug("poll {} in the domain {} with batch size {}", taskType, domain, count);
         return taskClient.batchPollTasksInDomain(taskType, domain, workerId, count, this.taskPollTimeout);
     }
 
