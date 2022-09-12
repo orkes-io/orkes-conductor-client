@@ -175,49 +175,6 @@ public class AuthorizationResourceApi {
     }
 
     /**
-     * Get the access that have been granted over the given object (asynchronously)
-     *
-     * @param type (required)
-     * @param id (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getPermissionsAsync(
-            String type, String id, final ApiCallback<Map<String, List<Subject>>> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getPermissionsValidateBeforeCall(
-                        type, id, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Map<String, List<Subject>>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for grantPermissions
      *
      * @param body (required)
@@ -331,45 +288,6 @@ public class AuthorizationResourceApi {
     }
 
     /**
-     * Grant access to a user over the target (asynchronously)
-     *
-     * @param body (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call grantPermissionsAsync(
-            AuthorizationRequest body, final ApiCallback<Void> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                grantPermissionsValidateBeforeCall(body, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
-    /**
      * Build call for removePermissions
      *
      * @param body (required)
@@ -482,44 +400,4 @@ public class AuthorizationResourceApi {
         return apiClient.execute(call);
     }
 
-    /**
-     * Remove user&#x27;s access over the target (asynchronously)
-     *
-     * @param body (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call removePermissionsAsync(
-            AuthorizationRequest body, final ApiCallback<Void> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                removePermissionsValidateBeforeCall(
-                        body, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
 }

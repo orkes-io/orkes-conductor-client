@@ -156,45 +156,6 @@ public class TaskResourceApi {
     }
 
     /**
-     * Get the details about each queue (asynchronously)
-     *
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call allAsync(final ApiCallback<Map<String, Long>> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                allValidateBeforeCall(progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Map<String, Long>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for allVerbose
      *
      * @param progressListener Progress listener
@@ -300,47 +261,6 @@ public class TaskResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Get the details about each queue (asynchronously)
-     *
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call allVerboseAsync(
-            final ApiCallback<Map<String, Map<String, Map<String, Long>>>> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                allVerboseValidateBeforeCall(progressListener, progressRequestListener);
-        Type localVarReturnType =
-                new TypeToken<Map<String, Map<String, Map<String, Long>>>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for batchPoll
      *
@@ -500,63 +420,6 @@ public class TaskResourceApi {
     }
 
     /**
-     * Batch poll for a task of a certain type (asynchronously)
-     *
-     * @param tasktype (required)
-     * @param workerid (optional)
-     * @param domain (optional)
-     * @param count (optional, default to 1)
-     * @param timeout (optional, default to 100)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call batchPollAsync(
-            String tasktype,
-            String workerid,
-            String domain,
-            Integer count,
-            Integer timeout,
-            final ApiCallback<List<Task>> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                batchPollValidateBeforeCall(
-                        tasktype,
-                        workerid,
-                        domain,
-                        count,
-                        timeout,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<List<Task>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for getAllPollData
      *
      * @param progressListener Progress listener
@@ -661,45 +524,6 @@ public class TaskResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Get the last poll data for all task types (asynchronously)
-     *
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getAllPollDataAsync(final ApiCallback<List<PollData>> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getAllPollDataValidateBeforeCall(progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<List<PollData>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for getExternalStorageLocation1
      *
@@ -847,53 +671,6 @@ public class TaskResourceApi {
     }
 
     /**
-     * Get the external uri where the task payload is to be stored (asynchronously)
-     *
-     * @param path (required)
-     * @param operation (required)
-     * @param payloadType (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getExternalStorageLocation1Async(
-            String path,
-            String operation,
-            String payloadType,
-            final ApiCallback<ExternalStorageLocation> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getExternalStorageLocation1ValidateBeforeCall(
-                        path, operation, payloadType, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<ExternalStorageLocation>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for getPollData
      *
      * @param taskType (required)
@@ -1011,46 +788,6 @@ public class TaskResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Get the last poll data for a given task type (asynchronously)
-     *
-     * @param taskType (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getPollDataAsync(
-            String taskType, final ApiCallback<List<PollData>> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getPollDataValidateBeforeCall(taskType, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<List<PollData>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for getTask
      *
@@ -1171,46 +908,6 @@ public class TaskResourceApi {
     }
 
     /**
-     * Get task by Id (asynchronously)
-     *
-     * @param taskId (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getTaskAsync(String taskId, final ApiCallback<Task> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getTaskValidateBeforeCall(taskId, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Task>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for getTaskLogs
      *
      * @param taskId (required)
@@ -1330,46 +1027,6 @@ public class TaskResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Get Task Execution Logs (asynchronously)
-     *
-     * @param taskId (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call getTaskLogsAsync(
-            String taskId, final ApiCallback<List<TaskExecLog>> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                getTaskLogsValidateBeforeCall(taskId, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<List<TaskExecLog>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for log
      *
@@ -1495,46 +1152,6 @@ public class TaskResourceApi {
         return apiClient.execute(call);
     }
 
-    /**
-     * Log Task Execution Details (asynchronously)
-     *
-     * @param body (required)
-     * @param taskId (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call logAsync(
-            String body, String taskId, final ApiCallback<Void> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                logValidateBeforeCall(body, taskId, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
     /**
      * Build call for poll
      *
@@ -1670,50 +1287,6 @@ public class TaskResourceApi {
     }
 
     /**
-     * Poll for a task of a certain type (asynchronously)
-     *
-     * @param tasktype (required)
-     * @param workerid (optional)
-     * @param domain (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call pollAsync(
-            String tasktype, String workerid, String domain, final ApiCallback<Task> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                pollValidateBeforeCall(
-                        tasktype, workerid, domain, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Task>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for requeuePendingTask
      *
      * @param taskType (required)
@@ -1833,47 +1406,6 @@ public class TaskResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Requeue pending tasks (asynchronously)
-     *
-     * @param taskType (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call requeuePendingTaskAsync(
-            String taskType, final ApiCallback<String> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                requeuePendingTaskValidateBeforeCall(
-                        taskType, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for search1
      *
@@ -2028,65 +1560,6 @@ public class TaskResourceApi {
     }
 
     /**
-     * Search for tasks based in payload and other parameters (asynchronously) use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call search1Async(
-            Integer start,
-            Integer size,
-            String sort,
-            String freeText,
-            String query,
-            final ApiCallback<SearchResultTaskSummary> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                search1ValidateBeforeCall(
-                        start,
-                        size,
-                        sort,
-                        freeText,
-                        query,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<SearchResultTaskSummary>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for searchV21
      *
      * @param start (optional, default to 0)
@@ -2240,65 +1713,6 @@ public class TaskResourceApi {
     }
 
     /**
-     * Search for tasks based in payload and other parameters (asynchronously) use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call searchV21Async(
-            Integer start,
-            Integer size,
-            String sort,
-            String freeText,
-            String query,
-            final ApiCallback<SearchResultTask> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                searchV21ValidateBeforeCall(
-                        start,
-                        size,
-                        sort,
-                        freeText,
-                        query,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<SearchResultTask>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for size
      *
      * @param taskType (optional)
@@ -2413,47 +1827,6 @@ public class TaskResourceApi {
     }
 
     /**
-     * Get Task type queue sizes (asynchronously)
-     *
-     * @param taskType (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call sizeAsync(
-            List<String> taskType, final ApiCallback<Map<String, Integer>> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                sizeValidateBeforeCall(taskType, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Map<String, Integer>>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for updateTask
      *
      * @param body (required)
@@ -2567,46 +1940,6 @@ public class TaskResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Update a task (asynchronously)
-     *
-     * @param body (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call updateTaskAsync(
-            TaskResult body, final ApiCallback<String> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                updateTaskValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for updateTask1
      *
@@ -2772,58 +2105,4 @@ public class TaskResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Update a task By Ref Name (asynchronously)
-     *
-     * @param body (required)
-     * @param workflowId (required)
-     * @param taskRefName (required)
-     * @param status (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call updateTask1Async(
-            Map<String, Object> body,
-            String workflowId,
-            String taskRefName,
-            String status,
-            final ApiCallback<String> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                updateTask1ValidateBeforeCall(
-                        body,
-                        workflowId,
-                        taskRefName,
-                        status,
-                        progressListener,
-                        progressRequestListener);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
 }
