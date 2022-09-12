@@ -13,39 +13,130 @@
 package io.orkes.conductor.client.http;
 
 import com.netflix.conductor.client.config.ConductorClientConfiguration;
-import com.netflix.conductor.client.http.TaskClient;
 
+import com.netflix.conductor.common.metadata.tasks.PollData;
+import com.netflix.conductor.common.metadata.tasks.Task;
+import com.netflix.conductor.common.metadata.tasks.TaskExecLog;
+import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import com.netflix.conductor.common.run.SearchResult;
+import com.netflix.conductor.common.run.TaskSummary;
+import io.orkes.conductor.client.http.api.TaskResourceApi;
 import io.orkes.conductor.client.http.auth.AuthorizationClientFilter;
 
 import com.sun.jersey.api.client.ClientHandler;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.filter.ClientFilter;
 
-public class OrkesTaskClient extends TaskClient implements OrkesClient {
-    public OrkesTaskClient() {}
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-    public OrkesTaskClient(ClientConfig config) {
-        super(config);
-    }
+public class OrkesTaskClient extends OrkesClient implements TaskClient  {
 
-    public OrkesTaskClient(ClientConfig config, ClientHandler handler) {
-        super(config, handler);
-    }
+    private TaskResourceApi taskResourceApi;
 
-    public OrkesTaskClient(ClientConfig config, ClientHandler handler, ClientFilter... filters) {
-        super(config, handler, filters);
-    }
-
-    public OrkesTaskClient(
-            ClientConfig config,
-            ConductorClientConfiguration clientConfiguration,
-            ClientHandler handler,
-            ClientFilter... filters) {
-        super(config, clientConfiguration, handler, filters);
+    public OrkesTaskClient(ApiClient apiClient) {
+        super(apiClient);
+        this.taskResourceApi = new TaskResourceApi(apiClient);
     }
 
     @Override
-    public void withCredentials(String keyId, String secret) {
-        this.client.addFilter(new AuthorizationClientFilter(root, keyId, secret));
+    public Task pollTask(String taskType, String workerId, String domain) {
+        return taskResourceApi.poll(taskType, workerId, domain);
+    }
+
+    @Override
+    public List<Task> batchPollTasksByTaskType(String taskType, String workerId, int count, int timeoutInMillisecond) {
+        return taskResourceApi.batchPoll(taskType, workerId, null, count, timeoutInMillisecond);
+    }
+
+    @Override
+    public List<Task> batchPollTasksInDomain(String taskType, String domain, String workerId, int count, int timeoutInMillisecond) {
+        return taskResourceApi.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
+    }
+
+    @Override
+    public void updateTask(TaskResult taskResult) {
+        taskResourceApi.updateTask(taskResult);
+    }
+
+    @Override
+    public Optional<String> evaluateAndUploadLargePayload(Map<String, Object> taskOutputData, String taskType) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Boolean ack(String taskId, String workerId) {
+        throw new UnsupportedOperationException("ack is no longer required");
+    }
+
+    @Override
+    public void logMessageForTask(String taskId, String logMessage) {
+        taskResourceApi.log(logMessage, taskId);
+    }
+
+    @Override
+    public List<TaskExecLog> getTaskLogs(String taskId) {
+        return taskResourceApi.getTaskLogs(taskId);
+    }
+
+    @Override
+    public Task getTaskDetails(String taskId) {
+        return taskResourceApi.getTask(taskId);
+    }
+
+    @Override
+    public void removeTaskFromQueue(String taskType, String taskId) {
+
+    }
+
+    @Override
+    public int getQueueSizeForTask(String taskType) {
+        return 0;
+    }
+
+    @Override
+    public int getQueueSizeForTask(String taskType, String domain, String isolationGroupId, String executionNamespace) {
+        return 0;
+    }
+
+    @Override
+    public List<PollData> getPollData(String taskType) {
+        return null;
+    }
+
+    @Override
+    public List<PollData> getAllPollData() {
+        return null;
+    }
+
+    @Override
+    public String requeueAllPendingTasks() {
+        return null;
+    }
+
+    @Override
+    public String requeuePendingTasksByTaskType(String taskType) {
+        return null;
+    }
+
+    @Override
+    public SearchResult<TaskSummary> search(String query) {
+        return null;
+    }
+
+    @Override
+    public SearchResult<Task> searchV2(String query) {
+        return null;
+    }
+
+    @Override
+    public SearchResult<TaskSummary> search(Integer start, Integer size, String sort, String freeText, String query) {
+        return null;
+    }
+
+    @Override
+    public SearchResult<Task> searchV2(Integer start, Integer size, String sort, String freeText, String query) {
+        return null;
     }
 }

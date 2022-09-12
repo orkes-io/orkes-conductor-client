@@ -13,40 +13,76 @@
 package io.orkes.conductor.client.http;
 
 import com.netflix.conductor.client.config.ConductorClientConfiguration;
-import com.netflix.conductor.client.http.MetadataClient;
 
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+import io.orkes.conductor.client.http.api.MetadataResourceApi;
 import io.orkes.conductor.client.http.auth.AuthorizationClientFilter;
 
 import com.sun.jersey.api.client.ClientHandler;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.filter.ClientFilter;
 
-public class OrkesMetadataClient extends MetadataClient implements OrkesClient {
-    public OrkesMetadataClient() {}
+import java.util.List;
 
-    public OrkesMetadataClient(ClientConfig clientConfig) {
-        super(clientConfig);
-    }
+public class OrkesMetadataClient extends OrkesClient implements MetadataClient  {
 
-    public OrkesMetadataClient(ClientConfig clientConfig, ClientHandler clientHandler) {
-        super(clientConfig, clientHandler);
-    }
+    private final MetadataResourceApi metadataResourceApi;
 
-    public OrkesMetadataClient(
-            ClientConfig config, ClientHandler handler, ClientFilter... filters) {
-        super(config, handler, filters);
-    }
-
-    public OrkesMetadataClient(
-            ClientConfig config,
-            ConductorClientConfiguration clientConfiguration,
-            ClientHandler handler,
-            ClientFilter... filters) {
-        super(config, clientConfiguration, handler, filters);
+    public OrkesMetadataClient(ApiClient apiClient) {
+        super(apiClient);
+        this.metadataResourceApi = new MetadataResourceApi(apiClient);
     }
 
     @Override
-    public void withCredentials(String keyId, String secret) {
-        this.client.addFilter(new AuthorizationClientFilter(root, keyId, secret));
+    public void registerWorkflowDef(WorkflowDef workflowDef) {
+        metadataResourceApi.create(workflowDef, true);
+    }
+
+    public void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite) {
+        metadataResourceApi.create(workflowDef, overwrite);
+    }
+
+    @Override
+    public void updateWorkflowDefs(List<WorkflowDef> workflowDefs) {
+        metadataResourceApi.update(workflowDefs, true);
+    }
+
+    public void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite) {
+        metadataResourceApi.update(workflowDefs, overwrite);
+    }
+
+    @Override
+    public WorkflowDef getWorkflowDef(String name, Integer version) {
+        return metadataResourceApi.get(name, version, false);
+    }
+
+    public WorkflowDef getWorkflowDefWithMetadata(String name, Integer version) {
+        return metadataResourceApi.get(name, version, true);
+    }
+
+    @Override
+    public void unregisterWorkflowDef(String name, Integer version) {
+
+    }
+
+    @Override
+    public void registerTaskDefs(List<TaskDef> taskDefs) {
+
+    }
+
+    @Override
+    public void updateTaskDef(TaskDef taskDef) {
+
+    }
+
+    @Override
+    public TaskDef getTaskDef(String taskType) {
+        return null;
+    }
+
+    @Override
+    public void unregisterTaskDef(String taskType) {
+
     }
 }

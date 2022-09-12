@@ -13,39 +13,43 @@
 package io.orkes.conductor.client.http;
 
 import com.netflix.conductor.client.config.ConductorClientConfiguration;
-import com.netflix.conductor.client.http.EventClient;
 
+import com.netflix.conductor.common.metadata.events.EventHandler;
+import io.orkes.conductor.client.http.api.EventResourceApi;
 import io.orkes.conductor.client.http.auth.AuthorizationClientFilter;
 
 import com.sun.jersey.api.client.ClientHandler;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.filter.ClientFilter;
 
-public class OrkesEventClient extends EventClient implements OrkesClient {
-    public OrkesEventClient() {}
+import java.util.List;
 
-    public OrkesEventClient(ClientConfig clientConfig) {
-        super(clientConfig);
-    }
+public class OrkesEventClient extends OrkesClient implements EventClient {
 
-    public OrkesEventClient(ClientConfig clientConfig, ClientHandler clientHandler) {
-        super(clientConfig, clientHandler);
-    }
+    private EventResourceApi eventResourceApi;
 
-    public OrkesEventClient(ClientConfig config, ClientHandler handler, ClientFilter... filters) {
-        super(config, handler, filters);
-    }
-
-    public OrkesEventClient(
-            ClientConfig config,
-            ConductorClientConfiguration clientConfiguration,
-            ClientHandler handler,
-            ClientFilter... filters) {
-        super(config, clientConfiguration, handler, filters);
+    public OrkesEventClient(ApiClient apiClient) {
+        super(apiClient);
+        this.eventResourceApi = new EventResourceApi(apiClient);
     }
 
     @Override
-    public void withCredentials(String keyId, String secret) {
-        this.client.addFilter(new AuthorizationClientFilter(root, keyId, secret));
+    public void registerEventHandler(EventHandler eventHandler) {
+        this.eventResourceApi.addEventHandler(eventHandler);
+    }
+
+    @Override
+    public void updateEventHandler(EventHandler eventHandler) {
+        this.eventResourceApi.updateEventHandler(eventHandler);
+    }
+
+    @Override
+    public List<EventHandler> getEventHandlers(String event, boolean activeOnly) {
+        return eventResourceApi.getEventHandlersForEvent(event, activeOnly);
+    }
+
+    @Override
+    public void unregisterEventHandler(String name) {
+        eventResourceApi.removeEventHandlerStatus(name);
     }
 }

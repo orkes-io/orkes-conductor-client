@@ -12,6 +12,26 @@
  */
 package io.orkes.conductor.client.http;
 
-public interface OrkesClient {
-    void withCredentials(String keyId, String secret);
+public abstract class OrkesClient {
+
+    protected ApiClient apiClient;
+
+    public OrkesClient(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
+
+    public OrkesClient withReadTimeout(int readTimeout) {
+        apiClient.setReadTimeout(readTimeout);
+        return this;
+    }
+
+    public OrkesClient setWriteTimeout(int writeTimeout) {
+        apiClient.setWriteTimeout(writeTimeout);
+        return this;
+    }
+
+    public OrkesClient withConnectTimeout(int connectTimeout) {
+        apiClient.setConnectTimeout(connectTimeout);
+        return this;
+    }
 }

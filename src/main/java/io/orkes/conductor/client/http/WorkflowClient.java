@@ -9,7 +9,7 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 
 import java.util.List;
 
-public interface WorkflowClient extends OrkesClient {
+public interface WorkflowClient {
     String startWorkflow(StartWorkflowRequest startWorkflowRequest);
 
     Workflow getWorkflow(String workflowId, boolean includeTasks);

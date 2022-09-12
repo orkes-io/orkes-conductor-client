@@ -32,21 +32,19 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
-public class OrkesWorkflowClient implements WorkflowClient {
+public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     private final WorkflowResourceApi httpClient;
 
     private final WorkflowBulkResourceApi bulkResourceApi;
 
     public OrkesWorkflowClient(ApiClient apiClient) {
+        super(apiClient);
         this.httpClient = new WorkflowResourceApi(apiClient);
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
     }
 
-    @Override
-    public void withCredentials(String keyId, String secret) {
 
-    }
 
     @Override
     public String startWorkflow(StartWorkflowRequest startWorkflowRequest) {
