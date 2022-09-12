@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http.orkesclient;
+package io.orkes.conductor.client.http;
 
 import java.util.List;
 import java.util.Map;
@@ -23,10 +23,9 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.TaskSummary;
 
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
-import io.orkes.conductor.client.http.client.TaskClient;
-import io.orkes.conductor.client.http.orkesclient.ApiClient;
-import io.orkes.conductor.client.http.orkesclient.OrkesClient;
+import io.orkes.conductor.client.TaskClient;
 
 public class OrkesTaskClient extends OrkesClient implements TaskClient {
 

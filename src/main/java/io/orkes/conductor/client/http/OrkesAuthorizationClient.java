@@ -1,12 +1,12 @@
-package io.orkes.conductor.client.http.orkesclient;
+package io.orkes.conductor.client.http;
 
-import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.api.AuthorizationResourceApi;
 import io.orkes.conductor.client.http.api.GroupResourceApi;
 import io.orkes.conductor.client.http.api.UserResourceApi;
-import io.orkes.conductor.client.http.client.AuthorizationClient;
-import io.orkes.conductor.client.http.client.GroupClient;
-import io.orkes.conductor.client.http.client.UserClient;
+import io.orkes.conductor.client.AuthorizationClient;
+import io.orkes.conductor.client.GroupClient;
+import io.orkes.conductor.client.UserClient;
 import io.orkes.conductor.client.http.model.*;
 
 import java.util.List;

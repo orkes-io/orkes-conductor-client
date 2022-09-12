@@ -23,7 +23,7 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.model.*;
 
 import com.google.gson.reflect.TypeToken;
-import io.orkes.conductor.client.http.orkesclient.ApiClient;
+import io.orkes.conductor.client.ApiClient;
 
 public class ApplicationResourceApi {
     private ApiClient apiClient;

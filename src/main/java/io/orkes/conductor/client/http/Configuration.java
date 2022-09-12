@@ -12,7 +12,7 @@
  */
 package io.orkes.conductor.client.http;
 
-import io.orkes.conductor.client.http.orkesclient.ApiClient;
+import io.orkes.conductor.client.ApiClient;
 
 public class Configuration {
     private static ApiClient defaultApiClient = new ApiClient();

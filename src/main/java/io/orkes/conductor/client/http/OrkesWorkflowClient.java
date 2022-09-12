@@ -10,15 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http.orkesclient;
+package io.orkes.conductor.client.http;
 
 import java.util.List;
 
 import com.squareup.okhttp.Call;
-import io.orkes.conductor.client.http.ApiCallback;
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.client.WorkflowBulkOperationsClient;
-import io.orkes.conductor.client.http.client.WorkflowClient;
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.WorkflowBulkOperationsClient;
+import io.orkes.conductor.client.WorkflowClient;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;

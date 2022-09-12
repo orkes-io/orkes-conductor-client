@@ -12,7 +12,7 @@
  */
 package io.orkes.conductor.client.util;
 
-import io.orkes.conductor.client.http.orkesclient.ApiClient;
+import io.orkes.conductor.client.ApiClient;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

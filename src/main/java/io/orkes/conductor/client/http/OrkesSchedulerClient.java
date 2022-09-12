@@ -1,14 +1,13 @@
-package io.orkes.conductor.client.http.orkesclient;
+package io.orkes.conductor.client.http;
 
-import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.api.SchedulerResourceApi;
-import io.orkes.conductor.client.http.client.SchedulerClient;
+import io.orkes.conductor.client.SchedulerClient;
 import io.orkes.conductor.client.http.model.SaveScheduleRequest;
 import io.orkes.conductor.client.http.model.SearchResultWorkflowScheduleExecutionModel;
 import io.orkes.conductor.client.http.model.WorkflowSchedule;
 
 import java.util.List;
-import java.util.Map;
 
 public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient {
 

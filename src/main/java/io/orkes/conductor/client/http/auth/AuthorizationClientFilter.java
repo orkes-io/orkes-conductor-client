@@ -15,7 +15,7 @@ package io.orkes.conductor.client.http.auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.orkes.conductor.client.http.orkesclient.ApiClient;
+import io.orkes.conductor.client.ApiClient;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;

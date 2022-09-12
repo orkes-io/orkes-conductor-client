@@ -1,8 +1,8 @@
-package io.orkes.conductor.client.http.orkesclient;
+package io.orkes.conductor.client.http;
 
-import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.api.ApplicationResourceApi;
-import io.orkes.conductor.client.http.client.ApplicationClient;
+import io.orkes.conductor.client.ApplicationClient;
 import io.orkes.conductor.client.http.model.*;
 
 import java.util.List;

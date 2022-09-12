@@ -30,7 +30,7 @@ import io.orkes.conductor.client.http.model.SearchResultTask;
 import io.orkes.conductor.client.http.model.SearchResultTaskSummary;
 
 import com.google.gson.reflect.TypeToken;
-import io.orkes.conductor.client.http.orkesclient.ApiClient;
+import io.orkes.conductor.client.ApiClient;
 
 public class TaskResourceApi {
     private ApiClient apiClient;

@@ -10,20 +10,19 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http.orkesclient;
+package io.orkes.conductor.client.http;
 
 import java.util.List;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.api.MetadataResourceApi;
 import io.orkes.conductor.client.http.api.TagsApi;
-import io.orkes.conductor.client.http.client.MetadataClient;
+import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.model.TagObject;
 import io.orkes.conductor.client.http.model.TagString;
-import io.orkes.conductor.client.http.orkesclient.ApiClient;
-import io.orkes.conductor.client.http.orkesclient.OrkesClient;
 
 public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
 
