@@ -25,7 +25,7 @@ import com.sun.jersey.api.client.filter.ClientFilter;
 public class AuthorizationClientFilter extends ClientFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationClientFilter.class);
 
-    private static final String AUTHORIZATION_HEADER = "X-AUTHORIZATION";
+    private static final String AUTHORIZATION_HEADER = "X-Authorization";
 
     private final ApiClient apiClient;
 
@@ -38,13 +38,6 @@ public class AuthorizationClientFilter extends ClientFilter {
 
     @Override
     public ClientResponse handle(ClientRequest request) throws ClientHandlerException {
-        if (apiClient.getToken() == null) {
-            try {
-                this.apiClient.refreshToken();
-            } catch (Exception e) {
-                LOGGER.warn("Failed to refresh authentication token, reason: " + e.getMessage());
-            }
-        }
         request.getHeaders().add(AUTHORIZATION_HEADER, apiClient.getToken());
         try {
             ClientResponse clientResponse = getNext().handle(request);

@@ -25,34 +25,18 @@ import io.orkes.conductor.client.http.model.*;
 import com.google.gson.reflect.TypeToken;
 
 public class TokenResourceApi {
-    private ApiClient apiClient;
-
-    public TokenResourceApi() {
-        this(Configuration.getDefaultApiClient());
-    }
-
-    public TokenResourceApi(ApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
-
-    public ApiClient getApiClient() {
-        return apiClient;
-    }
-
-    public void setApiClient(ApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
-
     /**
      * Build call for generateToken
      *
+     * @param apiClient ApiClient (required)
      * @param body (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call generateTokenCall(
+    public static com.squareup.okhttp.Call generateTokenCall(
+            ApiClient apiClient,
             GenerateTokenRequest body,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -114,7 +98,8 @@ public class TokenResourceApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call generateTokenValidateBeforeCall(
+    private static com.squareup.okhttp.Call generateTokenValidateBeforeCall(
+            ApiClient apiClient,
             GenerateTokenRequest body,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -126,49 +111,55 @@ public class TokenResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                generateTokenCall(body, progressListener, progressRequestListener);
+                generateTokenCall(apiClient, body, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Generate JWT with the given access key
      *
+     * @param apiClient ApiClient (required)
      * @param body (required)
      * @return Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Response generateToken(GenerateTokenRequest body) throws ApiException {
-        ApiResponse<Response> resp = generateTokenWithHttpInfo(body);
+    public static Map<String, String> generateToken(ApiClient apiClient, GenerateTokenRequest body)
+            throws ApiException {
+        ApiResponse<Map<String, String>> resp = generateTokenWithHttpInfo(apiClient, body);
         return resp.getData();
     }
 
     /**
      * Generate JWT with the given access key
      *
+     * @param apiClient ApiClient (required)
      * @param body (required)
      * @return ApiResponse&lt;Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Response> generateTokenWithHttpInfo(GenerateTokenRequest body)
-            throws ApiException {
-        com.squareup.okhttp.Call call = generateTokenValidateBeforeCall(body, null, null);
-        Type localVarReturnType = new TypeToken<Response>() {}.getType();
+    public static ApiResponse<Map<String, String>> generateTokenWithHttpInfo(
+            ApiClient apiClient, GenerateTokenRequest body) throws ApiException {
+        com.squareup.okhttp.Call call =
+                generateTokenValidateBeforeCall(apiClient, body, null, null);
+        Type localVarReturnType = new TypeToken<Map<String, String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Generate JWT with the given access key (asynchronously)
      *
+     * @param apiClient ApiClient (required)
      * @param body (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body
      *     object
      */
-    public com.squareup.okhttp.Call generateTokenAsync(
-            GenerateTokenRequest body, final ApiCallback<Response> callback) throws ApiException {
+    public static com.squareup.okhttp.Call generateTokenAsync(
+            ApiClient apiClient, GenerateTokenRequest body, final ApiCallback<Response> callback)
+            throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -193,20 +184,24 @@ public class TokenResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                generateTokenValidateBeforeCall(body, progressListener, progressRequestListener);
+                generateTokenValidateBeforeCall(
+                        apiClient, body, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<Response>() {}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
+
     /**
      * Build call for getUserInfo
      *
+     * @param apiClient ApiClient (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getUserInfoCall(
+    public static com.squareup.okhttp.Call getUserInfoCall(
+            ApiClient apiClient,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -268,36 +263,40 @@ public class TokenResourceApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getUserInfoValidateBeforeCall(
+    private static com.squareup.okhttp.Call getUserInfoValidateBeforeCall(
+            ApiClient apiClient,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-
-        com.squareup.okhttp.Call call = getUserInfoCall(progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call =
+                getUserInfoCall(apiClient, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Get the user info from the token
      *
+     * @param apiClient ApiClient (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object getUserInfo() throws ApiException {
-        ApiResponse<Object> resp = getUserInfoWithHttpInfo();
+    public static Object getUserInfo(ApiClient apiClient) throws ApiException {
+        ApiResponse<Object> resp = getUserInfoWithHttpInfo(apiClient);
         return resp.getData();
     }
 
     /**
      * Get the user info from the token
      *
+     * @param apiClient ApiClient (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> getUserInfoWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = getUserInfoValidateBeforeCall(null, null);
+    public static ApiResponse<Object> getUserInfoWithHttpInfo(ApiClient apiClient)
+            throws ApiException {
+        com.squareup.okhttp.Call call = getUserInfoValidateBeforeCall(apiClient, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -305,13 +304,14 @@ public class TokenResourceApi {
     /**
      * Get the user info from the token (asynchronously)
      *
+     * @param apiClient ApiClient (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body
      *     object
      */
-    public com.squareup.okhttp.Call getUserInfoAsync(final ApiCallback<Object> callback)
-            throws ApiException {
+    public static com.squareup.okhttp.Call getUserInfoAsync(
+            ApiClient apiClient, final ApiCallback<Object> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -336,7 +336,7 @@ public class TokenResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                getUserInfoValidateBeforeCall(progressListener, progressRequestListener);
+                getUserInfoValidateBeforeCall(apiClient, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;

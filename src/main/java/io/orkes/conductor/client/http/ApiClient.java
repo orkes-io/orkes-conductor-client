@@ -43,6 +43,7 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import io.orkes.conductor.client.http.api.TokenResourceApi;
 import io.orkes.conductor.client.http.auth.ApiKeyAuth;
 import io.orkes.conductor.client.http.auth.Authentication;
 import io.orkes.conductor.client.http.auth.HttpBasicAuth;
@@ -75,7 +76,9 @@ public class ApiClient {
 
     private String keyId;
     private String keySecret;
+
     private String token;
+    private Object tokenMutex;
 
     /*
      * Constructor for ApiClient
@@ -100,6 +103,7 @@ public class ApiClient {
         this.keyId = null;
         this.keySecret = null;
         this.token = null;
+        this.tokenMutex = new Object();
     }
 
     public ApiClient(String basePath, String keyId, String keySecret) {
@@ -1247,7 +1251,7 @@ public class ApiClient {
         }
     }
 
-    public synchronized void refreshToken() throws Exception {
+    public void refreshToken() throws Exception {
         if (this.getToken() != null) {
             return;
         }
@@ -1255,36 +1259,34 @@ public class ApiClient {
             throw new Exception(
                     "KeyId and KeySecret must be set in order to get an authentication token");
         }
-        GenerateTokenRequest generateTokenRequest =
-                new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
-        Request request =
-                this.buildRequest(
-                        "/token",
-                        "POST",
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        generateTokenRequest,
-                        Collections.emptyMap(),
-                        Collections.emptyMap(),
-                        new String[0],
-                        null);
-        Call call = httpClient.newCall(request);
-        ApiResponse<Map<String, String>> response = execute(call, Map.class);
-        this.setToken(response.getData().get("token"));
+        synchronized (this.tokenMutex) {
+            GenerateTokenRequest generateTokenRequest =
+                    new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
+            Map<String, String> response =
+                    TokenResourceApi.generateToken(this, generateTokenRequest);
+            final String token = response.get("token");
+            this.setToken(token);
+        }
     }
 
-    public synchronized String getToken() {
-        return this.token;
+    public String getToken() {
+        synchronized (this.tokenMutex) {
+            return this.token;
+        }
     }
 
-    synchronized void setToken(String token) {
-        this.token = token;
+    void setToken(String token) {
+        synchronized (this.tokenMutex) {
+            this.token = token;
+        }
         this.setApiKeyHeader(token);
     }
 
     void setApiKeyHeader(String token) {
-        ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
-        apiKeyAuth.setApiKey(token);
-        authentications.put("api_key", apiKeyAuth);
+        synchronized (this.tokenMutex) {
+            ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
+            apiKeyAuth.setApiKey(token);
+            authentications.put("api_key", apiKeyAuth);
+        }
     }
 }
