@@ -1,0 +1,58 @@
+package io.orkes.conductor.client.http;
+
+import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
+import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import com.netflix.conductor.common.model.BulkResponse;
+import com.netflix.conductor.common.run.SearchResult;
+import com.netflix.conductor.common.run.Workflow;
+import com.netflix.conductor.common.run.WorkflowSummary;
+
+import java.util.List;
+
+public interface WorkflowClient extends OrkesClient {
+    String startWorkflow(StartWorkflowRequest startWorkflowRequest);
+
+    Workflow getWorkflow(String workflowId, boolean includeTasks);
+
+    List<Workflow> getWorkflows(
+            String name, String correlationId, boolean includeClosed, boolean includeTasks);
+
+    void populateWorkflowOutput(Workflow workflow);
+
+    void deleteWorkflow(String workflowId, boolean archiveWorkflow);
+
+    BulkResponse terminateWorkflows(List<String> workflowIds, String reason);
+
+    List<String> getRunningWorkflow(String workflowName, Integer version);
+
+    List<String> getWorkflowsByTimePeriod(
+            String workflowName, int version, Long startTime, Long endTime);
+
+    void runDecider(String workflowId);
+
+    void pauseWorkflow(String workflowId);
+
+    void resumeWorkflow(String workflowId);
+
+    void skipTaskFromWorkflow(String workflowId, String taskReferenceName);
+
+    String rerunWorkflow(String workflowId, RerunWorkflowRequest rerunWorkflowRequest);
+
+    void restart(String workflowId, boolean useLatestDefinitions);
+
+    void retryLastFailedTask(String workflowId);
+
+    void resetCallbacksForInProgressTasks(String workflowId);
+
+    void terminateWorkflow(String workflowId, String reason);
+
+    SearchResult<WorkflowSummary> search(String query);
+
+    SearchResult<Workflow> searchV2(String query);
+
+    SearchResult<WorkflowSummary> search(
+            Integer start, Integer size, String sort, String freeText, String query);
+
+    SearchResult<Workflow> searchV2(
+            Integer start, Integer size, String sort, String freeText, String query);
+}

@@ -12,14 +12,13 @@
  */
 package io.orkes.conductor.client.http.model;
 
+import com.google.gson.annotations.SerializedName;
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-
-import com.google.gson.annotations.SerializedName;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 /** SubWorkflowParams */
 public class SubWorkflowParams {

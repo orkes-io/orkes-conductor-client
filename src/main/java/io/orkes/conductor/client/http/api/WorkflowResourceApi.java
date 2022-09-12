@@ -19,7 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.SkipTaskRequest;
+import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.http.*;
@@ -1473,7 +1475,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public List<Workflow> getWorkflows1(
+    public List<Workflow> getWorkflowsByCorrelationId(
             String name, String correlationId, Boolean includeClosed, Boolean includeTasks)
             throws ApiException {
         ApiResponse<List<Workflow>> resp =
@@ -4133,7 +4135,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void terminate1(String workflowId, String reason) throws ApiException {
+    public void terminateWithAReason(String workflowId, String reason) throws ApiException {
         terminate1WithHttpInfo(workflowId, reason);
     }
 

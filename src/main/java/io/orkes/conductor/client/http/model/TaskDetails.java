@@ -12,12 +12,12 @@
  */
 package io.orkes.conductor.client.http.model;
 
+import com.google.gson.annotations.SerializedName;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import com.google.gson.annotations.SerializedName;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 /** TaskDetails */
 public class TaskDetails {

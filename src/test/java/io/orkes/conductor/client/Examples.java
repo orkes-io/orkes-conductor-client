@@ -14,6 +14,7 @@ package io.orkes.conductor.client;
 
 import java.util.*;
 
+import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

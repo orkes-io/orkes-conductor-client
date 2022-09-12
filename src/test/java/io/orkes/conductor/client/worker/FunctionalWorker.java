@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,6 @@ import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.http.ApiClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
-import io.orkes.conductor.client.http.model.StartWorkflowRequest;
 import io.orkes.conductor.client.http.model.WorkflowStatus;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
@@ -62,11 +62,14 @@ public class FunctionalWorker {
     }
 
     String startWorkflow(String workflowName) {
-        return workflowResourceApi.startWorkflow(new StartWorkflowRequest().name(workflowName));
+        StartWorkflowRequest reqeust = new StartWorkflowRequest();
+        reqeust.setName(workflowName);
+        return workflowResourceApi.startWorkflow(reqeust);
     }
 
     List<String> startWorkflows(int quantity, String workflowName) {
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest().name(workflowName);
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
         List<String> workflowIds = new ArrayList<>();
         for (int i = 0; i < quantity; i += 1) {
             String workflowId = workflowResourceApi.startWorkflow(startWorkflowRequest);

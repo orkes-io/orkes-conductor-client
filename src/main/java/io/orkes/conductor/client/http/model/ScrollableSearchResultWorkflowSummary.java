@@ -12,22 +12,19 @@
  */
 package io.orkes.conductor.client.http.model;
 
+import com.google.gson.annotations.SerializedName;
+import com.netflix.conductor.common.run.SearchResult;
+import com.netflix.conductor.common.run.WorkflowSummary;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.netflix.conductor.common.run.WorkflowSummary;
-
-import com.google.gson.annotations.SerializedName;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /** ScrollableSearchResultWorkflowSummary */
-public class ScrollableSearchResultWorkflowSummary {
+public class ScrollableSearchResultWorkflowSummary extends SearchResult<WorkflowSummary> {
     @SerializedName("queryId")
     private String queryId = null;
-
-    @SerializedName("results")
-    private List<WorkflowSummary> results = null;
 
     public ScrollableSearchResultWorkflowSummary queryId(String queryId) {
         this.queryId = queryId;
@@ -49,30 +46,13 @@ public class ScrollableSearchResultWorkflowSummary {
     }
 
     public ScrollableSearchResultWorkflowSummary results(List<WorkflowSummary> results) {
-        this.results = results;
+        setResults(results);
         return this;
     }
 
     public ScrollableSearchResultWorkflowSummary addResultsItem(WorkflowSummary resultsItem) {
-        if (this.results == null) {
-            this.results = new ArrayList<WorkflowSummary>();
-        }
-        this.results.add(resultsItem);
+        getResults().add(resultsItem);
         return this;
-    }
-
-    /**
-     * Get results
-     *
-     * @return results
-     */
-    @Schema(description = "")
-    public List<WorkflowSummary> getResults() {
-        return results;
-    }
-
-    public void setResults(List<WorkflowSummary> results) {
-        this.results = results;
     }
 
     @Override
@@ -86,12 +66,12 @@ public class ScrollableSearchResultWorkflowSummary {
         ScrollableSearchResultWorkflowSummary scrollableSearchResultWorkflowSummary =
                 (ScrollableSearchResultWorkflowSummary) o;
         return Objects.equals(this.queryId, scrollableSearchResultWorkflowSummary.queryId)
-                && Objects.equals(this.results, scrollableSearchResultWorkflowSummary.results);
+                && Objects.equals(this.getResults(), scrollableSearchResultWorkflowSummary.getResults());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(queryId, results);
+        return Objects.hash(queryId, getResults());
     }
 
     @Override
@@ -100,7 +80,7 @@ public class ScrollableSearchResultWorkflowSummary {
         sb.append("class ScrollableSearchResultWorkflowSummary {\n");
 
         sb.append("    queryId: ").append(toIndentedString(queryId)).append("\n");
-        sb.append("    results: ").append(toIndentedString(results)).append("\n");
+        sb.append("    results: ").append(toIndentedString(getResults())).append("\n");
         sb.append("}");
         return sb.toString();
     }
