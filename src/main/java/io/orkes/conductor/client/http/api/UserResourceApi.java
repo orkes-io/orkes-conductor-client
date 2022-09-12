@@ -19,11 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.model.*;
 
 import com.google.gson.reflect.TypeToken;
-import io.orkes.conductor.client.ApiClient;
 
 public class UserResourceApi {
     private ApiClient apiClient;
@@ -753,5 +753,4 @@ public class UserResourceApi {
         Type localVarReturnType = new TypeToken<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
-
 }

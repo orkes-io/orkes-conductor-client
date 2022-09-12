@@ -19,11 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.model.*;
 
 import com.google.gson.reflect.TypeToken;
-import io.orkes.conductor.client.ApiClient;
 
 public class ApplicationResourceApi {
     private ApiClient apiClient;
@@ -282,7 +282,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<CreateAccessKeyResponse> createAccessKeyWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<CreateAccessKeyResponse> createAccessKeyWithHttpInfo(String id)
+            throws ApiException {
         com.squareup.okhttp.Call call = createAccessKeyValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeToken<CreateAccessKeyResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -383,7 +384,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest body) throws ApiException {
+    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest body)
+            throws ApiException {
         ApiResponse<ConductorApplication> resp = createApplicationWithHttpInfo(body);
         return resp.getData();
     }
@@ -396,8 +398,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(CreateOrUpdateApplicationRequest body)
-            throws ApiException {
+    private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(
+            CreateOrUpdateApplicationRequest body) throws ApiException {
         com.squareup.okhttp.Call call = createApplicationValidateBeforeCall(body, null, null);
         Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -761,7 +763,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<List<AccessKeyResponse>> getAccessKeysWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<List<AccessKeyResponse>> getAccessKeysWithHttpInfo(String id)
+            throws ApiException {
         com.squareup.okhttp.Call call = getAccessKeysValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeToken<List<AccessKeyResponse>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -878,7 +881,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<ConductorApplication> getApplicationWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<ConductorApplication> getApplicationWithHttpInfo(String id)
+            throws ApiException {
         com.squareup.okhttp.Call call = getApplicationValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1231,8 +1235,10 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException {
-        ApiResponse<AccessKeyResponse> resp = toggleAccessKeyStatusWithHttpInfo(applicationId, keyId);
+    public AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId)
+            throws ApiException {
+        ApiResponse<AccessKeyResponse> resp =
+                toggleAccessKeyStatusWithHttpInfo(applicationId, keyId);
         return resp.getData();
     }
 
@@ -1380,5 +1386,4 @@ public class ApplicationResourceApi {
         Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
-
 }

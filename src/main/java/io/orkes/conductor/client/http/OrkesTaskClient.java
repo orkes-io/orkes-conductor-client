@@ -24,8 +24,8 @@ import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.TaskSummary;
 
 import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.api.TaskResourceApi;
 import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.http.api.TaskResourceApi;
 
 public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
@@ -120,23 +120,27 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
     @Override
     public SearchResult<TaskSummary> search(String query) {
-        throw new UnsupportedOperationException("search operation on tasks is no loinger supported");
+        throw new UnsupportedOperationException(
+                "search operation on tasks is no loinger supported");
     }
 
     @Override
     public SearchResult<Task> searchV2(String query) {
-        throw new UnsupportedOperationException("search operation on tasks is no loinger supported");
+        throw new UnsupportedOperationException(
+                "search operation on tasks is no loinger supported");
     }
 
     @Override
     public SearchResult<TaskSummary> search(
             Integer start, Integer size, String sort, String freeText, String query) {
-        throw new UnsupportedOperationException("search operation on tasks is no loinger supported");
+        throw new UnsupportedOperationException(
+                "search operation on tasks is no loinger supported");
     }
 
     @Override
     public SearchResult<Task> searchV2(
             Integer start, Integer size, String sort, String freeText, String query) {
-        throw new UnsupportedOperationException("search operation on tasks is no loinger supported");
+        throw new UnsupportedOperationException(
+                "search operation on tasks is no loinger supported");
     }
 }

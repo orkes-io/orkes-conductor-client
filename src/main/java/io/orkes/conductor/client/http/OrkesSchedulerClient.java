@@ -1,13 +1,25 @@
+/*
+ * Copyright 2022 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.client.http;
 
+import java.util.List;
+
 import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.api.SchedulerResourceApi;
 import io.orkes.conductor.client.SchedulerClient;
+import io.orkes.conductor.client.http.api.SchedulerResourceApi;
 import io.orkes.conductor.client.http.model.SaveScheduleRequest;
 import io.orkes.conductor.client.http.model.SearchResultWorkflowScheduleExecutionModel;
 import io.orkes.conductor.client.http.model.WorkflowSchedule;
-
-import java.util.List;
 
 public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient {
 
@@ -29,8 +41,11 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public List<Long> getNextFewSchedules(String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit) throws ApiException {
-        return schedulerResourceApi.getNextFewSchedules(cronExpression, scheduleStartTime, scheduleEndTime, limit);
+    public List<Long> getNextFewSchedules(
+            String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit)
+            throws ApiException {
+        return schedulerResourceApi.getNextFewSchedules(
+                cronExpression, scheduleStartTime, scheduleEndTime, limit);
     }
 
     @Override
@@ -69,8 +84,9 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public SearchResultWorkflowScheduleExecutionModel searchV22(Integer start, Integer size, String sort, String freeText, String query) throws ApiException {
+    public SearchResultWorkflowScheduleExecutionModel searchV22(
+            Integer start, Integer size, String sort, String freeText, String query)
+            throws ApiException {
         return schedulerResourceApi.searchV22(start, size, sort, freeText, query);
     }
-
 }

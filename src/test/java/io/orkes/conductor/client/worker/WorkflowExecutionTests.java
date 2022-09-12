@@ -24,8 +24,8 @@ import org.junit.jupiter.api.Test;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
-import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.http.model.WorkflowStatus;
@@ -45,9 +45,10 @@ public class WorkflowExecutionTests {
         workflowResourceApi = new WorkflowResourceApi(apiClient);
         TaskResourceApi taskClient = new TaskResourceApi(apiClient);
         Worker worker = new SimpleWorker();
-        this.taskRunnerConfigurer = new TaskRunnerConfigurer.Builder(taskClient, Collections.singletonList(worker))
-                .withTaskThreadCount(Map.of(Commons.TASK_NAME, 10))
-                .build();
+        this.taskRunnerConfigurer =
+                new TaskRunnerConfigurer.Builder(taskClient, Collections.singletonList(worker))
+                        .withTaskThreadCount(Map.of(Commons.TASK_NAME, 10))
+                        .build();
     }
 
     @Test
@@ -79,7 +80,8 @@ public class WorkflowExecutionTests {
     }
 
     void validateCompletedWorkflow(String workflowId) {
-        WorkflowStatus workflowStatus = workflowResourceApi.getWorkflowStatusSummary(workflowId, false, false);
+        WorkflowStatus workflowStatus =
+                workflowResourceApi.getWorkflowStatusSummary(workflowId, false, false);
         assertEquals(WorkflowStatus.StatusEnum.COMPLETED, workflowStatus.getStatus());
     }
 }

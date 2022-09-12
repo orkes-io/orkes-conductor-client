@@ -18,9 +18,9 @@ import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
 import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.api.MetadataResourceApi;
 import io.orkes.conductor.client.http.api.TagsApi;
-import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.model.TagObject;
 import io.orkes.conductor.client.http.model.TagString;
 
@@ -32,7 +32,7 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
     public OrkesMetadataClient(ApiClient apiClient) {
         super(apiClient);
         this.metadataResourceApi = new MetadataResourceApi(apiClient);
-        this.tagsApi =  new TagsApi(apiClient);
+        this.tagsApi = new TagsApi(apiClient);
     }
 
     @Override
@@ -87,40 +87,40 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
         metadataResourceApi.unregisterTaskDef(taskType);
     }
 
-    //Tags APIs
+    // Tags APIs
     void addTaskTag(TagObject body, String taskName) {
         tagsApi.addTaskTag(body, taskName);
     }
 
-    void addWorkflowTag(TagObject body, String name){
+    void addWorkflowTag(TagObject body, String name) {
         tagsApi.addWorkflowTag(body, name);
     }
 
-    void deleteTaskTag(TagString body, String taskName){
+    void deleteTaskTag(TagString body, String taskName) {
         tagsApi.deleteTaskTag(body, taskName);
     }
 
-    void deleteWorkflowTag(TagObject body, String name){
+    void deleteWorkflowTag(TagObject body, String name) {
         tagsApi.deleteWorkflowTag(body, name);
     }
 
-    List<TagObject> getTags(){
+    List<TagObject> getTags() {
         return tagsApi.getTags();
     }
 
-    List<TagObject> getTaskTags(String taskName){
+    List<TagObject> getTaskTags(String taskName) {
         return tagsApi.getTaskTags(taskName);
     }
 
-    List<TagObject> getWorkflowTags(String name){
+    List<TagObject> getWorkflowTags(String name) {
         return tagsApi.getWorkflowTags(name);
     }
 
-    void setTaskTags(List<TagObject> body, String taskName){
+    void setTaskTags(List<TagObject> body, String taskName) {
         tagsApi.setTaskTags(body, taskName);
     }
 
-    void setWorkflowTags(List<TagObject> body, String name){
+    void setWorkflowTags(List<TagObject> body, String name) {
         tagsApi.setWorkflowTags(body, name);
     }
 }

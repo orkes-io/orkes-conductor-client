@@ -19,12 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.model.TagObject;
 import io.orkes.conductor.client.http.model.TagString;
 
 import com.google.gson.reflect.TypeToken;
-import io.orkes.conductor.client.ApiClient;
 
 public class TagsApi {
     private ApiClient apiClient;
@@ -1146,5 +1146,4 @@ public class TagsApi {
         com.squareup.okhttp.Call call = setWorkflowTagsValidateBeforeCall(body, name, null, null);
         return apiClient.execute(call);
     }
-
 }

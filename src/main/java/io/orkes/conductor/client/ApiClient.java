@@ -37,13 +37,13 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
-import io.orkes.conductor.client.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.api.TokenResourceApi;
 import io.orkes.conductor.client.http.auth.ApiKeyAuth;
 import io.orkes.conductor.client.http.auth.Authentication;
@@ -1264,7 +1264,8 @@ public class ApiClient {
             GenerateTokenRequest generateTokenRequest =
                     new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
             Map<String, String> response =
-                    TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
+                    TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest)
+                            .getData();
             final String token = response.get("token");
             this.setToken(token);
         }
