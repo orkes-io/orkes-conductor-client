@@ -13,6 +13,7 @@
 package io.orkes.conductor.client.util;
 
 import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.OrkesClients;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -20,6 +21,11 @@ public class ApiUtil {
     private static final String ENV_ROOT_URI = "SDK_INTEGRATION_TESTS_SERVER_API_URL";
     private static final String ENV_KEY_ID = "SDK_INTEGRATION_TESTS_SERVER_KEY_ID";
     private static final String ENV_SECRET = "SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
+
+    public static OrkesClients getOrkesClient() {
+        final ApiClient apiClient = getApiClientWithCredentials();
+        return new OrkesClients(apiClient);
+    }
 
     public static ApiClient getApiClientWithCredentials() {
         String basePath = getEnv(ENV_ROOT_URI);

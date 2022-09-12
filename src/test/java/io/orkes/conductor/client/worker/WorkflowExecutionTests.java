@@ -31,10 +31,11 @@ import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.http.model.WorkflowStatus;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
+import io.orkes.conductor.client.util.SimpleWorker;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FunctionalWorker {
+public class WorkflowExecutionTests {
     WorkflowResourceApi workflowResourceApi;
     TaskRunnerConfigurer taskRunnerConfigurer;
 
@@ -44,10 +45,9 @@ public class FunctionalWorker {
         workflowResourceApi = new WorkflowResourceApi(apiClient);
         TaskResourceApi taskClient = new TaskResourceApi(apiClient);
         Worker worker = new SimpleWorker();
-        this.taskRunnerConfigurer =
-                new TaskRunnerConfigurer.Builder(taskClient, Collections.singletonList(worker))
-                        .withTaskThreadCount(Map.of(Commons.TASK_NAME, 10))
-                        .build();
+        this.taskRunnerConfigurer = new TaskRunnerConfigurer.Builder(taskClient, Collections.singletonList(worker))
+                .withTaskThreadCount(Map.of(Commons.TASK_NAME, 10))
+                .build();
     }
 
     @Test
@@ -79,8 +79,7 @@ public class FunctionalWorker {
     }
 
     void validateCompletedWorkflow(String workflowId) {
-        WorkflowStatus workflowStatus =
-                workflowResourceApi.getWorkflowStatusSummary(workflowId, false, false);
+        WorkflowStatus workflowStatus = workflowResourceApi.getWorkflowStatusSummary(workflowId, false, false);
         assertEquals(WorkflowStatus.StatusEnum.COMPLETED, workflowStatus.getStatus());
     }
 }

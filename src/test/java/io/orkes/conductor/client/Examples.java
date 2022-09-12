@@ -14,7 +14,6 @@ package io.orkes.conductor.client;
 
 import java.util.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,24 +31,24 @@ import io.orkes.conductor.client.util.WorkflowUtil;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Examples {
-    MetadataResourceApi metadataResourceApi;
-    GroupResourceApi groupResourceApi;
-    ApplicationResourceApi applicationResourceApi;
-    WorkflowResourceApi workflowResourceApi;
-    UserResourceApi userResourceApi;
-    AuthorizationResourceApi authorizationResourceApi;
-    TagsApi tagsApi;
+    private final MetadataClient metadataClient;
+    private final WorkflowClient workflowClient;
 
-    @BeforeEach
-    public void init() {
+    final ApplicationResourceApi applicationResourceApi;
+    final AuthorizationResourceApi authorizationResourceApi;
+    final TagsApi tagsApi;
+    final GroupResourceApi groupResourceApi;
+
+    public Examples() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        metadataResourceApi = new MetadataResourceApi(apiClient);
-        groupResourceApi = new GroupResourceApi(apiClient);
+        OrkesClients orkesClients = ApiUtil.getOrkesClient();
+        metadataClient = orkesClients.getMetadataClient();
+        workflowClient = orkesClients.getWorkflowClient();
+
         applicationResourceApi = new ApplicationResourceApi(apiClient);
-        workflowResourceApi = new WorkflowResourceApi(apiClient);
         tagsApi = new TagsApi(apiClient);
-        userResourceApi = new UserResourceApi(apiClient);
         authorizationResourceApi = new AuthorizationResourceApi(apiClient);
+        groupResourceApi = new GroupResourceApi(apiClient);
     }
 
     @Test
@@ -92,7 +91,7 @@ public class Examples {
         startWorkflowRequest.setVersion(1);
         Map<String, Object> input = new HashMap<>();
         startWorkflowRequest.setInput(input);
-        workflowResourceApi.startWorkflow(startWorkflowRequest);
+        workflowClient.startWorkflow(startWorkflowRequest);
     }
 
     @Test
@@ -108,12 +107,12 @@ public class Examples {
         taskDef.setName(Commons.TASK_NAME);
         List<TaskDef> taskDefs = new ArrayList<>();
         taskDefs.add(taskDef);
-        this.metadataResourceApi.registerTaskDef(taskDefs);
+        this.metadataClient.registerTaskDefs(taskDefs);
     }
 
     void registerWorkflow() {
         WorkflowDef workflowDef = WorkflowUtil.getWorkflowDef();
-        metadataResourceApi.create(workflowDef, true);
+        metadataClient.registerWorkflowDef(workflowDef);
     }
 
     void giveApplicationPermissions(String applicationId) {
