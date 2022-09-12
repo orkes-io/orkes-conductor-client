@@ -138,7 +138,6 @@ public class UserResourceApi {
      * Delete a user
      *
      * @param id (required)
-     * @return Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
@@ -605,7 +604,6 @@ public class UserResourceApi {
      *
      * @param id (required)
      * @param body (optional)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */

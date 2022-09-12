@@ -134,7 +134,6 @@ public class SecretResourceApi {
      * Delete a secret value by key
      *
      * @param key (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
@@ -587,7 +586,6 @@ public class SecretResourceApi {
      *
      * @param body (required)
      * @param key (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */

@@ -150,7 +150,6 @@ public class ApplicationResourceApi {
     /**
      * @param applicationId (required)
      * @param role (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
@@ -512,7 +511,6 @@ public class ApplicationResourceApi {
      *
      * @param applicationId (required)
      * @param keyId (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
@@ -631,7 +629,6 @@ public class ApplicationResourceApi {
      * Delete an application
      *
      * @param id (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
@@ -1099,7 +1096,6 @@ public class ApplicationResourceApi {
     /**
      * @param applicationId (required)
      * @param role (required)
-     * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
