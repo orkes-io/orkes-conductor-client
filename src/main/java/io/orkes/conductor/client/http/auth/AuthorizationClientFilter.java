@@ -1,105 +1,50 @@
+/*
+ * Copyright 2022 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.client.http.auth;
 
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.netflix.conductor.common.config.ObjectMapperProvider;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientRequest;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.client.filter.ClientFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
-import java.util.Objects;
+import io.orkes.conductor.client.ApiClient;
+
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientRequest;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.filter.ClientFilter;
 
 public class AuthorizationClientFilter extends ClientFilter {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationClientFilter.class);
 
-    private static final String AUTHORIZATION_HEADER = "X-AUTHORIZATION";
-    private static final String API_TOKEN_PATH = "/token";
-    private static final Object LOCK = new Object();
+    private static final String AUTHORIZATION_HEADER = "X-Authorization";
 
-    private final String rootUri;
-    private final Client client;
-    private final ObjectMapper objectMapper;
-    private final String keyId;
-    private final String secret;
-    private final TokenHolder tokenHolder;
+    private final ApiClient apiClient;
 
     public AuthorizationClientFilter(String rootUri, String keyId, String secret) {
-        this.rootUri = Objects.requireNonNull(rootUri).replaceAll("/$", "");
-        this.keyId = Objects.requireNonNull(keyId);
-        this.secret = Objects.requireNonNull(secret);
-        this.objectMapper = new ObjectMapperProvider().getObjectMapper();
-        this.tokenHolder = new TokenHolder();
-        this.client = initClient();
-    }
-
-    private Client initClient() {
-        ClientConfig config = new DefaultClientConfig();
-        // https://github.com/FasterXML/jackson-databind/issues/2683
-        if (isNewerJacksonVersion()) {
-            objectMapper.registerModule(new JavaTimeModule());
+        while (rootUri.endsWith("/")) {
+            rootUri = rootUri.replaceAll("/$", "");
         }
-
-        JacksonJsonProvider provider = new JacksonJsonProvider(objectMapper);
-        config.getSingletons().add(provider);
-        return Client.create(config);
-    }
-
-    private boolean isNewerJacksonVersion() {
-        Version version = com.fasterxml.jackson.databind.cfg.PackageVersion.VERSION;
-        return version.getMajorVersion() == 2 && version.getMinorVersion() >= 12;
+        this.apiClient = new ApiClient(rootUri, keyId, secret);
     }
 
     @Override
     public ClientResponse handle(ClientRequest request) throws ClientHandlerException {
-        //TODO if response is 401 try to get a token again
+        request.getHeaders().add(AUTHORIZATION_HEADER, apiClient.getToken());
         try {
-            request.getHeaders().add(AUTHORIZATION_HEADER, getToken());
-            return getNext().handle(request);
+            ClientResponse clientResponse = getNext().handle(request);
+            return clientResponse;
         } catch (ClientHandlerException e) {
             LOGGER.error("Error adding authorization header to request", e);
             throw e;
         }
-    }
-
-    private String getToken() {
-        String token = tokenHolder.getToken();
-        if (token == null) {
-            synchronized (LOCK) {
-                token = tokenHolder.getToken();
-                if (token == null) {
-                    token = postForToken();
-                    tokenHolder.setToken(token);
-                }
-            }
-        }
-
-        return token;
-    }
-
-    //TODO error handling
-    private String postForToken() {
-        URI uri = UriBuilder.fromPath(rootUri + API_TOKEN_PATH).build();
-        TokenResponse post = client.resource(uri)
-                .type(MediaType.APPLICATION_JSON)
-                .entity(TokenRequest.builder()
-                        .withKeyId(keyId)
-                        .withKeySecret(secret)
-                        .build())
-                .accept(MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON)
-                .post(TokenResponse.class);
-        LOGGER.info("Successfully generated a token");
-        return post.getToken();
     }
 }

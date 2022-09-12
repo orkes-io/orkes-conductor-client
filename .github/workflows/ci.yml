@@ -1,16 +1,9 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+name: Continuous Integration
 
-name: Gradle Build
-on:
-  push:
-    branches:
-      - main
+on: pull_request
 
 jobs:
-  publish:
+  test:
     runs-on: ubuntu-latest
     name: Gradle Build
     steps:
@@ -19,7 +12,11 @@ jobs:
       - name: Set up Zulu JDK 11
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '11'
+          distribution: "zulu"
+          java-version: "11"
       - name: Build
         run: ./gradlew clean build
+        env:
+          SDK_INTEGRATION_TESTS_SERVER_API_URL: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_API_URL }}
+          SDK_INTEGRATION_TESTS_SERVER_KEY_ID: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_KEY_ID }}
+          SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET }}

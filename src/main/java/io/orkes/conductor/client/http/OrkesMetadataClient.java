@@ -1,34 +1,126 @@
+/*
+ * Copyright 2022 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.client.http;
 
-import com.netflix.conductor.client.config.ConductorClientConfiguration;
-import com.netflix.conductor.client.http.MetadataClient;
-import com.sun.jersey.api.client.ClientHandler;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.filter.ClientFilter;
-import io.orkes.conductor.client.http.auth.AuthorizationClientFilter;
+import java.util.List;
 
-public class OrkesMetadataClient extends MetadataClient implements OrkesClient {
-    public OrkesMetadataClient() {
-    }
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
-    public OrkesMetadataClient(ClientConfig clientConfig) {
-        super(clientConfig);
-    }
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.api.MetadataResourceApi;
+import io.orkes.conductor.client.http.api.TagsApi;
+import io.orkes.conductor.client.MetadataClient;
+import io.orkes.conductor.client.http.model.TagObject;
+import io.orkes.conductor.client.http.model.TagString;
 
-    public OrkesMetadataClient(ClientConfig clientConfig, ClientHandler clientHandler) {
-        super(clientConfig, clientHandler);
-    }
+public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
 
-    public OrkesMetadataClient(ClientConfig config, ClientHandler handler, ClientFilter... filters) {
-        super(config, handler, filters);
-    }
+    private final MetadataResourceApi metadataResourceApi;
+    private final TagsApi tagsApi;
 
-    public OrkesMetadataClient(ClientConfig config, ConductorClientConfiguration clientConfiguration, ClientHandler handler, ClientFilter... filters) {
-        super(config, clientConfiguration, handler, filters);
+    public OrkesMetadataClient(ApiClient apiClient) {
+        super(apiClient);
+        this.metadataResourceApi = new MetadataResourceApi(apiClient);
+        this.tagsApi =  new TagsApi(apiClient);
     }
 
     @Override
-    public void withCredentials(String keyId, String secret) {
-        this.client.addFilter(new AuthorizationClientFilter(root, keyId, secret));
+    public void registerWorkflowDef(WorkflowDef workflowDef) {
+        metadataResourceApi.create(workflowDef, true);
+    }
+
+    public void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite) {
+        metadataResourceApi.create(workflowDef, overwrite);
+    }
+
+    @Override
+    public void updateWorkflowDefs(List<WorkflowDef> workflowDefs) {
+        metadataResourceApi.update(workflowDefs, true);
+    }
+
+    public void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite) {
+        metadataResourceApi.update(workflowDefs, overwrite);
+    }
+
+    @Override
+    public WorkflowDef getWorkflowDef(String name, Integer version) {
+        return metadataResourceApi.get(name, version, false);
+    }
+
+    public WorkflowDef getWorkflowDefWithMetadata(String name, Integer version) {
+        return metadataResourceApi.get(name, version, true);
+    }
+
+    @Override
+    public void unregisterWorkflowDef(String name, Integer version) {
+        metadataResourceApi.unregisterWorkflowDef(name, version);
+    }
+
+    @Override
+    public void registerTaskDefs(List<TaskDef> taskDefs) {
+        metadataResourceApi.registerTaskDef(taskDefs);
+    }
+
+    @Override
+    public void updateTaskDef(TaskDef taskDef) {
+        metadataResourceApi.updateTaskDef(taskDef);
+    }
+
+    @Override
+    public TaskDef getTaskDef(String taskType) {
+        return metadataResourceApi.getTaskDef(taskType, true);
+    }
+
+    @Override
+    public void unregisterTaskDef(String taskType) {
+        metadataResourceApi.unregisterTaskDef(taskType);
+    }
+
+    //Tags APIs
+    void addTaskTag(TagObject body, String taskName) {
+        tagsApi.addTaskTag(body, taskName);
+    }
+
+    void addWorkflowTag(TagObject body, String name){
+        tagsApi.addWorkflowTag(body, name);
+    }
+
+    void deleteTaskTag(TagString body, String taskName){
+        tagsApi.deleteTaskTag(body, taskName);
+    }
+
+    void deleteWorkflowTag(TagObject body, String name){
+        tagsApi.deleteWorkflowTag(body, name);
+    }
+
+    List<TagObject> getTags(){
+        return tagsApi.getTags();
+    }
+
+    List<TagObject> getTaskTags(String taskName){
+        return tagsApi.getTaskTags(taskName);
+    }
+
+    List<TagObject> getWorkflowTags(String name){
+        return tagsApi.getWorkflowTags(name);
+    }
+
+    void setTaskTags(List<TagObject> body, String taskName){
+        tagsApi.setTaskTags(body, taskName);
+    }
+
+    void setWorkflowTags(List<TagObject> body, String name){
+        tagsApi.setWorkflowTags(body, name);
     }
 }

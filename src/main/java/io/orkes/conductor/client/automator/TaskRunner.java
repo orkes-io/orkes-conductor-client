@@ -1,7 +1,32 @@
+/*
+ * Copyright 2022 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.client.automator;
 
-import com.google.common.base.Stopwatch;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.netflix.appinfo.InstanceInfo;
+import com.netflix.conductor.client.config.ConductorClientConfiguration;
 import com.netflix.conductor.client.config.PropertyFactory;
 import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.telemetry.MetricsContainer;
@@ -13,27 +38,18 @@ import com.netflix.spectator.api.Registry;
 import com.netflix.spectator.api.Spectator;
 import com.netflix.spectator.api.patterns.ThreadPoolMonitor;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.api.TaskResourceApi;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.*;
-import java.util.function.Function;
+import com.google.common.base.Stopwatch;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 class TaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunner.class);
     private static final Registry REGISTRY = Spectator.globalRegistry();
 
     private final EurekaClient eurekaClient;
-    private final TaskClient taskClient;
+    private final TaskResourceApi taskClient;
     private final int updateRetryCount;
     private final ThreadPoolExecutor executorService;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
@@ -44,9 +60,13 @@ class TaskRunner {
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
     private static final String ALL_WORKERS = "all";
 
+    // used or managing external payload
+    private TaskClient taskClientForExternalPayload;
+
     TaskRunner(
             EurekaClient eurekaClient,
-            TaskClient taskClient,
+            TaskResourceApi taskClient,
+            ConductorClientConfiguration conductorClientConfiguration,
             int updateRetryCount,
             Map<String, String> taskToDomain,
             String workerNamePrefix,
@@ -58,20 +78,23 @@ class TaskRunner {
         this.taskToDomain = taskToDomain;
         this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
-        this.executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(
-                threadCount,
-                new BasicThreadFactory.Builder()
-                        .namingPattern(workerNamePrefix)
-                        .uncaughtExceptionHandler(uncaughtExceptionHandler)
-                        .build());
+        this.taskClientForExternalPayload =
+                new TaskClient(new DefaultClientConfig(), conductorClientConfiguration, null);
+        this.executorService =
+                (ThreadPoolExecutor)
+                        Executors.newFixedThreadPool(
+                                threadCount,
+                                new BasicThreadFactory.Builder()
+                                        .namingPattern(workerNamePrefix)
+                                        .uncaughtExceptionHandler(uncaughtExceptionHandler)
+                                        .build());
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
         LOGGER.info("Initialized the TaskPollExecutor for {} with {} threads", threadCount);
     }
 
     public void poll(Worker worker) {
-        pollTasksForWorker(worker).forEach(
-                task -> this.executorService.submit(
-                        () -> this.processTask(task, worker)));
+        pollTasksForWorker(worker)
+                .forEach(task -> this.executorService.submit(() -> this.processTask(task, worker)));
     }
 
     public void shutdown(int timeout) {
@@ -91,13 +114,16 @@ class TaskRunner {
     }
 
     private List<Task> pollTasksForWorker(Worker worker) {
+        LOGGER.info("Polling for {}", worker.getTaskDefName());
         List<Task> tasks = new LinkedList<>();
-        Boolean discoveryOverride = Optional.ofNullable(
-                PropertyFactory.getBoolean(
-                        worker.getTaskDefName(), OVERRIDE_DISCOVERY, null))
-                .orElseGet(
-                        () -> PropertyFactory.getBoolean(
-                                ALL_WORKERS, OVERRIDE_DISCOVERY, false));
+        Boolean discoveryOverride =
+                Optional.ofNullable(
+                                PropertyFactory.getBoolean(
+                                        worker.getTaskDefName(), OVERRIDE_DISCOVERY, null))
+                        .orElseGet(
+                                () ->
+                                        PropertyFactory.getBoolean(
+                                                ALL_WORKERS, OVERRIDE_DISCOVERY, false));
         if (eurekaClient != null
                 && !eurekaClient.getInstanceRemoteStatus().equals(InstanceInfo.InstanceStatus.UP)
                 && !discoveryOverride) {
@@ -111,20 +137,24 @@ class TaskRunner {
         }
         String taskType = worker.getTaskDefName();
         try {
-            String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
-                    .orElseGet(
-                            () -> Optional.ofNullable(
-                                    PropertyFactory.getString(
-                                            ALL_WORKERS, DOMAIN, null))
-                                    .orElse(taskToDomain.get(taskType)));
+            String domain =
+                    Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
+                            .orElseGet(
+                                    () ->
+                                            Optional.ofNullable(
+                                                            PropertyFactory.getString(
+                                                                    ALL_WORKERS, DOMAIN, null))
+                                                    .orElse(taskToDomain.get(taskType)));
             LOGGER.info("Polling task of type: {} in domain: '{}'", taskType, domain);
-            List<Task> polledTasks = MetricsContainer.getPollTimer(taskType)
-                    .record(
-                            () -> pollTask(
-                                    taskType,
-                                    worker.getIdentity(),
-                                    domain,
-                                    this.getAvailableWorkers()));
+            List<Task> polledTasks =
+                    MetricsContainer.getPollTimer(taskType)
+                            .record(
+                                    () ->
+                                            pollTask(
+                                                    taskType,
+                                                    worker.getIdentity(),
+                                                    domain,
+                                                    this.getAvailableWorkers()));
             for (Task task : polledTasks) {
                 if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
                     LOGGER.info(
@@ -136,6 +166,10 @@ class TaskRunner {
                     tasks.add(task);
                 }
             }
+        } catch (ApiException ae) {
+            MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), ae);
+            LOGGER.error(
+                    "Error when polling for tasks {} - {}", ae.getCode(), ae.getResponseBody(), ae);
         } catch (Exception e) {
             MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), e);
             LOGGER.error("Error when polling for tasks", e);
@@ -149,24 +183,18 @@ class TaskRunner {
 
     private List<Task> pollTask(String taskType, String workerId, String domain, int count) {
         if (count < 1) {
-            return List.of();
+            return Collections.emptyList();
         }
-        if (count == 1) {
-            Task task = taskClient.pollTask(taskType, workerId, domain);
-            if (task == null) {
-                return List.of();
-            }
-            return List.of(task);
-        }
-        return taskClient.batchPollTasksByTaskType(taskType, workerId, count, this.taskPollTimeout);
+        return taskClient.batchPoll(taskType, workerId, domain, count, this.taskPollTimeout);
     }
 
     @SuppressWarnings("FieldCanBeLocal")
-    private final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = (thread, error) -> {
-        // JVM may be in unstable state, try to send metrics then exit
-        MetricsContainer.incrementUncaughtExceptionCount();
-        LOGGER.error("Uncaught exception. Thread {} will exit now", thread, error);
-    };
+    private final Thread.UncaughtExceptionHandler uncaughtExceptionHandler =
+            (thread, error) -> {
+                // JVM may be in unstable state, try to send metrics then exit
+                MetricsContainer.incrementUncaughtExceptionCount();
+                LOGGER.error("Uncaught exception. Thread {} will exit now", thread, error);
+            };
 
     private void processTask(Task task, Worker worker) {
         LOGGER.info(
@@ -263,7 +291,8 @@ class TaskRunner {
 
     private Optional<String> upload(TaskResult result, String taskType) {
         try {
-            return taskClient.evaluateAndUploadLargePayload(result.getOutputData(), taskType);
+            return taskClientForExternalPayload.evaluateAndUploadLargePayload(
+                    result.getOutputData(), taskType);
         } catch (IllegalArgumentException iae) {
             result.setReasonForIncompletion(iae.getMessage());
             result.setOutputData(null);

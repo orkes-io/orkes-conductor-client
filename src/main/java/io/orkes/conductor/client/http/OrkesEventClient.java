@@ -1,34 +1,51 @@
+/*
+ * Copyright 2022 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.client.http;
 
-import com.netflix.conductor.client.config.ConductorClientConfiguration;
-import com.netflix.conductor.client.http.EventClient;
-import com.sun.jersey.api.client.ClientHandler;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.filter.ClientFilter;
-import io.orkes.conductor.client.http.auth.AuthorizationClientFilter;
+import java.util.List;
 
-public class OrkesEventClient extends EventClient implements OrkesClient {
-    public OrkesEventClient() {
-    }
+import com.netflix.conductor.common.metadata.events.EventHandler;
 
-    public OrkesEventClient(ClientConfig clientConfig) {
-        super(clientConfig);
-    }
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.api.EventResourceApi;
+import io.orkes.conductor.client.EventClient;
 
-    public OrkesEventClient(ClientConfig clientConfig, ClientHandler clientHandler) {
-        super(clientConfig, clientHandler);
-    }
+public class OrkesEventClient extends OrkesClient implements EventClient {
 
-    public OrkesEventClient(ClientConfig config, ClientHandler handler, ClientFilter... filters) {
-        super(config, handler, filters);
-    }
+    private EventResourceApi eventResourceApi;
 
-    public OrkesEventClient(ClientConfig config, ConductorClientConfiguration clientConfiguration, ClientHandler handler, ClientFilter... filters) {
-        super(config, clientConfiguration, handler, filters);
+    public OrkesEventClient(ApiClient apiClient) {
+        super(apiClient);
+        this.eventResourceApi = new EventResourceApi(apiClient);
     }
 
     @Override
-    public void withCredentials(String keyId, String secret) {
-        this.client.addFilter(new AuthorizationClientFilter(root, keyId, secret));
+    public void registerEventHandler(EventHandler eventHandler) {
+        this.eventResourceApi.addEventHandler(eventHandler);
+    }
+
+    @Override
+    public void updateEventHandler(EventHandler eventHandler) {
+        this.eventResourceApi.updateEventHandler(eventHandler);
+    }
+
+    @Override
+    public List<EventHandler> getEventHandlers(String event, boolean activeOnly) {
+        return eventResourceApi.getEventHandlersForEvent(event, activeOnly);
+    }
+
+    @Override
+    public void unregisterEventHandler(String name) {
+        eventResourceApi.removeEventHandlerStatus(name);
     }
 }
