@@ -14,6 +14,8 @@ package io.orkes.conductor.client.http.orkesclient;
 
 import java.util.List;
 
+import com.squareup.okhttp.Call;
+import io.orkes.conductor.client.http.ApiCallback;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.client.WorkflowBulkOperationsClient;
 import io.orkes.conductor.client.http.client.WorkflowClient;
@@ -166,8 +168,18 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient, 
     }
 
     @Override
+    public Call pauseWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback) throws ApiException {
+        return bulkResourceApi.pauseWorkflow1Async(body, callback);
+    }
+
+    @Override
     public BulkResponse restartWorkflow(List<String> body, Boolean useLatestDefinitions) throws ApiException {
         return bulkResourceApi.restart1(body, useLatestDefinitions);
+    }
+
+    @Override
+    public Call restartWorkflowAsync(List<String> body, Boolean useLatestDefinitions, ApiCallback<BulkResponse> callback) throws ApiException {
+        return bulkResourceApi.restart1Async(body, useLatestDefinitions, callback);
     }
 
     @Override
@@ -176,12 +188,28 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient, 
     }
 
     @Override
+    public Call resumeWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback) throws ApiException {
+        return bulkResourceApi.resumeWorkflow1Async(body, callback);
+    }
+
+    @Override
     public BulkResponse retryWorkflow(List<String> body) throws ApiException {
         return bulkResourceApi.retry1(body);
+    }
+
+    @Override
+    public Call retryWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback) throws ApiException {
+        return bulkResourceApi.retry1Async(body, callback);
     }
 
     @Override
     public BulkResponse terminateWorkflow(List<String> body, String reason) throws ApiException {
         return bulkResourceApi.terminate(body, reason);
     }
+
+    @Override
+    public Call terminateWorkflowAsync(List<String> body, String reason, ApiCallback<BulkResponse> callback) throws ApiException {
+        return bulkResourceApi.terminateAsync(body, reason, callback);
+    }
+
 }
