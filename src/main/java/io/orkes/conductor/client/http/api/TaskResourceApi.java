@@ -148,7 +148,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Map<String, Long>> allWithHttpInfo() throws ApiException {
+    private ApiResponse<Map<String, Long>> allWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = allValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<Map<String, Long>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -291,7 +291,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Map<String, Map<String, Map<String, Long>>>> allVerboseWithHttpInfo()
+    private ApiResponse<Map<String, Map<String, Map<String, Long>>>> allVerboseWithHttpInfo()
             throws ApiException {
         com.squareup.okhttp.Call call = allVerboseValidateBeforeCall(null, null);
         Type localVarReturnType =
@@ -489,7 +489,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<Task>> batchPollWithHttpInfo(
+    private ApiResponse<List<Task>> batchPollWithHttpInfo(
             String tasktype, String workerid, String domain, Integer count, Integer timeout)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -654,7 +654,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<PollData>> getAllPollDataWithHttpInfo() throws ApiException {
+    private ApiResponse<List<PollData>> getAllPollDataWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getAllPollDataValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<List<PollData>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -836,7 +836,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<ExternalStorageLocation> getExternalStorageLocation1WithHttpInfo(
+    private ApiResponse<ExternalStorageLocation> getExternalStorageLocation1WithHttpInfo(
             String path, String operation, String payloadType) throws ApiException {
         com.squareup.okhttp.Call call =
                 getExternalStorageLocation1ValidateBeforeCall(
@@ -1003,7 +1003,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<PollData>> getPollDataWithHttpInfo(String taskType)
+    private ApiResponse<List<PollData>> getPollDataWithHttpInfo(String taskType)
             throws ApiException {
         com.squareup.okhttp.Call call = getPollDataValidateBeforeCall(taskType, null, null);
         Type localVarReturnType = new TypeToken<List<PollData>>() {}.getType();
@@ -1163,7 +1163,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Task> getTaskWithHttpInfo(String taskId) throws ApiException {
+    private ApiResponse<Task> getTaskWithHttpInfo(String taskId) throws ApiException {
         com.squareup.okhttp.Call call = getTaskValidateBeforeCall(taskId, null, null);
         Type localVarReturnType = new TypeToken<Task>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1322,7 +1322,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<TaskExecLog>> getTaskLogsWithHttpInfo(String taskId)
+    private ApiResponse<List<TaskExecLog>> getTaskLogsWithHttpInfo(String taskId)
             throws ApiException {
         com.squareup.okhttp.Call call = getTaskLogsValidateBeforeCall(taskId, null, null);
         Type localVarReturnType = new TypeToken<List<TaskExecLog>>() {}.getType();
@@ -1489,7 +1489,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> logWithHttpInfo(String body, String taskId) throws ApiException {
+    private ApiResponse<Void> logWithHttpInfo(String body, String taskId) throws ApiException {
         com.squareup.okhttp.Call call = logValidateBeforeCall(body, taskId, null, null);
         return apiClient.execute(call);
     }
@@ -1660,7 +1660,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Task> pollWithHttpInfo(String tasktype, String workerid, String domain)
+    private ApiResponse<Task> pollWithHttpInfo(String tasktype, String workerid, String domain)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 pollValidateBeforeCall(tasktype, workerid, domain, null, null);
@@ -1825,7 +1825,8 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<String> requeuePendingTaskWithHttpInfo(String taskType) throws ApiException {
+    private ApiResponse<String> requeuePendingTaskWithHttpInfo(String taskType)
+            throws ApiException {
         com.squareup.okhttp.Call call = requeuePendingTaskValidateBeforeCall(taskType, null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -2016,7 +2017,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<SearchResultTaskSummary> search1WithHttpInfo(
+    private ApiResponse<SearchResultTaskSummary> search1WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -2228,7 +2229,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<SearchResultTask> searchV21WithHttpInfo(
+    private ApiResponse<SearchResultTask> searchV21WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -2403,7 +2404,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Map<String, Integer>> sizeWithHttpInfo(List<String> taskType)
+    private ApiResponse<Map<String, Integer>> sizeWithHttpInfo(List<String> taskType)
             throws ApiException {
         com.squareup.okhttp.Call call = sizeValidateBeforeCall(taskType, null, null);
         Type localVarReturnType = new TypeToken<Map<String, Integer>>() {}.getType();
@@ -2559,7 +2560,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<String> updateTaskWithHttpInfo(TaskResult body) throws ApiException {
+    private ApiResponse<String> updateTaskWithHttpInfo(TaskResult body) throws ApiException {
         com.squareup.okhttp.Call call = updateTaskValidateBeforeCall(body, null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -2761,7 +2762,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<String> updateTask1WithHttpInfo(
+    private ApiResponse<String> updateTask1WithHttpInfo(
             Map<String, Object> body, String workflowId, String taskRefName, String status)
             throws ApiException {
         com.squareup.okhttp.Call call =

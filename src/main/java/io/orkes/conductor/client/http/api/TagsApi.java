@@ -165,7 +165,7 @@ public class TagsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> addTaskTagWithHttpInfo(TagObject body, String taskName)
+    private ApiResponse<Void> addTaskTagWithHttpInfo(TagObject body, String taskName)
             throws ApiException {
         com.squareup.okhttp.Call call = addTaskTagValidateBeforeCall(body, taskName, null, null);
         return apiClient.execute(call);
@@ -332,7 +332,7 @@ public class TagsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> addWorkflowTagWithHttpInfo(TagObject body, String name)
+    private ApiResponse<Void> addWorkflowTagWithHttpInfo(TagObject body, String name)
             throws ApiException {
         com.squareup.okhttp.Call call = addWorkflowTagValidateBeforeCall(body, name, null, null);
         return apiClient.execute(call);
@@ -500,7 +500,7 @@ public class TagsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> deleteTaskTagWithHttpInfo(TagString body, String taskName)
+    private ApiResponse<Void> deleteTaskTagWithHttpInfo(TagString body, String taskName)
             throws ApiException {
         com.squareup.okhttp.Call call = deleteTaskTagValidateBeforeCall(body, taskName, null, null);
         return apiClient.execute(call);
@@ -667,7 +667,7 @@ public class TagsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> deleteWorkflowTagWithHttpInfo(TagObject body, String name)
+    private ApiResponse<Void> deleteWorkflowTagWithHttpInfo(TagObject body, String name)
             throws ApiException {
         com.squareup.okhttp.Call call = deleteWorkflowTagValidateBeforeCall(body, name, null, null);
         return apiClient.execute(call);
@@ -812,7 +812,7 @@ public class TagsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<TagObject>> getTagsWithHttpInfo() throws ApiException {
+    private ApiResponse<List<TagObject>> getTagsWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getTagsValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<List<TagObject>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -970,7 +970,7 @@ public class TagsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<TagObject>> getTaskTagsWithHttpInfo(String taskName)
+    private ApiResponse<List<TagObject>> getTaskTagsWithHttpInfo(String taskName)
             throws ApiException {
         com.squareup.okhttp.Call call = getTaskTagsValidateBeforeCall(taskName, null, null);
         Type localVarReturnType = new TypeToken<List<TagObject>>() {}.getType();
@@ -1129,7 +1129,7 @@ public class TagsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<TagObject>> getWorkflowTagsWithHttpInfo(String name)
+    private ApiResponse<List<TagObject>> getWorkflowTagsWithHttpInfo(String name)
             throws ApiException {
         com.squareup.okhttp.Call call = getWorkflowTagsValidateBeforeCall(name, null, null);
         Type localVarReturnType = new TypeToken<List<TagObject>>() {}.getType();
@@ -1297,7 +1297,7 @@ public class TagsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> setTaskTagsWithHttpInfo(List<TagObject> body, String taskName)
+    private ApiResponse<Void> setTaskTagsWithHttpInfo(List<TagObject> body, String taskName)
             throws ApiException {
         com.squareup.okhttp.Call call = setTaskTagsValidateBeforeCall(body, taskName, null, null);
         return apiClient.execute(call);
@@ -1465,7 +1465,7 @@ public class TagsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> setWorkflowTagsWithHttpInfo(List<TagObject> body, String name)
+    private ApiResponse<Void> setWorkflowTagsWithHttpInfo(List<TagObject> body, String name)
             throws ApiException {
         com.squareup.okhttp.Call call = setWorkflowTagsValidateBeforeCall(body, name, null, null);
         return apiClient.execute(call);

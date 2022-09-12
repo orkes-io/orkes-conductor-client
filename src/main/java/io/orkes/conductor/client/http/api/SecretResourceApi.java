@@ -153,7 +153,7 @@ public class SecretResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> deleteSecretWithHttpInfo(String key) throws ApiException {
+    private ApiResponse<Object> deleteSecretWithHttpInfo(String key) throws ApiException {
         com.squareup.okhttp.Call call = deleteSecretValidateBeforeCall(key, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -310,7 +310,7 @@ public class SecretResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> getSecretWithHttpInfo(String key) throws ApiException {
+    private ApiResponse<Object> getSecretWithHttpInfo(String key) throws ApiException {
         com.squareup.okhttp.Call call = getSecretValidateBeforeCall(key, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -455,7 +455,7 @@ public class SecretResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> listAllSecretNamesWithHttpInfo() throws ApiException {
+    private ApiResponse<Object> listAllSecretNamesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = listAllSecretNamesValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -599,7 +599,7 @@ public class SecretResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<String>> listSecretsThatUserCanGrantAccessToWithHttpInfo()
+    private ApiResponse<List<String>> listSecretsThatUserCanGrantAccessToWithHttpInfo()
             throws ApiException {
         com.squareup.okhttp.Call call =
                 listSecretsThatUserCanGrantAccessToValidateBeforeCall(null, null);
@@ -767,7 +767,7 @@ public class SecretResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> putSecretWithHttpInfo(String body, String key) throws ApiException {
+    private ApiResponse<Object> putSecretWithHttpInfo(String body, String key) throws ApiException {
         com.squareup.okhttp.Call call = putSecretValidateBeforeCall(body, key, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -925,7 +925,7 @@ public class SecretResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> secretExistsWithHttpInfo(String key) throws ApiException {
+    private ApiResponse<Object> secretExistsWithHttpInfo(String key) throws ApiException {
         com.squareup.okhttp.Call call = secretExistsValidateBeforeCall(key, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);

@@ -168,7 +168,7 @@ public class GroupResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> addUserToGroupWithHttpInfo(String groupId, String userId)
+    private ApiResponse<Void> addUserToGroupWithHttpInfo(String groupId, String userId)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 addUserToGroupValidateBeforeCall(groupId, userId, null, null);
@@ -326,7 +326,7 @@ public class GroupResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> deleteGroupWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<Void> deleteGroupWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = deleteGroupValidateBeforeCall(id, null, null);
         return apiClient.execute(call);
     }
@@ -483,7 +483,7 @@ public class GroupResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<GrantedAccessResponse> getGrantedPermissions1WithHttpInfo(String groupId)
+    private ApiResponse<GrantedAccessResponse> getGrantedPermissions1WithHttpInfo(String groupId)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 getGrantedPermissions1ValidateBeforeCall(groupId, null, null);
@@ -642,7 +642,7 @@ public class GroupResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Group> getGroupWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<Group> getGroupWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = getGroupValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeToken<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -799,7 +799,7 @@ public class GroupResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<ConductorUser>> getUsersInGroupWithHttpInfo(String id)
+    private ApiResponse<List<ConductorUser>> getUsersInGroupWithHttpInfo(String id)
             throws ApiException {
         com.squareup.okhttp.Call call = getUsersInGroupValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeToken<List<ConductorUser>>() {}.getType();
@@ -944,7 +944,7 @@ public class GroupResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<Group>> listGroupsWithHttpInfo() throws ApiException {
+    private ApiResponse<List<Group>> listGroupsWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = listGroupsValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<List<Group>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1114,7 +1114,7 @@ public class GroupResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> removeUserFromGroupWithHttpInfo(String groupId, String userId)
+    private ApiResponse<Void> removeUserFromGroupWithHttpInfo(String groupId, String userId)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 removeUserFromGroupValidateBeforeCall(groupId, userId, null, null);
@@ -1282,7 +1282,7 @@ public class GroupResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Group> upsertGroupWithHttpInfo(UpsertGroupRequest body, String id)
+    private ApiResponse<Group> upsertGroupWithHttpInfo(UpsertGroupRequest body, String id)
             throws ApiException {
         com.squareup.okhttp.Call call = upsertGroupValidateBeforeCall(body, id, null, null);
         Type localVarReturnType = new TypeToken<Group>() {}.getType();

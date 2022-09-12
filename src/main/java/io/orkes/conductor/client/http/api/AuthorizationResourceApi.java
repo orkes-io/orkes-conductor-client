@@ -166,7 +166,7 @@ public class AuthorizationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Map<String, List<Subject>>> getPermissionsWithHttpInfo(
+    private ApiResponse<Map<String, List<Subject>>> getPermissionsWithHttpInfo(
             String type, String id) throws ApiException {
         com.squareup.okhttp.Call call = getPermissionsValidateBeforeCall(type, id, null, null);
         Type localVarReturnType = new TypeToken<Map<String, List<Subject>>>() {}.getType();
@@ -323,7 +323,7 @@ public class AuthorizationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> grantPermissionsWithHttpInfo(AuthorizationRequest body)
+    private ApiResponse<Void> grantPermissionsWithHttpInfo(AuthorizationRequest body)
             throws ApiException {
         com.squareup.okhttp.Call call = grantPermissionsValidateBeforeCall(body, null, null);
         return apiClient.execute(call);
@@ -475,7 +475,7 @@ public class AuthorizationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> removePermissionsWithHttpInfo(AuthorizationRequest body)
+    private ApiResponse<Void> removePermissionsWithHttpInfo(AuthorizationRequest body)
             throws ApiException {
         com.squareup.okhttp.Call call = removePermissionsValidateBeforeCall(body, null, null);
         return apiClient.execute(call);

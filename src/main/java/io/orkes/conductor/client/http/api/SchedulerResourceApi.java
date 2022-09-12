@@ -154,7 +154,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> deleteScheduleWithHttpInfo(String name) throws ApiException {
+    private ApiResponse<Void> deleteScheduleWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = deleteScheduleValidateBeforeCall(name, null, null);
         return apiClient.execute(call);
     }
@@ -304,7 +304,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<WorkflowSchedule>> getAllSchedulesWithHttpInfo(String workflowName)
+    private ApiResponse<List<WorkflowSchedule>> getAllSchedulesWithHttpInfo(String workflowName)
             throws ApiException {
         com.squareup.okhttp.Call call = getAllSchedulesValidateBeforeCall(workflowName, null, null);
         Type localVarReturnType = new TypeToken<List<WorkflowSchedule>>() {}.getType();
@@ -496,7 +496,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<Long>> getNextFewSchedulesWithHttpInfo(
+    private ApiResponse<List<Long>> getNextFewSchedulesWithHttpInfo(
             String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -672,7 +672,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<WorkflowSchedule> getScheduleWithHttpInfo(String name) throws ApiException {
+    private ApiResponse<WorkflowSchedule> getScheduleWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = getScheduleValidateBeforeCall(name, null, null);
         Type localVarReturnType = new TypeToken<WorkflowSchedule>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -817,7 +817,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Map<String, Object>> pauseAllSchedulesWithHttpInfo() throws ApiException {
+    private ApiResponse<Map<String, Object>> pauseAllSchedulesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = pauseAllSchedulesValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -974,7 +974,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> pauseScheduleWithHttpInfo(String name) throws ApiException {
+    private ApiResponse<Void> pauseScheduleWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = pauseScheduleValidateBeforeCall(name, null, null);
         return apiClient.execute(call);
     }
@@ -1117,7 +1117,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Map<String, Object>> requeueAllExecutionRecordsWithHttpInfo()
+    private ApiResponse<Map<String, Object>> requeueAllExecutionRecordsWithHttpInfo()
             throws ApiException {
         com.squareup.okhttp.Call call = requeueAllExecutionRecordsValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<Map<String, Object>>() {}.getType();
@@ -1263,7 +1263,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Map<String, Object>> resumeAllSchedulesWithHttpInfo() throws ApiException {
+    private ApiResponse<Map<String, Object>> resumeAllSchedulesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = resumeAllSchedulesValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1419,7 +1419,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> resumeScheduleWithHttpInfo(String name) throws ApiException {
+    private ApiResponse<Void> resumeScheduleWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = resumeScheduleValidateBeforeCall(name, null, null);
         return apiClient.execute(call);
     }
@@ -1572,7 +1572,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> saveScheduleWithHttpInfo(SaveScheduleRequest body)
+    private ApiResponse<Void> saveScheduleWithHttpInfo(SaveScheduleRequest body)
             throws ApiException {
         com.squareup.okhttp.Call call = saveScheduleValidateBeforeCall(body, null, null);
         return apiClient.execute(call);
@@ -1762,7 +1762,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<SearchResultWorkflowScheduleExecutionModel> searchV22WithHttpInfo(
+    private ApiResponse<SearchResultWorkflowScheduleExecutionModel> searchV22WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -1929,7 +1929,7 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> testTimeoutWithHttpInfo() throws ApiException {
+    private ApiResponse<Void> testTimeoutWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = testTimeoutValidateBeforeCall(null, null);
         return apiClient.execute(call);
     }

@@ -151,7 +151,7 @@ public class WorkflowBulkResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<BulkResponse> pauseWorkflow1WithHttpInfo(List<String> body)
+    private ApiResponse<BulkResponse> pauseWorkflow1WithHttpInfo(List<String> body)
             throws ApiException {
         com.squareup.okhttp.Call call = pauseWorkflow1ValidateBeforeCall(body, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
@@ -315,7 +315,7 @@ public class WorkflowBulkResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<BulkResponse> restart1WithHttpInfo(
+    private ApiResponse<BulkResponse> restart1WithHttpInfo(
             List<String> body, Boolean useLatestDefinitions) throws ApiException {
         com.squareup.okhttp.Call call =
                 restart1ValidateBeforeCall(body, useLatestDefinitions, null, null);
@@ -476,7 +476,7 @@ public class WorkflowBulkResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<BulkResponse> resumeWorkflow1WithHttpInfo(List<String> body)
+    private ApiResponse<BulkResponse> resumeWorkflow1WithHttpInfo(List<String> body)
             throws ApiException {
         com.squareup.okhttp.Call call = resumeWorkflow1ValidateBeforeCall(body, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
@@ -630,7 +630,7 @@ public class WorkflowBulkResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<BulkResponse> retry1WithHttpInfo(List<String> body) throws ApiException {
+    private ApiResponse<BulkResponse> retry1WithHttpInfo(List<String> body) throws ApiException {
         com.squareup.okhttp.Call call = retry1ValidateBeforeCall(body, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -790,7 +790,7 @@ public class WorkflowBulkResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<BulkResponse> terminateWithHttpInfo(List<String> body, String reason)
+    private ApiResponse<BulkResponse> terminateWithHttpInfo(List<String> body, String reason)
             throws ApiException {
         com.squareup.okhttp.Call call = terminateValidateBeforeCall(body, reason, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();

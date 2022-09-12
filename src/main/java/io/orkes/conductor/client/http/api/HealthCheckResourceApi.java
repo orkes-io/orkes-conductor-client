@@ -136,7 +136,7 @@ public class HealthCheckResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Map<String, Object>> doCheckWithHttpInfo() throws ApiException {
+    private ApiResponse<Map<String, Object>> doCheckWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = doCheckValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);

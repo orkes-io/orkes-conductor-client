@@ -157,7 +157,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> createWithHttpInfo(WorkflowDef body, Boolean overwrite)
+    private ApiResponse<Void> createWithHttpInfo(WorkflowDef body, Boolean overwrite)
             throws ApiException {
         com.squareup.okhttp.Call call = createValidateBeforeCall(body, overwrite, null, null);
         return apiClient.execute(call);
@@ -330,7 +330,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<WorkflowDef> getWithHttpInfo(String name, Integer version, Boolean metadata)
+    private ApiResponse<WorkflowDef> getWithHttpInfo(String name, Integer version, Boolean metadata)
             throws ApiException {
         com.squareup.okhttp.Call call = getValidateBeforeCall(name, version, metadata, null, null);
         Type localVarReturnType = new TypeToken<WorkflowDef>() {}.getType();
@@ -514,7 +514,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<WorkflowDef>> getAllWorkflowsWithHttpInfo(
+    private ApiResponse<List<WorkflowDef>> getAllWorkflowsWithHttpInfo(
             String access, Boolean metadata, String tagKey, String tagValue) throws ApiException {
         com.squareup.okhttp.Call call =
                 getAllWorkflowsValidateBeforeCall(access, metadata, tagKey, tagValue, null, null);
@@ -696,7 +696,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<TaskDef> getTaskDefWithHttpInfo(String tasktype, Boolean metadata)
+    private ApiResponse<TaskDef> getTaskDefWithHttpInfo(String tasktype, Boolean metadata)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 getTaskDefValidateBeforeCall(tasktype, metadata, null, null);
@@ -880,7 +880,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<TaskDef>> getTaskDefsWithHttpInfo(
+    private ApiResponse<List<TaskDef>> getTaskDefsWithHttpInfo(
             String access, Boolean metadata, String tagKey, String tagValue) throws ApiException {
         com.squareup.okhttp.Call call =
                 getTaskDefsValidateBeforeCall(access, metadata, tagKey, tagValue, null, null);
@@ -1049,7 +1049,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> registerTaskDefWithHttpInfo(List<TaskDef> body) throws ApiException {
+    private ApiResponse<Void> registerTaskDefWithHttpInfo(List<TaskDef> body) throws ApiException {
         com.squareup.okhttp.Call call = registerTaskDefValidateBeforeCall(body, null, null);
         return apiClient.execute(call);
     }
@@ -1205,7 +1205,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> unregisterTaskDefWithHttpInfo(String tasktype) throws ApiException {
+    private ApiResponse<Void> unregisterTaskDefWithHttpInfo(String tasktype) throws ApiException {
         com.squareup.okhttp.Call call = unregisterTaskDefValidateBeforeCall(tasktype, null, null);
         return apiClient.execute(call);
     }
@@ -1373,7 +1373,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> unregisterWorkflowDefWithHttpInfo(String name, Integer version)
+    private ApiResponse<Void> unregisterWorkflowDefWithHttpInfo(String name, Integer version)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 unregisterWorkflowDefValidateBeforeCall(name, version, null, null);
@@ -1536,7 +1536,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> updateWithHttpInfo(List<WorkflowDef> body, Boolean overwrite)
+    private ApiResponse<Void> updateWithHttpInfo(List<WorkflowDef> body, Boolean overwrite)
             throws ApiException {
         com.squareup.okhttp.Call call = updateValidateBeforeCall(body, overwrite, null, null);
         return apiClient.execute(call);
@@ -1691,7 +1691,7 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> updateTaskDefWithHttpInfo(TaskDef body) throws ApiException {
+    private ApiResponse<Void> updateTaskDefWithHttpInfo(TaskDef body) throws ApiException {
         com.squareup.okhttp.Call call = updateTaskDefValidateBeforeCall(body, null, null);
         return apiClient.execute(call);
     }

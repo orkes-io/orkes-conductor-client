@@ -154,7 +154,7 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Response> deleteUserWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<Response> deleteUserWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = deleteUserValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeToken<Response>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -313,7 +313,7 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> getGrantedPermissionsWithHttpInfo(String userId)
+    private ApiResponse<Object> getGrantedPermissionsWithHttpInfo(String userId)
             throws ApiException {
         com.squareup.okhttp.Call call = getGrantedPermissionsValidateBeforeCall(userId, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
@@ -471,7 +471,7 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> getUserWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<Object> getUserWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = getUserValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -622,7 +622,7 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<ConductorUser>> listUsersWithHttpInfo(Boolean apps)
+    private ApiResponse<List<ConductorUser>> listUsersWithHttpInfo(Boolean apps)
             throws ApiException {
         com.squareup.okhttp.Call call = listUsersValidateBeforeCall(apps, null, null);
         Type localVarReturnType = new TypeToken<List<ConductorUser>>() {}.getType();
@@ -784,7 +784,7 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> sendInviteEmailWithHttpInfo(String id, ConductorUser body)
+    private ApiResponse<Object> sendInviteEmailWithHttpInfo(String id, ConductorUser body)
             throws ApiException {
         com.squareup.okhttp.Call call = sendInviteEmailValidateBeforeCall(id, body, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
@@ -953,7 +953,7 @@ public class UserResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> upsertUserWithHttpInfo(UpsertUserRequest body, String id)
+    private ApiResponse<Object> upsertUserWithHttpInfo(UpsertUserRequest body, String id)
             throws ApiException {
         com.squareup.okhttp.Call call = upsertUserValidateBeforeCall(body, id, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();

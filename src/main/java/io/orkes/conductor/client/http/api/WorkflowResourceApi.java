@@ -157,7 +157,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> decideWithHttpInfo(String workflowId) throws ApiException {
+    private ApiResponse<Void> decideWithHttpInfo(String workflowId) throws ApiException {
         com.squareup.okhttp.Call call = decideValidateBeforeCall(workflowId, null, null);
         return apiClient.execute(call);
     }
@@ -321,7 +321,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> deleteWithHttpInfo(String workflowId, Boolean archiveWorkflow)
+    private ApiResponse<Void> deleteWithHttpInfo(String workflowId, Boolean archiveWorkflow)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 deleteValidateBeforeCall(workflowId, archiveWorkflow, null, null);
@@ -492,7 +492,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Workflow> getExecutionStatusWithHttpInfo(
+    private ApiResponse<Workflow> getExecutionStatusWithHttpInfo(
             String workflowId, Boolean includeTasks) throws ApiException {
         com.squareup.okhttp.Call call =
                 getExecutionStatusValidateBeforeCall(workflowId, includeTasks, null, null);
@@ -680,7 +680,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<ExternalStorageLocation> getExternalStorageLocationWithHttpInfo(
+    private ApiResponse<ExternalStorageLocation> getExternalStorageLocationWithHttpInfo(
             String path, String operation, String payloadType) throws ApiException {
         com.squareup.okhttp.Call call =
                 getExternalStorageLocationValidateBeforeCall(
@@ -878,7 +878,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<String>> getRunningWorkflowWithHttpInfo(
+    private ApiResponse<List<String>> getRunningWorkflowWithHttpInfo(
             String name, Integer version, Long startTime, Long endTime) throws ApiException {
         com.squareup.okhttp.Call call =
                 getRunningWorkflowValidateBeforeCall(name, version, startTime, endTime, null, null);
@@ -1076,7 +1076,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<WorkflowStatus> getWorkflowStatusSummaryWithHttpInfo(
+    private ApiResponse<WorkflowStatus> getWorkflowStatusSummaryWithHttpInfo(
             String workflowId, Boolean includeOutput, Boolean includeVariables)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -1281,7 +1281,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Map<String, List<Workflow>>> getWorkflowsWithHttpInfo(
+    private ApiResponse<Map<String, List<Workflow>>> getWorkflowsWithHttpInfo(
             List<String> body, String name, Boolean includeClosed, Boolean includeTasks)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -1491,7 +1491,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<Workflow>> getWorkflows1WithHttpInfo(
+    private ApiResponse<List<Workflow>> getWorkflows1WithHttpInfo(
             String name, String correlationId, Boolean includeClosed, Boolean includeTasks)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -1667,7 +1667,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> pauseWorkflowWithHttpInfo(String workflowId) throws ApiException {
+    private ApiResponse<Void> pauseWorkflowWithHttpInfo(String workflowId) throws ApiException {
         com.squareup.okhttp.Call call = pauseWorkflowValidateBeforeCall(workflowId, null, null);
         return apiClient.execute(call);
     }
@@ -1834,7 +1834,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<String> rerunWithHttpInfo(RerunWorkflowRequest body, String workflowId)
+    private ApiResponse<String> rerunWithHttpInfo(RerunWorkflowRequest body, String workflowId)
             throws ApiException {
         com.squareup.okhttp.Call call = rerunValidateBeforeCall(body, workflowId, null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
@@ -1996,7 +1996,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> resetWorkflowWithHttpInfo(String workflowId) throws ApiException {
+    private ApiResponse<Void> resetWorkflowWithHttpInfo(String workflowId) throws ApiException {
         com.squareup.okhttp.Call call = resetWorkflowValidateBeforeCall(workflowId, null, null);
         return apiClient.execute(call);
     }
@@ -2165,7 +2165,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> restartWithHttpInfo(String workflowId, Boolean useLatestDefinitions)
+    private ApiResponse<Void> restartWithHttpInfo(String workflowId, Boolean useLatestDefinitions)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 restartValidateBeforeCall(workflowId, useLatestDefinitions, null, null);
@@ -2329,7 +2329,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> resumeWorkflowWithHttpInfo(String workflowId) throws ApiException {
+    private ApiResponse<Void> resumeWorkflowWithHttpInfo(String workflowId) throws ApiException {
         com.squareup.okhttp.Call call = resumeWorkflowValidateBeforeCall(workflowId, null, null);
         return apiClient.execute(call);
     }
@@ -2498,7 +2498,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> retryWithHttpInfo(String workflowId, Boolean resumeSubworkflowTasks)
+    private ApiResponse<Void> retryWithHttpInfo(String workflowId, Boolean resumeSubworkflowTasks)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 retryValidateBeforeCall(workflowId, resumeSubworkflowTasks, null, null);
@@ -2716,7 +2716,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<ScrollableSearchResultWorkflowSummary> searchWithHttpInfo(
+    private ApiResponse<ScrollableSearchResultWorkflowSummary> searchWithHttpInfo(
             String queryId,
             Integer start,
             Integer size,
@@ -2943,7 +2943,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<SearchResultWorkflow> searchV2WithHttpInfo(
+    private ApiResponse<SearchResultWorkflow> searchV2WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -3155,7 +3155,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<SearchResultWorkflowSummary> searchWorkflowsByTasksWithHttpInfo(
+    private ApiResponse<SearchResultWorkflowSummary> searchWorkflowsByTasksWithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -3368,7 +3368,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<SearchResultWorkflow> searchWorkflowsByTasksV2WithHttpInfo(
+    private ApiResponse<SearchResultWorkflow> searchWorkflowsByTasksV2WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -3582,7 +3582,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> skipTaskFromWorkflowWithHttpInfo(
+    private ApiResponse<Void> skipTaskFromWorkflowWithHttpInfo(
             String workflowId, String taskReferenceName, SkipTaskRequest skipTaskRequest)
             throws ApiException {
         com.squareup.okhttp.Call call =
@@ -3749,7 +3749,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<String> startWorkflowWithHttpInfo(StartWorkflowRequest body)
+    private ApiResponse<String> startWorkflowWithHttpInfo(StartWorkflowRequest body)
             throws ApiException {
         com.squareup.okhttp.Call call = startWorkflowValidateBeforeCall(body, null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
@@ -3955,7 +3955,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<String> startWorkflow1WithHttpInfo(
+    private ApiResponse<String> startWorkflow1WithHttpInfo(
             Map<String, Object> body,
             String name,
             Integer version,
@@ -4145,7 +4145,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> terminate1WithHttpInfo(String workflowId, String reason)
+    private ApiResponse<Void> terminate1WithHttpInfo(String workflowId, String reason)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 terminate1ValidateBeforeCall(workflowId, reason, null, null);
@@ -4293,7 +4293,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> uploadCompletedWorkflowsWithHttpInfo() throws ApiException {
+    private ApiResponse<Object> uploadCompletedWorkflowsWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = uploadCompletedWorkflowsValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);

@@ -140,7 +140,7 @@ public class VersionResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<String> getVersionWithHttpInfo() throws ApiException {
+    private ApiResponse<String> getVersionWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getVersionValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);

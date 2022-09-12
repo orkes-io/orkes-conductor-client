@@ -150,7 +150,7 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> addEventHandlerWithHttpInfo(EventHandler body) throws ApiException {
+    private ApiResponse<Void> addEventHandlerWithHttpInfo(EventHandler body) throws ApiException {
         com.squareup.okhttp.Call call = addEventHandlerValidateBeforeCall(body, null, null);
         return apiClient.execute(call);
     }
@@ -321,7 +321,7 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> deleteQueueConfigWithHttpInfo(String queueType, String queueName)
+    private ApiResponse<Object> deleteQueueConfigWithHttpInfo(String queueType, String queueName)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 deleteQueueConfigValidateBeforeCall(queueType, queueName, null, null);
@@ -471,7 +471,7 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<EventHandler>> getEventHandlersWithHttpInfo() throws ApiException {
+    private ApiResponse<List<EventHandler>> getEventHandlersWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getEventHandlersValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<List<EventHandler>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -638,7 +638,7 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<List<EventHandler>> getEventHandlersForEventWithHttpInfo(
+    private ApiResponse<List<EventHandler>> getEventHandlersForEventWithHttpInfo(
             String event, Boolean activeOnly) throws ApiException {
         com.squareup.okhttp.Call call =
                 getEventHandlersForEventValidateBeforeCall(event, activeOnly, null, null);
@@ -815,7 +815,7 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> getQueueConfigWithHttpInfo(String queueType, String queueName)
+    private ApiResponse<Object> getQueueConfigWithHttpInfo(String queueType, String queueName)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 getQueueConfigValidateBeforeCall(queueType, queueName, null, null);
@@ -965,7 +965,7 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> getQueueNamesWithHttpInfo() throws ApiException {
+    private ApiResponse<Object> getQueueNamesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getQueueNamesValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1147,7 +1147,7 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Object> putQueueConfigWithHttpInfo(
+    private ApiResponse<Object> putQueueConfigWithHttpInfo(
             String body, String queueType, String queueName) throws ApiException {
         com.squareup.okhttp.Call call =
                 putQueueConfigValidateBeforeCall(body, queueType, queueName, null, null);
@@ -1310,7 +1310,8 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> removeEventHandlerStatusWithHttpInfo(String name) throws ApiException {
+    private ApiResponse<Void> removeEventHandlerStatusWithHttpInfo(String name)
+            throws ApiException {
         com.squareup.okhttp.Call call =
                 removeEventHandlerStatusValidateBeforeCall(name, null, null);
         return apiClient.execute(call);
@@ -1463,7 +1464,8 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ApiResponse<Void> updateEventHandlerWithHttpInfo(EventHandler body) throws ApiException {
+    private ApiResponse<Void> updateEventHandlerWithHttpInfo(EventHandler body)
+            throws ApiException {
         com.squareup.okhttp.Call call = updateEventHandlerValidateBeforeCall(body, null, null);
         return apiClient.execute(call);
     }
