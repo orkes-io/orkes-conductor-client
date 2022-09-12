@@ -5,14 +5,12 @@ import io.orkes.conductor.client.http.api.AuthorizationResourceApi;
 import io.orkes.conductor.client.http.api.GroupResourceApi;
 import io.orkes.conductor.client.http.api.UserResourceApi;
 import io.orkes.conductor.client.AuthorizationClient;
-import io.orkes.conductor.client.GroupClient;
-import io.orkes.conductor.client.UserClient;
 import io.orkes.conductor.client.http.model.*;
 
 import java.util.List;
 import java.util.Map;
 
-public class OrkesAuthorizationClient extends OrkesClient implements AuthorizationClient, GroupClient, UserClient {
+public class OrkesAuthorizationClient extends OrkesClient implements AuthorizationClient {
 
     private AuthorizationResourceApi authorizationResourceApi;
     private GroupResourceApi groupResourceApi;

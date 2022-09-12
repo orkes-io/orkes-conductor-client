@@ -16,7 +16,6 @@ import java.util.List;
 
 import com.squareup.okhttp.Call;
 import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.WorkflowBulkOperationsClient;
 import io.orkes.conductor.client.WorkflowClient;
 import org.apache.commons.lang.StringUtils;
 
@@ -33,7 +32,7 @@ import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 
 import com.google.common.base.Preconditions;
 
-public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient, WorkflowBulkOperationsClient {
+public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     private final WorkflowResourceApi httpClient;
 

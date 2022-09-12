@@ -2,12 +2,11 @@ package io.orkes.conductor.client.http;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.api.ApplicationResourceApi;
-import io.orkes.conductor.client.ApplicationClient;
 import io.orkes.conductor.client.http.model.*;
 
 import java.util.List;
 
-public class OrkesApplicationClient extends OrkesClient implements ApplicationClient {
+public class OrkesApplicationClient extends OrkesClient {
 
     private ApplicationResourceApi applicationResourceApi;
 

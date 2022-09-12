@@ -14,10 +14,6 @@ public class OrkesClients {
         return new OrkesWorkflowClient(apiClient);
     }
 
-    public ApplicationClient getApplicationClient() {
-        return new OrkesApplicationClient(apiClient);
-    }
-
     public AuthorizationClient getAuthorizationClient() {
         return new OrkesAuthorizationClient(apiClient);
     }
@@ -26,9 +22,6 @@ public class OrkesClients {
         return new OrkesEventClient(apiClient);
     }
 
-    public GroupClient getGroupClient() {
-        return new OrkesAuthorizationClient(apiClient);
-    }
 
     public MetadataClient getMetadataClient() {
         return new OrkesMetadataClient(apiClient);
@@ -46,11 +39,4 @@ public class OrkesClients {
         return new OrkesTaskClient(apiClient);
     }
 
-    public UserClient getUserClient() {
-        return new OrkesAuthorizationClient(apiClient);
-    }
-
-    public WorkflowBulkOperationsClient getWorkflowBulkOperationsClient() {
-        return new OrkesWorkflowClient(apiClient);
-    }
 }
