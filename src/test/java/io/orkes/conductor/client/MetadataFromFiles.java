@@ -12,43 +12,38 @@
  */
 package io.orkes.conductor.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import net.javacrumbs.jsonunit.core.util.ResourceUtils;
-import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import io.orkes.conductor.client.util.ApiUtil;
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MetadataFromFiles {
     private final MetadataClient metadataClient;
-    private final ApiClient apiClient;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public MetadataFromFiles() {
-        apiClient = new ApiClient("http://localhost:8080/api");
-        OrkesClients orkesClients = new OrkesClients(apiClient);
+        OrkesClients orkesClients = ApiUtil.getOrkesClient();
         metadataClient = orkesClients.getMetadataClient();
     }
 
     @Test
     @DisplayName("load workflow from file and store definition in conductor")
     public void loadAndStoreWorkflowDefinition() throws IOException {
-        InputStream inputStream = MetadataFromFiles.class.getResourceAsStream("/sample_workflow.json");
+        InputStream inputStream =
+                MetadataFromFiles.class.getResourceAsStream("/sample_workflow.json");
         String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         WorkflowDef workflowDef = objectMapper.readValue(result, WorkflowDef.class);
         // Unregister workflow in case it exist
         metadataClient.unregisterWorkflowDef(workflowDef.getName(), workflowDef.getVersion());
         metadataClient.registerWorkflowDef(workflowDef);
     }
-
 }

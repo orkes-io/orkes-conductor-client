@@ -91,6 +91,7 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
     public void addTaskTag(TagObject body, String taskName) {
         tagsApi.addTaskTag(body, taskName);
     }
+
     @Override
     public void addWorkflowTag(TagObject body, String name) {
         tagsApi.addWorkflowTag(body, name);
