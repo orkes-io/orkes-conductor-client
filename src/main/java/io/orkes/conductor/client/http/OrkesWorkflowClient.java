@@ -28,7 +28,7 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
-import io.orkes.conductor.client.http.model.WorkflowStatus;
+import io.orkes.conductor.client.model.WorkflowStatus;
 
 import com.google.common.base.Preconditions;
 import com.squareup.okhttp.Call;

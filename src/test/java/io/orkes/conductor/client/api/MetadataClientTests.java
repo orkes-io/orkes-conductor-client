@@ -22,7 +22,7 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.OrkesMetadataClient;
-import io.orkes.conductor.client.http.model.TagObject;
+import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.WorkflowUtil;
 

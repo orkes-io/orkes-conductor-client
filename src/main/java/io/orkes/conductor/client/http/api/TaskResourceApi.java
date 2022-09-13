@@ -26,9 +26,9 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.model.ExternalStorageLocation;
-import io.orkes.conductor.client.http.model.SearchResultTask;
-import io.orkes.conductor.client.http.model.SearchResultTaskSummary;
+import io.orkes.conductor.client.model.ExternalStorageLocation;
+import io.orkes.conductor.client.model.SearchResultTask;
+import io.orkes.conductor.client.model.SearchResultTaskSummary;
 
 import com.google.gson.reflect.TypeToken;
 
