@@ -21,8 +21,8 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.api.MetadataResourceApi;
 import io.orkes.conductor.client.http.api.TagsApi;
-import io.orkes.conductor.client.http.model.TagObject;
-import io.orkes.conductor.client.http.model.TagString;
+import io.orkes.conductor.client.model.TagObject;
+import io.orkes.conductor.client.model.TagString;
 
 public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
 

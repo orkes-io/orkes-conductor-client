@@ -29,7 +29,7 @@ import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-import io.orkes.conductor.client.http.model.WorkflowStatus;
+import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.SimpleWorker;
