@@ -9,7 +9,7 @@ OrkesClients orkesClients = OrkesClients(apiClient);
 AuthorizationClient authorizationClient = super.orkesClients.getAuthorizationClient();
 ```
 
-### Adding User
+### Manage Users
 
 ### Create and Manage Groups
 
