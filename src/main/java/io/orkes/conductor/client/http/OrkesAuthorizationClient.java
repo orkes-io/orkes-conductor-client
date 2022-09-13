@@ -21,7 +21,7 @@ import io.orkes.conductor.client.http.api.ApplicationResourceApi;
 import io.orkes.conductor.client.http.api.AuthorizationResourceApi;
 import io.orkes.conductor.client.http.api.GroupResourceApi;
 import io.orkes.conductor.client.http.api.UserResourceApi;
-import io.orkes.conductor.client.http.model.*;
+import io.orkes.conductor.client.model.*;
 
 public class OrkesAuthorizationClient extends OrkesClient implements AuthorizationClient {
 

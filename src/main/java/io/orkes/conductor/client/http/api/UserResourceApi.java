@@ -21,7 +21,10 @@ import java.util.Map;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.model.*;
+import io.orkes.conductor.client.model.ConductorUser;
+import io.orkes.conductor.client.model.GrantedAccessResponse;
+import io.orkes.conductor.client.model.Response;
+import io.orkes.conductor.client.model.UpsertUserRequest;
 
 import com.google.gson.reflect.TypeToken;
 

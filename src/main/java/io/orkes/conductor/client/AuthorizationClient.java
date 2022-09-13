@@ -15,7 +15,7 @@ package io.orkes.conductor.client;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.http.model.*;
+import io.orkes.conductor.client.model.*;
 
 public interface AuthorizationClient {
 

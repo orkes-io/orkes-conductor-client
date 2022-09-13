@@ -49,7 +49,7 @@ import io.orkes.conductor.client.http.auth.ApiKeyAuth;
 import io.orkes.conductor.client.http.auth.Authentication;
 import io.orkes.conductor.client.http.auth.HttpBasicAuth;
 import io.orkes.conductor.client.http.auth.OAuth;
-import io.orkes.conductor.client.http.model.GenerateTokenRequest;
+import io.orkes.conductor.client.model.GenerateTokenRequest;
 
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;

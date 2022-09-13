@@ -21,7 +21,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.model.*;
+import io.orkes.conductor.client.model.*;
 
 import com.google.gson.reflect.TypeToken;
 

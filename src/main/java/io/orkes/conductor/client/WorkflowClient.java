@@ -22,7 +22,7 @@ import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.http.ApiCallback;
-import io.orkes.conductor.client.http.model.WorkflowStatus;
+import io.orkes.conductor.client.model.WorkflowStatus;
 
 import com.squareup.okhttp.Call;
 

@@ -21,9 +21,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.AuthorizationClient;
-import io.orkes.conductor.client.http.model.Group;
-import io.orkes.conductor.client.http.model.UpsertGroupRequest;
-import io.orkes.conductor.client.http.model.UpsertGroupRequest.RolesEnum;
+import io.orkes.conductor.client.model.Group;
+import io.orkes.conductor.client.model.UpsertGroupRequest;
+import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

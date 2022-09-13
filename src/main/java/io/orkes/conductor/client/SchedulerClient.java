@@ -14,9 +14,9 @@ package io.orkes.conductor.client;
 
 import java.util.List;
 
-import io.orkes.conductor.client.http.model.SaveScheduleRequest;
-import io.orkes.conductor.client.http.model.SearchResultWorkflowScheduleExecutionModel;
-import io.orkes.conductor.client.http.model.WorkflowSchedule;
+import io.orkes.conductor.client.model.SaveScheduleRequest;
+import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
+import io.orkes.conductor.client.model.WorkflowSchedule;
 
 public interface SchedulerClient {
     void deleteSchedule(String name);

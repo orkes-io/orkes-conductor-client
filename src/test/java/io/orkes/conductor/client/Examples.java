@@ -22,8 +22,12 @@ import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
 import io.orkes.conductor.client.http.OrkesMetadataClient;
-import io.orkes.conductor.client.http.model.*;
-import io.orkes.conductor.client.http.model.UpsertGroupRequest.RolesEnum;
+import io.orkes.conductor.client.model.*;
+import io.orkes.conductor.client.model.AuthorizationRequest;
+import io.orkes.conductor.client.model.Group;
+import io.orkes.conductor.client.model.TagObject;
+import io.orkes.conductor.client.model.UpsertGroupRequest;
+import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.WorkflowUtil;
