@@ -88,23 +88,23 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
     }
 
     @Override
-    public void addTaskTag(TagObject body, String taskName) {
-        tagsApi.addTaskTag(body, taskName);
+    public void addTaskTag(TagObject tagObject, String taskName) {
+        tagsApi.addTaskTag(tagObject, taskName);
     }
 
     @Override
-    public void addWorkflowTag(TagObject body, String name) {
-        tagsApi.addWorkflowTag(body, name);
+    public void addWorkflowTag(TagObject tagObject, String name) {
+        tagsApi.addWorkflowTag(tagObject, name);
     }
 
     @Override
-    public void deleteTaskTag(TagString body, String taskName) {
-        tagsApi.deleteTaskTag(body, taskName);
+    public void deleteTaskTag(TagString tagString, String taskName) {
+        tagsApi.deleteTaskTag(tagString, taskName);
     }
 
     @Override
-    public void deleteWorkflowTag(TagObject body, String name) {
-        tagsApi.deleteWorkflowTag(body, name);
+    public void deleteWorkflowTag(TagObject tagObject, String name) {
+        tagsApi.deleteWorkflowTag(tagObject, name);
     }
 
     @Override
@@ -123,12 +123,12 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
     }
 
     @Override
-    public void setTaskTags(List<TagObject> body, String taskName) {
-        tagsApi.setTaskTags(body, taskName);
+    public void setTaskTags(List<TagObject> tagObjects, String taskName) {
+        tagsApi.setTaskTags(tagObjects, taskName);
     }
 
     @Override
-    public void setWorkflowTags(List<TagObject> body, String name) {
-        tagsApi.setWorkflowTags(body, name);
+    public void setWorkflowTags(List<TagObject> tagObjects, String name) {
+        tagsApi.setWorkflowTags(tagObjects, name);
     }
 }

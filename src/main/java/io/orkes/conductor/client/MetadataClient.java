@@ -38,13 +38,13 @@ public interface MetadataClient {
 
     void unregisterTaskDef(String taskType);
 
-    void addTaskTag(TagObject body, String taskName) throws ApiException;
+    void addTaskTag(TagObject tagObject, String taskName) throws ApiException;
 
-    void addWorkflowTag(TagObject body, String name) throws ApiException;
+    void addWorkflowTag(TagObject tagObject, String name) throws ApiException;
 
-    void deleteTaskTag(TagString body, String taskName) throws ApiException;
+    void deleteTaskTag(TagString tagString, String taskName) throws ApiException;
 
-    void deleteWorkflowTag(TagObject body, String name) throws ApiException;
+    void deleteWorkflowTag(TagObject tagObject, String name) throws ApiException;
 
     List<TagObject> getTags() throws ApiException;
 
@@ -52,7 +52,7 @@ public interface MetadataClient {
 
     List<TagObject> getWorkflowTags(String name) throws ApiException;
 
-    void setTaskTags(List<TagObject> body, String taskName) throws ApiException;
+    void setTaskTags(List<TagObject> tagObjects, String taskName) throws ApiException;
 
-    void setWorkflowTags(List<TagObject> body, String name) throws ApiException;
+    void setWorkflowTags(List<TagObject> tagObjects, String name) throws ApiException;
 }

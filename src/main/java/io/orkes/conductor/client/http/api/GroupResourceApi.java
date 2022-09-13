@@ -888,7 +888,7 @@ public class GroupResourceApi {
     /**
      * Build call for upsertGroup
      *
-     * @param body (required)
+     * @param upsertGroupRequest (required)
      * @param id (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
@@ -896,12 +896,12 @@ public class GroupResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call upsertGroupCall(
-            UpsertGroupRequest body,
+            UpsertGroupRequest upsertGroupRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = upsertGroupRequest;
 
         // create path and map variables
         String localVarPath =
@@ -961,13 +961,13 @@ public class GroupResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call upsertGroupValidateBeforeCall(
-            UpsertGroupRequest body,
+            UpsertGroupRequest upsertGroupRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (upsertGroupRequest == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling upsertGroup(Async)");
         }
@@ -978,36 +978,37 @@ public class GroupResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                upsertGroupCall(body, id, progressListener, progressRequestListener);
+                upsertGroupCall(upsertGroupRequest, id, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Create or update a group
      *
-     * @param body (required)
+     * @param upsertGroupRequest (required)
      * @param id (required)
      * @return Group
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Group upsertGroup(UpsertGroupRequest body, String id) throws ApiException {
-        ApiResponse<Group> resp = upsertGroupWithHttpInfo(body, id);
+    public Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id) throws ApiException {
+        ApiResponse<Group> resp = upsertGroupWithHttpInfo(upsertGroupRequest, id);
         return resp.getData();
     }
 
     /**
      * Create or update a group
      *
-     * @param body (required)
+     * @param upsertGroupRequest (required)
      * @param id (required)
      * @return ApiResponse&lt;Group&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Group> upsertGroupWithHttpInfo(UpsertGroupRequest body, String id)
-            throws ApiException {
-        com.squareup.okhttp.Call call = upsertGroupValidateBeforeCall(body, id, null, null);
+    private ApiResponse<Group> upsertGroupWithHttpInfo(
+            UpsertGroupRequest upsertGroupRequest, String id) throws ApiException {
+        com.squareup.okhttp.Call call =
+                upsertGroupValidateBeforeCall(upsertGroupRequest, id, null, null);
         Type localVarReturnType = new TypeToken<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

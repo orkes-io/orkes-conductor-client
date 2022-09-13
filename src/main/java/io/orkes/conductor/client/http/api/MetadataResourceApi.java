@@ -49,7 +49,7 @@ public class MetadataResourceApi {
     /**
      * Build call for create
      *
-     * @param body (required)
+     * @param workflowDef (required)
      * @param overwrite (optional, default to false)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
@@ -57,12 +57,12 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call createCall(
-            WorkflowDef body,
+            WorkflowDef workflowDef,
             Boolean overwrite,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = workflowDef;
 
         // create path and map variables
         String localVarPath = "/metadata/workflow";
@@ -123,46 +123,47 @@ public class MetadataResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call createValidateBeforeCall(
-            WorkflowDef body,
+            WorkflowDef workflowDef,
             Boolean overwrite,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (workflowDef == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling create(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                createCall(body, overwrite, progressListener, progressRequestListener);
+                createCall(workflowDef, overwrite, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Create a new workflow definition
      *
-     * @param body (required)
+     * @param workflowDef (required)
      * @param overwrite (optional, default to false)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void create(WorkflowDef body, Boolean overwrite) throws ApiException {
-        createWithHttpInfo(body, overwrite);
+    public void create(WorkflowDef workflowDef, Boolean overwrite) throws ApiException {
+        createWithHttpInfo(workflowDef, overwrite);
     }
 
     /**
      * Create a new workflow definition
      *
-     * @param body (required)
+     * @param workflowDef (required)
      * @param overwrite (optional, default to false)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> createWithHttpInfo(WorkflowDef body, Boolean overwrite)
+    private ApiResponse<Void> createWithHttpInfo(WorkflowDef workflowDef, Boolean overwrite)
             throws ApiException {
-        com.squareup.okhttp.Call call = createValidateBeforeCall(body, overwrite, null, null);
+        com.squareup.okhttp.Call call =
+                createValidateBeforeCall(workflowDef, overwrite, null, null);
         return apiClient.execute(call);
     }
 
@@ -711,18 +712,18 @@ public class MetadataResourceApi {
     /**
      * Build call for registerTaskDef
      *
-     * @param body (required)
+     * @param taskDefs (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call registerTaskDefCall(
-            List<TaskDef> body,
+            List<TaskDef> taskDefs,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = taskDefs;
 
         // create path and map variables
         String localVarPath = "/metadata/taskdefs";
@@ -781,42 +782,43 @@ public class MetadataResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call registerTaskDefValidateBeforeCall(
-            List<TaskDef> body,
+            List<TaskDef> taskDefs,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (taskDefs == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling registerTaskDef(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                registerTaskDefCall(body, progressListener, progressRequestListener);
+                registerTaskDefCall(taskDefs, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Create or update task definition(s)
      *
-     * @param body (required)
+     * @param taskDefs (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void registerTaskDef(List<TaskDef> body) throws ApiException {
-        registerTaskDefWithHttpInfo(body);
+    public void registerTaskDef(List<TaskDef> taskDefs) throws ApiException {
+        registerTaskDefWithHttpInfo(taskDefs);
     }
 
     /**
      * Create or update task definition(s)
      *
-     * @param body (required)
+     * @param taskDefs (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> registerTaskDefWithHttpInfo(List<TaskDef> body) throws ApiException {
-        com.squareup.okhttp.Call call = registerTaskDefValidateBeforeCall(body, null, null);
+    private ApiResponse<Void> registerTaskDefWithHttpInfo(List<TaskDef> taskDefs)
+            throws ApiException {
+        com.squareup.okhttp.Call call = registerTaskDefValidateBeforeCall(taskDefs, null, null);
         return apiClient.execute(call);
     }
 
@@ -1070,7 +1072,7 @@ public class MetadataResourceApi {
     /**
      * Build call for update
      *
-     * @param body (required)
+     * @param workflowDefs (required)
      * @param overwrite (optional, default to true)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
@@ -1078,12 +1080,12 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call updateCall(
-            List<WorkflowDef> body,
+            List<WorkflowDef> workflowDefs,
             Boolean overwrite,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = workflowDefs;
 
         // create path and map variables
         String localVarPath = "/metadata/workflow";
@@ -1144,64 +1146,65 @@ public class MetadataResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateValidateBeforeCall(
-            List<WorkflowDef> body,
+            List<WorkflowDef> workflowDefs,
             Boolean overwrite,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (workflowDefs == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling update(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                updateCall(body, overwrite, progressListener, progressRequestListener);
+                updateCall(workflowDefs, overwrite, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Create or update workflow definition(s)
      *
-     * @param body (required)
+     * @param workflowDefs (required)
      * @param overwrite (optional, default to true)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void update(List<WorkflowDef> body, Boolean overwrite) throws ApiException {
-        updateWithHttpInfo(body, overwrite);
+    public void update(List<WorkflowDef> workflowDefs, Boolean overwrite) throws ApiException {
+        updateWithHttpInfo(workflowDefs, overwrite);
     }
 
     /**
      * Create or update workflow definition(s)
      *
-     * @param body (required)
+     * @param workflowDefs (required)
      * @param overwrite (optional, default to true)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> updateWithHttpInfo(List<WorkflowDef> body, Boolean overwrite)
+    private ApiResponse<Void> updateWithHttpInfo(List<WorkflowDef> workflowDefs, Boolean overwrite)
             throws ApiException {
-        com.squareup.okhttp.Call call = updateValidateBeforeCall(body, overwrite, null, null);
+        com.squareup.okhttp.Call call =
+                updateValidateBeforeCall(workflowDefs, overwrite, null, null);
         return apiClient.execute(call);
     }
 
     /**
      * Build call for updateTaskDef
      *
-     * @param body (required)
+     * @param taskDef (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call updateTaskDefCall(
-            TaskDef body,
+            TaskDef taskDef,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = taskDef;
 
         // create path and map variables
         String localVarPath = "/metadata/taskdefs";
@@ -1260,18 +1263,18 @@ public class MetadataResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateTaskDefValidateBeforeCall(
-            TaskDef body,
+            TaskDef taskDef,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (taskDef == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling updateTaskDef(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                updateTaskDefCall(body, progressListener, progressRequestListener);
+                updateTaskDefCall(taskDef, progressListener, progressRequestListener);
         return call;
     }
 

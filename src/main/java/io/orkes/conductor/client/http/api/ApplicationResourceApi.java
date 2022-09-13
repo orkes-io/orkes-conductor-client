@@ -292,18 +292,18 @@ public class ApplicationResourceApi {
     /**
      * Build call for createApplication
      *
-     * @param body (required)
+     * @param createOrUpdateApplicationRequest (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call createApplicationCall(
-            CreateOrUpdateApplicationRequest body,
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = createOrUpdateApplicationRequest;
 
         // create path and map variables
         String localVarPath = "/applications";
@@ -361,18 +361,21 @@ public class ApplicationResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call createApplicationValidateBeforeCall(
-            CreateOrUpdateApplicationRequest body,
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (createOrUpdateApplicationRequest == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling createApplication(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                createApplicationCall(body, progressListener, progressRequestListener);
+                createApplicationCall(
+                        createOrUpdateApplicationRequest,
+                        progressListener,
+                        progressRequestListener);
         return call;
     }
 
@@ -1262,7 +1265,7 @@ public class ApplicationResourceApi {
     /**
      * Build call for updateApplication
      *
-     * @param body (required)
+     * @param createOrUpdateApplicationRequest (required)
      * @param id (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
@@ -1270,12 +1273,12 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call updateApplicationCall(
-            CreateOrUpdateApplicationRequest body,
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = createOrUpdateApplicationRequest;
 
         // create path and map variables
         String localVarPath =
@@ -1335,13 +1338,13 @@ public class ApplicationResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateApplicationValidateBeforeCall(
-            CreateOrUpdateApplicationRequest body,
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (createOrUpdateApplicationRequest == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling updateApplication(Async)");
         }
@@ -1352,37 +1355,46 @@ public class ApplicationResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                updateApplicationCall(body, id, progressListener, progressRequestListener);
+                updateApplicationCall(
+                        createOrUpdateApplicationRequest,
+                        id,
+                        progressListener,
+                        progressRequestListener);
         return call;
     }
 
     /**
      * Update an application
      *
-     * @param body (required)
+     * @param createOrUpdateApplicationRequest (required)
      * @param id (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ConductorApplication updateApplication(CreateOrUpdateApplicationRequest body, String id)
+    public ConductorApplication updateApplication(
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id)
             throws ApiException {
-        ApiResponse<ConductorApplication> resp = updateApplicationWithHttpInfo(body, id);
+        ApiResponse<ConductorApplication> resp =
+                updateApplicationWithHttpInfo(createOrUpdateApplicationRequest, id);
         return resp.getData();
     }
 
     /**
      * Update an application
      *
-     * @param body (required)
+     * @param createOrUpdateApplicationRequest (required)
      * @param id (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
     private ApiResponse<ConductorApplication> updateApplicationWithHttpInfo(
-            CreateOrUpdateApplicationRequest body, String id) throws ApiException {
-        com.squareup.okhttp.Call call = updateApplicationValidateBeforeCall(body, id, null, null);
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id)
+            throws ApiException {
+        com.squareup.okhttp.Call call =
+                updateApplicationValidateBeforeCall(
+                        createOrUpdateApplicationRequest, id, null, null);
         Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

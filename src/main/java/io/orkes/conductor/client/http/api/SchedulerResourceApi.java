@@ -1097,18 +1097,18 @@ public class SchedulerResourceApi {
     /**
      * Build call for saveSchedule
      *
-     * @param body (required)
+     * @param saveScheduleRequest (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call saveScheduleCall(
-            SaveScheduleRequest body,
+            SaveScheduleRequest saveScheduleRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = saveScheduleRequest;
 
         // create path and map variables
         String localVarPath = "/scheduler/schedules";
@@ -1167,18 +1167,18 @@ public class SchedulerResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call saveScheduleValidateBeforeCall(
-            SaveScheduleRequest body,
+            SaveScheduleRequest saveScheduleRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (saveScheduleRequest == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling saveSchedule(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                saveScheduleCall(body, progressListener, progressRequestListener);
+                saveScheduleCall(saveScheduleRequest, progressListener, progressRequestListener);
         return call;
     }
 

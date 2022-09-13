@@ -1829,18 +1829,18 @@ public class TaskResourceApi {
     /**
      * Build call for updateTask
      *
-     * @param body (required)
+     * @param taskResult (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call updateTaskCall(
-            TaskResult body,
+            TaskResult taskResult,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = taskResult;
 
         // create path and map variables
         String localVarPath = "/tasks";
@@ -1898,18 +1898,18 @@ public class TaskResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateTaskValidateBeforeCall(
-            TaskResult body,
+            TaskResult taskResult,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (taskResult == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling updateTask(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                updateTaskCall(body, progressListener, progressRequestListener);
+                updateTaskCall(taskResult, progressListener, progressRequestListener);
         return call;
     }
 

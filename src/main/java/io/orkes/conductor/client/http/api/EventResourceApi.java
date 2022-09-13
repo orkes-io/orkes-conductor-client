@@ -48,18 +48,18 @@ public class EventResourceApi {
     /**
      * Build call for addEventHandler
      *
-     * @param body (required)
+     * @param eventHandler (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call addEventHandlerCall(
-            EventHandler body,
+            EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = eventHandler;
 
         // create path and map variables
         String localVarPath = "/event";
@@ -118,42 +118,43 @@ public class EventResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call addEventHandlerValidateBeforeCall(
-            EventHandler body,
+            EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (eventHandler == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling addEventHandler(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                addEventHandlerCall(body, progressListener, progressRequestListener);
+                addEventHandlerCall(eventHandler, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Add a new event handler.
      *
-     * @param body (required)
+     * @param eventHandler (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void addEventHandler(EventHandler body) throws ApiException {
-        addEventHandlerWithHttpInfo(body);
+    public void addEventHandler(EventHandler eventHandler) throws ApiException {
+        addEventHandlerWithHttpInfo(eventHandler);
     }
 
     /**
      * Add a new event handler.
      *
-     * @param body (required)
+     * @param eventHandler (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> addEventHandlerWithHttpInfo(EventHandler body) throws ApiException {
-        com.squareup.okhttp.Call call = addEventHandlerValidateBeforeCall(body, null, null);
+    private ApiResponse<Void> addEventHandlerWithHttpInfo(EventHandler eventHandler)
+            throws ApiException {
+        com.squareup.okhttp.Call call = addEventHandlerValidateBeforeCall(eventHandler, null, null);
         return apiClient.execute(call);
     }
 
@@ -1032,18 +1033,18 @@ public class EventResourceApi {
     /**
      * Build call for updateEventHandler
      *
-     * @param body (required)
+     * @param eventHandler (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call updateEventHandlerCall(
-            EventHandler body,
+            EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = eventHandler;
 
         // create path and map variables
         String localVarPath = "/event";
@@ -1102,18 +1103,18 @@ public class EventResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateEventHandlerValidateBeforeCall(
-            EventHandler body,
+            EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (eventHandler == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling updateEventHandler(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                updateEventHandlerCall(body, progressListener, progressRequestListener);
+                updateEventHandlerCall(eventHandler, progressListener, progressRequestListener);
         return call;
     }
 

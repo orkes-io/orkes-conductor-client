@@ -38,7 +38,7 @@ public interface AuthorizationClient {
 
     void sendInviteEmail(String id, ConductorUser body);
 
-    ConductorUser upsertUser(UpsertUserRequest body, String id);
+    ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id);
 
     // Groups
     void addUserToGroup(String groupId, String userId);
@@ -55,7 +55,7 @@ public interface AuthorizationClient {
 
     void removeUserFromGroup(String groupId, String userId);
 
-    Group upsertGroup(UpsertGroupRequest body, String id);
+    Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id);
 
     // Applications
     void addRoleToApplicationUser(String applicationId, String role);
@@ -78,5 +78,6 @@ public interface AuthorizationClient {
 
     AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId);
 
-    ConductorApplication updateApplication(CreateOrUpdateApplicationRequest body, String id);
+    ConductorApplication updateApplication(
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id);
 }

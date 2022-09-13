@@ -178,18 +178,18 @@ public class AuthorizationResourceApi {
     /**
      * Build call for grantPermissions
      *
-     * @param body (required)
+     * @param authorizationRequest (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call grantPermissionsCall(
-            AuthorizationRequest body,
+            AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = authorizationRequest;
 
         // create path and map variables
         String localVarPath = "/auth/authorization";
@@ -248,18 +248,19 @@ public class AuthorizationResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call grantPermissionsValidateBeforeCall(
-            AuthorizationRequest body,
+            AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (authorizationRequest == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling grantPermissions(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                grantPermissionsCall(body, progressListener, progressRequestListener);
+                grantPermissionsCall(
+                        authorizationRequest, progressListener, progressRequestListener);
         return call;
     }
 
@@ -291,18 +292,18 @@ public class AuthorizationResourceApi {
     /**
      * Build call for removePermissions
      *
-     * @param body (required)
+     * @param authorizationRequest (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call removePermissionsCall(
-            AuthorizationRequest body,
+            AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = authorizationRequest;
 
         // create path and map variables
         String localVarPath = "/auth/authorization";
@@ -361,18 +362,19 @@ public class AuthorizationResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call removePermissionsValidateBeforeCall(
-            AuthorizationRequest body,
+            AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (authorizationRequest == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling removePermissions(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                removePermissionsCall(body, progressListener, progressRequestListener);
+                removePermissionsCall(
+                        authorizationRequest, progressListener, progressRequestListener);
         return call;
     }
 

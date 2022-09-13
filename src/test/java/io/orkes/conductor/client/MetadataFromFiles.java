@@ -15,16 +15,14 @@ package io.orkes.conductor.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
 import io.orkes.conductor.client.util.ApiUtil;
@@ -51,15 +49,15 @@ public class MetadataFromFiles {
         // Unregister workflow in case it exist
         metadataClient.unregisterWorkflowDef(workflowDef.getName(), workflowDef.getVersion());
         metadataClient.registerWorkflowDef(workflowDef);
-        Assertions.assertEquals(metadataClient.getWorkflowDef(workflowDef.getName(), workflowDef.getVersion()),
+        Assertions.assertEquals(
+                metadataClient.getWorkflowDef(workflowDef.getName(), workflowDef.getVersion()),
                 workflowDef);
     }
 
     @Test
     @DisplayName("load tasks from file and store definition in conductor")
     public void loadAndStoreTaskDefinitions() throws IOException {
-        InputStream inputStream =
-                MetadataFromFiles.class.getResourceAsStream("/sample_tasks.json");
+        InputStream inputStream = MetadataFromFiles.class.getResourceAsStream("/sample_tasks.json");
         String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         List<TaskDef> taskDefs = objectMapper.readValue(result, List.class);
         metadataClient.registerTaskDefs(taskDefs);
