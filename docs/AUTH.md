@@ -74,6 +74,7 @@ For example, you can tag multiple workflows with a given tag (e.g. `org:accounti
 for each individual workflow, you can grant permissions to a tag.
 
 #### Granting permissions to group
+
 ```java
 AuthorizationRequest request = new AuthorizationRequest();
 
@@ -96,4 +97,25 @@ target.setType(TargetRef.TypeEnum.WORKFLOW_DEF);
 request.setTarget(target);
 authorizationClient.grantPermissions(request);
 
+```
+
+#### Adding permissions to a tag
+```java
+AuthorizationRequest request = new AuthorizationRequest();
+request.access(Arrays.asList(AuthorizationRequest.AccessEnum.READ));
+
+
+SubjectRef subject = new SubjectRef();
+subject.setId("Example Group");
+subject.setType(SubjectRef.TypeEnum.GROUP);
+
+request.setSubject(subject);
+
+//Grant permissions to the tag with accounting org
+TargetRef target = new TargetRef();
+target.setId("org:accounting");
+target.setType(TargetRef.TypeEnum.TAG);
+
+request.setTarget(target);
+authorizationClient.grantPermissions(request);
 ```
