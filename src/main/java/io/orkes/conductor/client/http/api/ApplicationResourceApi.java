@@ -368,7 +368,7 @@ public class ApplicationResourceApi {
         // verify the required parameter 'body' is set
         if (createOrUpdateApplicationRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling createApplication(Async)");
+                    "Missing the required parameter 'createOrUpdateApplicationRequest' when calling createApplication(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -382,28 +382,28 @@ public class ApplicationResourceApi {
     /**
      * Create an application
      *
-     * @param body (required)
+     * @param createOrUpdateApplicationRequest (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest body)
+    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest)
             throws ApiException {
-        ApiResponse<ConductorApplication> resp = createApplicationWithHttpInfo(body);
+        ApiResponse<ConductorApplication> resp = createApplicationWithHttpInfo(createOrUpdateApplicationRequest);
         return resp.getData();
     }
 
     /**
      * Create an application
      *
-     * @param body (required)
+     * @param createOrUpdateApplicationRequest (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
     private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(
-            CreateOrUpdateApplicationRequest body) throws ApiException {
-        com.squareup.okhttp.Call call = createApplicationValidateBeforeCall(body, null, null);
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
+        com.squareup.okhttp.Call call = createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, null, null);
         Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -1346,7 +1346,7 @@ public class ApplicationResourceApi {
         // verify the required parameter 'body' is set
         if (createOrUpdateApplicationRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling updateApplication(Async)");
+                    "Missing the required parameter 'createOrUpdateApplicationRequest' when calling updateApplication(Async)");
         }
         // verify the required parameter 'id' is set
         if (id == null) {

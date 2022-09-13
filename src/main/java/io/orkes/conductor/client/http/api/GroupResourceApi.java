@@ -969,7 +969,7 @@ public class GroupResourceApi {
         // verify the required parameter 'body' is set
         if (upsertGroupRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling upsertGroup(Async)");
+                    "Missing the required parameter 'upsertGroupRequest' when calling upsertGroup(Async)");
         }
         // verify the required parameter 'id' is set
         if (id == null) {

@@ -1174,7 +1174,7 @@ public class SchedulerResourceApi {
         // verify the required parameter 'body' is set
         if (saveScheduleRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling saveSchedule(Async)");
+                    "Missing the required parameter 'saveScheduleRequest' when calling saveSchedule(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -1186,26 +1186,26 @@ public class SchedulerResourceApi {
      * Create or update a schedule for a specified workflow with a corresponding start workflow
      * request
      *
-     * @param body (required)
+     * @param saveScheduleRequest (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void saveSchedule(SaveScheduleRequest body) throws ApiException {
-        saveScheduleWithHttpInfo(body);
+    public void saveSchedule(SaveScheduleRequest saveScheduleRequest) throws ApiException {
+        saveScheduleWithHttpInfo(saveScheduleRequest);
     }
 
     /**
      * Create or update a schedule for a specified workflow with a corresponding start workflow
      * request
      *
-     * @param body (required)
+     * @param saveScheduleRequest (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> saveScheduleWithHttpInfo(SaveScheduleRequest body)
+    private ApiResponse<Void> saveScheduleWithHttpInfo(SaveScheduleRequest saveScheduleRequest)
             throws ApiException {
-        com.squareup.okhttp.Call call = saveScheduleValidateBeforeCall(body, null, null);
+        com.squareup.okhttp.Call call = saveScheduleValidateBeforeCall(saveScheduleRequest, null, null);
         return apiClient.execute(call);
     }
 

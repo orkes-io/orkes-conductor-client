@@ -606,12 +606,12 @@ public class UserResourceApi {
      * Send an email with a link to this cluster
      *
      * @param id (required)
-     * @param body (optional)
+     * @param conductorUser (optional)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void sendInviteEmail(String id, ConductorUser body) throws ApiException {
-        sendInviteEmailWithHttpInfo(id, body);
+    public void sendInviteEmail(String id, ConductorUser conductorUser) throws ApiException {
+        sendInviteEmailWithHttpInfo(id, conductorUser);
     }
 
     /**
@@ -715,7 +715,7 @@ public class UserResourceApi {
         // verify the required parameter 'body' is set
         if (upsertUserRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling upsertUser(Async)");
+                    "Missing the required parameter 'upsertUserRequest' when calling upsertUser(Async)");
         }
         // verify the required parameter 'id' is set
         if (id == null) {

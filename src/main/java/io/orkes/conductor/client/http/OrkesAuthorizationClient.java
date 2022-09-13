@@ -44,13 +44,13 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public void grantPermissions(AuthorizationRequest body) throws ApiException {
-        authorizationResourceApi.grantPermissions(body);
+    public void grantPermissions(AuthorizationRequest authorizationRequest) throws ApiException {
+        authorizationResourceApi.grantPermissions(authorizationRequest);
     }
 
     @Override
-    public void removePermissions(AuthorizationRequest body) throws ApiException {
-        authorizationResourceApi.removePermissions(body);
+    public void removePermissions(AuthorizationRequest authorizationRequest) throws ApiException {
+        authorizationResourceApi.removePermissions(authorizationRequest);
     }
 
     @Override
@@ -114,8 +114,8 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public void sendInviteEmail(String id, ConductorUser body) throws ApiException {
-        userResourceApi.sendInviteEmail(id, body);
+    public void sendInviteEmail(String id, ConductorUser conductorUser) throws ApiException {
+        userResourceApi.sendInviteEmail(id, conductorUser);
     }
 
     @Override
@@ -135,9 +135,9 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest body)
+    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest)
             throws ApiException {
-        return applicationResourceApi.createApplication(body);
+        return applicationResourceApi.createApplication(createOrUpdateApplicationRequest);
     }
 
     @Override

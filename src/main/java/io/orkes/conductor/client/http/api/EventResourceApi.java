@@ -125,7 +125,7 @@ public class EventResourceApi {
         // verify the required parameter 'body' is set
         if (eventHandler == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling addEventHandler(Async)");
+                    "Missing the required parameter 'eventHandler' when calling addEventHandler(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -1110,7 +1110,7 @@ public class EventResourceApi {
         // verify the required parameter 'body' is set
         if (eventHandler == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling updateEventHandler(Async)");
+                    "Missing the required parameter 'eventHandler' when calling updateEventHandler(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -1121,25 +1121,25 @@ public class EventResourceApi {
     /**
      * Update an existing event handler.
      *
-     * @param body (required)
+     * @param eventHandler (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void updateEventHandler(EventHandler body) throws ApiException {
-        updateEventHandlerWithHttpInfo(body);
+    public void updateEventHandler(EventHandler eventHandler) throws ApiException {
+        updateEventHandlerWithHttpInfo(eventHandler);
     }
 
     /**
      * Update an existing event handler.
      *
-     * @param body (required)
+     * @param eventHandler (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> updateEventHandlerWithHttpInfo(EventHandler body)
+    private ApiResponse<Void> updateEventHandlerWithHttpInfo(EventHandler eventHandler)
             throws ApiException {
-        com.squareup.okhttp.Call call = updateEventHandlerValidateBeforeCall(body, null, null);
+        com.squareup.okhttp.Call call = updateEventHandlerValidateBeforeCall(eventHandler, null, null);
         return apiClient.execute(call);
     }
 }

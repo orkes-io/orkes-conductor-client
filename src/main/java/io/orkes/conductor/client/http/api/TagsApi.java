@@ -132,7 +132,7 @@ public class TagsApi {
         // verify the required parameter 'body' is set
         if (tagObject == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling addTaskTag(Async)");
+                    "Missing the required parameter 'tagObject' when calling addTaskTag(Async)");
         }
         // verify the required parameter 'taskName' is set
         if (taskName == null) {
@@ -259,7 +259,7 @@ public class TagsApi {
         // verify the required parameter 'body' is set
         if (tagObject == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling addWorkflowTag(Async)");
+                    "Missing the required parameter 'tagObject' when calling addWorkflowTag(Async)");
         }
         // verify the required parameter 'name' is set
         if (name == null) {
@@ -387,7 +387,7 @@ public class TagsApi {
         // verify the required parameter 'body' is set
         if (tagString == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling deleteTaskTag(Async)");
+                    "Missing the required parameter 'tagString' when calling deleteTaskTag(Async)");
         }
         // verify the required parameter 'taskName' is set
         if (taskName == null) {
@@ -514,7 +514,7 @@ public class TagsApi {
         // verify the required parameter 'body' is set
         if (tagObject == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling deleteWorkflowTag(Async)");
+                    "Missing the required parameter 'tagObject' when calling deleteWorkflowTag(Async)");
         }
         // verify the required parameter 'name' is set
         if (name == null) {
@@ -985,7 +985,7 @@ public class TagsApi {
         // verify the required parameter 'body' is set
         if (tagObjects == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling setTaskTags(Async)");
+                    "Missing the required parameter 'tagObjects' when calling setTaskTags(Async)");
         }
         // verify the required parameter 'taskName' is set
         if (taskName == null) {
@@ -1112,7 +1112,7 @@ public class TagsApi {
         // verify the required parameter 'body' is set
         if (tagObjects == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling setWorkflowTags(Async)");
+                    "Missing the required parameter 'tagObjects' when calling setWorkflowTags(Async)");
         }
         // verify the required parameter 'name' is set
         if (name == null) {

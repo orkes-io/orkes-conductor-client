@@ -108,7 +108,7 @@ public class TokenResourceApi {
         // verify the required parameter 'body' is set
         if (generateTokenRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling generateToken(Async)");
+                    "Missing the required parameter 'generateTokenRequest' when calling generateToken(Async)");
         }
 
         com.squareup.okhttp.Call call =

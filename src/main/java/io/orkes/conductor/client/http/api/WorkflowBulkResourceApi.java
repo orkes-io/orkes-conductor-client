@@ -48,18 +48,18 @@ public class WorkflowBulkResourceApi {
     /**
      * Build call for pauseWorkflow1
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call pauseWorkflow1Call(
-            List<String> body,
+            List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = workflowIds;
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/pause";
@@ -117,93 +117,52 @@ public class WorkflowBulkResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call pauseWorkflow1ValidateBeforeCall(
-            List<String> body,
+            List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (workflowIds == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling pauseWorkflow1(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                pauseWorkflow1Call(body, progressListener, progressRequestListener);
+                pauseWorkflow1Call(workflowIds, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Pause the list of workflows
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @return BulkResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public BulkResponse pauseWorkflow1(List<String> body) throws ApiException {
-        ApiResponse<BulkResponse> resp = pauseWorkflow1WithHttpInfo(body);
+    public BulkResponse pauseWorkflow1(List<String> workflowIds) throws ApiException {
+        ApiResponse<BulkResponse> resp = pauseWorkflow1WithHttpInfo(workflowIds);
         return resp.getData();
     }
 
     /**
      * Pause the list of workflows
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @return ApiResponse&lt;BulkResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<BulkResponse> pauseWorkflow1WithHttpInfo(List<String> body)
+    private ApiResponse<BulkResponse> pauseWorkflow1WithHttpInfo(List<String> workflowIds)
             throws ApiException {
-        com.squareup.okhttp.Call call = pauseWorkflow1ValidateBeforeCall(body, null, null);
+        com.squareup.okhttp.Call call = pauseWorkflow1ValidateBeforeCall(workflowIds, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
-    }
-
-    /**
-     * Pause the list of workflows (asynchronously)
-     *
-     * @param body (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call pauseWorkflow1Async(
-            List<String> body, final ApiCallback<BulkResponse> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                pauseWorkflow1ValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
     }
     /**
      * Build call for restart1
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @param useLatestDefinitions (optional, default to false)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
@@ -211,12 +170,12 @@ public class WorkflowBulkResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call restart1Call(
-            List<String> body,
+            List<String> workflowIds,
             Boolean useLatestDefinitions,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = workflowIds;
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/restart";
@@ -277,114 +236,69 @@ public class WorkflowBulkResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call restart1ValidateBeforeCall(
-            List<String> body,
+            List<String> workflowIds,
             Boolean useLatestDefinitions,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (workflowIds == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling restart1(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                restart1Call(body, useLatestDefinitions, progressListener, progressRequestListener);
+                restart1Call(workflowIds, useLatestDefinitions, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Restart the list of completed workflow
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @param useLatestDefinitions (optional, default to false)
      * @return BulkResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public BulkResponse restart1(List<String> body, Boolean useLatestDefinitions)
+    public BulkResponse restart1(List<String> workflowIds, Boolean useLatestDefinitions)
             throws ApiException {
-        ApiResponse<BulkResponse> resp = restart1WithHttpInfo(body, useLatestDefinitions);
+        ApiResponse<BulkResponse> resp = restart1WithHttpInfo(workflowIds, useLatestDefinitions);
         return resp.getData();
     }
 
     /**
      * Restart the list of completed workflow
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @param useLatestDefinitions (optional, default to false)
      * @return ApiResponse&lt;BulkResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
     private ApiResponse<BulkResponse> restart1WithHttpInfo(
-            List<String> body, Boolean useLatestDefinitions) throws ApiException {
+            List<String> workflowIds, Boolean useLatestDefinitions) throws ApiException {
         com.squareup.okhttp.Call call =
-                restart1ValidateBeforeCall(body, useLatestDefinitions, null, null);
+                restart1ValidateBeforeCall(workflowIds, useLatestDefinitions, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Restart the list of completed workflow (asynchronously)
-     *
-     * @param body (required)
-     * @param useLatestDefinitions (optional, default to false)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call restart1Async(
-            List<String> body,
-            Boolean useLatestDefinitions,
-            final ApiCallback<BulkResponse> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                restart1ValidateBeforeCall(
-                        body, useLatestDefinitions, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for resumeWorkflow1
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call resumeWorkflow1Call(
-            List<String> body,
+            List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = workflowIds;
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/resume";
@@ -442,104 +356,64 @@ public class WorkflowBulkResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call resumeWorkflow1ValidateBeforeCall(
-            List<String> body,
+            List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (workflowIds == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling resumeWorkflow1(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                resumeWorkflow1Call(body, progressListener, progressRequestListener);
+                resumeWorkflow1Call(workflowIds, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Resume the list of workflows
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @return BulkResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public BulkResponse resumeWorkflow1(List<String> body) throws ApiException {
-        ApiResponse<BulkResponse> resp = resumeWorkflow1WithHttpInfo(body);
+    public BulkResponse resumeWorkflow1(List<String> workflowIds) throws ApiException {
+        ApiResponse<BulkResponse> resp = resumeWorkflow1WithHttpInfo(workflowIds);
         return resp.getData();
     }
 
     /**
      * Resume the list of workflows
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @return ApiResponse&lt;BulkResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<BulkResponse> resumeWorkflow1WithHttpInfo(List<String> body)
+    private ApiResponse<BulkResponse> resumeWorkflow1WithHttpInfo(List<String> workflowIds)
             throws ApiException {
-        com.squareup.okhttp.Call call = resumeWorkflow1ValidateBeforeCall(body, null, null);
+        com.squareup.okhttp.Call call = resumeWorkflow1ValidateBeforeCall(workflowIds, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Resume the list of workflows (asynchronously)
-     *
-     * @param body (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call resumeWorkflow1Async(
-            List<String> body, final ApiCallback<BulkResponse> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                resumeWorkflow1ValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for retry1
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call retry1Call(
-            List<String> body,
+            List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = workflowIds;
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/retry";
@@ -597,91 +471,51 @@ public class WorkflowBulkResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call retry1ValidateBeforeCall(
-            List<String> body,
+            List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (workflowIds == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling retry1(Async)");
         }
 
-        com.squareup.okhttp.Call call = retry1Call(body, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = retry1Call(workflowIds, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Retry the last failed task for each workflow from the list
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @return BulkResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public BulkResponse retry1(List<String> body) throws ApiException {
-        ApiResponse<BulkResponse> resp = retry1WithHttpInfo(body);
+    public BulkResponse retry1(List<String> workflowIds) throws ApiException {
+        ApiResponse<BulkResponse> resp = retry1WithHttpInfo(workflowIds);
         return resp.getData();
     }
 
     /**
      * Retry the last failed task for each workflow from the list
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @return ApiResponse&lt;BulkResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<BulkResponse> retry1WithHttpInfo(List<String> body) throws ApiException {
-        com.squareup.okhttp.Call call = retry1ValidateBeforeCall(body, null, null);
+    private ApiResponse<BulkResponse> retry1WithHttpInfo(List<String> workflowIds) throws ApiException {
+        com.squareup.okhttp.Call call = retry1ValidateBeforeCall(workflowIds, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Retry the last failed task for each workflow from the list (asynchronously)
-     *
-     * @param body (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call retry1Async(
-            List<String> body, final ApiCallback<BulkResponse> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                retry1ValidateBeforeCall(body, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
      * Build call for terminate
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @param reason (optional)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
@@ -689,12 +523,12 @@ public class WorkflowBulkResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call terminateCall(
-            List<String> body,
+            List<String> workflowIds,
             String reason,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = workflowIds;
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/terminate";
@@ -753,93 +587,50 @@ public class WorkflowBulkResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call terminateValidateBeforeCall(
-            List<String> body,
+            List<String> workflowIds,
             String reason,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (workflowIds == null) {
             throw new ApiException(
                     "Missing the required parameter 'body' when calling terminate(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                terminateCall(body, reason, progressListener, progressRequestListener);
+                terminateCall(workflowIds, reason, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Terminate workflows execution
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @param reason (optional)
      * @return BulkResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public BulkResponse terminate(List<String> body, String reason) throws ApiException {
-        ApiResponse<BulkResponse> resp = terminateWithHttpInfo(body, reason);
+    public BulkResponse terminate(List<String> workflowIds, String reason) throws ApiException {
+        ApiResponse<BulkResponse> resp = terminateWithHttpInfo(workflowIds, reason);
         return resp.getData();
     }
 
     /**
      * Terminate workflows execution
      *
-     * @param body (required)
+     * @param workflowIds (required)
      * @param reason (optional)
      * @return ApiResponse&lt;BulkResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<BulkResponse> terminateWithHttpInfo(List<String> body, String reason)
+    private ApiResponse<BulkResponse> terminateWithHttpInfo(List<String> workflowIds, String reason)
             throws ApiException {
-        com.squareup.okhttp.Call call = terminateValidateBeforeCall(body, reason, null, null);
+        com.squareup.okhttp.Call call = terminateValidateBeforeCall(workflowIds, reason, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Terminate workflows execution (asynchronously)
-     *
-     * @param body (required)
-     * @param reason (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body
-     *     object
-     */
-    public com.squareup.okhttp.Call terminateAsync(
-            List<String> body, String reason, final ApiCallback<BulkResponse> callback)
-            throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener =
-                    new ProgressResponseBody.ProgressListener() {
-                        @Override
-                        public void update(long bytesRead, long contentLength, boolean done) {
-                            callback.onDownloadProgress(bytesRead, contentLength, done);
-                        }
-                    };
-
-            progressRequestListener =
-                    new ProgressRequestBody.ProgressRequestListener() {
-                        @Override
-                        public void onRequestProgress(
-                                long bytesWritten, long contentLength, boolean done) {
-                            callback.onUploadProgress(bytesWritten, contentLength, done);
-                        }
-                    };
-        }
-
-        com.squareup.okhttp.Call call =
-                terminateValidateBeforeCall(
-                        body, reason, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
 }

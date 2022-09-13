@@ -1905,7 +1905,7 @@ public class TaskResourceApi {
         // verify the required parameter 'body' is set
         if (taskResult == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling updateTask(Async)");
+                    "Missing the required parameter 'taskResult' when calling updateTask(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -1916,26 +1916,26 @@ public class TaskResourceApi {
     /**
      * Update a task
      *
-     * @param body (required)
+     * @param taskResult (required)
      * @return String
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public String updateTask(TaskResult body) throws ApiException {
-        ApiResponse<String> resp = updateTaskWithHttpInfo(body);
+    public String updateTask(TaskResult taskResult) throws ApiException {
+        ApiResponse<String> resp = updateTaskWithHttpInfo(taskResult);
         return resp.getData();
     }
 
     /**
      * Update a task
      *
-     * @param body (required)
+     * @param taskResult (required)
      * @return ApiResponse&lt;String&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<String> updateTaskWithHttpInfo(TaskResult body) throws ApiException {
-        com.squareup.okhttp.Call call = updateTaskValidateBeforeCall(body, null, null);
+    private ApiResponse<String> updateTaskWithHttpInfo(TaskResult taskResult) throws ApiException {
+        com.squareup.okhttp.Call call = updateTaskValidateBeforeCall(taskResult, null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

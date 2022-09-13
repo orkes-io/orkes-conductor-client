@@ -23,9 +23,9 @@ public interface AuthorizationClient {
 
     Map<String, List<Subject>> getPermissions(String type, String id);
 
-    void grantPermissions(AuthorizationRequest body);
+    void grantPermissions(AuthorizationRequest authorizationRequest);
 
-    void removePermissions(AuthorizationRequest body);
+    void removePermissions(AuthorizationRequest authorizationRequest);
 
     // Users
     void deleteUser(String id);
@@ -36,7 +36,7 @@ public interface AuthorizationClient {
 
     List<ConductorUser> listUsers(Boolean apps);
 
-    void sendInviteEmail(String id, ConductorUser body);
+    void sendInviteEmail(String id, ConductorUser conductorUser);
 
     ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id);
 
@@ -62,7 +62,7 @@ public interface AuthorizationClient {
 
     CreateAccessKeyResponse createAccessKey(String id);
 
-    ConductorApplication createApplication(CreateOrUpdateApplicationRequest body);
+    ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
 
     void deleteAccessKey(String applicationId, String keyId);
 

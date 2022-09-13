@@ -1377,7 +1377,7 @@ public class WorkflowResourceApi {
         // verify the required parameter 'body' is set
         if (rerunWorkflowRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling rerun(Async)");
+                    "Missing the required parameter 'rerunWorkflowRequest' when calling rerun(Async)");
         }
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
@@ -2799,7 +2799,7 @@ public class WorkflowResourceApi {
         // verify the required parameter 'body' is set
         if (startWorkflowRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling startWorkflow(Async)");
+                    "Missing the required parameter 'startWorkflowRequest' when calling startWorkflow(Async)");
         }
 
         com.squareup.okhttp.Call call =

@@ -255,7 +255,7 @@ public class AuthorizationResourceApi {
         // verify the required parameter 'body' is set
         if (authorizationRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling grantPermissions(Async)");
+                    "Missing the required parameter 'authorizationRequest' when calling grantPermissions(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -267,25 +267,25 @@ public class AuthorizationResourceApi {
     /**
      * Grant access to a user over the target
      *
-     * @param body (required)
+     * @param authorizationRequest (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void grantPermissions(AuthorizationRequest body) throws ApiException {
-        grantPermissionsWithHttpInfo(body);
+    public void grantPermissions(AuthorizationRequest authorizationRequest) throws ApiException {
+        grantPermissionsWithHttpInfo(authorizationRequest);
     }
 
     /**
      * Grant access to a user over the target
      *
-     * @param body (required)
+     * @param authorizationRequest (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> grantPermissionsWithHttpInfo(AuthorizationRequest body)
+    private ApiResponse<Void> grantPermissionsWithHttpInfo(AuthorizationRequest authorizationRequest)
             throws ApiException {
-        com.squareup.okhttp.Call call = grantPermissionsValidateBeforeCall(body, null, null);
+        com.squareup.okhttp.Call call = grantPermissionsValidateBeforeCall(authorizationRequest, null, null);
         return apiClient.execute(call);
     }
 
@@ -369,7 +369,7 @@ public class AuthorizationResourceApi {
         // verify the required parameter 'body' is set
         if (authorizationRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling removePermissions(Async)");
+                    "Missing the required parameter 'authorizationRequest' when calling removePermissions(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -381,25 +381,25 @@ public class AuthorizationResourceApi {
     /**
      * Remove user&#x27;s access over the target
      *
-     * @param body (required)
+     * @param authorizationRequest (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void removePermissions(AuthorizationRequest body) throws ApiException {
-        removePermissionsWithHttpInfo(body);
+    public void removePermissions(AuthorizationRequest authorizationRequest) throws ApiException {
+        removePermissionsWithHttpInfo(authorizationRequest);
     }
 
     /**
      * Remove user&#x27;s access over the target
      *
-     * @param body (required)
+     * @param authorizationRequest (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> removePermissionsWithHttpInfo(AuthorizationRequest body)
+    private ApiResponse<Void> removePermissionsWithHttpInfo(AuthorizationRequest authorizationRequest)
             throws ApiException {
-        com.squareup.okhttp.Call call = removePermissionsValidateBeforeCall(body, null, null);
+        com.squareup.okhttp.Call call = removePermissionsValidateBeforeCall(authorizationRequest, null, null);
         return apiClient.execute(call);
     }
 }

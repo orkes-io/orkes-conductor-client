@@ -131,7 +131,7 @@ public class MetadataResourceApi {
         // verify the required parameter 'body' is set
         if (workflowDef == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling create(Async)");
+                    "Missing the required parameter 'workflowDef' when calling create(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -789,7 +789,7 @@ public class MetadataResourceApi {
         // verify the required parameter 'body' is set
         if (taskDefs == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling registerTaskDef(Async)");
+                    "Missing the required parameter 'taskDefs' when calling registerTaskDef(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -1154,7 +1154,7 @@ public class MetadataResourceApi {
         // verify the required parameter 'body' is set
         if (workflowDefs == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling update(Async)");
+                    "Missing the required parameter 'workflowDefs' when calling update(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -1270,7 +1270,7 @@ public class MetadataResourceApi {
         // verify the required parameter 'body' is set
         if (taskDef == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling updateTaskDef(Async)");
+                    "Missing the required parameter 'taskDef' when calling updateTaskDef(Async)");
         }
 
         com.squareup.okhttp.Call call =
@@ -1281,24 +1281,24 @@ public class MetadataResourceApi {
     /**
      * Update an existing task
      *
-     * @param body (required)
+     * @param taskDef (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void updateTaskDef(TaskDef body) throws ApiException {
-        updateTaskDefWithHttpInfo(body);
+    public void updateTaskDef(TaskDef taskDef) throws ApiException {
+        updateTaskDefWithHttpInfo(taskDef);
     }
 
     /**
      * Update an existing task
      *
-     * @param body (required)
+     * @param taskDef (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> updateTaskDefWithHttpInfo(TaskDef body) throws ApiException {
-        com.squareup.okhttp.Call call = updateTaskDefValidateBeforeCall(body, null, null);
+    private ApiResponse<Void> updateTaskDefWithHttpInfo(TaskDef taskDef) throws ApiException {
+        com.squareup.okhttp.Call call = updateTaskDefValidateBeforeCall(taskDef, null, null);
         return apiClient.execute(call);
     }
 }
