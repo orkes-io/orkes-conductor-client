@@ -87,39 +87,46 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
         metadataResourceApi.unregisterTaskDef(taskType);
     }
 
-    // Tags APIs
+    @Override
     public void addTaskTag(TagObject body, String taskName) {
         tagsApi.addTaskTag(body, taskName);
     }
-
+    @Override
     public void addWorkflowTag(TagObject body, String name) {
         tagsApi.addWorkflowTag(body, name);
     }
 
+    @Override
     public void deleteTaskTag(TagString body, String taskName) {
         tagsApi.deleteTaskTag(body, taskName);
     }
 
+    @Override
     public void deleteWorkflowTag(TagObject body, String name) {
         tagsApi.deleteWorkflowTag(body, name);
     }
 
+    @Override
     public List<TagObject> getTags() {
         return tagsApi.getTags();
     }
 
+    @Override
     public List<TagObject> getTaskTags(String taskName) {
         return tagsApi.getTaskTags(taskName);
     }
 
+    @Override
     public List<TagObject> getWorkflowTags(String name) {
         return tagsApi.getWorkflowTags(name);
     }
 
+    @Override
     public void setTaskTags(List<TagObject> body, String taskName) {
         tagsApi.setTaskTags(body, taskName);
     }
 
+    @Override
     public void setWorkflowTags(List<TagObject> body, String name) {
         tagsApi.setWorkflowTags(body, name);
     }
