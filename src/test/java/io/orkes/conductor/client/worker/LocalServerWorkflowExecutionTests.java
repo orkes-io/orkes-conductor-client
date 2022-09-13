@@ -30,12 +30,13 @@ public class LocalServerWorkflowExecutionTests {
         Iterable<Worker> workers = Arrays.asList(new MyWorker());
         Map<String, String> taskToDomain = new HashMap<>();
         taskToDomain.put("simple_task_0", "viren");
-        TaskRunnerConfigurer configurer = new TaskRunnerConfigurer.Builder(taskClient, workers)
-                .withSleepWhenRetry(100)
-                .withThreadCount(10)
-                .withWorkerNamePrefix("Hello")
-                .withTaskToDomain(taskToDomain)
-                .build();
+        TaskRunnerConfigurer configurer =
+                new TaskRunnerConfigurer.Builder(taskClient, workers)
+                        .withSleepWhenRetry(100)
+                        .withThreadCount(10)
+                        .withWorkerNamePrefix("Hello")
+                        .withTaskToDomain(taskToDomain)
+                        .build();
         configurer.init();
     }
 
