@@ -25,53 +25,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /** The object over which access is being granted or removed */
 @Schema(description = "The object over which access is being granted or removed")
 public class TargetRef {
-    /** Gets or Sets id */
-    @JsonAdapter(IdEnum.Adapter.class)
-    public enum IdEnum {
-        IDENTIFIER_OF_THE_TARGET_E_G_NAME_IN_CASE_IT_S_A_WORKFLOW_DEF(
-                "Identifier of the target e.g. `name` in case it's a WORKFLOW_DEF");
-
-        private String value;
-
-        IdEnum(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        public static IdEnum fromValue(String input) {
-            for (IdEnum b : IdEnum.values()) {
-                if (b.value.equals(input)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-
-        public static class Adapter extends TypeAdapter<IdEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final IdEnum enumeration)
-                    throws IOException {
-                jsonWriter.value(String.valueOf(enumeration.getValue()));
-            }
-
-            @Override
-            public IdEnum read(final JsonReader jsonReader) throws IOException {
-                Object value = jsonReader.nextString();
-                return IdEnum.fromValue((String) (value));
-            }
-        }
-    }
 
     @SerializedName("id")
-    private IdEnum id = null;
+    private String id = null;
 
     /** Gets or Sets type */
     @JsonAdapter(TypeEnum.Adapter.class)
@@ -79,6 +35,7 @@ public class TargetRef {
         WORKFLOW_DEF("WORKFLOW_DEF"),
         TASK_DEF("TASK_DEF"),
         APPLICATION("APPLICATION"),
+        TAG("TAG"),
         USER("USER");
 
         private String value;
@@ -123,7 +80,7 @@ public class TargetRef {
     @SerializedName("type")
     private TypeEnum type = null;
 
-    public TargetRef id(IdEnum id) {
+    public TargetRef id(String id) {
         this.id = id;
         return this;
     }
@@ -134,11 +91,11 @@ public class TargetRef {
      * @return id
      */
     @Schema(required = true, description = "")
-    public IdEnum getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(IdEnum id) {
+    public void setId(String id) {
         this.id = id;
     }
 
