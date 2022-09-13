@@ -65,6 +65,11 @@ public class WorkflowClientTests extends ClientTest {
                 () -> {
                     workflowClient.resetCallbacksForInProgressTasks(workflowId);
                 });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    workflowClient.searchV2(Commons.WORKFLOW_NAME);
+                });
         assertNotNull(workflowClient.getWorkflows(Commons.WORKFLOW_NAME, "abc", false, false));
         workflowClient.terminateWorkflow(workflowId, "reason");
         workflowClient.retryLastFailedTask(workflowId);
@@ -78,5 +83,7 @@ public class WorkflowClientTests extends ClientTest {
         workflowClient.pauseWorkflow(List.of(workflowId));
         workflowClient.resumeWorkflow(List.of(workflowId));
         workflowClient.deleteWorkflow(workflowId, false);
+        workflowClient.search(Commons.WORKFLOW_NAME);
+        workflowClient.runDecider(workflowId);
     }
 }
