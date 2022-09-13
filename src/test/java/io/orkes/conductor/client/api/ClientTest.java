@@ -10,11 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.util;
+package io.orkes.conductor.client.api;
 
-public class Commons {
-    public static String WORKFLOW_NAME = "test-sdk-java-workflow";
-    public static String TASK_NAME = "test-sdk-java-workflow";
-    public static String OWNER_EMAIL = "example@orkes.io";
-    public static int WORKFLOW_VERSION = 1;
+import io.orkes.conductor.client.OrkesClients;
+import io.orkes.conductor.client.util.ApiUtil;
+
+public abstract class ClientTest {
+    protected final OrkesClients orkesClients;
+
+    public ClientTest() {
+        this.orkesClients = ApiUtil.getOrkesClient();
+    }
 }

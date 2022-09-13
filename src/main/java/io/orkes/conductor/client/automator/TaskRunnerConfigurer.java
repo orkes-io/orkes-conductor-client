@@ -20,7 +20,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import io.orkes.conductor.client.TaskClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.discovery.EurekaClient;
 
-import io.orkes.conductor.client.http.api.TaskResourceApi;
+import io.orkes.conductor.client.TaskClient;
 
 import com.google.common.base.Preconditions;
 
