@@ -36,6 +36,10 @@ public class AuthorizationClientFilter extends ClientFilter {
         this.apiClient = new ApiClient(rootUri, keyId, secret);
     }
 
+    public AuthorizationClientFilter(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
+
     @Override
     public ClientResponse handle(ClientRequest request) throws ClientHandlerException {
         request.getHeaders().add(AUTHORIZATION_HEADER, apiClient.getToken());
