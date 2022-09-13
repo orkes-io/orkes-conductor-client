@@ -13,9 +13,9 @@
 package io.orkes.conductor.client.api;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
@@ -25,6 +25,7 @@ import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.util.Commons;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WorkflowClientTests extends ClientTest {
     private final WorkflowClient workflowClient;
@@ -34,8 +35,19 @@ public class WorkflowClientTests extends ClientTest {
     }
 
     @Test
-    @DisplayName("start workflow")
     public void startWorkflow() {
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(Commons.WORKFLOW_NAME);
+        startWorkflowRequest.setVersion(Commons.WORKFLOW_VERSION);
+        Map<String, Object> input = new HashMap<>();
+        startWorkflowRequest.setInput(input);
+        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        Workflow workflow = workflowClient.getWorkflow(workflowId, false);
+        assertNotNull(workflow, "Workflow should'n be null");
+    }
+
+    @Test
+    public void testWorkflowMethods() {
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(Commons.WORKFLOW_NAME);
         startWorkflowRequest.setVersion(1);
@@ -43,6 +55,28 @@ public class WorkflowClientTests extends ClientTest {
         startWorkflowRequest.setInput(input);
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
         Workflow workflow = workflowClient.getWorkflow(workflowId, false);
-        assertNotNull(workflow, "Workflow should'n be null");
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    workflowClient.populateWorkflowOutput(workflow);
+                });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    workflowClient.resetCallbacksForInProgressTasks(workflowId);
+                });
+        assertNotNull(workflowClient.getWorkflows(Commons.WORKFLOW_NAME, "abc", false, false));
+        workflowClient.terminateWorkflow(workflowId, "reason");
+        workflowClient.retryLastFailedTask(workflowId);
+        workflowClient.terminateWorkflows(List.of(workflowId), "reason");
+        workflowClient.restart(workflowId, true);
+        workflowClient.terminateWorkflow(List.of(workflowId), "reason");
+        workflowClient.restartWorkflow(List.of(workflowId), true);
+        workflowClient.getRunningWorkflow(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
+        workflowClient.pauseWorkflow(workflowId);
+        workflowClient.resumeWorkflow(workflowId);
+        workflowClient.pauseWorkflow(List.of(workflowId));
+        workflowClient.resumeWorkflow(List.of(workflowId));
+        workflowClient.deleteWorkflow(workflowId, false);
     }
 }

@@ -12,7 +12,7 @@
  */
 package io.orkes.conductor.client.util;
 
-import java.util.Collections;
+import java.util.List;
 
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
@@ -21,12 +21,12 @@ public class WorkflowUtil {
     public static WorkflowDef getWorkflowDef() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName(Commons.WORKFLOW_NAME);
-        workflowDef.setVersion(1);
-        workflowDef.setOwnerEmail("test@orkes.io");
+        workflowDef.setVersion(Commons.WORKFLOW_VERSION);
+        workflowDef.setOwnerEmail(Commons.OWNER_EMAIL);
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName(Commons.TASK_NAME);
         workflowTask.setTaskReferenceName(Commons.TASK_NAME);
-        workflowDef.setTasks(Collections.singletonList(workflowTask));
+        workflowDef.setTasks(List.of(workflowTask));
         return workflowDef;
     }
 }
