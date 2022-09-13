@@ -33,7 +33,8 @@ public class SubjectRef {
     public enum TypeEnum {
         USER("USER"),
         ROLE("ROLE"),
-        GROUP("GROUP");
+        GROUP("GROUP"),
+        TAG("TAG");
 
         private String value;
 
