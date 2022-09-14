@@ -38,7 +38,7 @@ public interface SchedulerClient {
 
     void resumeSchedule(String name);
 
-    void saveSchedule(SaveScheduleRequest body);
+    void saveSchedule(SaveScheduleRequest saveScheduleRequest);
 
     SearchResultWorkflowScheduleExecutionModel searchV22(
             Integer start, Integer size, String sort, String freeText, String query);

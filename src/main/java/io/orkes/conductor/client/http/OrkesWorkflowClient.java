@@ -31,7 +31,6 @@ import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.model.WorkflowStatus;
 
 import com.google.common.base.Preconditions;
-import com.squareup.okhttp.Call;
 
 public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
@@ -162,61 +161,30 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public BulkResponse pauseWorkflow(List<String> body) throws ApiException {
-        return bulkResourceApi.pauseWorkflow1(body);
+    public BulkResponse pauseWorkflow(List<String> workflowIds) throws ApiException {
+        return bulkResourceApi.pauseWorkflow1(workflowIds);
     }
 
     @Override
-    public Call pauseWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback)
+    public BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
             throws ApiException {
-        return bulkResourceApi.pauseWorkflow1Async(body, callback);
+        return bulkResourceApi.restart1(workflowIds, useLatestDefinitions);
     }
 
     @Override
-    public BulkResponse restartWorkflow(List<String> body, Boolean useLatestDefinitions)
+    public BulkResponse resumeWorkflow(List<String> workflowIds) throws ApiException {
+        return bulkResourceApi.resumeWorkflow1(workflowIds);
+    }
+
+    @Override
+    public BulkResponse retryWorkflow(List<String> workflowIds) throws ApiException {
+        return bulkResourceApi.retry1(workflowIds);
+    }
+
+    @Override
+    public BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
             throws ApiException {
-        return bulkResourceApi.restart1(body, useLatestDefinitions);
-    }
-
-    @Override
-    public Call restartWorkflowAsync(
-            List<String> body, Boolean useLatestDefinitions, ApiCallback<BulkResponse> callback)
-            throws ApiException {
-        return bulkResourceApi.restart1Async(body, useLatestDefinitions, callback);
-    }
-
-    @Override
-    public BulkResponse resumeWorkflow(List<String> body) throws ApiException {
-        return bulkResourceApi.resumeWorkflow1(body);
-    }
-
-    @Override
-    public Call resumeWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback)
-            throws ApiException {
-        return bulkResourceApi.resumeWorkflow1Async(body, callback);
-    }
-
-    @Override
-    public BulkResponse retryWorkflow(List<String> body) throws ApiException {
-        return bulkResourceApi.retry1(body);
-    }
-
-    @Override
-    public Call retryWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback)
-            throws ApiException {
-        return bulkResourceApi.retry1Async(body, callback);
-    }
-
-    @Override
-    public BulkResponse terminateWorkflow(List<String> body, String reason) throws ApiException {
-        return bulkResourceApi.terminate(body, reason);
-    }
-
-    @Override
-    public Call terminateWorkflowAsync(
-            List<String> body, String reason, ApiCallback<BulkResponse> callback)
-            throws ApiException {
-        return bulkResourceApi.terminateAsync(body, reason, callback);
+        return bulkResourceApi.terminate(workflowIds, reason);
     }
 
     @Override

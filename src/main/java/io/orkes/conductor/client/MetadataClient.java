@@ -17,6 +17,10 @@ import java.util.List;
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.model.TagObject;
+import io.orkes.conductor.client.model.TagString;
+
 public interface MetadataClient {
     void registerWorkflowDef(WorkflowDef workflowDef);
 
@@ -33,4 +37,22 @@ public interface MetadataClient {
     TaskDef getTaskDef(String taskType);
 
     void unregisterTaskDef(String taskType);
+
+    void addTaskTag(TagObject tagObject, String taskName) throws ApiException;
+
+    void addWorkflowTag(TagObject tagObject, String name) throws ApiException;
+
+    void deleteTaskTag(TagString tagString, String taskName) throws ApiException;
+
+    void deleteWorkflowTag(TagObject tagObject, String name) throws ApiException;
+
+    List<TagObject> getTags() throws ApiException;
+
+    List<TagObject> getTaskTags(String taskName) throws ApiException;
+
+    List<TagObject> getWorkflowTags(String name) throws ApiException;
+
+    void setTaskTags(List<TagObject> tagObjects, String taskName) throws ApiException;
+
+    void setWorkflowTags(List<TagObject> tagObjects, String name) throws ApiException;
 }

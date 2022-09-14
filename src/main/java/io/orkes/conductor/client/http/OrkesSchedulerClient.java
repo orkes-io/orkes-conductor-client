@@ -79,8 +79,8 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public void saveSchedule(SaveScheduleRequest body) throws ApiException {
-        schedulerResourceApi.saveSchedule(body);
+    public void saveSchedule(SaveScheduleRequest saveScheduleRequest) throws ApiException {
+        schedulerResourceApi.saveSchedule(saveScheduleRequest);
     }
 
     @Override

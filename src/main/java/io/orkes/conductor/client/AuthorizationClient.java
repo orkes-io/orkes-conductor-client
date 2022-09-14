@@ -23,9 +23,9 @@ public interface AuthorizationClient {
 
     Map<String, List<Subject>> getPermissions(String type, String id);
 
-    void grantPermissions(AuthorizationRequest body);
+    void grantPermissions(AuthorizationRequest authorizationRequest);
 
-    void removePermissions(AuthorizationRequest body);
+    void removePermissions(AuthorizationRequest authorizationRequest);
 
     // Users
     void deleteUser(String id);
@@ -36,9 +36,9 @@ public interface AuthorizationClient {
 
     List<ConductorUser> listUsers(Boolean apps);
 
-    void sendInviteEmail(String id, ConductorUser body);
+    void sendInviteEmail(String id, ConductorUser conductorUser);
 
-    ConductorUser upsertUser(UpsertUserRequest body, String id);
+    ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id);
 
     // Groups
     void addUserToGroup(String groupId, String userId);
@@ -55,14 +55,14 @@ public interface AuthorizationClient {
 
     void removeUserFromGroup(String groupId, String userId);
 
-    Group upsertGroup(UpsertGroupRequest body, String id);
+    Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id);
 
     // Applications
     void addRoleToApplicationUser(String applicationId, String role);
 
     CreateAccessKeyResponse createAccessKey(String id);
 
-    ConductorApplication createApplication(CreateOrUpdateApplicationRequest body);
+    ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
 
     void deleteAccessKey(String applicationId, String keyId);
 
@@ -78,5 +78,6 @@ public interface AuthorizationClient {
 
     AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId);
 
-    ConductorApplication updateApplication(CreateOrUpdateApplicationRequest body, String id);
+    ConductorApplication updateApplication(
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id);
 }

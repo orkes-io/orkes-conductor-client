@@ -24,7 +24,7 @@ public interface SecretClient {
 
     List<String> listSecretsThatUserCanGrantAccessTo();
 
-    void putSecret(String body, String key);
+    void putSecret(String name, String key);
 
     boolean secretExists(String key);
 }

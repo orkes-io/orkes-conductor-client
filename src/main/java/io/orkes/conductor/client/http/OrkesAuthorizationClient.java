@@ -44,13 +44,13 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public void grantPermissions(AuthorizationRequest body) throws ApiException {
-        authorizationResourceApi.grantPermissions(body);
+    public void grantPermissions(AuthorizationRequest authorizationRequest) throws ApiException {
+        authorizationResourceApi.grantPermissions(authorizationRequest);
     }
 
     @Override
-    public void removePermissions(AuthorizationRequest body) throws ApiException {
-        authorizationResourceApi.removePermissions(body);
+    public void removePermissions(AuthorizationRequest authorizationRequest) throws ApiException {
+        authorizationResourceApi.removePermissions(authorizationRequest);
     }
 
     @Override
@@ -89,8 +89,8 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public Group upsertGroup(UpsertGroupRequest body, String id) throws ApiException {
-        return groupResourceApi.upsertGroup(body, id);
+    public Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id) throws ApiException {
+        return groupResourceApi.upsertGroup(upsertGroupRequest, id);
     }
 
     @Override
@@ -114,13 +114,14 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public void sendInviteEmail(String id, ConductorUser body) throws ApiException {
-        userResourceApi.sendInviteEmail(id, body);
+    public void sendInviteEmail(String id, ConductorUser conductorUser) throws ApiException {
+        userResourceApi.sendInviteEmail(id, conductorUser);
     }
 
     @Override
-    public ConductorUser upsertUser(UpsertUserRequest body, String id) throws ApiException {
-        return userResourceApi.upsertUser(body, id);
+    public ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id)
+            throws ApiException {
+        return userResourceApi.upsertUser(upsertUserRequest, id);
     }
 
     @Override
@@ -134,9 +135,9 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest body)
+    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest)
             throws ApiException {
-        return applicationResourceApi.createApplication(body);
+        return applicationResourceApi.createApplication(createOrUpdateApplicationRequest);
     }
 
     @Override
@@ -177,8 +178,9 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public ConductorApplication updateApplication(CreateOrUpdateApplicationRequest body, String id)
+    public ConductorApplication updateApplication(
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id)
             throws ApiException {
-        return applicationResourceApi.updateApplication(body, id);
+        return applicationResourceApi.updateApplication(createOrUpdateApplicationRequest, id);
     }
 }

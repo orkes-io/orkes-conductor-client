@@ -514,7 +514,7 @@ public class UserResourceApi {
      * Build call for sendInviteEmail
      *
      * @param id (required)
-     * @param body (optional)
+     * @param conductorUser (optional)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
@@ -522,11 +522,11 @@ public class UserResourceApi {
      */
     public com.squareup.okhttp.Call sendInviteEmailCall(
             String id,
-            ConductorUser body,
+            ConductorUser conductorUser,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = conductorUser;
 
         // create path and map variables
         String localVarPath =
@@ -587,7 +587,7 @@ public class UserResourceApi {
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call sendInviteEmailValidateBeforeCall(
             String id,
-            ConductorUser body,
+            ConductorUser conductorUser,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -598,7 +598,7 @@ public class UserResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                sendInviteEmailCall(id, body, progressListener, progressRequestListener);
+                sendInviteEmailCall(id, conductorUser, progressListener, progressRequestListener);
         return call;
     }
 
@@ -606,26 +606,27 @@ public class UserResourceApi {
      * Send an email with a link to this cluster
      *
      * @param id (required)
-     * @param body (optional)
+     * @param conductorUser (optional)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void sendInviteEmail(String id, ConductorUser body) throws ApiException {
-        sendInviteEmailWithHttpInfo(id, body);
+    public void sendInviteEmail(String id, ConductorUser conductorUser) throws ApiException {
+        sendInviteEmailWithHttpInfo(id, conductorUser);
     }
 
     /**
      * Send an email with a link to this cluster
      *
      * @param id (required)
-     * @param body (optional)
+     * @param conductorUser (optional)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> sendInviteEmailWithHttpInfo(String id, ConductorUser body)
+    private ApiResponse<Object> sendInviteEmailWithHttpInfo(String id, ConductorUser conductorUser)
             throws ApiException {
-        com.squareup.okhttp.Call call = sendInviteEmailValidateBeforeCall(id, body, null, null);
+        com.squareup.okhttp.Call call =
+                sendInviteEmailValidateBeforeCall(id, conductorUser, null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -633,7 +634,7 @@ public class UserResourceApi {
     /**
      * Build call for upsertUser
      *
-     * @param body (required)
+     * @param upsertUserRequest (required)
      * @param id (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
@@ -641,12 +642,12 @@ public class UserResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call upsertUserCall(
-            UpsertUserRequest body,
+            UpsertUserRequest upsertUserRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = upsertUserRequest;
 
         // create path and map variables
         String localVarPath =
@@ -706,15 +707,15 @@ public class UserResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call upsertUserValidateBeforeCall(
-            UpsertUserRequest body,
+            UpsertUserRequest upsertUserRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (upsertUserRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling upsertUser(Async)");
+                    "Missing the required parameter 'upsertUserRequest' when calling upsertUser(Async)");
         }
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -723,36 +724,38 @@ public class UserResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                upsertUserCall(body, id, progressListener, progressRequestListener);
+                upsertUserCall(upsertUserRequest, id, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Create or update a user
      *
-     * @param body (required)
+     * @param upsertUserRequest (required)
      * @param id (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ConductorUser upsertUser(UpsertUserRequest body, String id) throws ApiException {
-        ApiResponse<ConductorUser> resp = upsertUserWithHttpInfo(body, id);
+    public ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id)
+            throws ApiException {
+        ApiResponse<ConductorUser> resp = upsertUserWithHttpInfo(upsertUserRequest, id);
         return resp.getData();
     }
 
     /**
      * Create or update a user
      *
-     * @param body (required)
+     * @param upsertUserRequest (required)
      * @param id (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<ConductorUser> upsertUserWithHttpInfo(UpsertUserRequest body, String id)
-            throws ApiException {
-        com.squareup.okhttp.Call call = upsertUserValidateBeforeCall(body, id, null, null);
+    private ApiResponse<ConductorUser> upsertUserWithHttpInfo(
+            UpsertUserRequest upsertUserRequest, String id) throws ApiException {
+        com.squareup.okhttp.Call call =
+                upsertUserValidateBeforeCall(upsertUserRequest, id, null, null);
         Type localVarReturnType = new TypeToken<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

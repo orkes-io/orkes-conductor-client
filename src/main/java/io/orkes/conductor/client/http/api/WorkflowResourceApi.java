@@ -1294,7 +1294,7 @@ public class WorkflowResourceApi {
     /**
      * Build call for rerun
      *
-     * @param body (required)
+     * @param rerunWorkflowRequest (required)
      * @param workflowId (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
@@ -1302,12 +1302,12 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call rerunCall(
-            RerunWorkflowRequest body,
+            RerunWorkflowRequest rerunWorkflowRequest,
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = rerunWorkflowRequest;
 
         // create path and map variables
         String localVarPath =
@@ -1369,15 +1369,15 @@ public class WorkflowResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call rerunValidateBeforeCall(
-            RerunWorkflowRequest body,
+            RerunWorkflowRequest rerunWorkflowRequest,
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (rerunWorkflowRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling rerun(Async)");
+                    "Missing the required parameter 'rerunWorkflowRequest' when calling rerun(Async)");
         }
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
@@ -1386,36 +1386,42 @@ public class WorkflowResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                rerunCall(body, workflowId, progressListener, progressRequestListener);
+                rerunCall(
+                        rerunWorkflowRequest,
+                        workflowId,
+                        progressListener,
+                        progressRequestListener);
         return call;
     }
 
     /**
      * Reruns the workflow from a specific task
      *
-     * @param body (required)
+     * @param rerunWorkflowRequest (required)
      * @param workflowId (required)
      * @return String
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public String rerun(RerunWorkflowRequest body, String workflowId) throws ApiException {
-        ApiResponse<String> resp = rerunWithHttpInfo(body, workflowId);
+    public String rerun(RerunWorkflowRequest rerunWorkflowRequest, String workflowId)
+            throws ApiException {
+        ApiResponse<String> resp = rerunWithHttpInfo(rerunWorkflowRequest, workflowId);
         return resp.getData();
     }
 
     /**
      * Reruns the workflow from a specific task
      *
-     * @param body (required)
+     * @param rerunWorkflowRequest (required)
      * @param workflowId (required)
      * @return ApiResponse&lt;String&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<String> rerunWithHttpInfo(RerunWorkflowRequest body, String workflowId)
-            throws ApiException {
-        com.squareup.okhttp.Call call = rerunValidateBeforeCall(body, workflowId, null, null);
+    private ApiResponse<String> rerunWithHttpInfo(
+            RerunWorkflowRequest rerunWorkflowRequest, String workflowId) throws ApiException {
+        com.squareup.okhttp.Call call =
+                rerunValidateBeforeCall(rerunWorkflowRequest, workflowId, null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -2717,18 +2723,18 @@ public class WorkflowResourceApi {
     /**
      * Build call for startWorkflow
      *
-     * @param body (required)
+     * @param startWorkflowRequest (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call startWorkflowCall(
-            StartWorkflowRequest body,
+            StartWorkflowRequest startWorkflowRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = startWorkflowRequest;
 
         // create path and map variables
         String localVarPath = "/workflow";
@@ -2786,45 +2792,46 @@ public class WorkflowResourceApi {
 
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call startWorkflowValidateBeforeCall(
-            StartWorkflowRequest body,
+            StartWorkflowRequest startWorkflowRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (startWorkflowRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling startWorkflow(Async)");
+                    "Missing the required parameter 'startWorkflowRequest' when calling startWorkflow(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                startWorkflowCall(body, progressListener, progressRequestListener);
+                startWorkflowCall(startWorkflowRequest, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Start a new workflow with StartWorkflowRequest, which allows task to be executed in a domain
      *
-     * @param body (required)
+     * @param startWorkflowRequest (required)
      * @return String
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public String startWorkflow(StartWorkflowRequest body) throws ApiException {
-        ApiResponse<String> resp = startWorkflowWithHttpInfo(body);
+    public String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ApiException {
+        ApiResponse<String> resp = startWorkflowWithHttpInfo(startWorkflowRequest);
         return resp.getData();
     }
 
     /**
      * Start a new workflow with StartWorkflowRequest, which allows task to be executed in a domain
      *
-     * @param body (required)
+     * @param startWorkflowRequest (required)
      * @return ApiResponse&lt;String&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<String> startWorkflowWithHttpInfo(StartWorkflowRequest body)
+    private ApiResponse<String> startWorkflowWithHttpInfo(StartWorkflowRequest startWorkflowRequest)
             throws ApiException {
-        com.squareup.okhttp.Call call = startWorkflowValidateBeforeCall(body, null, null);
+        com.squareup.okhttp.Call call =
+                startWorkflowValidateBeforeCall(startWorkflowRequest, null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

@@ -30,7 +30,7 @@ public class TokenResourceApi {
      * Build call for generateToken
      *
      * @param apiClient ApiClient (required)
-     * @param body (required)
+     * @param generateTokenRequest (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
@@ -38,11 +38,11 @@ public class TokenResourceApi {
      */
     public static com.squareup.okhttp.Call generateTokenCall(
             ApiClient apiClient,
-            GenerateTokenRequest body,
+            GenerateTokenRequest generateTokenRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        Object localVarPostBody = body;
+        Object localVarPostBody = generateTokenRequest;
 
         // create path and map variables
         String localVarPath = "/token";
@@ -101,18 +101,19 @@ public class TokenResourceApi {
     @SuppressWarnings("rawtypes")
     private static com.squareup.okhttp.Call generateTokenValidateBeforeCall(
             ApiClient apiClient,
-            GenerateTokenRequest body,
+            GenerateTokenRequest generateTokenRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
         // verify the required parameter 'body' is set
-        if (body == null) {
+        if (generateTokenRequest == null) {
             throw new ApiException(
-                    "Missing the required parameter 'body' when calling generateToken(Async)");
+                    "Missing the required parameter 'generateTokenRequest' when calling generateToken(Async)");
         }
 
         com.squareup.okhttp.Call call =
-                generateTokenCall(apiClient, body, progressListener, progressRequestListener);
+                generateTokenCall(
+                        apiClient, generateTokenRequest, progressListener, progressRequestListener);
         return call;
     }
 
@@ -120,15 +121,15 @@ public class TokenResourceApi {
      * Generate JWT with the given access key
      *
      * @param apiClient ApiClient (required)
-     * @param body (required)
+     * @param generateTokenRequest (required)
      * @return ApiResponse&lt;Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
     public static ApiResponse<Map<String, String>> generateTokenWithHttpInfo(
-            ApiClient apiClient, GenerateTokenRequest body) throws ApiException {
+            ApiClient apiClient, GenerateTokenRequest generateTokenRequest) throws ApiException {
         com.squareup.okhttp.Call call =
-                generateTokenValidateBeforeCall(apiClient, body, null, null);
+                generateTokenValidateBeforeCall(apiClient, generateTokenRequest, null, null);
         Type localVarReturnType = new TypeToken<Map<String, String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

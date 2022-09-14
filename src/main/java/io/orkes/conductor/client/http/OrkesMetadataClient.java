@@ -87,40 +87,48 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
         metadataResourceApi.unregisterTaskDef(taskType);
     }
 
-    // Tags APIs
-    public void addTaskTag(TagObject body, String taskName) {
-        tagsApi.addTaskTag(body, taskName);
+    @Override
+    public void addTaskTag(TagObject tagObject, String taskName) {
+        tagsApi.addTaskTag(tagObject, taskName);
     }
 
-    public void addWorkflowTag(TagObject body, String name) {
-        tagsApi.addWorkflowTag(body, name);
+    @Override
+    public void addWorkflowTag(TagObject tagObject, String name) {
+        tagsApi.addWorkflowTag(tagObject, name);
     }
 
-    public void deleteTaskTag(TagString body, String taskName) {
-        tagsApi.deleteTaskTag(body, taskName);
+    @Override
+    public void deleteTaskTag(TagString tagString, String taskName) {
+        tagsApi.deleteTaskTag(tagString, taskName);
     }
 
-    public void deleteWorkflowTag(TagObject body, String name) {
-        tagsApi.deleteWorkflowTag(body, name);
+    @Override
+    public void deleteWorkflowTag(TagObject tagObject, String name) {
+        tagsApi.deleteWorkflowTag(tagObject, name);
     }
 
+    @Override
     public List<TagObject> getTags() {
         return tagsApi.getTags();
     }
 
+    @Override
     public List<TagObject> getTaskTags(String taskName) {
         return tagsApi.getTaskTags(taskName);
     }
 
+    @Override
     public List<TagObject> getWorkflowTags(String name) {
         return tagsApi.getWorkflowTags(name);
     }
 
-    public void setTaskTags(List<TagObject> body, String taskName) {
-        tagsApi.setTaskTags(body, taskName);
+    @Override
+    public void setTaskTags(List<TagObject> tagObjects, String taskName) {
+        tagsApi.setTaskTags(tagObjects, taskName);
     }
 
-    public void setWorkflowTags(List<TagObject> body, String name) {
-        tagsApi.setWorkflowTags(body, name);
+    @Override
+    public void setWorkflowTags(List<TagObject> tagObjects, String name) {
+        tagsApi.setWorkflowTags(tagObjects, name);
     }
 }

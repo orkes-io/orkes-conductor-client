@@ -21,10 +21,7 @@ import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowSummary;
 
-import io.orkes.conductor.client.http.ApiCallback;
 import io.orkes.conductor.client.model.WorkflowStatus;
-
-import com.squareup.okhttp.Call;
 
 public interface WorkflowClient {
     String startWorkflow(StartWorkflowRequest startWorkflowRequest);
@@ -74,27 +71,15 @@ public interface WorkflowClient {
             Integer start, Integer size, String sort, String freeText, String query);
 
     // Bulk operations
-    BulkResponse pauseWorkflow(List<String> body);
+    BulkResponse pauseWorkflow(List<String> workflowIds);
 
-    Call pauseWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback);
+    BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions);
 
-    BulkResponse restartWorkflow(List<String> body, Boolean useLatestDefinitions);
+    BulkResponse resumeWorkflow(List<String> workflowIds);
 
-    Call restartWorkflowAsync(
-            List<String> body, Boolean useLatestDefinitions, ApiCallback<BulkResponse> callback);
+    BulkResponse retryWorkflow(List<String> workflowIds);
 
-    BulkResponse resumeWorkflow(List<String> body);
-
-    Call resumeWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback);
-
-    BulkResponse retryWorkflow(List<String> body);
-
-    Call retryWorkflowAsync(List<String> body, ApiCallback<BulkResponse> callback);
-
-    BulkResponse terminateWorkflow(List<String> body, String reason);
-
-    Call terminateWorkflowAsync(
-            List<String> body, String reason, ApiCallback<BulkResponse> callback);
+    BulkResponse terminateWorkflow(List<String> workflowIds, String reason);
 
     WorkflowStatus getWorkflowStatusSummary(
             String workflowId, Boolean includeOutput, Boolean includeVariables);
