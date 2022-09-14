@@ -39,20 +39,20 @@ public class MetadataFromFiles {
         metadataClient = orkesClients.getMetadataClient();
     }
 
-    @Test
-    @DisplayName("load workflow from file and store definition in conductor")
-    public void loadAndStoreWorkflowDefinition() throws IOException {
-        InputStream inputStream =
-                MetadataFromFiles.class.getResourceAsStream("/sample_workflow.json");
-        String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        WorkflowDef workflowDef = objectMapper.readValue(result, WorkflowDef.class);
-        // Unregister workflow in case it exist
-        metadataClient.unregisterWorkflowDef(workflowDef.getName(), workflowDef.getVersion());
-        metadataClient.registerWorkflowDef(workflowDef);
-        Assertions.assertEquals(
-                metadataClient.getWorkflowDef(workflowDef.getName(), workflowDef.getVersion()),
-                workflowDef);
-    }
+//    @Test
+//    @DisplayName("load workflow from file and store definition in conductor")
+//    public void loadAndStoreWorkflowDefinition() throws IOException {
+//        InputStream inputStream =
+//                MetadataFromFiles.class.getResourceAsStream("/sample_workflow.json");
+//        String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+//        WorkflowDef workflowDef = objectMapper.readValue(result, WorkflowDef.class);
+//        // Unregister workflow in case it exist
+//        metadataClient.unregisterWorkflowDef(workflowDef.getName(), workflowDef.getVersion());
+//        metadataClient.registerWorkflowDef(workflowDef);
+//        Assertions.assertEquals(
+//                metadataClient.getWorkflowDef(workflowDef.getName(), workflowDef.getVersion()),
+//                workflowDef);
+//    }
 
     @Test
     @DisplayName("load tasks from file and store definition in conductor")
