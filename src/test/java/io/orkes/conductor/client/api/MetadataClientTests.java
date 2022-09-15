@@ -19,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -33,8 +31,6 @@ import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.WorkflowUtil;
 
 public class MetadataClientTests extends ClientTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetadataClientTests.class);
-
     private final MetadataClient metadataClient;
 
     public MetadataClientTests() {
