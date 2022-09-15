@@ -67,6 +67,7 @@ public class WorkflowClientTests extends ClientTest {
         workflowClient.rerunWorkflow(workflowId, new RerunWorkflowRequest());
         workflowClient.pauseWorkflow(workflowId);
         workflowClient.resumeWorkflow(workflowId);
+        workflowClient.pauseWorkflow(workflowId);
         try {
             workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME);
         } catch (ApiException e) {
