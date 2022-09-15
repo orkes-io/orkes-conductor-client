@@ -18,11 +18,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.AuthorizationClient;
+import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
+import io.orkes.conductor.client.util.Commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AuthorizationClientTests extends ClientTest {
     private final AuthorizationClient authorizationClient;
@@ -34,42 +38,46 @@ public class AuthorizationClientTests extends ClientTest {
     @Test
     @DisplayName("auto assign group permission on workflow creation by any group member")
     public void autoAssignWorkflowPermissions() {
-        giveApplicationPermissions("46f0bf10-b59d-4fbd-a053-935307c8cb86");
+        giveApplicationPermissions(Commons.APPLICATION_ID);
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
         validateGroupPermissions(group.getId());
     }
 
     @Test
-    void testAddUser() {
-        UpsertUserRequest request = new UpsertUserRequest();
-        request.setName("Orkes User");
-        request.setGroups(Arrays.asList("Example Group"));
-        request.setRoles(Arrays.asList(UpsertUserRequest.RolesEnum.USER));
-        String userId = "user@orkes.io"; // MUST be the email addressed used to login to Conductor
-        ConductorUser user = authorizationClient.upsertUser(request, userId);
-        assertNotNull(user);
-
-        ConductorUser found = authorizationClient.getUser(userId);
-        assertNotNull(found);
-        assertEquals(user.getName(), found.getName());
-        assertEquals(user.getGroups().get(0).getId(), found.getGroups().get(0).getId());
-        assertEquals(user.getRoles().get(0).getName(), found.getRoles().get(0).getName());
+    void testUser() {
+        ConductorUser user = authorizationClient.upsertUser(
+                getUpserUserRequest(),
+                Commons.USER_EMAIL);
+        ConductorUser receivedUser = authorizationClient.getUser(Commons.USER_EMAIL);
+        assertEquals(
+                user.getName(),
+                receivedUser.getName());
+        assertEquals(
+                user.getGroups().get(0).getId(),
+                receivedUser.getGroups().get(0).getId());
+        assertEquals(
+                user.getRoles().get(0).getName(),
+                receivedUser.getRoles().get(0).getName());
+        authorizationClient.sendInviteEmail(user.getId(), user);
     }
 
     @Test
-    void testAddGroup() {
+    void testGroup() {
         UpsertGroupRequest request = new UpsertGroupRequest();
 
-        // Default Access for the group.  When specified, any new workflow or task created by the
+        // Default Access for the group. When specified, any new workflow or task
+        // created by the
         // members of this group
         // get this default permission inside the group.
         Map<String, List<String>> defaultAccess = new HashMap<>();
 
-        // Grant READ access to the members of the group for any new workflow created by a member of
+        // Grant READ access to the members of the group for any new workflow created by
+        // a member of
         // this group
         defaultAccess.put("WORKFLOW_DEF", List.of("READ"));
 
-        // Grant EXECUTE access to the members of the group for any new task created by a member of
+        // Grant EXECUTE access to the members of the group for any new task created by
+        // a member of
         // this group
         defaultAccess.put("TASK_DEF", List.of("EXECUTE"));
         request.setDefaultAccess(defaultAccess);
@@ -77,23 +85,22 @@ public class AuthorizationClientTests extends ClientTest {
         request.setDescription("Example group created for testing");
         request.setRoles(Arrays.asList(UpsertGroupRequest.RolesEnum.USER));
 
-        String groupId = "Test Group";
-        Group group = authorizationClient.upsertGroup(request, groupId);
+        Group group = authorizationClient.upsertGroup(request, Commons.GROUP_ID);
         assertNotNull(group);
 
-        Group found = authorizationClient.getGroup(groupId);
+        Group found = authorizationClient.getGroup(Commons.GROUP_ID);
         assertNotNull(found);
         assertEquals(group.getId(), found.getId());
         assertEquals(group.getDefaultAccess().keySet(), found.getDefaultAccess().keySet());
     }
 
     @Test
-    void testAddApplication() {
-
+    void testApplication() {
         CreateOrUpdateApplicationRequest request = new CreateOrUpdateApplicationRequest();
         request.setName("Test Application for the testing");
 
-        // WARNING: Application Name is not a UNIQUE value and if called multiple times, it will
+        // WARNING: Application Name is not a UNIQUE value and if called multiple times,
+        // it will
         // create a new application
         ConductorApplication application = authorizationClient.createApplication(request);
         assertNotNull(application);
@@ -102,26 +109,34 @@ public class AuthorizationClientTests extends ClientTest {
         // Get the list of applications
         List<ConductorApplication> apps = authorizationClient.listApplications();
         assertNotNull(apps);
-        long found =
-                apps.stream()
-                        .map(ConductorApplication::getId)
-                        .filter(id -> id.equals(application.getId()))
-                        .count();
+        long found = apps.stream()
+                .map(ConductorApplication::getId)
+                .filter(id -> id.equals(application.getId()))
+                .count();
         assertEquals(1, found);
 
         // Create new access key
-        CreateAccessKeyResponse accessKey =
-                authorizationClient.createAccessKey(application.getId());
-        assertNotNull(accessKey.getId());
-        assertNotNull(accessKey.getSecret());
-        System.out.println(accessKey.getId() + ":" + accessKey.getSecret());
+        CreateAccessKeyResponse accessKey = authorizationClient.createAccessKey(application.getId());
+        List<AccessKeyResponse> accessKeyResponses = authorizationClient.getAccessKeys(application.getId());
+        assertEquals(1, accessKeyResponses.size());
+        authorizationClient.toggleAccessKeyStatus(application.getId(), accessKey.getId());
+        authorizationClient.deleteAccessKey(application.getId(), accessKey.getId());
+        accessKeyResponses = authorizationClient.getAccessKeys(application.getId());
+        assertEquals(0, accessKeyResponses.size());
+
+        String newName = "ansdjansdjna";
+        authorizationClient.updateApplication(
+                new CreateOrUpdateApplicationRequest().name(newName),
+                application.getId());
+        assertEquals(
+                newName,
+                authorizationClient.getApplication(application.getId()).getName());
 
         authorizationClient.deleteApplication(application.getId());
     }
 
     @Test
-    void testGrangPermissionsToGroup() {
-
+    void testGrantPermissionsToGroup() {
         AuthorizationRequest request = new AuthorizationRequest();
         request.access(Arrays.asList(AuthorizationRequest.AccessEnum.READ));
         SubjectRef subject = new SubjectRef();
@@ -137,7 +152,6 @@ public class AuthorizationClientTests extends ClientTest {
 
     @Test
     void testGrantPermissionsToTag() {
-
         AuthorizationRequest request = new AuthorizationRequest();
         request.access(Arrays.asList(AuthorizationRequest.AccessEnum.READ));
 
@@ -154,6 +168,56 @@ public class AuthorizationClientTests extends ClientTest {
 
         request.setTarget(target);
         authorizationClient.grantPermissions(request);
+    }
+
+    @Test
+    void testMethods() {
+        try {
+            authorizationClient.deleteUser(Commons.USER_EMAIL);
+        } catch (ApiException e) {
+            if (e.getCode() != 404) {
+                throw e;
+            }
+        }
+        authorizationClient.upsertUser(
+                getUpserUserRequest(),
+                Commons.USER_EMAIL);
+        List<ConductorUser> users = authorizationClient.listUsers(false);
+        assertFalse(users.isEmpty());
+        users = authorizationClient.listUsers(true);
+        assertFalse(users.isEmpty());
+        try {
+            authorizationClient.deleteGroup(Commons.GROUP_ID);
+        } catch (ApiException e) {
+            if (e.getCode() != 404) {
+                throw e;
+            }
+        }
+        authorizationClient.upsertGroup(getUpsertGroupRequest(), Commons.GROUP_ID);
+        List<Group> groups = authorizationClient.listGroups();
+        assertFalse(groups.isEmpty());
+        authorizationClient.addUserToGroup(
+                Commons.GROUP_ID,
+                Commons.USER_EMAIL);
+        boolean found = false;
+        for (ConductorUser user : authorizationClient.getUsersInGroup(Commons.GROUP_ID)) {
+            if (user.getName().equals(Commons.USER_NAME)) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+        authorizationClient.getPermissions("abc", Commons.GROUP_ID);
+        assertEquals(
+                authorizationClient.getApplication(Commons.APPLICATION_ID).getId(),
+                Commons.APPLICATION_ID);
+        assertTrue(
+                authorizationClient.getGrantedPermissionsForGroup(Commons.GROUP_ID)
+                        .getGrantedAccess()
+                        .isEmpty());
+        assertFalse(
+                authorizationClient.getGrantedPermissionsForUser(Commons.USER_EMAIL)
+                        .getGrantedAccess()
+                        .isEmpty());
     }
 
     void giveApplicationPermissions(String applicationId) {
@@ -179,6 +243,14 @@ public class AuthorizationClientTests extends ClientTest {
                                 "TASK_DEF", getAccessListAll()))
                 .description("Group used for SDK testing")
                 .roles(List.of(RolesEnum.ADMIN));
+    }
+
+    UpsertUserRequest getUpserUserRequest() {
+        UpsertUserRequest request = new UpsertUserRequest();
+        request.setName(Commons.USER_NAME);
+        request.setGroups(List.of(Commons.GROUP_ID));
+        request.setRoles(List.of(UpsertUserRequest.RolesEnum.USER));
+        return request;
     }
 
     List<String> getAccessListAll() {
