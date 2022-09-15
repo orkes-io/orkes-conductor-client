@@ -40,21 +40,39 @@ public class AuthorizationManagement {
         // Remove user from group
         authorizationClient.removeUserFromGroup(groupId, userId2);
 
-        // Add workflow and task execution permissions to the group
+        // Add workflow execution permissions to the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
         authorizationRequest.setAccess(Arrays.asList(AuthorizationRequest.AccessEnum.EXECUTE));
         SubjectRef subjectRef = new SubjectRef();
-        subjectRef.setId(userId);
+        subjectRef.setId("Example group");
         subjectRef.setType(SubjectRef.TypeEnum.USER);
         // Grant workflow execution permission to user
         authorizationRequest.setSubject(subjectRef);
         TargetRef targetRef = new TargetRef();
-        targetRef.setId(workflowDef.getName());
+        targetRef.setId("org:engineering");
         targetRef.setType(TargetRef.TypeEnum.WORKFLOW_DEF);
         authorizationRequest.setTarget(targetRef);
         authorizationClient.grantPermissions(authorizationRequest);
 
-        // Grant task execution permission to user
+        // Grant workflow execution permission to tag
+        targetRef = new TargetRef();
+        targetRef.setId("customer:abc");
+        targetRef.setType(TargetRef.TypeEnum.TASK_DEF);
+        authorizationRequest.setTarget(targetRef);
+        authorizationClient.grantPermissions(authorizationRequest);
+
+        // Add read only permission to tag in group
+        authorizationRequest = new AuthorizationRequest();
+        authorizationRequest.setAccess(Arrays.asList(AuthorizationRequest.AccessEnum.READ));
+        subjectRef = new SubjectRef();
+        subjectRef.setId("Test group");
+        subjectRef.setType(SubjectRef.TypeEnum.GROUP);
+        authorizationRequest.setSubject(subjectRef);
+        targetRef = new TargetRef();
+        targetRef.setId("org:engineering");
+        targetRef.setType(TargetRef.TypeEnum.WORKFLOW_DEF);
+        authorizationRequest.setTarget(targetRef);
+        authorizationClient.grantPermissions(authorizationRequest);
 
     }
 
