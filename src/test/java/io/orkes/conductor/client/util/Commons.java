@@ -12,9 +12,36 @@
  */
 package io.orkes.conductor.client.util;
 
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
+
+import io.orkes.conductor.client.model.TagObject;
+import io.orkes.conductor.client.model.TagString;
+
 public class Commons {
     public static String WORKFLOW_NAME = "test-sdk-java-workflow";
-    public static String TASK_NAME = "test-sdk-java-workflow";
+    public static String TASK_NAME = "test-sdk-java-task";
     public static String OWNER_EMAIL = "example@orkes.io";
     public static int WORKFLOW_VERSION = 1;
+
+    public static TagObject getTagObject() {
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setKey("a");
+        tagObject.setValue("b");
+        return tagObject;
+    }
+
+    public static TagString getTagString() {
+        TagString tagString = new TagString();
+        tagString.setType(TagString.TypeEnum.METADATA);
+        tagString.setKey("a");
+        tagString.setValue("b");
+        return tagString;
+    }
+
+    public static TaskDef getTaskDef() {
+        TaskDef taskDef = new TaskDef();
+        taskDef.setName(Commons.TASK_NAME);
+        return taskDef;
+    }
 }

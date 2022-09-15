@@ -12,21 +12,29 @@
  */
 package io.orkes.conductor.client.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
 import io.orkes.conductor.client.MetadataClient;
+import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.model.TagObject;
-import io.orkes.conductor.client.model.TagString;
 import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.WorkflowUtil;
 
 public class MetadataClientTests extends ClientTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetadataClientTests.class);
+
     private final MetadataClient metadataClient;
 
     public MetadataClientTests() {
@@ -34,84 +42,91 @@ public class MetadataClientTests extends ClientTest {
     }
 
     @Test
-    void task() {
-        TaskDef taskDef = new TaskDef();
-        taskDef.setName(Commons.TASK_NAME);
-        metadataClient.unregisterTaskDef(Commons.TASK_NAME);
+    void taskDefinition() {
+        try {
+            metadataClient.unregisterTaskDef(Commons.TASK_NAME);
+        } catch (ApiException e) {
+            if (e.getCode() != 404) {
+                throw e;
+            }
+        }
+        TaskDef taskDef = Commons.getTaskDef();
         metadataClient.registerTaskDefs(List.of(taskDef));
         metadataClient.updateTaskDef(taskDef);
-        metadataClient.getTaskDef(Commons.TASK_NAME);
+        TaskDef receivedTaskDef = metadataClient.getTaskDef(Commons.TASK_NAME);
+        assertTrue(taskDef.getName().equals(receivedTaskDef.getName()));
     }
 
     @Test
     void workflow() {
+        try {
+            metadataClient.unregisterWorkflowDef(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
+        } catch (ApiException e) {
+            if (e.getCode() != 404) {
+                throw e;
+            }
+        }
+        metadataClient.registerTaskDefs(List.of(Commons.getTaskDef()));
         WorkflowDef workflowDef = WorkflowUtil.getWorkflowDef();
-        metadataClient.unregisterWorkflowDef(
-                Commons.WORKFLOW_NAME,
-                Commons.WORKFLOW_VERSION);
         metadataClient.registerWorkflowDef(workflowDef);
         metadataClient.updateWorkflowDefs(List.of(workflowDef));
-        ((OrkesMetadataClient) metadataClient).updateWorkflowDefs(
-                List.of(workflowDef), true);
-        ((OrkesMetadataClient) metadataClient).registerWorkflowDef(workflowDef, true);
-        metadataClient.getWorkflowDef(
-                Commons.WORKFLOW_NAME,
-                Commons.WORKFLOW_VERSION);
+        metadataClient.updateWorkflowDefs(List.of(workflowDef), true);
+        metadataClient.registerWorkflowDef(workflowDef, true);
         ((OrkesMetadataClient) metadataClient).getWorkflowDefWithMetadata(
                 Commons.WORKFLOW_NAME,
                 Commons.WORKFLOW_VERSION);
+        WorkflowDef receivedWorkflowDef = metadataClient.getWorkflowDef(Commons.WORKFLOW_NAME,
+                Commons.WORKFLOW_VERSION);
+        assertTrue(receivedWorkflowDef.getName().equals(Commons.WORKFLOW_NAME));
+        assertEquals(receivedWorkflowDef.getVersion(), Commons.WORKFLOW_VERSION);
     }
 
     @Test
     void tagTask() {
-        TagObject tagObject = getTagObject();
+        metadataClient.registerTaskDefs(List.of(Commons.getTaskDef()));
+        try {
+            metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
+        } catch (ApiException e) {
+            if (e.getCode() != 404) {
+                throw e;
+            }
+        }
+        TagObject tagObject = Commons.getTagObject();
         metadataClient.addTaskTag(
                 tagObject,
                 Commons.TASK_NAME);
         metadataClient.setTaskTags(
                 List.of(tagObject),
                 Commons.TASK_NAME);
+        List<TagObject> tags = metadataClient.getTaskTags(
+                Commons.TASK_NAME);
+        assertIterableEquals(List.of(tagObject), tags);
         metadataClient.deleteTaskTag(
-                getTagString(),
+                Commons.getTagString(),
                 Commons.TASK_NAME);
-        metadataClient.getTaskTags(
+        tags = metadataClient.getTaskTags(
                 Commons.TASK_NAME);
+        assertIterableEquals(List.of(), tags);
     }
 
     @Test
     void tagWorkflow() {
-        TagObject tagObject = getTagObject();
-        metadataClient.addWorkflowTag(
-                tagObject,
-                Commons.WORKFLOW_NAME);
-        metadataClient.setWorkflowTags(
-                List.of(tagObject),
-                Commons.WORKFLOW_NAME);
-        metadataClient.deleteWorkflowTag(
-                getTagObject(),
-                Commons.WORKFLOW_NAME);
-        metadataClient.getWorkflowTags(
-                Commons.WORKFLOW_NAME);
+        TagObject tagObject = Commons.getTagObject();
+        try {
+            metadataClient.deleteWorkflowTag(Commons.getTagObject(), Commons.WORKFLOW_NAME);
+        } catch (ApiException e) {
+            if (e.getCode() != 404) {
+                throw e;
+            }
+        }
+        metadataClient.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
+        metadataClient.setWorkflowTags(List.of(tagObject), Commons.WORKFLOW_NAME);
+        List<TagObject> tags = metadataClient.getWorkflowTags(Commons.WORKFLOW_NAME);
+        assertIterableEquals(List.of(tagObject), tags);
     }
 
     @Test
     void tag() {
         metadataClient.getTags();
-    }
-
-    TagObject getTagObject() {
-        TagObject tagObject = new TagObject();
-        tagObject.setType(TagObject.TypeEnum.METADATA);
-        tagObject.setKey("a");
-        tagObject.setValue("b");
-        return tagObject;
-    }
-
-    TagString getTagString() {
-        TagString tagString = new TagString();
-        tagString.setType(TagString.TypeEnum.METADATA);
-        tagString.setKey("a");
-        tagString.setValue("b");
-        return tagString;
     }
 }
