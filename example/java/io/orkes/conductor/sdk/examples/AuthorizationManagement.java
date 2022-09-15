@@ -11,7 +11,10 @@ import io.orkes.conductor.client.model.UpsertUserRequest;
 import java.util.Arrays;
 import java.util.UUID;
 
-/* This example covers following apis
+/**
+
+ Examples for managing user authorization in Orkes Conductor
+
 1. upsertUser - Add user
 2. upsertUser - Add group
 3. addUserToGroup - Add user to group

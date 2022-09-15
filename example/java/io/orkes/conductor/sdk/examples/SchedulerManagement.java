@@ -10,7 +10,10 @@ import java.util.List;
 
 import static io.orkes.conductor.sdk.examples.MetadataManagement.workflowDef;
 
-/* This example covers following apis
+/**
+
+ Examples for managing Schedules in Orkes Conductor
+
 1. saveSchedule - Create workflow schedule
 2. pauseSchedule - Pause workflow schedule
 3. getSchedule - Get schedule for workflow

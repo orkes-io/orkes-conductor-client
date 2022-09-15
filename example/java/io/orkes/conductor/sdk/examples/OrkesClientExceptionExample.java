@@ -4,7 +4,9 @@ import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.OrkesClients;
 
-// This example shows how to use OrkesClientException
+/**
+ * Example demonstrating how to catch client exception and extract the underlying status code and message
+ */
 public class OrkesClientExceptionExample {
 
     public static void main(String a[]) {

@@ -11,7 +11,10 @@ import io.orkes.conductor.client.model.TagObject;
 import java.util.Arrays;
 import java.util.Map;
 
-/* This example covers following apis
+/**
+
+ Examples for managing Metadata (Tasks, Workflows) in Conductor
+
 1. registerWorkflowDef - Register workflow definition
 2. registerTaskDefs - Register task definition
 3. addTaskTag - Add tag to taks

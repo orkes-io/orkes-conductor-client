@@ -9,7 +9,10 @@ import java.util.Arrays;
 
 import static io.orkes.conductor.sdk.examples.MetadataManagement.workflowDef;
 
-/* This example covers following apis
+/**
+
+ Examples for managing Workflow operations in Conductor
+
 1. startWorkflow - Start a new workflow
 2. getWorkflow - Get workflow execution status
 3. pauseWorkflow - Pause workflow
