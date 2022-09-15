@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import io.orkes.conductor.client.AuthorizationClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.*;
-import io.orkes.conductor.client.model.AuthorizationRequest.AccessEnum;
 import io.orkes.conductor.client.model.TargetRef.TypeEnum;
 import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
 import io.orkes.conductor.client.util.Commons;
@@ -41,7 +40,9 @@ public class AuthorizationClientTests extends ClientTest {
     @DisplayName("auto assign group permission on workflow creation by any group member")
     public void autoAssignWorkflowPermissions() {
         giveApplicationPermissions(Commons.APPLICATION_ID);
-        Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
+        Group group = authorizationClient.upsertGroup(
+            getUpsertGroupRequest(), 
+            "sdk-test-group");
         validateGroupPermissions(group.getId());
     }
 
