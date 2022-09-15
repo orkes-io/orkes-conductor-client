@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import io.orkes.conductor.client.AuthorizationClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.*;
+import io.orkes.conductor.client.model.AuthorizationRequest.AccessEnum;
+import io.orkes.conductor.client.model.TargetRef.TypeEnum;
 import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
 import io.orkes.conductor.client.util.Commons;
 
@@ -59,6 +61,10 @@ public class AuthorizationClientTests extends ClientTest {
                 user.getRoles().get(0).getName(),
                 receivedUser.getRoles().get(0).getName());
         authorizationClient.sendInviteEmail(user.getId(), user);
+        Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), Commons.GROUP_ID);
+        assertNotNull(group);
+        authorizationClient.removeUserFromGroup(Commons.GROUP_ID, user.getId());
+        authorizationClient.removePermissions(getAuthorizationRequest());
     }
 
     @Test
@@ -74,12 +80,12 @@ public class AuthorizationClientTests extends ClientTest {
         // Grant READ access to the members of the group for any new workflow created by
         // a member of
         // this group
-        defaultAccess.put("WORKFLOW_DEF", List.of("READ"));
+        defaultAccess.put(TypeEnum.WORKFLOW_DEF.getValue(), List.of("READ"));
 
         // Grant EXECUTE access to the members of the group for any new task created by
         // a member of
         // this group
-        defaultAccess.put("TASK_DEF", List.of("EXECUTE"));
+        defaultAccess.put(TypeEnum.TASK_DEF.getValue(), List.of("EXECUTE"));
         request.setDefaultAccess(defaultAccess);
 
         request.setDescription("Example group created for testing");
@@ -87,7 +93,6 @@ public class AuthorizationClientTests extends ClientTest {
 
         Group group = authorizationClient.upsertGroup(request, Commons.GROUP_ID);
         assertNotNull(group);
-
         Group found = authorizationClient.getGroup(Commons.GROUP_ID);
         assertNotNull(found);
         assertEquals(group.getId(), found.getId());
@@ -124,6 +129,8 @@ public class AuthorizationClientTests extends ClientTest {
         accessKeyResponses = authorizationClient.getAccessKeys(application.getId());
         assertEquals(0, accessKeyResponses.size());
 
+        authorizationClient.removeRoleFromApplicationUser(application.getId(), RolesEnum.ADMIN.getValue());
+
         String newName = "ansdjansdjna";
         authorizationClient.updateApplication(
                 new CreateOrUpdateApplicationRequest().name(newName),
@@ -152,22 +159,7 @@ public class AuthorizationClientTests extends ClientTest {
 
     @Test
     void testGrantPermissionsToTag() {
-        AuthorizationRequest request = new AuthorizationRequest();
-        request.access(Arrays.asList(AuthorizationRequest.AccessEnum.READ));
-
-        SubjectRef subject = new SubjectRef();
-        subject.setId("Example Group");
-        subject.setType(SubjectRef.TypeEnum.GROUP);
-
-        request.setSubject(subject);
-
-        // Grant permissions to the tag with accounting org
-        TargetRef target = new TargetRef();
-        target.setId("org:accounting");
-        target.setType(TargetRef.TypeEnum.TAG);
-
-        request.setTarget(target);
-        authorizationClient.grantPermissions(request);
+        authorizationClient.grantPermissions(getAuthorizationRequest());
     }
 
     @Test
@@ -221,7 +213,7 @@ public class AuthorizationClientTests extends ClientTest {
     }
 
     void giveApplicationPermissions(String applicationId) {
-        authorizationClient.addRoleToApplicationUser(applicationId, "ADMIN");
+        authorizationClient.addRoleToApplicationUser(applicationId, RolesEnum.ADMIN.getValue());
     }
 
     void validateGroupPermissions(String id) {
@@ -239,8 +231,8 @@ public class AuthorizationClientTests extends ClientTest {
         return new UpsertGroupRequest()
                 .defaultAccess(
                         Map.of(
-                                "WORKFLOW_DEF", getAccessListAll(),
-                                "TASK_DEF", getAccessListAll()))
+                                TypeEnum.WORKFLOW_DEF.getValue(), getAccessListAll(),
+                                TypeEnum.TASK_DEF.getValue(), getAccessListAll()))
                 .description("Group used for SDK testing")
                 .roles(List.of(RolesEnum.ADMIN));
     }
@@ -254,6 +246,25 @@ public class AuthorizationClientTests extends ClientTest {
     }
 
     List<String> getAccessListAll() {
-        return List.of("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
+        return List.of(
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "EXECUTE",
+                "DELETE");
+    }
+
+    AuthorizationRequest getAuthorizationRequest() {
+        AuthorizationRequest request = new AuthorizationRequest();
+        request.access(Arrays.asList(AuthorizationRequest.AccessEnum.READ));
+        SubjectRef subject = new SubjectRef();
+        subject.setId("Example Group");
+        subject.setType(SubjectRef.TypeEnum.GROUP);
+        request.setSubject(subject);
+        TargetRef target = new TargetRef();
+        target.setId("org:accounting");
+        target.setType(TargetRef.TypeEnum.TAG);
+        request.setTarget(target);
+        return request;
     }
 }
