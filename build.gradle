@@ -182,3 +182,4 @@ signing {
 
     sign publishing.publications
 }
+sourceSets.main.java.srcDirs += ['example/java', 'example/resources']
