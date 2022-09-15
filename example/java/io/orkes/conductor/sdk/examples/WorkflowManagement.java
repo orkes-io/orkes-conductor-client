@@ -9,6 +9,14 @@ import java.util.Arrays;
 
 import static io.orkes.conductor.sdk.examples.MetadataManagement.workflowDef;
 
+/* This example covers following apis
+1. startWorkflow - Start a new workflow
+2. getWorkflow - Get workflow execution status
+3. pauseWorkflow - Pause workflow
+4. resumeWorkflow - Resume workflow
+5. terminateWorkflow - Terminate workflow
+6. deleteWorkflow - Delete workflow
+*/
 public class WorkflowManagement {
 
     private static WorkflowClient workflowClient;

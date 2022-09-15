@@ -4,6 +4,7 @@ import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.OrkesClients;
 
+// This example shows how to use OrkesClientException
 public class OrkesClientExceptionExample {
 
     public static void main(String a[]) {

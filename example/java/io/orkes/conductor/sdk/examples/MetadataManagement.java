@@ -11,6 +11,12 @@ import io.orkes.conductor.client.model.TagObject;
 import java.util.Arrays;
 import java.util.Map;
 
+/* This example covers following apis
+1. registerWorkflowDef - Register workflow definition
+2. registerTaskDefs - Register task definition
+3. addTaskTag - Add tag to taks
+4. addWorkflowTag - Add tag to workflow
+*/
 public class MetadataManagement {
 
     public static String taskName = "test_task";

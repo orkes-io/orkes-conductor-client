@@ -11,8 +11,13 @@ import io.orkes.conductor.client.model.UpsertUserRequest;
 import java.util.Arrays;
 import java.util.UUID;
 
-import static io.orkes.conductor.sdk.examples.MetadataManagement.workflowDef;
-
+/* This example covers following apis
+1. upsertUser - Add user
+2. upsertUser - Add group
+3. addUserToGroup - Add user to group
+4. removeUserFromGroup - Remove user from group
+5. grantPermissions - Grant permission to user via tag or group.
+*/
 public class AuthorizationManagement {
 
     private static AuthorizationClient authorizationClient;
@@ -21,6 +26,8 @@ public class AuthorizationManagement {
         OrkesClients orkesClients = ApiUtil.getOrkesClient();
         createMetadata();
         authorizationClient = orkesClients.getAuthorizationClient();
+        AuthorizationManagement authorizationManagement = new AuthorizationManagement();
+        authorizationManagement.userAndGroupOperations();
     }
 
     private void userAndGroupOperations() {
@@ -29,16 +36,18 @@ public class AuthorizationManagement {
         String userId2 = createUser("user2");
         String userId3 = createUser("user3");
         // Create groups
-        String groupId = createGroup("group1");
-        String groupId2 = createGroup("group2");
+        String group1 = "group1";
+        String group2 = "group2";
+        createGroup(group1, "group to perform");
+        createGroup(group1, "group to perform action");
         //Add users to group 1
-        authorizationClient.addUserToGroup(groupId, userId);
-        authorizationClient.addUserToGroup(groupId, userId2);
-        authorizationClient.addUserToGroup(groupId2, userId2);
-        authorizationClient.addUserToGroup(groupId2, userId3);
+        authorizationClient.addUserToGroup(group1, userId);
+        authorizationClient.addUserToGroup(group1, userId2);
+        authorizationClient.addUserToGroup(group2, userId2);
+        authorizationClient.addUserToGroup(group2, userId3);
 
         // Remove user from group
-        authorizationClient.removeUserFromGroup(groupId, userId2);
+        authorizationClient.removeUserFromGroup(group1, userId2);
 
         // Add workflow execution permissions to the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
@@ -85,13 +94,11 @@ public class AuthorizationManagement {
         return userId;
     }
 
-    private String createGroup(String name) {
-        String id = UUID.randomUUID().toString();
+    private void createGroup(String name, String description) {
         UpsertGroupRequest upsertGroupRequest = new UpsertGroupRequest();
-        upsertGroupRequest.setDescription(name);
+        upsertGroupRequest.setDescription(description);
         upsertGroupRequest.setRoles(Arrays.asList(UpsertGroupRequest.RolesEnum.USER));
-        authorizationClient.upsertGroup(upsertGroupRequest, id);
-        return id;
+        authorizationClient.upsertGroup(upsertGroupRequest, name);
     }
 
 
