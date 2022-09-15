@@ -10,6 +10,15 @@ import java.util.List;
 
 import static io.orkes.conductor.sdk.examples.MetadataManagement.workflowDef;
 
+/* This example covers following apis
+1. saveSchedule - Create workflow schedule
+2. pauseSchedule - Pause workflow schedule
+3. getSchedule - Get schedule for workflow
+4. getNextFewSchedules - Get next few schedule runs for schedule
+5. pauseAllSchedules -  Pause all the schedules
+6. resumeAllSchedules - Resume all the schedules
+7. searchV2 - Get Schedule executions
+*/
 public class SchedulerManagement {
 
     private static SchedulerClient schedulerClient;
