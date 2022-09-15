@@ -55,4 +55,8 @@ public interface MetadataClient {
     void setTaskTags(List<TagObject> tagObjects, String taskName) throws ApiException;
 
     void setWorkflowTags(List<TagObject> tagObjects, String name) throws ApiException;
+
+    void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite);
+
+    void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite);
 }

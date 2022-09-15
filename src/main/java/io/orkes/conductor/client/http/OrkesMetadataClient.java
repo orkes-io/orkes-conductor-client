@@ -40,6 +40,7 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
         metadataResourceApi.create(workflowDef, true);
     }
 
+    @Override
     public void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite) {
         metadataResourceApi.create(workflowDef, overwrite);
     }
@@ -49,6 +50,7 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
         metadataResourceApi.update(workflowDefs, true);
     }
 
+    @Override
     public void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite) {
         metadataResourceApi.update(workflowDefs, overwrite);
     }

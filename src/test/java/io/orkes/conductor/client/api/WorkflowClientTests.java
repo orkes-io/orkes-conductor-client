@@ -14,7 +14,6 @@ package io.orkes.conductor.client.api;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,6 @@ import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.util.Commons;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,24 +37,54 @@ public class WorkflowClientTests extends ClientTest {
 
     @Test
     public void startWorkflow() {
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(Commons.WORKFLOW_NAME);
-        startWorkflowRequest.setVersion(Commons.WORKFLOW_VERSION);
-        Map<String, Object> input = new HashMap<>();
-        startWorkflowRequest.setInput(input);
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
         Workflow workflow = workflowClient.getWorkflow(workflowId, false);
-        assertNotNull(workflow, "Workflow should'n be null");
+        assertTrue(workflow.getWorkflowName().equals(Commons.WORKFLOW_NAME));
     }
 
     @Test
     public void testWorkflowMethods() {
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(Commons.WORKFLOW_NAME);
-        startWorkflowRequest.setVersion(1);
-        Map<String, Object> input = new HashMap<>();
-        startWorkflowRequest.setInput(input);
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
+        List<Workflow> workflows = workflowClient.getWorkflows(
+                Commons.WORKFLOW_NAME,
+                "askdjbjqhbdjqhbdjqhsbdjqhsbd",
+                false,
+                false);
+        assertTrue(workflows.isEmpty());
+        workflowClient.terminateWorkflow(workflowId, "reason");
+        workflowClient.retryLastFailedTask(workflowId);
+        workflowClient.getRunningWorkflow(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
+        workflowClient.getWorkflowsByTimePeriod(
+                Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION, 0L, 0L);
+        workflowClient.search(2, 5, "", "", Commons.WORKFLOW_NAME);
+        workflowClient.terminateWorkflows(List.of(workflowId), "reason");
+        workflowClient.restart(workflowId, true);
+        workflowClient.terminateWorkflow(List.of(workflowId), "reason");
+        workflowClient.restartWorkflow(List.of(workflowId), true);
+        workflowClient.terminateWorkflow(workflowId, "reason");
+        workflowClient.retryWorkflow(List.of(workflowId));
+        workflowClient.terminateWorkflow(workflowId, "reason");
+        workflowClient.rerunWorkflow(workflowId, new RerunWorkflowRequest());
+        workflowClient.pauseWorkflow(workflowId);
+        workflowClient.resumeWorkflow(workflowId);
+        workflowClient.pauseWorkflow(workflowId);
+        try {
+            workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME);
+        } catch (ApiException e) {
+            if (e.getCode() != 500) {
+                throw e;
+            }
+        }
+        workflowClient.pauseWorkflow(List.of(workflowId));
+        workflowClient.resumeWorkflow(List.of(workflowId));
+        workflowClient.deleteWorkflow(workflowId, false);
+        workflowClient.search(Commons.WORKFLOW_NAME);
+        workflowClient.runDecider(workflowId);
+    }
+
+    @Test
+    void testUnsupportedMethods() {
+        String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
         Workflow workflow = workflowClient.getWorkflow(workflowId, false);
         assertThrows(
                 UnsupportedOperationException.class,
@@ -78,32 +106,13 @@ public class WorkflowClientTests extends ClientTest {
                 () -> {
                     workflowClient.searchV2(0, 0, "", "", "");
                 });
-        assertNotNull(workflowClient.getWorkflows(Commons.WORKFLOW_NAME, "abc", false, false));
-        workflowClient.terminateWorkflow(workflowId, "reason");
-        workflowClient.retryLastFailedTask(workflowId);
-        workflowClient.getRunningWorkflow(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
-        workflowClient.getWorkflowsByTimePeriod(
-                Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION, 0L, 0L);
-        workflowClient.search(2, 5, "", "", Commons.WORKFLOW_NAME);
-        workflowClient.terminateWorkflows(List.of(workflowId), "reason");
-        workflowClient.restart(workflowId, true);
-        workflowClient.terminateWorkflow(List.of(workflowId), "reason");
-        workflowClient.restartWorkflow(List.of(workflowId), true);
-        workflowClient.terminateWorkflow(workflowId, "reason");
-        workflowClient.retryWorkflow(List.of(workflowId));
-        workflowClient.terminateWorkflow(workflowId, "reason");
-        workflowClient.rerunWorkflow(workflowId, new RerunWorkflowRequest());
-        workflowClient.pauseWorkflow(workflowId);
-        workflowClient.resumeWorkflow(workflowId);
-        try {
-            workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME);
-        } catch (ApiException e) {
-            assertTrue(e.getMessage().contains("cannot be skipped"));
-        }
-        workflowClient.pauseWorkflow(List.of(workflowId));
-        workflowClient.resumeWorkflow(List.of(workflowId));
-        workflowClient.deleteWorkflow(workflowId, false);
-        workflowClient.search(Commons.WORKFLOW_NAME);
-        workflowClient.runDecider(workflowId);
+    }
+
+    StartWorkflowRequest getStartWorkflowRequest() {
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(Commons.WORKFLOW_NAME);
+        startWorkflowRequest.setVersion(1);
+        startWorkflowRequest.setInput(new HashMap<>());
+        return startWorkflowRequest;
     }
 }
