@@ -18,7 +18,6 @@ import io.orkes.conductor.client.SecretClient;
 import io.orkes.conductor.client.http.ApiException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SecretClientTests extends ClientTest {
@@ -41,7 +40,7 @@ public class SecretClientTests extends ClientTest {
             }
         }
         secretClient.putSecret(SECRET_NAME, SECRET_KEY);
-        assertFalse(secretClient.listSecretsThatUserCanGrantAccessTo().isEmpty());
+        assertTrue(secretClient.listSecretsThatUserCanGrantAccessTo().contains(SECRET_KEY));
         assertTrue(secretClient.listAllSecretNames().contains(SECRET_KEY));
         assertEquals(SECRET_NAME, secretClient.getSecret(SECRET_KEY));
         assertTrue(secretClient.secretExists(SECRET_KEY));
