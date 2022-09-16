@@ -14,6 +14,8 @@ jobs:
         with:
           distribution: "zulu"
           java-version: "11"
+      - name: Linter
+        run: ./gradlew clean check -x build -x test
       - name: Build and run tests
         run: ./gradlew clean build test
         env:
