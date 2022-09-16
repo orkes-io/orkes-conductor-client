@@ -45,11 +45,9 @@ public class WorkflowClientTests extends ClientTest {
     @Test
     public void testWorkflowMethods() {
         String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
-        List<Workflow> workflows = workflowClient.getWorkflows(
-                Commons.WORKFLOW_NAME,
-                "askdjbjqhbdjqhbdjqhsbdjqhsbd",
-                false,
-                false);
+        List<Workflow> workflows =
+                workflowClient.getWorkflows(
+                        Commons.WORKFLOW_NAME, "askdjbjqhbdjqhbdjqhsbdjqhsbd", false, false);
         assertTrue(workflows.isEmpty());
         workflowClient.terminateWorkflow(workflowId, "reason");
         workflowClient.retryLastFailedTask(workflowId);

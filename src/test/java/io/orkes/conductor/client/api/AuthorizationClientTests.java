@@ -40,27 +40,18 @@ public class AuthorizationClientTests extends ClientTest {
     @DisplayName("auto assign group permission on workflow creation by any group member")
     public void autoAssignWorkflowPermissions() {
         giveApplicationPermissions(Commons.APPLICATION_ID);
-        Group group = authorizationClient.upsertGroup(
-            getUpsertGroupRequest(), 
-            "sdk-test-group");
+        Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
         validateGroupPermissions(group.getId());
     }
 
     @Test
     void testUser() {
-        ConductorUser user = authorizationClient.upsertUser(
-                getUpserUserRequest(),
-                Commons.USER_EMAIL);
+        ConductorUser user =
+                authorizationClient.upsertUser(getUpserUserRequest(), Commons.USER_EMAIL);
         ConductorUser receivedUser = authorizationClient.getUser(Commons.USER_EMAIL);
-        assertEquals(
-                user.getName(),
-                receivedUser.getName());
-        assertEquals(
-                user.getGroups().get(0).getId(),
-                receivedUser.getGroups().get(0).getId());
-        assertEquals(
-                user.getRoles().get(0).getName(),
-                receivedUser.getRoles().get(0).getName());
+        assertEquals(user.getName(), receivedUser.getName());
+        assertEquals(user.getGroups().get(0).getId(), receivedUser.getGroups().get(0).getId());
+        assertEquals(user.getRoles().get(0).getName(), receivedUser.getRoles().get(0).getName());
         authorizationClient.sendInviteEmail(user.getId(), user);
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), Commons.GROUP_ID);
         assertNotNull(group);
@@ -115,30 +106,31 @@ public class AuthorizationClientTests extends ClientTest {
         // Get the list of applications
         List<ConductorApplication> apps = authorizationClient.listApplications();
         assertNotNull(apps);
-        long found = apps.stream()
-                .map(ConductorApplication::getId)
-                .filter(id -> id.equals(application.getId()))
-                .count();
+        long found =
+                apps.stream()
+                        .map(ConductorApplication::getId)
+                        .filter(id -> id.equals(application.getId()))
+                        .count();
         assertEquals(1, found);
 
         // Create new access key
-        CreateAccessKeyResponse accessKey = authorizationClient.createAccessKey(application.getId());
-        List<AccessKeyResponse> accessKeyResponses = authorizationClient.getAccessKeys(application.getId());
+        CreateAccessKeyResponse accessKey =
+                authorizationClient.createAccessKey(application.getId());
+        List<AccessKeyResponse> accessKeyResponses =
+                authorizationClient.getAccessKeys(application.getId());
         assertEquals(1, accessKeyResponses.size());
         authorizationClient.toggleAccessKeyStatus(application.getId(), accessKey.getId());
         authorizationClient.deleteAccessKey(application.getId(), accessKey.getId());
         accessKeyResponses = authorizationClient.getAccessKeys(application.getId());
         assertEquals(0, accessKeyResponses.size());
 
-        authorizationClient.removeRoleFromApplicationUser(application.getId(), RolesEnum.ADMIN.getValue());
+        authorizationClient.removeRoleFromApplicationUser(
+                application.getId(), RolesEnum.ADMIN.getValue());
 
         String newName = "ansdjansdjna";
         authorizationClient.updateApplication(
-                new CreateOrUpdateApplicationRequest().name(newName),
-                application.getId());
-        assertEquals(
-                newName,
-                authorizationClient.getApplication(application.getId()).getName());
+                new CreateOrUpdateApplicationRequest().name(newName), application.getId());
+        assertEquals(newName, authorizationClient.getApplication(application.getId()).getName());
 
         authorizationClient.deleteApplication(application.getId());
     }
@@ -172,9 +164,7 @@ public class AuthorizationClientTests extends ClientTest {
                 throw e;
             }
         }
-        authorizationClient.upsertUser(
-                getUpserUserRequest(),
-                Commons.USER_EMAIL);
+        authorizationClient.upsertUser(getUpserUserRequest(), Commons.USER_EMAIL);
         List<ConductorUser> users = authorizationClient.listUsers(false);
         assertFalse(users.isEmpty());
         users = authorizationClient.listUsers(true);
@@ -189,9 +179,7 @@ public class AuthorizationClientTests extends ClientTest {
         authorizationClient.upsertGroup(getUpsertGroupRequest(), Commons.GROUP_ID);
         List<Group> groups = authorizationClient.listGroups();
         assertFalse(groups.isEmpty());
-        authorizationClient.addUserToGroup(
-                Commons.GROUP_ID,
-                Commons.USER_EMAIL);
+        authorizationClient.addUserToGroup(Commons.GROUP_ID, Commons.USER_EMAIL);
         boolean found = false;
         for (ConductorUser user : authorizationClient.getUsersInGroup(Commons.GROUP_ID)) {
             if (user.getName().equals(Commons.USER_NAME)) {
@@ -204,11 +192,13 @@ public class AuthorizationClientTests extends ClientTest {
                 authorizationClient.getApplication(Commons.APPLICATION_ID).getId(),
                 Commons.APPLICATION_ID);
         assertTrue(
-                authorizationClient.getGrantedPermissionsForGroup(Commons.GROUP_ID)
+                authorizationClient
+                        .getGrantedPermissionsForGroup(Commons.GROUP_ID)
                         .getGrantedAccess()
                         .isEmpty());
         assertFalse(
-                authorizationClient.getGrantedPermissionsForUser(Commons.USER_EMAIL)
+                authorizationClient
+                        .getGrantedPermissionsForUser(Commons.USER_EMAIL)
                         .getGrantedAccess()
                         .isEmpty());
     }
@@ -247,12 +237,7 @@ public class AuthorizationClientTests extends ClientTest {
     }
 
     List<String> getAccessListAll() {
-        return List.of(
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "EXECUTE",
-                "DELETE");
+        return List.of("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
     }
 
     AuthorizationRequest getAuthorizationRequest() {
