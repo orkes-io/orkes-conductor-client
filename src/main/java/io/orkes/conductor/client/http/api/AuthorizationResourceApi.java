@@ -283,9 +283,10 @@ public class AuthorizationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> grantPermissionsWithHttpInfo(AuthorizationRequest authorizationRequest)
-            throws ApiException {
-        com.squareup.okhttp.Call call = grantPermissionsValidateBeforeCall(authorizationRequest, null, null);
+    private ApiResponse<Void> grantPermissionsWithHttpInfo(
+            AuthorizationRequest authorizationRequest) throws ApiException {
+        com.squareup.okhttp.Call call =
+                grantPermissionsValidateBeforeCall(authorizationRequest, null, null);
         return apiClient.execute(call);
     }
 
@@ -397,9 +398,10 @@ public class AuthorizationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> removePermissionsWithHttpInfo(AuthorizationRequest authorizationRequest)
-            throws ApiException {
-        com.squareup.okhttp.Call call = removePermissionsValidateBeforeCall(authorizationRequest, null, null);
+    private ApiResponse<Void> removePermissionsWithHttpInfo(
+            AuthorizationRequest authorizationRequest) throws ApiException {
+        com.squareup.okhttp.Call call =
+                removePermissionsValidateBeforeCall(authorizationRequest, null, null);
         return apiClient.execute(call);
     }
 }

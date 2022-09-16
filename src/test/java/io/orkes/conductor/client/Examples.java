@@ -12,6 +12,12 @@
  */
 package io.orkes.conductor.client;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,12 +34,6 @@ import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.WorkflowUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Examples {
     private final MetadataClient metadataClient;
@@ -126,11 +126,6 @@ public class Examples {
     }
 
     List<String> getAccessListAll() {
-        return List.of(
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "EXECUTE",
-                "DELETE");
+        return List.of("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
     }
 }
