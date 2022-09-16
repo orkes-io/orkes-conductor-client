@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import io.orkes.conductor.client.SchedulerClient;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.WorkflowSchedule;
+import io.orkes.conductor.client.util.Commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -37,6 +38,7 @@ public class SchedulerClientTests extends ClientTest {
         schedulerClient.deleteSchedule(NAME);
         assertTrue(schedulerClient.getNextFewSchedules(CRON_EXPRESSION, 0L, 0L, 0).isEmpty());
         schedulerClient.saveSchedule(getSaveScheduleRequest());
+        assertEquals(1, schedulerClient.getAllSchedules(Commons.WORKFLOW_NAME).size());
         WorkflowSchedule workflowSchedule = schedulerClient.getSchedule(NAME);
         assertEquals(NAME, workflowSchedule.getName());
         assertEquals(CRON_EXPRESSION, workflowSchedule.getCronExpression());
@@ -58,9 +60,9 @@ public class SchedulerClientTests extends ClientTest {
     }
 
     SaveScheduleRequest getSaveScheduleRequest() {
-        SaveScheduleRequest saveScheduleRequest = new SaveScheduleRequest();
-        saveScheduleRequest.setName(NAME);
-        saveScheduleRequest.setCronExpression(CRON_EXPRESSION);
-        return saveScheduleRequest;
+        return new SaveScheduleRequest()
+                .name(NAME)
+                .cronExpression(CRON_EXPRESSION)
+                .startWorkflowRequest(Commons.getStartWorkflowRequest());
     }
 }
