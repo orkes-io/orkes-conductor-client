@@ -1205,7 +1205,8 @@ public class SchedulerResourceApi {
      */
     private ApiResponse<Void> saveScheduleWithHttpInfo(SaveScheduleRequest saveScheduleRequest)
             throws ApiException {
-        com.squareup.okhttp.Call call = saveScheduleValidateBeforeCall(saveScheduleRequest, null, null);
+        com.squareup.okhttp.Call call =
+                saveScheduleValidateBeforeCall(saveScheduleRequest, null, null);
         return apiClient.execute(call);
     }
 

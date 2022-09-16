@@ -62,7 +62,8 @@ public interface AuthorizationClient {
 
     CreateAccessKeyResponse createAccessKey(String id);
 
-    ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
+    ConductorApplication createApplication(
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
 
     void deleteAccessKey(String applicationId, String keyId);
 

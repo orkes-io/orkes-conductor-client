@@ -135,8 +135,8 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest)
-            throws ApiException {
+    public ConductorApplication createApplication(
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
         return applicationResourceApi.createApplication(createOrUpdateApplicationRequest);
     }
 

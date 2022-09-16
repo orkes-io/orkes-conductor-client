@@ -1139,7 +1139,8 @@ public class EventResourceApi {
      */
     private ApiResponse<Void> updateEventHandlerWithHttpInfo(EventHandler eventHandler)
             throws ApiException {
-        com.squareup.okhttp.Call call = updateEventHandlerValidateBeforeCall(eventHandler, null, null);
+        com.squareup.okhttp.Call call =
+                updateEventHandlerValidateBeforeCall(eventHandler, null, null);
         return apiClient.execute(call);
     }
 }

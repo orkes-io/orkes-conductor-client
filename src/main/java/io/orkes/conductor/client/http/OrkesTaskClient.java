@@ -122,27 +122,23 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
     @Override
     public SearchResult<TaskSummary> search(String query) {
-        throw new UnsupportedOperationException(
-                "search operation on tasks is no longer supported");
+        throw new UnsupportedOperationException("search operation on tasks is no longer supported");
     }
 
     @Override
     public SearchResult<Task> searchV2(String query) {
-        throw new UnsupportedOperationException(
-                "search operation on tasks is no longer supported");
+        throw new UnsupportedOperationException("search operation on tasks is no longer supported");
     }
 
     @Override
     public SearchResult<TaskSummary> search(
             Integer start, Integer size, String sort, String freeText, String query) {
-        throw new UnsupportedOperationException(
-                "search operation on tasks is no longer supported");
+        throw new UnsupportedOperationException("search operation on tasks is no longer supported");
     }
 
     @Override
     public SearchResult<Task> searchV2(
             Integer start, Integer size, String sort, String freeText, String query) {
-        throw new UnsupportedOperationException(
-                "search operation on tasks is no longer supported");
+        throw new UnsupportedOperationException("search operation on tasks is no longer supported");
     }
 }
