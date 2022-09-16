@@ -22,6 +22,10 @@ public class Commons {
     public static String TASK_NAME = "test-sdk-java-task";
     public static String OWNER_EMAIL = "example@orkes.io";
     public static int WORKFLOW_VERSION = 1;
+    public static String GROUP_ID = "sdk-test-group";
+    public static String USER_NAME = "Orkes User";
+    public static String USER_EMAIL = "user@orkes.io";
+    public static String APPLICATION_ID = "46f0bf10-b59d-4fbd-a053-935307c8cb86";
 
     public static TagObject getTagObject() {
         TagObject tagObject = new TagObject();
