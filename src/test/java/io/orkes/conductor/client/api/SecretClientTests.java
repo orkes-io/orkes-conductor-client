@@ -27,7 +27,7 @@ public class SecretClientTests extends ClientTest {
 
     private final SecretClient secretClient;
 
-    SecretClientTests() {
+    public SecretClientTests() {
         secretClient = super.orkesClients.getSecretClient();
     }
 
