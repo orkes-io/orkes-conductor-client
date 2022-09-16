@@ -18,12 +18,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
 import io.orkes.conductor.client.util.ApiUtil;
 
@@ -39,20 +37,21 @@ public class MetadataFromFiles {
         metadataClient = orkesClients.getMetadataClient();
     }
 
-//    @Test
-//    @DisplayName("load workflow from file and store definition in conductor")
-//    public void loadAndStoreWorkflowDefinition() throws IOException {
-//        InputStream inputStream =
-//                MetadataFromFiles.class.getResourceAsStream("/sample_workflow.json");
-//        String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-//        WorkflowDef workflowDef = objectMapper.readValue(result, WorkflowDef.class);
-//        // Unregister workflow in case it exist
-//        metadataClient.unregisterWorkflowDef(workflowDef.getName(), workflowDef.getVersion());
-//        metadataClient.registerWorkflowDef(workflowDef);
-//        Assertions.assertEquals(
-//                metadataClient.getWorkflowDef(workflowDef.getName(), workflowDef.getVersion()),
-//                workflowDef);
-//    }
+    //    @Test
+    //    @DisplayName("load workflow from file and store definition in conductor")
+    //    public void loadAndStoreWorkflowDefinition() throws IOException {
+    //        InputStream inputStream =
+    //                MetadataFromFiles.class.getResourceAsStream("/sample_workflow.json");
+    //        String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+    //        WorkflowDef workflowDef = objectMapper.readValue(result, WorkflowDef.class);
+    //        // Unregister workflow in case it exist
+    //        metadataClient.unregisterWorkflowDef(workflowDef.getName(), workflowDef.getVersion());
+    //        metadataClient.registerWorkflowDef(workflowDef);
+    //        Assertions.assertEquals(
+    //                metadataClient.getWorkflowDef(workflowDef.getName(),
+    // workflowDef.getVersion()),
+    //                workflowDef);
+    //    }
 
     @Test
     @DisplayName("load tasks from file and store definition in conductor")

@@ -12,7 +12,11 @@
  */
 package io.orkes.conductor.client;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,9 +25,6 @@ import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
-import io.orkes.conductor.client.http.OrkesMetadataClient;
-import io.orkes.conductor.client.model.*;
-import io.orkes.conductor.client.model.AuthorizationRequest;
 import io.orkes.conductor.client.model.Group;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.UpsertGroupRequest;
@@ -55,18 +56,8 @@ public class Examples {
         tagObject.setType(TagObject.TypeEnum.METADATA);
         tagObject.setKey("a");
         tagObject.setValue("b");
-        ((OrkesMetadataClient) metadataClient).addTaskTag(tagObject, Commons.TASK_NAME);
-        ((OrkesMetadataClient) metadataClient).addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
-    }
-
-    @Test
-    @DisplayName("add auth to tags")
-    public void addAuthToTags() {
-        // Add auth to tags
-        AuthorizationRequest authorizationRequest = new AuthorizationRequest();
-        authorizationRequest.access(
-                Collections.singletonList(AuthorizationRequest.AccessEnum.EXECUTE));
-        // authorizationResourceApi.grantPermissions(authorizationRequest);
+        metadataClient.addTaskTag(tagObject, Commons.TASK_NAME);
+        metadataClient.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
     }
 
     @Test
@@ -84,8 +75,7 @@ public class Examples {
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(Commons.WORKFLOW_NAME);
         startWorkflowRequest.setVersion(1);
-        Map<String, Object> input = new HashMap<>();
-        startWorkflowRequest.setInput(input);
+        startWorkflowRequest.setInput(new HashMap<>());
         workflowClient.startWorkflow(startWorkflowRequest);
     }
 
@@ -136,7 +126,6 @@ public class Examples {
     }
 
     List<String> getAccessListAll() {
-        return new ArrayList<String>(
-                Arrays.asList("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE"));
+        return List.of("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
     }
 }

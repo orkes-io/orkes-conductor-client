@@ -1,25 +1,34 @@
+/*
+ * Copyright 2022 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.sdk.examples;
+
+import java.util.Arrays;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
+
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.WorkflowClient;
-
-import java.util.Arrays;
 
 import static io.orkes.conductor.sdk.examples.MetadataManagement.workflowDef;
 
 /**
-
- Examples for managing Workflow operations in Conductor
-
-1. startWorkflow - Start a new workflow
-2. getWorkflow - Get workflow execution status
-3. pauseWorkflow - Pause workflow
-4. resumeWorkflow - Resume workflow
-5. terminateWorkflow - Terminate workflow
-6. deleteWorkflow - Delete workflow
-*/
+ * Examples for managing Workflow operations in Conductor
+ *
+ * <p>1. startWorkflow - Start a new workflow 2. getWorkflow - Get workflow execution status 3.
+ * pauseWorkflow - Pause workflow 4. resumeWorkflow - Resume workflow 5. terminateWorkflow -
+ * Terminate workflow 6. deleteWorkflow - Delete workflow
+ */
 public class WorkflowManagement {
 
     private static WorkflowClient workflowClient;

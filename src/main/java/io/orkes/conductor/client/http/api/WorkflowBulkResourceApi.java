@@ -248,7 +248,11 @@ public class WorkflowBulkResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                restart1Call(workflowIds, useLatestDefinitions, progressListener, progressRequestListener);
+                restart1Call(
+                        workflowIds,
+                        useLatestDefinitions,
+                        progressListener,
+                        progressRequestListener);
         return call;
     }
 
@@ -481,7 +485,8 @@ public class WorkflowBulkResourceApi {
                     "Missing the required parameter 'body' when calling retry1(Async)");
         }
 
-        com.squareup.okhttp.Call call = retry1Call(workflowIds, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call =
+                retry1Call(workflowIds, progressListener, progressRequestListener);
         return call;
     }
 
@@ -506,7 +511,8 @@ public class WorkflowBulkResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<BulkResponse> retry1WithHttpInfo(List<String> workflowIds) throws ApiException {
+    private ApiResponse<BulkResponse> retry1WithHttpInfo(List<String> workflowIds)
+            throws ApiException {
         com.squareup.okhttp.Call call = retry1ValidateBeforeCall(workflowIds, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -628,9 +634,9 @@ public class WorkflowBulkResourceApi {
      */
     private ApiResponse<BulkResponse> terminateWithHttpInfo(List<String> workflowIds, String reason)
             throws ApiException {
-        com.squareup.okhttp.Call call = terminateValidateBeforeCall(workflowIds, reason, null, null);
+        com.squareup.okhttp.Call call =
+                terminateValidateBeforeCall(workflowIds, reason, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
-
 }
