@@ -12,17 +12,73 @@
  */
 package io.orkes.conductor.client.api;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
+import com.netflix.conductor.common.metadata.events.EventHandler;
+import com.netflix.conductor.common.metadata.events.EventHandler.Action;
+import com.netflix.conductor.common.metadata.events.EventHandler.StartWorkflow;
+
 import io.orkes.conductor.client.EventClient;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.util.Commons;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 public class EventClientTests extends ClientTest {
+    private static final String EVENT_NAME = "test-sdk-java-event-name";
+    private static final String EVENT = "test-sdk-java-event";
+
     private final EventClient eventClient;
 
     public EventClientTests() {
-        this.eventClient = super.orkesClients.getEventClient();
+        eventClient = super.orkesClients.getEventClient();
     }
 
     @Test
-    void testMethods() {}
+    void testMethods() {
+        try {
+            eventClient.unregisterEventHandler(EVENT_NAME);
+        } catch (ApiException e) {
+            if (e.getCode() != 404) {
+                throw e;
+            }
+        }
+        EventHandler eventHandler = getEventHandler();
+        eventClient.registerEventHandler(eventHandler);
+        eventClient.updateEventHandler(eventHandler);
+        List<EventHandler> events = eventClient.getEventHandlers(EVENT, false);
+        assertEquals(1, events.size());
+        events.forEach(
+                event -> {
+                    assertEquals(eventHandler.getName(), event.getName());
+                    assertEquals(eventHandler.getEvent(), event.getEvent());
+                });
+        eventClient.unregisterEventHandler(EVENT_NAME);
+        assertIterableEquals(List.of(), eventClient.getEventHandlers(EVENT, false));
+    }
+
+    EventHandler getEventHandler() {
+        EventHandler eventHandler = new EventHandler();
+        eventHandler.setName(EVENT_NAME);
+        eventHandler.setEvent(EVENT);
+        eventHandler.setActions(List.of(getEventHandlerAction()));
+        return eventHandler;
+    }
+
+    Action getEventHandlerAction() {
+        Action action = new Action();
+        action.setAction(Action.Type.start_workflow);
+        action.setStart_workflow(getStartWorkflowAction());
+        return action;
+    }
+
+    StartWorkflow getStartWorkflowAction() {
+        StartWorkflow startWorkflow = new StartWorkflow();
+        startWorkflow.setName(Commons.WORKFLOW_NAME);
+        startWorkflow.setVersion(Commons.WORKFLOW_VERSION);
+        return startWorkflow;
+    }
 }
