@@ -17,6 +17,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.AuthorizationClient;
+import io.orkes.conductor.client.SecretsManager;
 import io.orkes.conductor.client.http.api.ApplicationResourceApi;
 import io.orkes.conductor.client.http.api.AuthorizationResourceApi;
 import io.orkes.conductor.client.http.api.GroupResourceApi;
@@ -132,6 +133,12 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     @Override
     public CreateAccessKeyResponse createAccessKey(String id) throws ApiException {
         return applicationResourceApi.createAccessKey(id);
+    }
+
+    @Override
+    public void createAccessKey(String id, SecretsManager secretsManager, String secretPath) {
+        CreateAccessKeyResponse response = applicationResourceApi.createAccessKey(id);
+        secretsManager.storeSecret(secretPath, response.getSecret());
     }
 
     @Override

@@ -62,6 +62,8 @@ public interface AuthorizationClient {
 
     CreateAccessKeyResponse createAccessKey(String id);
 
+    void createAccessKey(String id, SecretsManager secretsManager, String secretPath);
+
     ConductorApplication createApplication(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
 
