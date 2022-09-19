@@ -1237,11 +1237,10 @@ public class ApiClient {
                     "KeyId and KeySecret must be set in order to get an authentication token");
         }
         synchronized (this.tokenMutex) {
-
             String secretKey = this.keyId;
             String secretValue = this.keySecret;
 
-            if(secretsManager != null) {
+            if (secretsManager != null) {
                 secretKey = secretsManager.getSecret(this.keyId);
                 secretValue = secretsManager.getSecret(this.keySecret);
             }
