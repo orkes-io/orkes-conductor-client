@@ -81,12 +81,19 @@ public class ApiClient {
     private String token;
     private Object tokenMutex;
 
+    private SecretsManager secretsManager;
+
     /*
      * Constructor for ApiClient
      */
 
     public ApiClient() {
         this("http://localhost:8080/api");
+    }
+
+    public ApiClient(String basePath, SecretsManager secretsManager) {
+        this(basePath);
+        this.secretsManager = secretsManager;
     }
 
     public ApiClient(String basePath) {
@@ -105,6 +112,11 @@ public class ApiClient {
         this.keySecret = null;
         this.token = null;
         this.tokenMutex = new Object();
+    }
+
+    public ApiClient(String basePath, SecretsManager secretsManager, String key, String secret) {
+        this(basePath, key, secret);
+        this.secretsManager = secretsManager;
     }
 
     public ApiClient(String basePath, String keyId, String keySecret) {
@@ -465,6 +477,14 @@ public class ApiClient {
     public ApiClient setWriteTimeout(int writeTimeout) {
         httpClient.setWriteTimeout(writeTimeout, TimeUnit.MILLISECONDS);
         return this;
+    }
+
+    public SecretsManager getSecretsManager() {
+        return secretsManager;
+    }
+
+    public void setSecretsManager(SecretsManager secretsManager) {
+        this.secretsManager = secretsManager;
     }
 
     /**
@@ -1217,6 +1237,15 @@ public class ApiClient {
                     "KeyId and KeySecret must be set in order to get an authentication token");
         }
         synchronized (this.tokenMutex) {
+
+            String secretKey = this.keyId;
+            String secretValue = this.keySecret;
+
+            if(secretsManager != null) {
+                secretKey = secretsManager.getSecret(this.keyId);
+                secretValue = secretsManager.getSecret(this.keySecret);
+            }
+
             GenerateTokenRequest generateTokenRequest =
                     new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
             Map<String, String> response =
