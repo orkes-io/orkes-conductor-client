@@ -13,6 +13,7 @@
 package io.orkes.conductor.client.util;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
+import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
@@ -47,5 +48,9 @@ public class Commons {
         TaskDef taskDef = new TaskDef();
         taskDef.setName(Commons.TASK_NAME);
         return taskDef;
+    }
+
+    public static StartWorkflowRequest getStartWorkflowRequest() {
+        return new StartWorkflowRequest().withName(WORKFLOW_NAME).withVersion(WORKFLOW_VERSION);
     }
 }
