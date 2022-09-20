@@ -62,32 +62,16 @@ public class AwsSecretsManager implements SecretsManager {
                         PredefinedRetryPolicies.DEFAULT_BACKOFF_STRATEGY,
                         3,
                         false);
-
         AWSSimpleSystemsManagementClientBuilder builder =
                 AWSSimpleSystemsManagementClientBuilder.standard()
                         .withClientConfiguration(
                                 new ClientConfiguration().withRetryPolicy(retryPolicy))
                         .withRegion(region)
                         .withCredentials(credentialsProvider);
-
         return builder.build();
     }
 
     private String getRegion() {
-        String region = System.getenv("aws.region");
-
-        if (region == null) {
-            region = System.getProperty("aws.region");
-        }
-
-        if (region == null) {
-            region = System.getenv("AWS_REGION");
-        }
-
-        if (region == null) {
-            region = System.getProperty("AWS_REGION");
-        }
-
-        return region;
+        return getProperty("aws.region");
     }
 }
