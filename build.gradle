@@ -77,7 +77,7 @@ dependencies {
     //Integrations
     implementation "com.amazonaws:aws-java-sdk-ssm:${versions.awsSsm}"
     implementation "com.azure:azure-security-keyvault-secrets:${versions.azureSsm}"
-    implementation "com.azure:azure-identity:${versions.azureIdentity}"
+    // implementation "com.azure:azure-identity:${versions.azureIdentity}"
 
     // test dependencies
     testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
