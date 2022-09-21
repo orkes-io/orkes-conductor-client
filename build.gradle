@@ -31,7 +31,7 @@ ext {
             jackson    : '2.11.4!!',
             jersey     : '1.19.4',
             junit      : '5.9.0',
-            slf4j      : '1.7.36',
+            slf4j      : '2.0.0',
             spectator  : '0.122.0',
             spock      : '2.1-groovy-2.5',
             wiremock   : '2.33.2',
