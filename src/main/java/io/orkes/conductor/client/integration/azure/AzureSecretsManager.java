@@ -14,6 +14,7 @@ package io.orkes.conductor.client.integration.azure;
 
 import io.orkes.conductor.client.SecretsManager;
 
+import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.security.keyvault.secrets.SecretClient;
 import com.azure.security.keyvault.secrets.SecretClientBuilder;
 
@@ -45,7 +46,7 @@ public class AzureSecretsManager implements SecretsManager {
         }
         return new SecretClientBuilder()
                 .vaultUrl(String.format("https://%s.vault.azure.net/", keyVaultName))
-                // .credential(new DefaultAzureCredentialBuilder().build())
+                .credential(new DefaultAzureCredentialBuilder().build())
                 .buildClient();
     }
 }
