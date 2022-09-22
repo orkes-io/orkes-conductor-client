@@ -28,13 +28,25 @@ public class ApiUtil {
     }
 
     public static ApiClient getApiClientWithCredentials() {
-        String basePath = getEnv(ENV_ROOT_URI);
+        String basePath = getBasePath();
         assertNotNull(basePath, ENV_ROOT_URI + " env not set");
-        String keyId = getEnv(ENV_KEY_ID);
+        String keyId = getKeyId();
         assertNotNull(keyId, ENV_KEY_ID + " env not set");
-        String keySecret = getEnv(ENV_SECRET);
-        assertNotNull(keyId, ENV_SECRET + " env not set");
+        String keySecret = getKeySecret();
+        assertNotNull(keySecret, ENV_SECRET + " env not set");
         return new ApiClient(basePath, keyId, keySecret);
+    }
+
+    public static String getBasePath() {
+        return getEnv(ENV_ROOT_URI);
+    }
+
+    public static String getKeyId() {
+        return getEnv(ENV_KEY_ID);
+    }
+
+    public static String getKeySecret() {
+        return getEnv(ENV_SECRET);
     }
 
     static String getEnv(String key) {

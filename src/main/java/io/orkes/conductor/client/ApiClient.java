@@ -79,7 +79,6 @@ public class ApiClient {
     private String keySecret;
 
     private String token;
-    private Object tokenMutex;
 
     private SecretsManager secretsManager;
     private String ssmKeyPath;
@@ -95,19 +94,10 @@ public class ApiClient {
 
     public ApiClient(String basePath) {
         this.basePath = basePath;
-
         httpClient = new OkHttpClient();
-
         verifyingSsl = true;
-
         json = new JSON();
-
         authentications = new HashMap<String, Authentication>();
-
-        this.keyId = null;
-        this.keySecret = null;
-        this.token = null;
-        this.tokenMutex = new Object();
     }
 
     public ApiClient(
@@ -116,6 +106,11 @@ public class ApiClient {
         this.secretsManager = secretsManager;
         this.ssmKeyPath = keyPath;
         this.ssmSecretPath = secretPath;
+        try {
+            this.refreshToken();
+        } catch (Exception e) {
+            LOGGER.warn("Failed to set authentication token. Reason: " + e.getMessage());
+        }
     }
 
     public ApiClient(String basePath, String keyId, String keySecret) {
@@ -1227,47 +1222,38 @@ public class ApiClient {
         }
     }
 
-    public void refreshToken() throws Exception {
+    public synchronized String getToken() {
+        return this.token;
+    }
+
+    synchronized void refreshToken() throws Exception {
         if (this.getToken() != null) {
             return;
         }
-        synchronized (this.tokenMutex) {
-            if (secretsManager != null) {
-                keyId = secretsManager.getSecret(this.ssmKeyPath);
-                keySecret = secretsManager.getSecret(this.ssmSecretPath);
-            }
-            if (this.keyId == null || this.keySecret == null) {
-                throw new Exception(
-                        "KeyId and KeySecret must be set in order to get an authentication token");
-            }
-            GenerateTokenRequest generateTokenRequest =
-                    new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
-            Map<String, String> response =
-                    TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest)
-                            .getData();
-            final String token = response.get("token");
-            this.setToken(token);
+        if (secretsManager != null) {
+            keyId = secretsManager.getSecret(this.ssmKeyPath);
+            keySecret = secretsManager.getSecret(this.ssmSecretPath);
         }
+        if (this.keyId == null || this.keySecret == null) {
+            throw new Exception(
+                    "KeyId and KeySecret must be set in order to get an authentication token");
+        }
+        GenerateTokenRequest generateTokenRequest =
+                new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
+        Map<String, String> response =
+                TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
+        final String token = response.get("token");
+        this.setToken(token);
     }
 
-    public String getToken() {
-        synchronized (this.tokenMutex) {
-            return this.token;
-        }
-    }
-
-    void setToken(String token) {
-        synchronized (this.tokenMutex) {
-            this.token = token;
-        }
+    synchronized void setToken(String token) {
+        this.token = token;
         this.setApiKeyHeader(token);
     }
 
-    void setApiKeyHeader(String token) {
-        synchronized (this.tokenMutex) {
-            ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
-            apiKeyAuth.setApiKey(token);
-            authentications.put("api_key", apiKeyAuth);
-        }
+    synchronized void setApiKeyHeader(String token) {
+        ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
+        apiKeyAuth.setApiKey(token);
+        authentications.put("api_key", apiKeyAuth);
     }
 }
