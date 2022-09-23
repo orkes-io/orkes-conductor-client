@@ -12,26 +12,13 @@
  */
 package io.orkes.conductor.client.util.secrets.manager;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 
 public abstract class TestWithAwsContainer {
     protected static AWSContainer awsContainer;
 
-    @BeforeAll
-    static void setupAwsContainer() {
+    static {
         awsContainer = new AWSContainer(null, LocalStackContainer.Service.SSM);
-    }
-
-    @BeforeEach
-    void init() {
         awsContainer.start();
-    }
-
-    @AfterEach
-    void shutdown() {
-        awsContainer.close();
     }
 }
