@@ -28,6 +28,10 @@ public class AwsSecretsManager implements SecretsManager {
 
     private final AWSSimpleSystemsManagement client;
 
+    public AwsSecretsManager(AWSSimpleSystemsManagement awsSimpleSystemsManagement) {
+        this.client = awsSimpleSystemsManagement;
+    }
+
     public AwsSecretsManager(AWSCredentialsProvider credentialsProvider, String region) {
         this.client = createClient(credentialsProvider, region);
     }

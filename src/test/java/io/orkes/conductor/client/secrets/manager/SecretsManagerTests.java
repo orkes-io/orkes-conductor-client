@@ -12,54 +12,86 @@
  */
 package io.orkes.conductor.client.secrets.manager;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.localstack.LocalStackContainer;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.SecretsManager;
 import io.orkes.conductor.client.secrets.manager.aws.AwsSecretsManager;
 import io.orkes.conductor.client.secrets.manager.azure.AzureSecretsManager;
+import io.orkes.conductor.client.secrets.manager.util.AWSContainer;
 import io.orkes.conductor.client.util.ApiUtil;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class SecretsManagerTests {
-    private static final String KEY_PATH = "ABCDJSFNFJQNW";
-    private static final String SECRET_PATH = "NASDQJWDNQW";
+    private static final String KEY_PATH = "path/to/key";
+    private static final String SECRET_PATH = "path/to/secret";
 
-    private final ApiClient apiClient;
-
-    public SecretsManagerTests() {
-        apiClient = ApiUtil.getApiClientWithCredentials();
+    @Test
+    void testAwsSecretsManagerWithoutCredentials() throws Exception {
+        AWSContainer awsContainer = new AWSContainer(null, LocalStackContainer.Service.SSM);
+        awsContainer.start();
+        AwsSecretsManager awsSecretsManager = getAwsSecretsManager(awsContainer);
+        ApiClient customApiClient =
+                new ApiClient(ApiUtil.getBasePath(), awsSecretsManager, KEY_PATH, SECRET_PATH);
+        assertNull(customApiClient.getToken());
+        awsContainer.close();
     }
 
     @Test
-    void testAwsSecretsManager() {
-        AwsSecretsManager awsSecretsManager = mock(AwsSecretsManager.class);
+    void testAwsSecretsManager() throws Exception {
+        AWSContainer awsContainer = new AWSContainer(null, LocalStackContainer.Service.SSM);
+        awsContainer.start();
+        AwsSecretsManager awsSecretsManager = getAwsSecretsManager(awsContainer);
+        awsSecretsManager.storeSecret(KEY_PATH, ApiUtil.getKeyId());
+        awsSecretsManager.storeSecret(SECRET_PATH, ApiUtil.getKeySecret());
         testSecretManager(awsSecretsManager);
+        awsContainer.close();
     }
 
     @Test
     void testAzureSecretsManager() {
         AzureSecretsManager azureSecretsManager = mock(AzureSecretsManager.class);
+        when(azureSecretsManager.getSecret(KEY_PATH)).thenReturn(ApiUtil.getKeyId());
+        when(azureSecretsManager.getSecret(SECRET_PATH)).thenReturn(ApiUtil.getKeySecret());
         testSecretManager(azureSecretsManager);
     }
 
     void testSecretManager(SecretsManager secretsManager) {
-        when(secretsManager.getSecret(KEY_PATH)).thenReturn(ApiUtil.getKeyId());
-        when(secretsManager.getSecret(SECRET_PATH)).thenReturn(ApiUtil.getKeySecret());
+        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         ApiClient customApiClient =
                 new ApiClient(ApiUtil.getBasePath(), secretsManager, KEY_PATH, SECRET_PATH);
-        List<String> expected = getCommonTokenPrefix(this.apiClient.getToken());
-        List<String> received = getCommonTokenPrefix(customApiClient.getToken());
-        assertIterableEquals(expected, received);
+        assertEquals(
+                getCommonTokenPrefix(apiClient.getToken()),
+                getCommonTokenPrefix(customApiClient.getToken()));
     }
 
-    List<String> getCommonTokenPrefix(String token) {
+    String getCommonTokenPrefix(String token) {
+        if (token == null) {
+            return null;
+        }
         String[] splitted = token.split("[.]", 0);
-        return List.of(splitted[0]);
+        return splitted[0];
+    }
+
+    AwsSecretsManager getAwsSecretsManager(AWSContainer awsContainer) {
+        AWSSimpleSystemsManagement awsSimpleSystemsManagement =
+                getAWSSimpleSystemsManagement(awsContainer);
+        return new AwsSecretsManager(awsSimpleSystemsManagement);
+    }
+
+    AWSSimpleSystemsManagement getAWSSimpleSystemsManagement(AWSContainer awsContainer) {
+        return AWSSimpleSystemsManagementClientBuilder.standard()
+                .withEndpointConfiguration(
+                        awsContainer.getEndpointConfiguration(LocalStackContainer.Service.SSM))
+                .withCredentials(awsContainer.getDefaultCredentialsProvider())
+                .build();
     }
 }
