@@ -26,26 +26,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class AwsSecretsManagerTests extends TestWithAwsContainer {
     @Test
     void testAwsSecretsManagerWithoutCredentials() throws Exception {
-        awsContainer.start();
         AwsSecretsManager awsSecretsManager = getAwsSecretsManager();
         ApiClient customApiClient =
                 new ApiClient(
                         ApiUtil.getBasePath(),
                         awsSecretsManager,
-                        "random_key_path",
-                        "random_secret_path");
+                        Commons.SECRET_MANAGER_KEY_PATH,
+                        Commons.SECRET_MANAGER_SECRET_PATH);
         assertNull(customApiClient.getToken());
-        awsContainer.close();
     }
 
     @Test
     void testAwsSecretsManager() throws Exception {
-        awsContainer.start();
         AwsSecretsManager awsSecretsManager = getAwsSecretsManager();
         awsSecretsManager.storeSecret(Commons.SECRET_MANAGER_KEY_PATH, ApiUtil.getKeyId());
         awsSecretsManager.storeSecret(Commons.SECRET_MANAGER_SECRET_PATH, ApiUtil.getKeySecret());
         SecretsManagerUtil.validateApiClientWithSecretsManager(awsSecretsManager);
-        awsContainer.close();
     }
 
     AwsSecretsManager getAwsSecretsManager() {
