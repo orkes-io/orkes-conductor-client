@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.secrets.manager.util;
+package io.orkes.conductor.client.util.secrets.manager;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -19,6 +19,9 @@ import org.testcontainers.containers.Network;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
+
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;
 
 public class AWSContainer extends LocalStackContainer {
     private static final String NETWORK_ALIAS = "localstack";
@@ -40,6 +43,14 @@ public class AWSContainer extends LocalStackContainer {
     public void start() {
         super.start();
         setProperties(services);
+    }
+
+    public AWSSimpleSystemsManagement getAWSSimpleSystemsManagement() {
+        return AWSSimpleSystemsManagementClientBuilder.standard()
+                .withEndpointConfiguration(
+                        getEndpointConfiguration(LocalStackContainer.Service.SSM))
+                .withCredentials(getDefaultCredentialsProvider())
+                .build();
     }
 
     void setProperties(LocalStackContainer.Service... services) {
