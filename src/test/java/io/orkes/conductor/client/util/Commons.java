@@ -27,6 +27,8 @@ public class Commons {
     public static String USER_NAME = "Orkes User";
     public static String USER_EMAIL = "user@orkes.io";
     public static String APPLICATION_ID = "46f0bf10-b59d-4fbd-a053-935307c8cb86";
+    public static final String SECRET_MANAGER_KEY_PATH = "path/to/key";
+    public static final String SECRET_MANAGER_SECRET_PATH = "path/to/secret";
 
     public static TagObject getTagObject() {
         TagObject tagObject = new TagObject();

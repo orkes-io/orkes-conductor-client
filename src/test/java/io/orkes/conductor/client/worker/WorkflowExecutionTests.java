@@ -58,7 +58,7 @@ public class WorkflowExecutionTests {
         List<String> workflowIds = startWorkflows(10, Commons.WORKFLOW_NAME);
         workflowIds.add(startWorkflow(Commons.WORKFLOW_NAME));
         this.taskRunnerConfigurer.init();
-        Thread.sleep(5 * 1000);
+        Thread.sleep(7 * 1000);
         workflowIds.forEach(workflowId -> validateCompletedWorkflow(workflowId));
         this.taskRunnerConfigurer.shutdown();
     }

@@ -62,7 +62,7 @@ public class ApiClient {
     private final String basePath;
     private final Map<String, String> defaultHeaderMap = new HashMap<String, String>();
 
-    private String tempFolderPath = null;
+    private String tempFolderPath;
 
     private Map<String, Authentication> authentications;
 
@@ -79,7 +79,10 @@ public class ApiClient {
     private String keySecret;
 
     private String token;
-    private Object tokenMutex;
+
+    private SecretsManager secretsManager;
+    private String ssmKeyPath;
+    private String ssmSecretPath;
 
     /*
      * Constructor for ApiClient
@@ -91,20 +94,23 @@ public class ApiClient {
 
     public ApiClient(String basePath) {
         this.basePath = basePath;
-
         httpClient = new OkHttpClient();
-
         verifyingSsl = true;
-
         json = new JSON();
-
-        // Setup authentications (key: authentication name, value: authentication).
         authentications = new HashMap<String, Authentication>();
+    }
 
-        this.keyId = null;
-        this.keySecret = null;
-        this.token = null;
-        this.tokenMutex = new Object();
+    public ApiClient(
+            String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
+        this(basePath);
+        this.secretsManager = secretsManager;
+        this.ssmKeyPath = keyPath;
+        this.ssmSecretPath = secretPath;
+        try {
+            this.refreshToken();
+        } catch (Exception e) {
+            LOGGER.warn("Failed to set authentication token. Reason: " + e.getMessage());
+        }
     }
 
     public ApiClient(String basePath, String keyId, String keySecret) {
@@ -382,7 +388,7 @@ public class ApiClient {
 
     /**
      * The path of temporary folder used to store downloaded files from endpoints with file
-     * response. The default value is <code>null</code>, i.e. using the system's default tempopary
+     * response. The default value is <code>null</code>, i.e. using the system's default temporary
      * folder.
      *
      * @see <a href=
@@ -465,6 +471,14 @@ public class ApiClient {
     public ApiClient setWriteTimeout(int writeTimeout) {
         httpClient.setWriteTimeout(writeTimeout, TimeUnit.MILLISECONDS);
         return this;
+    }
+
+    public SecretsManager getSecretsManager() {
+        return secretsManager;
+    }
+
+    public void setSecretsManager(SecretsManager secretsManager) {
+        this.secretsManager = secretsManager;
     }
 
     /**
@@ -1037,8 +1051,8 @@ public class ApiClient {
     /**
      * Set header parameters to the request builder, including default headers.
      *
-     * @param headerParams Header parameters in the ofrm of Map
-     * @param reqBuilder Reqeust.Builder
+     * @param headerParams Header parameters in the from of Map
+     * @param reqBuilder Request.Builder
      */
     public void processHeaderParams(Map<String, String> headerParams, Request.Builder reqBuilder) {
         for (Entry<String, String> param : headerParams.entrySet()) {
@@ -1208,43 +1222,38 @@ public class ApiClient {
         }
     }
 
-    public void refreshToken() throws Exception {
+    public synchronized String getToken() {
+        return this.token;
+    }
+
+    synchronized void refreshToken() throws Exception {
         if (this.getToken() != null) {
             return;
+        }
+        if (secretsManager != null) {
+            keyId = secretsManager.getSecret(this.ssmKeyPath);
+            keySecret = secretsManager.getSecret(this.ssmSecretPath);
         }
         if (this.keyId == null || this.keySecret == null) {
             throw new Exception(
                     "KeyId and KeySecret must be set in order to get an authentication token");
         }
-        synchronized (this.tokenMutex) {
-            GenerateTokenRequest generateTokenRequest =
-                    new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
-            Map<String, String> response =
-                    TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest)
-                            .getData();
-            final String token = response.get("token");
-            this.setToken(token);
-        }
+        GenerateTokenRequest generateTokenRequest =
+                new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
+        Map<String, String> response =
+                TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
+        final String token = response.get("token");
+        this.setToken(token);
     }
 
-    public String getToken() {
-        synchronized (this.tokenMutex) {
-            return this.token;
-        }
-    }
-
-    void setToken(String token) {
-        synchronized (this.tokenMutex) {
-            this.token = token;
-        }
+    synchronized void setToken(String token) {
+        this.token = token;
         this.setApiKeyHeader(token);
     }
 
-    void setApiKeyHeader(String token) {
-        synchronized (this.tokenMutex) {
-            ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
-            apiKeyAuth.setApiKey(token);
-            authentications.put("api_key", apiKeyAuth);
-        }
+    synchronized void setApiKeyHeader(String token) {
+        ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
+        apiKeyAuth.setApiKey(token);
+        authentications.put("api_key", apiKeyAuth);
     }
 }
