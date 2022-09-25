@@ -24,7 +24,8 @@ jobs:
           java-version: '11'
       - name: Publish
         run: |
-          export ORKES_CLIENT_VERSION="$(git describe --tags --abbrev=0)"
+          export VERSION="$(git describe --tags --abbrev=0)"
+          export ORKES_CLIENT_VERSION=`echo ${VERSION:1}`
           echo Publishing version $ORKES_CLIENT_VERSION
           ./gradlew publish -Pversion=$ORKES_CLIENT_VERSION -PmavenCentral -Pusername=${{ secrets.SONATYPE_USERNAME }} -Ppassword=${{ secrets.SONATYPE_PASSWORD }}
     env:
