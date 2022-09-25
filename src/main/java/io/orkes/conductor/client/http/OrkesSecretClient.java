@@ -17,7 +17,7 @@ import java.util.Set;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.SecretClient;
-import io.orkes.conductor.client.http.api.*;
+import io.orkes.conductor.client.http.api.SecretResourceApi;
 
 public class OrkesSecretClient extends OrkesClient implements SecretClient {
 

@@ -14,10 +14,8 @@ package io.orkes.conductor.client;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -37,28 +35,11 @@ public class MetadataFromFiles {
         metadataClient = orkesClients.getMetadataClient();
     }
 
-    //    @Test
-    //    @DisplayName("load workflow from file and store definition in conductor")
-    //    public void loadAndStoreWorkflowDefinition() throws IOException {
-    //        InputStream inputStream =
-    //                MetadataFromFiles.class.getResourceAsStream("/sample_workflow.json");
-    //        String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-    //        WorkflowDef workflowDef = objectMapper.readValue(result, WorkflowDef.class);
-    //        // Unregister workflow in case it exist
-    //        metadataClient.unregisterWorkflowDef(workflowDef.getName(), workflowDef.getVersion());
-    //        metadataClient.registerWorkflowDef(workflowDef);
-    //        Assertions.assertEquals(
-    //                metadataClient.getWorkflowDef(workflowDef.getName(),
-    // workflowDef.getVersion()),
-    //                workflowDef);
-    //    }
-
     @Test
     @DisplayName("load tasks from file and store definition in conductor")
     public void loadAndStoreTaskDefinitions() throws IOException {
         InputStream inputStream = MetadataFromFiles.class.getResourceAsStream("/sample_tasks.json");
-        String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        List<TaskDef> taskDefs = objectMapper.readValue(result, List.class);
+        List<TaskDef> taskDefs = objectMapper.readValue(inputStream, List.class);
         metadataClient.registerTaskDefs(taskDefs);
     }
 }

@@ -26,9 +26,7 @@ import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.WorkflowUtil;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MetadataClientTests extends ClientTest {
     private final MetadataClient metadataClient;

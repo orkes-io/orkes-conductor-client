@@ -20,9 +20,7 @@ import org.junit.jupiter.api.Test;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.util.Commons;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskClientTests extends ClientTest {
     private final TaskClient taskClient;

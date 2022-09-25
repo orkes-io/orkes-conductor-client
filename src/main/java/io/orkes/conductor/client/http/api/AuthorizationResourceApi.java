@@ -21,7 +21,6 @@ import java.util.Map;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.Configuration;
 import io.orkes.conductor.client.model.AuthorizationRequest;
 import io.orkes.conductor.client.model.Subject;
 

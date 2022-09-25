@@ -24,10 +24,7 @@ import io.orkes.conductor.client.model.TargetRef.TypeEnum;
 import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
 import io.orkes.conductor.client.util.Commons;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthorizationClientTests extends ClientTest {
     private final AuthorizationClient authorizationClient;

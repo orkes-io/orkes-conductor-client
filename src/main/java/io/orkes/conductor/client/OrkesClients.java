@@ -12,10 +12,7 @@
  */
 package io.orkes.conductor.client;
 
-import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
-
 import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.auth.AuthorizationClientFilter;
 
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -54,57 +51,6 @@ public class OrkesClients {
 
     public TaskClient getTaskClient() {
         return new OrkesTaskClient(apiClient);
-    }
-
-    public com.netflix.conductor.client.http.WorkflowClient getWorkflowClientLegacy() {
-        return getWorkflowClientLegacy(10);
-    }
-
-    public com.netflix.conductor.client.http.WorkflowClient getWorkflowClientLegacy(
-            int threadPoolSize) {
-        AuthorizationClientFilter authorizationClientFilter =
-                new AuthorizationClientFilter(apiClient);
-        com.netflix.conductor.client.http.WorkflowClient workflowClient =
-                new com.netflix.conductor.client.http.WorkflowClient(
-                        conductorClientConfig(
-                                apiClient.getReadTimeout(),
-                                apiClient.getConnectTimeout(),
-                                threadPoolSize),
-                        new DefaultConductorClientConfiguration(),
-                        null,
-                        authorizationClientFilter);
-        String basePath = apiClient.getBasePath();
-        if (!basePath.endsWith("/")) {
-            basePath = basePath + "/";
-        }
-        workflowClient.setRootURI(basePath);
-
-        return workflowClient;
-    }
-
-    public com.netflix.conductor.client.http.TaskClient getTaskClientLegacy() {
-        return getTaskClientLegacy(10);
-    }
-
-    public com.netflix.conductor.client.http.TaskClient getTaskClientLegacy(int threadPoolSize) {
-        AuthorizationClientFilter authorizationClientFilter =
-                new AuthorizationClientFilter(apiClient);
-        com.netflix.conductor.client.http.TaskClient taskClient =
-                new com.netflix.conductor.client.http.TaskClient(
-                        conductorClientConfig(
-                                apiClient.getReadTimeout(),
-                                apiClient.getConnectTimeout(),
-                                threadPoolSize),
-                        new DefaultConductorClientConfiguration(),
-                        null,
-                        authorizationClientFilter);
-        String basePath = apiClient.getBasePath();
-        if (!basePath.endsWith("/")) {
-            basePath = basePath + "/";
-        }
-        taskClient.setRootURI(basePath);
-
-        return taskClient;
     }
 
     private ClientConfig conductorClientConfig(

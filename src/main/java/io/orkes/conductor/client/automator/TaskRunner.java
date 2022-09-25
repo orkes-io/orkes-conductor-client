@@ -41,7 +41,6 @@ import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.http.ApiException;
 
 import com.google.common.base.Stopwatch;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 class TaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunner.class);
@@ -59,9 +58,6 @@ class TaskRunner {
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
     private static final String ALL_WORKERS = "all";
 
-    // used or managing external payload
-    private com.netflix.conductor.client.http.TaskClient taskClientForExternalPayload;
-
     TaskRunner(
             EurekaClient eurekaClient,
             TaskClient taskClient,
@@ -77,9 +73,6 @@ class TaskRunner {
         this.taskToDomain = taskToDomain;
         this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
-        this.taskClientForExternalPayload =
-                new com.netflix.conductor.client.http.TaskClient(
-                        new DefaultClientConfig(), conductorClientConfiguration, null);
         this.executorService =
                 (ThreadPoolExecutor)
                         Executors.newFixedThreadPool(
@@ -296,15 +289,8 @@ class TaskRunner {
     }
 
     private Optional<String> upload(TaskResult result, String taskType) {
-        try {
-            return taskClientForExternalPayload.evaluateAndUploadLargePayload(
-                    result.getOutputData(), taskType);
-        } catch (IllegalArgumentException iae) {
-            result.setReasonForIncompletion(iae.getMessage());
-            result.setOutputData(null);
-            result.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
-            return Optional.empty();
-        }
+        // do nothing
+        return Optional.empty();
     }
 
     private <T, R> R retryOperation(Function<T, R> operation, int count, T input, String opName) {

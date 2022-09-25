@@ -19,9 +19,7 @@ import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 import io.orkes.conductor.client.util.Commons;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SchedulerClientTests extends ClientTest {
     private final String NAME = "test_sdk_java_scheduler_name";
