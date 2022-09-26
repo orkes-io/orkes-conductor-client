@@ -37,7 +37,7 @@ public class SchedulerManagement {
 
     private static String scheduleName = "sample_schedule";
     public static final long NANO = 1_000_000_000; // nano-seconds.
-    String cron = "0 0 * ? * *"; // Every minute
+    String cron = "0 0 * ? * *"; // Every hour
 
     public static void main(String[] args) {
         OrkesClients orkesClients = ApiUtil.getOrkesClient();
