@@ -37,6 +37,8 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.LocalDate;
@@ -97,6 +99,8 @@ public class ApiClient {
         httpClient = new OkHttpClient();
         verifyingSsl = true;
         json = new JSON();
+        GsonBuilder builder = new GsonBuilder().serializeNulls();
+        json.setGson(builder.create());
         authentications = new HashMap<String, Authentication>();
     }
 
