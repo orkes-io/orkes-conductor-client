@@ -51,6 +51,7 @@ import io.orkes.conductor.client.http.auth.HttpBasicAuth;
 import io.orkes.conductor.client.http.auth.OAuth;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
 import okio.BufferedSink;
@@ -97,6 +98,8 @@ public class ApiClient {
         httpClient = new OkHttpClient();
         verifyingSsl = true;
         json = new JSON();
+        GsonBuilder builder = new GsonBuilder().serializeNulls();
+        json.setGson(builder.create());
         authentications = new HashMap<String, Authentication>();
     }
 
