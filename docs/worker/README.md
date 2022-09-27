@@ -51,4 +51,4 @@ Worker SDK collects [these metrics](https://conductor.netflix.com/metrics/client
 
 Metrics on client side supplements the one collected from server in identifying the network as well as client side issues.
 
-### Next: [Create and Execute Workflows](workflow_sdk.md)
+### Next: [Create and Execute Workflows](docs/workflow/README.md)
