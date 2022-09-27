@@ -37,8 +37,6 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.LocalDate;
@@ -53,6 +51,7 @@ import io.orkes.conductor.client.http.auth.HttpBasicAuth;
 import io.orkes.conductor.client.http.auth.OAuth;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
 import okio.BufferedSink;
