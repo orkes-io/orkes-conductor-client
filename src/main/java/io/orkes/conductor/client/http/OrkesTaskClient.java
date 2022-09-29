@@ -25,37 +25,56 @@ import com.netflix.conductor.common.run.TaskSummary;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.grpc.GrpcTaskClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 
 public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
     private TaskResourceApi taskResourceApi;
 
+    private GrpcTaskClient grpcTaskClient;
+
     public OrkesTaskClient(ApiClient apiClient) {
         super(apiClient);
         this.taskResourceApi = new TaskResourceApi(apiClient);
+        this.grpcTaskClient = new GrpcTaskClient(apiClient);
     }
 
     @Override
     public Task pollTask(String taskType, String workerId, String domain) {
-        return taskResourceApi.poll(taskType, workerId, domain);
+        List<Task> tasks = batchPollTasksInDomain(taskType, domain, workerId, 1, 100);
+        if(tasks == null) {
+            return null;
+        }
+        return tasks.get(0);
     }
 
     @Override
     public List<Task> batchPollTasksByTaskType(
             String taskType, String workerId, int count, int timeoutInMillisecond) {
-        return taskResourceApi.batchPoll(taskType, workerId, null, count, timeoutInMillisecond);
+        return batchPollTasksInDomain(taskType, null, workerId, count, timeoutInMillisecond);
     }
 
     @Override
     public List<Task> batchPollTasksInDomain(
             String taskType, String domain, String workerId, int count, int timeoutInMillisecond) {
+        if(apiClient.isUseGRPC()) {
+            return grpcTaskClient.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
+        }
         return taskResourceApi.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
     }
 
     @Override
     public void updateTask(TaskResult taskResult) {
-        taskResourceApi.updateTask(taskResult);
+        if(apiClient.isUseGRPC()) {
+            try {
+                grpcTaskClient.updateTask(taskResult);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        } else {
+            taskResourceApi.updateTask(taskResult);
+        }
     }
 
     @Override

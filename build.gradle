@@ -35,20 +35,40 @@ ext {
             azureIdentity   : '1.3.7',
             eureka          : '1.10.17',
             wiremock        : '2.33.2',
+            ioGRPC          : '1.49.0',
+            lombok          : '1.18.24'
     ]
 }
 
 group = 'io.orkes.conductor'
 
 dependencies {
+
     api ("io.orkes.conductor:conductor-client:${versions.conductor}")
     api ("io.orkes.conductor:conductor-common:${versions.conductor}")
+    api ("io.orkes.conductor:conductor-grpc:${versions.conductor}")
     implementation "com.sun.jersey:jersey-client:${versions.jersey}"
 
     implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
 
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+
+    //
+    implementation "io.orkes.conductor:orkes-conductor-proto:0.0.7"
+    implementation "io.orkes.conductor:orkes-conductor-grpc-client:0.0.7"
+    //
+
+    //Grpc dependencies
+    implementation "io.grpc:grpc-okhttp:${versions.ioGRPC}"
+    implementation "io.grpc:grpc-netty:${versions.ioGRPC}"
+    implementation "io.grpc:grpc-stub:${versions.ioGRPC}"
+    implementation 'com.google.protobuf:protobuf-java:3.19.4'
+    //
+
+    //Misc
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    compileOnly "org.projectlombok:lombok:${versions.lombok}"
 
     implementation "com.netflix.spectator:spectator-api:${versions.spectator}"
     implementation("com.netflix.eureka:eureka-client:${versions.eureka}") {
@@ -83,6 +103,7 @@ dependencies {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 java {
@@ -185,3 +206,5 @@ signing {
     }
 }
 sourceSets.main.java.srcDirs += ['example/java', 'example/resources']
+configurations.all { exclude group: 'org.apache.logging.log4j'}
+

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -37,8 +38,7 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.LocalDate;
@@ -53,6 +53,7 @@ import io.orkes.conductor.client.http.auth.HttpBasicAuth;
 import io.orkes.conductor.client.http.auth.OAuth;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
 import okio.BufferedSink;
@@ -86,6 +87,12 @@ public class ApiClient {
     private String ssmKeyPath;
     private String ssmSecretPath;
 
+    private int grpcPort = 8090;
+
+    private boolean useSSL;
+
+    private boolean useGRPC;
+
     /*
      * Constructor for ApiClient
      */
@@ -97,10 +104,12 @@ public class ApiClient {
     public ApiClient(String basePath) {
         this.basePath = basePath;
         httpClient = new OkHttpClient();
+        httpClient.setRetryOnConnectionFailure(true);
         verifyingSsl = true;
         json = new JSON();
         GsonBuilder builder = new GsonBuilder().serializeNulls();
         json.setGson(builder.create());
+
         authentications = new HashMap<String, Authentication>();
     }
 
@@ -131,6 +140,29 @@ public class ApiClient {
     public ApiClient(String basePath, String token) {
         this(basePath);
         this.setToken(token);
+    }
+
+    public boolean useSecurity() {
+        return StringUtils.isNotBlank(keyId) && StringUtils.isNotBlank(keySecret);
+    }
+    public boolean isUseGRPC() {
+        return useGRPC;
+    }
+
+    public void setUseGRPC(boolean useGRPC) {
+        this.useGRPC = useGRPC;
+    }
+
+    public boolean useSSL() {
+        return useSSL;
+    }
+
+    /**
+     * Used for GRPC
+     * @param useSSL
+     */
+    public void setUseSSL(boolean useSSL) {
+        this.useSSL = useSSL;
     }
 
     /**
@@ -182,6 +214,21 @@ public class ApiClient {
         return this;
     }
 
+    public int getGrpcPort() {
+        return grpcPort;
+    }
+
+    public void setGrpcPort(int grpcPort) {
+        this.grpcPort = grpcPort;
+    }
+
+    public String getHost() {
+        try {
+            return new URL(basePath).getHost();
+        }catch (Exception e) {
+            return null;
+        }
+    }
     /**
      * True if isVerifyingSsl flag is on
      *
@@ -1227,6 +1274,15 @@ public class ApiClient {
     }
 
     public synchronized String getToken() {
+        return this.token;
+    }
+
+    public synchronized String getRefreshedToken() {
+        try {
+            refreshToken();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return this.token;
     }
 

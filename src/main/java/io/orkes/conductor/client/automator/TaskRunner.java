@@ -20,6 +20,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
@@ -89,9 +90,16 @@ class TaskRunner {
                 workerNamePrefix);
     }
 
-    public void poll(Worker worker) {
-        pollTasksForWorker(worker)
-                .forEach(task -> this.executorService.submit(() -> this.processTask(task, worker)));
+    public void init(Worker worker) {
+        LOGGER.info("Starting {}", worker.getTaskDefName());
+        while (true) {
+            List<Task> tasks = pollTasksForWorker(worker);
+            if (tasks == null || tasks.isEmpty()) {
+                Uninterruptibles.sleepUninterruptibly(worker.getPollingInterval(), TimeUnit.MILLISECONDS);
+            } else {
+                tasks.forEach(task -> this.executorService.submit(() -> this.processTask(task, worker)));
+            }
+        }
     }
 
     public void shutdown(int timeout) {
@@ -299,6 +307,7 @@ class TaskRunner {
             try {
                 return operation.apply(input);
             } catch (Exception e) {
+                LOGGER.error("Exception {}, retrying...", e.getMessage(), e);
                 index++;
                 try {
                     Thread.sleep(500L);
@@ -320,4 +329,6 @@ class TaskRunner {
         result.log(stringWriter.toString());
         updateTaskResult(updateRetryCount, task, result, worker);
     }
+
+
 }

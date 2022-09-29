@@ -17,6 +17,9 @@ import io.orkes.conductor.client.http.*;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class OrkesClients {
 
     private final ApiClient apiClient;
@@ -53,13 +56,7 @@ public class OrkesClients {
         return new OrkesTaskClient(apiClient);
     }
 
-    private ClientConfig conductorClientConfig(
-            int readTimeout, int connectionTimeout, int threadPoolSize) {
-        var clientConfig = new DefaultClientConfig();
-        var clientConfigProps = clientConfig.getProperties();
-        clientConfigProps.put(ClientConfig.PROPERTY_CONNECT_TIMEOUT, connectionTimeout);
-        clientConfigProps.put(ClientConfig.PROPERTY_READ_TIMEOUT, readTimeout);
-        clientConfigProps.put(ClientConfig.PROPERTY_THREADPOOL_SIZE, threadPoolSize);
-        return clientConfig;
+    public TaskClient getTaskClient2() {
+        return new OrkesTaskClient(apiClient);
     }
 }

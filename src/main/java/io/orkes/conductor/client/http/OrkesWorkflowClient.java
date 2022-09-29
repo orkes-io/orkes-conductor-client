@@ -13,7 +13,10 @@
 package io.orkes.conductor.client.http;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+import com.netflix.conductor.common.run.WorkflowRun;
+import io.orkes.conductor.client.grpc.GrpcWorkflowClient;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -38,15 +41,22 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     private final WorkflowBulkResourceApi bulkResourceApi;
 
+    private final GrpcWorkflowClient grpcWorkflowClient;
+
     public OrkesWorkflowClient(ApiClient apiClient) {
         super(apiClient);
         this.httpClient = new WorkflowResourceApi(apiClient);
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
+        this.grpcWorkflowClient = new GrpcWorkflowClient(apiClient);
     }
 
     @Override
     public String startWorkflow(StartWorkflowRequest startWorkflowRequest) {
         return httpClient.startWorkflow(startWorkflowRequest);
+    }
+
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request) {
+        return grpcWorkflowClient.executeWorkflow(request);
     }
 
     @Override

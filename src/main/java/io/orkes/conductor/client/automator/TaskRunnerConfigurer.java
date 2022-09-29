@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,8 +52,7 @@ public class TaskRunnerConfigurer {
     private final int threadCount;
 
     private final List<TaskRunner> taskRunners;
-
-    private ScheduledExecutorService scheduledExecutorService;
+    private ExecutorService executorService;
 
     /**
      * @see TaskRunnerConfigurer.Builder
@@ -256,7 +256,7 @@ public class TaskRunnerConfigurer {
      * Starts the polling. Must be called after {@link TaskRunnerConfigurer.Builder#build()} method.
      */
     public synchronized void init() {
-        this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
+        this.executorService = Executors.newFixedThreadPool(workers.size());
         workers.forEach(worker -> this.startWorker(worker));
     }
 
@@ -265,8 +265,8 @@ public class TaskRunnerConfigurer {
      * shutdown of your worker, during process termination.
      */
     public void shutdown() {
+        this.executorService.shutdownNow();
         this.taskRunners.forEach(taskRunner -> taskRunner.shutdown(shutdownGracePeriodSeconds));
-        this.scheduledExecutorService.shutdown();
     }
 
     private void startWorker(Worker worker) {
@@ -286,10 +286,6 @@ public class TaskRunnerConfigurer {
                         threadCountForTask,
                         taskPollTimeout);
         this.taskRunners.add(taskRunner);
-        this.scheduledExecutorService.scheduleWithFixedDelay(
-                () -> taskRunner.poll(worker),
-                0,
-                worker.getPollingInterval(),
-                TimeUnit.MILLISECONDS);
+        this.executorService.submit(()-> taskRunner.init(worker));
     }
 }
