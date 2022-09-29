@@ -22,24 +22,6 @@ Task workers must implement methods from `WorkflowInterface`. [Code sample](http
 
 See [Using Conductor Playground](https://orkes.io/content/docs/getting-started/playground/using-conductor-playground) for more details on how to use Playground environment for testing.
 
-## Task Management APIs
-
-### Get Task Details
-```java
-// TODO Add code sample
-```
-
-### Updating the Task result outside the worker implementation
-#### Update task by id
-```java
-// TODO Add code sample
-```
-
-#### Update task by Reference Name
-```java
-// TODO Add code sample
-```
-
 ### Worker Metrics
 Worker SDK collects [these metrics](https://conductor.netflix.com/metrics/client.html) 
 
