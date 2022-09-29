@@ -10,11 +10,13 @@
 
 ### Setup package
 
-### Server settings
-Everything related to server settings should be done within `Configuration` class, by setting the required parameter when initializing an object, like this:
+Check out [this example project](https://github.com/conductor-sdk/java-sdk-examples), go ahead and create a fork!
+
+### Conductor server settings
+Everything related to server settings should be done within the `ApiClient` class, by setting the required parameters when initializing an object, like this:
 
 ```java
-// TODO Add code sample
+ApiClient apiClient = new ApiClient("https://play.orkes.io/api");
 ```
 
 #### Authentication settings (optional)
@@ -24,8 +26,7 @@ Use if your conductor server requires authentication.
 See [Access Control](https://orkes.io/content/docs/getting-started/concepts/access-control) for more details on role based access control with Conductor and generating API keys for your environment.
 
 ```java
-// TODO Add code sample
+ApiClient apiClient = new ApiClient("https://play.orkes.io/api", "key", "secret");
 ```
-``
 
 ### Next: [Create and run Task Workers](docs/worker/README.md)
