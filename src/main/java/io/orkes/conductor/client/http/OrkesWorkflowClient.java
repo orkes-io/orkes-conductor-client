@@ -15,8 +15,6 @@ package io.orkes.conductor.client.http;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import com.netflix.conductor.common.run.WorkflowRun;
-import io.orkes.conductor.client.grpc.GrpcWorkflowClient;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -29,8 +27,10 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.grpc.GrpcWorkflowClient;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
+import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
 
 import com.google.common.base.Preconditions;

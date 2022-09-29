@@ -20,7 +20,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
@@ -42,6 +41,7 @@ import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.http.ApiException;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.util.concurrent.Uninterruptibles;
 
 class TaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunner.class);
@@ -91,13 +91,14 @@ class TaskRunner {
     }
 
     public void init(Worker worker) {
-        LOGGER.info("Starting {}", worker.getTaskDefName());
         while (true) {
             List<Task> tasks = pollTasksForWorker(worker);
             if (tasks == null || tasks.isEmpty()) {
-                Uninterruptibles.sleepUninterruptibly(worker.getPollingInterval(), TimeUnit.MILLISECONDS);
+                Uninterruptibles.sleepUninterruptibly(
+                        worker.getPollingInterval(), TimeUnit.MILLISECONDS);
             } else {
-                tasks.forEach(task -> this.executorService.submit(() -> this.processTask(task, worker)));
+                tasks.forEach(
+                        task -> this.executorService.submit(() -> this.processTask(task, worker)));
             }
         }
     }
@@ -329,6 +330,4 @@ class TaskRunner {
         result.log(stringWriter.toString());
         updateTaskResult(updateRetryCount, task, result, worker);
     }
-
-
 }

@@ -43,7 +43,7 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient {
     @Override
     public Task pollTask(String taskType, String workerId, String domain) {
         List<Task> tasks = batchPollTasksInDomain(taskType, domain, workerId, 1, 100);
-        if(tasks == null) {
+        if (tasks == null) {
             return null;
         }
         return tasks.get(0);
@@ -58,15 +58,16 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient {
     @Override
     public List<Task> batchPollTasksInDomain(
             String taskType, String domain, String workerId, int count, int timeoutInMillisecond) {
-        if(apiClient.isUseGRPC()) {
-            return grpcTaskClient.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
+        if (apiClient.isUseGRPC()) {
+            return grpcTaskClient.batchPoll(
+                    taskType, workerId, domain, count, timeoutInMillisecond);
         }
         return taskResourceApi.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
     }
 
     @Override
     public void updateTask(TaskResult taskResult) {
-        if(apiClient.isUseGRPC()) {
+        if (apiClient.isUseGRPC()) {
             try {
                 grpcTaskClient.updateTask(taskResult);
             } catch (Throwable t) {

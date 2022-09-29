@@ -14,12 +14,6 @@ package io.orkes.conductor.client;
 
 import io.orkes.conductor.client.http.*;
 
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
 public class OrkesClients {
 
     private final ApiClient apiClient;

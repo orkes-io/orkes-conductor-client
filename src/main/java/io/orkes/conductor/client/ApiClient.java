@@ -145,6 +145,7 @@ public class ApiClient {
     public boolean useSecurity() {
         return StringUtils.isNotBlank(keyId) && StringUtils.isNotBlank(keySecret);
     }
+
     public boolean isUseGRPC() {
         return useGRPC;
     }
@@ -159,6 +160,7 @@ public class ApiClient {
 
     /**
      * Used for GRPC
+     *
      * @param useSSL
      */
     public void setUseSSL(boolean useSSL) {
@@ -225,7 +227,7 @@ public class ApiClient {
     public String getHost() {
         try {
             return new URL(basePath).getHost();
-        }catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }

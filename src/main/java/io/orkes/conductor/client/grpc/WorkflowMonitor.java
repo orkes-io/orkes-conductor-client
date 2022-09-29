@@ -12,20 +12,19 @@
  */
 package io.orkes.conductor.client.grpc;
 
-import com.netflix.conductor.common.run.WorkflowRun;
-
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.orkes.conductor.client.model.WorkflowRun;
+
 public class WorkflowMonitor {
-    private Map<String, CompletableFuture<WorkflowRun>> runningWorkflowFutures = new ConcurrentHashMap<>();
+    private Map<String, CompletableFuture<WorkflowRun>> runningWorkflowFutures =
+            new ConcurrentHashMap<>();
 
     private static WorkflowMonitor instance = new WorkflowMonitor();
 
-    private WorkflowMonitor() {
-
-    }
+    private WorkflowMonitor() {}
 
     public static WorkflowMonitor getInstance() {
         return instance;
@@ -37,11 +36,10 @@ public class WorkflowMonitor {
         return future;
     }
 
-
     public void notifyCompletion(WorkflowRun workflowRun) {
         String requestId = workflowRun.getRequestId();
         CompletableFuture<WorkflowRun> future = runningWorkflowFutures.get(requestId);
-        if(future != null) {
+        if (future != null) {
             future.complete(workflowRun);
             runningWorkflowFutures.remove(requestId);
         }

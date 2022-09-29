@@ -1,9 +1,23 @@
+/*
+ * Copyright 2022 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.client.grpc;
 
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.proto.WorkflowModelProtoMapper;
-import io.grpc.stub.StreamObserver;
+
 import io.orkes.conductor.proto.WorkflowRun;
+
+import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -19,22 +33,21 @@ public class RequestStreamObserver implements StreamObserver<WorkflowRun> {
 
     @Override
     public void onNext(WorkflowRun result) {
-        com.netflix.conductor.common.run.WorkflowRun workflowRun = fromProto(result);
+        io.orkes.conductor.client.model.WorkflowRun workflowRun = fromProto(result);
         workflowMonitor.notifyCompletion(workflowRun);
     }
 
     @Override
     public void onError(Throwable t) {
         log.error(t.getMessage(), t);
-
     }
 
     @Override
-    public void onCompleted() {
-    }
+    public void onCompleted() {}
 
-    private com.netflix.conductor.common.run.WorkflowRun fromProto(WorkflowRun proto) {
-        com.netflix.conductor.common.run.WorkflowRun run = new com.netflix.conductor.common.run.WorkflowRun();
+    private io.orkes.conductor.client.model.WorkflowRun fromProto(WorkflowRun proto) {
+        io.orkes.conductor.client.model.WorkflowRun run =
+                new io.orkes.conductor.client.model.WorkflowRun();
         run.setWorkflowId(proto.getWorkflowId());
         run.setCreatedBy(proto.getCreatedBy());
         run.setCreateTime(proto.getCreateTime());

@@ -56,7 +56,6 @@ dependencies {
 
     //
     implementation "io.orkes.conductor:orkes-conductor-proto:0.0.7"
-    implementation "io.orkes.conductor:orkes-conductor-grpc-client:0.0.7"
     //
 
     //Grpc dependencies
