@@ -13,17 +13,12 @@ Each worker embodies design pattern and follows certain basic principles:
 4. Workers do not implement the logic to handle retries etc, that is taken care by the Conductor server.
 
 ### Creating Task Workers
-Task worker is implemented using a function that confirms to the following function
-```java
-// TODO Add code sample
-```
+
+Task workers must implement methods from `WorkflowInterface`. [Code sample](https://github.com/orkes-io/orkes-conductor-client/blob/main/src/test/java/io/orkes/conductor/client/util/SimpleWorker.java).
+
 
 ## Starting Workers
-`TaskRunner` interface is used to start the workers, which takes care of polling server for the work, executing worker code and updating the results back to the server.
-
-```java
-// TODO Add code sample
-```
+`TaskRunner` interface is used to start the workers, which takes care of polling server for the work, executing worker code and updating the results back to the server. [Code sample](https://github.com/conductor-sdk/java-sdk-examples/blob/main/src/main/java/io/orkes/samples/quickstart/WorkflowManagement.java#L83-L92)
 
 See [Using Conductor Playground](https://orkes.io/content/docs/getting-started/playground/using-conductor-playground) for more details on how to use Playground environment for testing.
 
