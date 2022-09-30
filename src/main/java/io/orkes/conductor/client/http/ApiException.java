@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.orkes.conductor.client.OrkesClientException;
+import org.apache.commons.lang3.StringUtils;
 
 public class ApiException extends OrkesClientException {
     private int code = 0;
@@ -113,6 +114,6 @@ public class ApiException extends OrkesClientException {
 
     @Override
     public String getMessage() {
-        return getCode() + ":" + responseBody;
+        return getCode() + ":" +  (StringUtils.isBlank(responseBody) ? super.getMessage() : responseBody);
     }
 }

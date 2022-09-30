@@ -14,58 +14,29 @@ package io.orkes.conductor.client.grpc;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-import com.netflix.conductor.common.config.ObjectMapperProvider;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.grpc.ProtoMapper;
-import com.netflix.conductor.proto.StartWorkflowRequestPb;
-import com.netflix.conductor.proto.WorkflowModelProtoMapper;
 
-import io.grpc.ConnectivityState;
-import io.grpc.ManagedChannel;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.model.WorkflowRun;
-import io.orkes.grpc.service.WorkflowServiceGrpc;
-
-import io.grpc.stub.StreamObserver;
-
-import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 
 public class GrpcWorkflowClient {
 
-    private static ScheduledExecutorService channelMonitor = Executors.newScheduledThreadPool(1);
-
-    private final WorkflowServiceGrpc.WorkflowServiceStub stub;
-
-    private final RequestStreamObserver responses;
-
-    private StreamObserver<StartWorkflowRequestPb.StartWorkflowRequest> requests;
-
-    private WorkflowModelProtoMapper protoMapper;
+    private final ExecuteWorkflowStream responses;
 
     private final WorkflowMonitor workflowMonitor = WorkflowMonitor.getInstance();
 
     public GrpcWorkflowClient(ApiClient apiClient) {
-        ManagedChannel channel = getChannel(apiClient);
-        this.stub =
-                WorkflowServiceGrpc.newStub(channel)
-                        .withCallCredentials(new AuthToken(apiClient));
-        this.protoMapper =
-                new WorkflowModelProtoMapper(new ObjectMapperProvider().getObjectMapper());
-        this.responses = new RequestStreamObserver(protoMapper);
-        this.requests = this.stub.executeWorkflow(responses);
+        this.responses = new ExecuteWorkflowStream(apiClient);
     }
 
     public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request) {
         String requestId = UUID.randomUUID().toString();
         request.getInput().put("_x-request-id", requestId);
-        StartWorkflowRequestPb.StartWorkflowRequest requestPb =
-                ProtoMapper.INSTANCE.toProto(request);
         CompletableFuture<WorkflowRun> future = workflowMonitor.add(requestId);
-        requests.onNext(requestPb);
+        responses.executeWorkflow(request);
         return future;
     }
+
+
 }

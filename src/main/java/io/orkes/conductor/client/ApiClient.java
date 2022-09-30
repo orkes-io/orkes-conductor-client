@@ -12,6 +12,30 @@
  */
 package io.orkes.conductor.client;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.*;
+import com.squareup.okhttp.internal.http.HttpMethod;
+import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.http.api.TokenResourceApi;
+import io.orkes.conductor.client.http.auth.ApiKeyAuth;
+import io.orkes.conductor.client.http.auth.Authentication;
+import io.orkes.conductor.client.http.auth.HttpBasicAuth;
+import io.orkes.conductor.client.http.auth.OAuth;
+import io.orkes.conductor.client.model.GenerateTokenRequest;
+import lombok.SneakyThrows;
+import okio.BufferedSink;
+import okio.Okio;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,35 +56,16 @@ import java.security.cert.X509Certificate;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.*;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
-
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.api.TokenResourceApi;
-import io.orkes.conductor.client.http.auth.ApiKeyAuth;
-import io.orkes.conductor.client.http.auth.Authentication;
-import io.orkes.conductor.client.http.auth.HttpBasicAuth;
-import io.orkes.conductor.client.http.auth.OAuth;
-import io.orkes.conductor.client.model.GenerateTokenRequest;
-
-import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.*;
-import com.squareup.okhttp.internal.http.HttpMethod;
-import okio.BufferedSink;
-import okio.Okio;
-
 public class ApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
+
+    private static final String TOKEN_CACHE_KEY = "TOKEN";
+    private final Cache<String, String> tokenCache;
 
     private final String basePath;
     private final Map<String, String> defaultHeaderMap = new HashMap<String, String>();
@@ -68,8 +73,6 @@ public class ApiClient {
     private String tempFolderPath;
 
     private Map<String, Authentication> authentications;
-
-    private DateFormat dateFormat;
 
     private InputStream sslCaCert;
     private boolean verifyingSsl;
@@ -80,8 +83,6 @@ public class ApiClient {
 
     private String keyId;
     private String keySecret;
-
-    private String token;
 
     private SecretsManager secretsManager;
     private String ssmKeyPath;
@@ -102,6 +103,9 @@ public class ApiClient {
     }
 
     public ApiClient(String basePath) {
+        this.tokenCache = CacheBuilder.newBuilder()
+                .expireAfterWrite(1, TimeUnit.SECONDS)
+                .build();
         this.basePath = basePath;
         httpClient = new OkHttpClient();
         httpClient.setRetryOnConnectionFailure(true);
@@ -109,7 +113,6 @@ public class ApiClient {
         json = new JSON();
         GsonBuilder builder = new GsonBuilder().serializeNulls();
         json.setGson(builder.create());
-
         authentications = new HashMap<String, Authentication>();
     }
 
@@ -119,27 +122,16 @@ public class ApiClient {
         this.secretsManager = secretsManager;
         this.ssmKeyPath = keyPath;
         this.ssmSecretPath = secretPath;
-        try {
-            this.refreshToken();
-        } catch (Exception e) {
-            LOGGER.warn("Failed to set authentication token. Reason: " + e.getMessage());
-        }
     }
 
     public ApiClient(String basePath, String keyId, String keySecret) {
         this(basePath);
         this.keyId = keyId;
         this.keySecret = keySecret;
-        try {
-            this.refreshToken();
-        } catch (Exception e) {
-            LOGGER.warn("Failed to set authentication token. Reason: " + e.getMessage());
-        }
     }
 
     public ApiClient(String basePath, String token) {
         this(basePath);
-        this.setToken(token);
     }
 
     public boolean useSecurity() {
@@ -291,10 +283,6 @@ public class ApiClient {
         this.keyManagers = managers;
         applySslSettings();
         return this;
-    }
-
-    public DateFormat getDateFormat() {
-        return dateFormat;
     }
 
     public ApiClient setDateFormat(DateFormat dateFormat) {
@@ -1275,45 +1263,30 @@ public class ApiClient {
         }
     }
 
-    public synchronized String getToken() {
-        return this.token;
+    @SneakyThrows
+    public String getToken() {
+        return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
     }
+    private String refreshToken()  {
+        System.out.println("Refreshing API Token");
 
-    public synchronized String getRefreshedToken() {
-        try {
-            refreshToken();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return this.token;
-    }
-
-    synchronized void refreshToken() throws Exception {
-        if (this.getToken() != null) {
-            return;
-        }
         if (secretsManager != null) {
             keyId = secretsManager.getSecret(this.ssmKeyPath);
             keySecret = secretsManager.getSecret(this.ssmSecretPath);
         }
         if (this.keyId == null || this.keySecret == null) {
-            throw new Exception(
+            throw new RuntimeException(
                     "KeyId and KeySecret must be set in order to get an authentication token");
         }
         GenerateTokenRequest generateTokenRequest =
                 new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
         Map<String, String> response =
                 TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
-        final String token = response.get("token");
-        this.setToken(token);
-    }
-
-    synchronized void setToken(String token) {
-        this.token = token;
+        String token = response.get("token");
         this.setApiKeyHeader(token);
+        return token;
     }
-
-    synchronized void setApiKeyHeader(String token) {
+    private synchronized void setApiKeyHeader(String token) {
         ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
         apiKeyAuth.setApiKey(token);
         authentications.put("api_key", apiKeyAuth);

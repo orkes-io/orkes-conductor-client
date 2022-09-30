@@ -24,15 +24,13 @@ import com.google.common.cache.CacheBuilder;
 import io.grpc.CallCredentials;
 import io.grpc.Metadata;
 import io.grpc.Status;
+import io.orkes.conductor.client.OrkesClientException;
 
 public class AuthToken extends CallCredentials {
 
-    private static final String TOKEN_CACHE_KEY = "TOKEN";
+
 
     private final ApiClient apiClient;
-
-    private Cache<String, String> tokenCache =
-            CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
 
     public AuthToken(ApiClient apiClient) {
         this.apiClient = apiClient;
@@ -51,16 +49,8 @@ public class AuthToken extends CallCredentials {
                                 getIdentity());
 
                         if (apiClient.useSecurity()) {
-                            String token =
-                                    tokenCache.get(
-                                            TOKEN_CACHE_KEY,
-                                            () -> {
-                                                return apiClient.getRefreshedToken();
-                                            });
-                            headers.put(
-                                    Metadata.Key.of(
-                                            "X-Authorization", Metadata.ASCII_STRING_MARSHALLER),
-                                    token);
+
+
                         }
                         metadataApplier.apply(headers);
                     } catch (Throwable e) {
