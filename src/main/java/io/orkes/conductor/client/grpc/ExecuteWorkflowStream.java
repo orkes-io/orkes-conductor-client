@@ -60,7 +60,6 @@ public class ExecuteWorkflowStream implements StreamObserver<WorkflowRunPb> {
     public ExecuteWorkflowStream(ApiClient apiClient) {
         this.protoMapper = new WorkflowRunProtoMapper(objectMapper);
         this.apiClient = apiClient;
-        this.apiClient.getToken();
         this.headerInterceptor = new HeaderClientInterceptor();
         this.stub =
                 WorkflowServiceGrpc.newStub(getChannel(apiClient))
@@ -69,12 +68,14 @@ public class ExecuteWorkflowStream implements StreamObserver<WorkflowRunPb> {
     }
 
     private synchronized void connect() {
+        System.out.println("Connecting...");
         log.debug("Attempting to reconnect to the server with backoff {} sec", reconnectBackoff);
         backoff();
         try {
             Uninterruptibles.sleepUninterruptibly(reconnectBackoff, TimeUnit.MILLISECONDS);
             this.requests = this.stub.executeWorkflow(this);
             this.ready = true;
+            System.out.println("Ready...");
         } catch (Throwable t) {
             t.printStackTrace();
             throw new RuntimeException(t);
@@ -89,6 +90,8 @@ public class ExecuteWorkflowStream implements StreamObserver<WorkflowRunPb> {
 
     @Override
     public void onError(Throwable t) {
+        t.printStackTrace();
+        System.out.println(t.getMessage());
         ready = false;
         Status status = Status.fromThrowable(t);
         Status.Code code = status.getCode();

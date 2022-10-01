@@ -121,12 +121,22 @@ public class ApiClient {
         this.secretsManager = secretsManager;
         this.ssmKeyPath = keyPath;
         this.ssmSecretPath = secretPath;
+        try {
+            getToken();
+        } catch (Throwable t) {
+            LOGGER.error(t.getMessage(), t);
+        }
     }
 
     public ApiClient(String basePath, String keyId, String keySecret) {
         this(basePath);
         this.keyId = keyId;
         this.keySecret = keySecret;
+        try {
+            getToken();
+        } catch (Throwable t) {
+            LOGGER.error(t.getMessage(), t);
+        }
     }
 
     public ApiClient(String basePath, String token) {

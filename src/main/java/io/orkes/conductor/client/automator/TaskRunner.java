@@ -192,8 +192,11 @@ class TaskRunner {
             return Collections.emptyList();
         }
         LOGGER.debug("poll {} in the domain {} with batch size {}", taskType, domain, count);
-        return taskClient.batchPollTasksInDomain(
+        long s = System.currentTimeMillis();
+        List<Task> tasks = taskClient.batchPollTasksInDomain(
                 taskType, domain, workerId, count, this.taskPollTimeout);
+        System.out.println("Time to poll " + (System.currentTimeMillis()-s));
+        return tasks;
     }
 
     @SuppressWarnings("FieldCanBeLocal")

@@ -17,7 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.netflix.conductor.client.model.WorkflowRun;
 import com.netflix.conductor.client.worker.Worker;
@@ -38,7 +40,7 @@ public class Main {
     static String secret = "yudMp8M5o6a4282Ihom6q7QEpjSS6sNfv0b2twuCoqoFAWnw";
 
     public static void main3(String[] args) {
-        ApiClient client = new ApiClient("http://localhost:8080/api", key, secret);
+        ApiClient client = new ApiClient("http://localhost:8080/api");
         client.setUseGRPC(true);
 
         OrkesClients clients = new OrkesClients(client);
@@ -56,39 +58,46 @@ public class Main {
         apiClient.setUseGRPC(true);
 
         GrpcWorkflowClient client = new GrpcWorkflowClient(apiClient);
-        while (true) {
+        int count = 1;
+        CountDownLatch latch = new CountDownLatch(count);
+        long s = System.currentTimeMillis();
+        for (int i = 0; i < count; i++) {
 
             Map<String, Object> input = new HashMap<>();
             input.put("key", UUID.randomUUID().toString());
 
             StartWorkflowRequest request = new StartWorkflowRequest();
-            request.setName("http");
+            request.setName("load_test_2");
             request.setVersion(1);
             request.setInput(input);
             try {
                 CompletableFuture<WorkflowRun> future = client.executeWorkflow(request);
                 future.thenAccept(
                         workflowRun -> {
-                            System.out.println(
-                                    "Completed "
-                                            + workflowRun.getWorkflowId()
-                                            + ":"
-                                            + workflowRun.getStatus());
+                            latch.countDown();
                         });
             } catch (Throwable t) {
                 System.out.println("Error " + t.getMessage());
                 // t.printStackTrace();
             }
-
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS);
         }
+        System.out.println("Time to to submit " + count + " execution requests: " + (System.currentTimeMillis()-s));
+        latch.await();
+        long time = (System.currentTimeMillis()-s);
+        System.out.println("Time to to submit AND receive " + count + " execution requests: " + time + ", req/sec= " + ((double)count)/time);
+
     }
+
 
     private static class MyWorker implements Worker {
 
+
+
+
+
         @Override
         public String getTaskDefName() {
-            return "task_1";
+            return "test";
         }
 
         @Override

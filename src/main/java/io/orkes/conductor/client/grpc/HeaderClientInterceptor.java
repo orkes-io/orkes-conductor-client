@@ -14,6 +14,7 @@ package io.orkes.conductor.client.grpc;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.UUID;
 
 import com.amazonaws.util.EC2MetadataUtils;
 import io.grpc.*;
@@ -43,9 +44,12 @@ public class HeaderClientInterceptor implements ClientInterceptor {
             @Override
             public void start(Listener<RespT> responseListener, Metadata headers) {
                 try {
-                    headers.put(AUTH_HEADER, token);
+                    if(token != null) {
+                        headers.put(AUTH_HEADER, token);
+                    }
                     headers.put(CLIENT_ID_HEADER, clientId);
                 } catch (Throwable t) {
+                    t.printStackTrace();
                 }
                 super.start(
                         new ForwardingClientCallListener.SimpleForwardingClientCallListener<RespT>(
@@ -60,18 +64,15 @@ public class HeaderClientInterceptor implements ClientInterceptor {
     }
 
     private String getIdentity() {
-        String serverId;
+        String clientId;
         try {
-            serverId = InetAddress.getLocalHost().getHostName();
+            clientId = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            serverId = System.getenv("HOSTNAME");
+            clientId = System.getenv("HOSTNAME");
         }
-        if (serverId == null) {
-            serverId =
-                    (EC2MetadataUtils.getInstanceId() == null)
-                            ? System.getProperty("user.name")
-                            : EC2MetadataUtils.getInstanceId();
+        if (clientId == null) {
+            clientId = UUID.randomUUID().toString();
         }
-        return serverId;
+        return clientId;
     }
 }
