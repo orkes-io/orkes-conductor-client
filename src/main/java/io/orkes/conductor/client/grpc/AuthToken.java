@@ -15,20 +15,14 @@ package io.orkes.conductor.client.grpc;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 import io.orkes.conductor.client.ApiClient;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import io.grpc.CallCredentials;
 import io.grpc.Metadata;
 import io.grpc.Status;
-import io.orkes.conductor.client.OrkesClientException;
 
 public class AuthToken extends CallCredentials {
-
-
 
     private final ApiClient apiClient;
 
@@ -48,10 +42,8 @@ public class AuthToken extends CallCredentials {
                                 Metadata.Key.of("X-Client-Id", Metadata.ASCII_STRING_MARSHALLER),
                                 getIdentity());
 
-                        if (apiClient.useSecurity()) {
+                        if (apiClient.useSecurity()) {}
 
-
-                        }
                         metadataApplier.apply(headers);
                     } catch (Throwable e) {
                         metadataApplier.fail(Status.UNAUTHENTICATED.withCause(e));

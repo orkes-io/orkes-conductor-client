@@ -17,10 +17,10 @@ import java.util.List;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import com.netflix.conductor.grpc.ProtoMapper;
 import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
 import com.netflix.conductor.proto.TaskPb;
-import com.netflix.conductor.proto.compatibility.ProtoMapper;
 
 import io.orkes.conductor.client.ApiClient;
 

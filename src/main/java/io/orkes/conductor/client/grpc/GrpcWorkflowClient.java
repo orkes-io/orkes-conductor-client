@@ -15,10 +15,11 @@ package io.orkes.conductor.client.grpc;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import com.netflix.conductor.client.model.WorkflowRun;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.model.WorkflowRun;
 
 public class GrpcWorkflowClient {
 
@@ -32,11 +33,9 @@ public class GrpcWorkflowClient {
 
     public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request) {
         String requestId = UUID.randomUUID().toString();
-        request.getInput().put("_x-request-id", requestId);
+        request.getInput().put("_X-request-id", requestId);
         CompletableFuture<WorkflowRun> future = workflowMonitor.add(requestId);
         responses.executeWorkflow(request);
         return future;
     }
-
-
 }

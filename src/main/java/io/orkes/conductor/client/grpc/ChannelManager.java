@@ -12,11 +12,8 @@
  */
 package io.orkes.conductor.client.grpc;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import io.grpc.ConnectivityState;
 import io.orkes.conductor.client.ApiClient;
 
 import io.grpc.ManagedChannel;

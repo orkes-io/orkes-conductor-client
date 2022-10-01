@@ -16,7 +16,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.orkes.conductor.client.model.WorkflowRun;
+import com.netflix.conductor.client.model.WorkflowRun;
+import com.netflix.conductor.common.run.Workflow;
 
 public class WorkflowMonitor {
     private Map<String, CompletableFuture<WorkflowRun>> runningWorkflowFutures =
@@ -37,7 +38,7 @@ public class WorkflowMonitor {
     }
 
     public void notifyCompletion(WorkflowRun workflowRun) {
-        String requestId = workflowRun.getRequestId();
+        String requestId = (String) workflowRun.getInput().get("_X-request-id");
         CompletableFuture<WorkflowRun> future = runningWorkflowFutures.get(requestId);
         if (future != null) {
             future.complete(workflowRun);

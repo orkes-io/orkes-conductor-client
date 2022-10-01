@@ -12,30 +12,6 @@
  */
 package io.orkes.conductor.client;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.*;
-import com.squareup.okhttp.internal.http.HttpMethod;
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.api.TokenResourceApi;
-import io.orkes.conductor.client.http.auth.ApiKeyAuth;
-import io.orkes.conductor.client.http.auth.Authentication;
-import io.orkes.conductor.client.http.auth.HttpBasicAuth;
-import io.orkes.conductor.client.http.auth.OAuth;
-import io.orkes.conductor.client.model.GenerateTokenRequest;
-import lombok.SneakyThrows;
-import okio.BufferedSink;
-import okio.Okio;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
-
-import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,10 +32,35 @@ import java.security.cert.X509Certificate;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.*;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
+import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.http.api.TokenResourceApi;
+import io.orkes.conductor.client.http.auth.ApiKeyAuth;
+import io.orkes.conductor.client.http.auth.Authentication;
+import io.orkes.conductor.client.http.auth.HttpBasicAuth;
+import io.orkes.conductor.client.http.auth.OAuth;
+import io.orkes.conductor.client.model.GenerateTokenRequest;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.*;
+import com.squareup.okhttp.internal.http.HttpMethod;
+import lombok.SneakyThrows;
+import okio.BufferedSink;
+import okio.Okio;
 
 public class ApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
@@ -103,9 +104,7 @@ public class ApiClient {
     }
 
     public ApiClient(String basePath) {
-        this.tokenCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(1, TimeUnit.SECONDS)
-                .build();
+        this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.SECONDS).build();
         this.basePath = basePath;
         httpClient = new OkHttpClient();
         httpClient.setRetryOnConnectionFailure(true);
@@ -1267,7 +1266,8 @@ public class ApiClient {
     public String getToken() {
         return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
     }
-    private String refreshToken()  {
+
+    private String refreshToken() {
         System.out.println("Refreshing API Token");
 
         if (secretsManager != null) {
@@ -1286,6 +1286,7 @@ public class ApiClient {
         this.setApiKeyHeader(token);
         return token;
     }
+
     private synchronized void setApiKeyHeader(String token) {
         ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
         apiKeyAuth.setApiKey(token);

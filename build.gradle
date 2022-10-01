@@ -1,10 +1,4 @@
 buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            url 'https://plugins.gradle.org/m2/'
-        }
-    }
     dependencies {
         classpath 'com.diffplug.spotless:spotless-plugin-gradle:6.+'
     }
@@ -18,6 +12,7 @@ plugins {
     id 'java-library'
     id "com.diffplug.spotless" version "5.0.0"
     id 'jacoco'
+    id 'idea'
 }
 
 ext {
@@ -36,6 +31,8 @@ ext {
             eureka          : '1.10.17',
             wiremock        : '2.33.2',
             ioGRPC          : '1.49.0',
+            ioGRPC          : '1.49.0',
+            protoBuf     : '3.19.4',
             lombok          : '1.18.24'
     ]
 }
@@ -48,21 +45,22 @@ dependencies {
     api ("io.orkes.conductor:conductor-common:${versions.conductor}")
     api ("io.orkes.conductor:conductor-grpc:${versions.conductor}")
     implementation "com.sun.jersey:jersey-client:${versions.jersey}"
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
 
     implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
 
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
-    //
-    implementation "io.orkes.conductor:orkes-conductor-proto:0.0.7"
-    //
+    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.13'
 
     //Grpc dependencies
     implementation "io.grpc:grpc-okhttp:${versions.ioGRPC}"
     implementation "io.grpc:grpc-netty:${versions.ioGRPC}"
     implementation "io.grpc:grpc-stub:${versions.ioGRPC}"
-    implementation 'com.google.protobuf:protobuf-java:3.19.4'
+    implementation "com.google.protobuf:protobuf-java:${versions.protoBuf}"
+    implementation "io.grpc:grpc-protobuf:${versions.ioGRPC}"
+    implementation "io.grpc:grpc-stub:${versions.ioGRPC}"
     //
 
     //Misc
