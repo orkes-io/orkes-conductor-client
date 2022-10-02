@@ -12,10 +12,7 @@
  */
 package io.orkes.conductor.client.automator;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -241,7 +238,7 @@ public class TaskRunnerConfigurer {
         return workerNamePrefix;
     }
 
-    private List<TaskPollExecutor> taskPollExecutors;
+    private List<TaskPollExecutor> taskPollExecutors = new ArrayList<>();
 
     /**
      * Starts the polling. Must be called after {@link TaskRunnerConfigurer.Builder#build()} method.

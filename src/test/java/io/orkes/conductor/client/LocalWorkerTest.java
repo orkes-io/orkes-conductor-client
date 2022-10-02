@@ -12,29 +12,29 @@
  */
 package io.orkes.conductor.client;
 
-import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
-
 import com.netflix.conductor.client.telemetry.MetricsContainer;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.grpc.GrpcTaskWorker;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-public class WorkerTest {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
+public class LocalWorkerTest {
 
     static String key = "a0b92def-ea61-464e-a51c-b05bcc04ec51";
     static String secret = "YNGLncaOWsv4nQIeO71LGGv77sM5iQCRjH5FNkfOS9Jfi6G5";
 
     public static void main(String[] args) {
-        ApiClient apiClient = new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
-        apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
-        apiClient.setUseSSL(true);
+        ApiClient apiClient = new ApiClient("http://localhost:8080/api", key, secret);
+        apiClient.setUseGRPC("localhost", 8090);
 
         OrkesClients clients = new OrkesClients(apiClient);
         TaskClient taskClient = clients.getTaskClient();
@@ -57,36 +57,7 @@ public class WorkerTest {
         System.out.println("Ready...");
     }
 
-    public static void mainBad(String[] args) {
-        ApiClient apiClient = new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
-        apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
-        apiClient.setUseSSL(true);
-        int threadCount = 10;
 
-        for (int i = 0; i < 6; i++) {
-            Worker worker = new MyWorker("simple_task_" + i);
-            ThreadPoolExecutor executor =
-                    (ThreadPoolExecutor)
-                            Executors.newFixedThreadPool(
-                                    threadCount,
-                                    new BasicThreadFactory.Builder()
-                                            .namingPattern("task-worker-")
-                                            .uncaughtExceptionHandler(uncaughtExceptionHandler)
-                                            .build());
-            GrpcTaskWorker taskWorker =
-                    new GrpcTaskWorker(apiClient, worker, null, executor, threadCount, 100);
-            taskWorker.init();
-        }
-
-        System.out.println("Ready...");
-    }
-
-    private static final Thread.UncaughtExceptionHandler uncaughtExceptionHandler =
-            (thread, error) -> {
-                // JVM may be in unstable state, try to send metrics then exit
-                MetricsContainer.incrementUncaughtExceptionCount();
-                System.out.println("Uncaught exception. Thread {} will exit now" + thread + error);
-            };
 
     private static class MyWorker implements Worker {
 
