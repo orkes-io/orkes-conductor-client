@@ -30,8 +30,8 @@ import io.orkes.conductor.client.grpc.GrpcWorkflowClient;
 
 public class Main {
 
-    static String key = "869ed133-52b9-4967-9107-a5e5273c3492";
-    static String secret = "of9Af1EJvnVOHnSjzdySnSrO1P91AquQ7crAqamUphNB3GN1";
+    static String key = "f55005c1-9110-464b-b4e6-ad53bedcad79";
+    static String secret = "mxukrZPTncrLahBD7yqmYLt2cNTAJi1Y683UKu79KgmynXux";
 
     public static void mainxx(String[] args) {
         ApiClient client = new ApiClient("http://localhost:8080/api");
@@ -47,7 +47,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ApiClient apiClient = new ApiClient("http://localhost:8080/api");
+        ApiClient apiClient = new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
         apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
         apiClient.setUseSSL(true);
 
