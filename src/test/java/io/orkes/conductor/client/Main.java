@@ -53,7 +53,7 @@ public class Main {
         apiClient.setUseSSL(true);
 
         GrpcWorkflowClient client = new GrpcWorkflowClient(apiClient);
-        int count = 100;
+        int count = 1;
         CountDownLatch latch = new CountDownLatch(count);
         long s = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -62,7 +62,7 @@ public class Main {
             input.put("key", UUID.randomUUID().toString());
 
             StartWorkflowRequest request = new StartWorkflowRequest();
-            request.setName("load_test_4");
+            request.setName("load_test");
             request.setVersion(1);
             if (i == 2) {
                 // request.setVersion(10);

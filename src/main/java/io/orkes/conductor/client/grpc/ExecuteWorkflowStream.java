@@ -80,15 +80,11 @@ public class ExecuteWorkflowStream
     @Override
     public void onError(Throwable t) {
         System.out.println(t.getMessage());
+        t.printStackTrace();
         ready = false;
         Status status = Status.fromThrowable(t);
         Status.Code code = status.getCode();
         switch (code) {
-            case UNKNOWN:
-            case INTERNAL:
-                break;
-            case UNAUTHENTICATED:
-                break;
             case PERMISSION_DENIED:
                 log.error("Key/Secret does not have permission to execute the workflow");
                 break;

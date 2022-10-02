@@ -49,8 +49,4 @@ public class OrkesClients {
     public TaskClient getTaskClient() {
         return new OrkesTaskClient(apiClient);
     }
-
-    public TaskClient getTaskClient2() {
-        return new OrkesTaskClient(apiClient);
-    }
 }
