@@ -32,7 +32,8 @@ public class WorkerTest {
     static String secret = "YNGLncaOWsv4nQIeO71LGGv77sM5iQCRjH5FNkfOS9Jfi6G5";
 
     public static void main(String[] args) {
-        ApiClient apiClient = new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
+        ApiClient apiClient =
+                new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
         apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
         apiClient.setUseSSL(true);
 
@@ -43,8 +44,8 @@ public class WorkerTest {
         Map<String, Integer> taskThreadCount = new HashMap<>();
 
         for (int i = 0; i < 6; i++) {
-            workers.add(new MyWorker("simple_task_" + i));
-            taskThreadCount.put("simple_task_" + i, 10);
+            workers.add(new LoadTestWorker("x_test_worker_" + i));
+            taskThreadCount.put("x_test_worker_" + i, 10);
         }
 
         TaskRunnerConfigurer configurer =
@@ -58,13 +59,14 @@ public class WorkerTest {
     }
 
     public static void mainBad(String[] args) {
-        ApiClient apiClient = new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
+        ApiClient apiClient =
+                new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
         apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
         apiClient.setUseSSL(true);
         int threadCount = 10;
 
         for (int i = 0; i < 6; i++) {
-            Worker worker = new MyWorker("simple_task_" + i);
+            Worker worker = new LoadTestWorker("x_test_worker_" + i);
             ThreadPoolExecutor executor =
                     (ThreadPoolExecutor)
                             Executors.newFixedThreadPool(

@@ -47,7 +47,8 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ApiClient apiClient = new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
+        ApiClient apiClient =
+                new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
         apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
         apiClient.setUseSSL(true);
 

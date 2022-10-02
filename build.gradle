@@ -1,6 +1,7 @@
 buildscript {
     dependencies {
         classpath 'com.diffplug.spotless:spotless-plugin-gradle:6.+'
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
     }
 }
 
@@ -59,19 +60,18 @@ dependencies {
 
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
-    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.16'
+    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.18'
 
     //Grpc dependencies
-    implementation "io.grpc:grpc-okhttp:${versions.ioGRPC}"
-    implementation "io.grpc:grpc-netty:${versions.ioGRPC}"
+    //implementation "io.grpc:grpc-okhttp:${versions.ioGRPC}"
+    implementation ("io.grpc:grpc-netty:${versions.ioGRPC}") {
+        exclude module: "netty-common"
+    }
     implementation "io.grpc:grpc-stub:${versions.ioGRPC}"
     implementation "com.google.protobuf:protobuf-java:${versions.protoBuf}"
     implementation "io.grpc:grpc-protobuf:${versions.ioGRPC}"
     implementation "io.grpc:grpc-stub:${versions.ioGRPC}"
-    implementation "io.netty:netty-all:${versions.netty}"
-    implementation "io.netty:netty-tcnative-boringssl-static:2.0.28.Final"
-
-    //
+    implementation "io.netty:netty-tcnative-boringssl-static:2.0.51.Final"
 
     //Misc
     annotationProcessor "org.projectlombok:lombok:${versions.lombok}"

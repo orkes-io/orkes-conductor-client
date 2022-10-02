@@ -17,9 +17,9 @@ import java.util.List;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.grpc.ProtoMapper;
 import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
+import com.netflix.conductor.proto.ProtoMappingHelper;
 import com.netflix.conductor.proto.TaskPb;
 
 import io.orkes.conductor.client.ApiClient;
@@ -35,7 +35,7 @@ public class GrpcTaskClient {
 
     private final TaskServiceGrpc.TaskServiceBlockingStub stub;
 
-    private final ProtoMapper protoMapper = ProtoMapper.INSTANCE;
+    private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
 
     public GrpcTaskClient(ApiClient apiClient) {
         this.channel = getChannel(apiClient);

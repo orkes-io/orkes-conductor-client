@@ -238,7 +238,7 @@ public class TaskRunnerConfigurer {
         return workerNamePrefix;
     }
 
-    private List<TaskPollExecutor> taskPollExecutors = new ArrayList<>();
+    private List<TaskRunner> taskPollExecutors = new ArrayList<>();
 
     /**
      * Starts the polling. Must be called after {@link TaskRunnerConfigurer.Builder#build()} method.
@@ -251,16 +251,16 @@ public class TaskRunnerConfigurer {
                     if (workerThreadCount == null) {
                         workerThreadCount = this.threadCount;
                     }
-
-                    TaskPollExecutor taskPollExecutor =
-                            new TaskPollExecutor(
+                    TaskRunner taskPollExecutor =
+                            new TaskRunner(
                                     worker,
                                     eurekaClient,
                                     taskClient,
-                                    workerThreadCount,
                                     updateRetryCount,
                                     taskToDomain,
-                                    workerNamePrefix);
+                                    workerNamePrefix,
+                                    workerThreadCount,
+                                    1000);
 
                     taskPollExecutors.add(taskPollExecutor);
 
@@ -279,7 +279,7 @@ public class TaskRunnerConfigurer {
     public void shutdown() {
         taskPollExecutors.forEach(
                 taskPollExecutor ->
-                        taskPollExecutor.shutdownExecutorService(
-                                scheduledExecutorService, shutdownGracePeriodSeconds));
+                        taskPollExecutor.shutdownExecutorService(shutdownGracePeriodSeconds));
+        this.scheduledExecutorService.shutdown();
     }
 }

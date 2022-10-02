@@ -12,20 +12,16 @@
  */
 package io.orkes.conductor.client;
 
-import com.netflix.conductor.client.telemetry.MetricsContainer;
-import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-import io.orkes.conductor.client.grpc.GrpcTaskWorker;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+
+import com.netflix.conductor.client.worker.Worker;
+import com.netflix.conductor.common.metadata.tasks.Task;
+import com.netflix.conductor.common.metadata.tasks.TaskResult;
+
+import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 
 public class LocalWorkerTest {
 
@@ -33,7 +29,7 @@ public class LocalWorkerTest {
     static String secret = "YNGLncaOWsv4nQIeO71LGGv77sM5iQCRjH5FNkfOS9Jfi6G5";
 
     public static void main(String[] args) {
-        ApiClient apiClient = new ApiClient("http://localhost:8080/api", key, secret);
+        ApiClient apiClient = new ApiClient("http://localhost:8080/api");
         apiClient.setUseGRPC("localhost", 8090);
 
         OrkesClients clients = new OrkesClients(apiClient);
@@ -43,7 +39,7 @@ public class LocalWorkerTest {
         Map<String, Integer> taskThreadCount = new HashMap<>();
 
         for (int i = 0; i < 6; i++) {
-            workers.add(new MyWorker("simple_task_" + i));
+            workers.add(new LoadTestWorker("simple_task_" + i));
             taskThreadCount.put("simple_task_" + i, 10);
         }
 
@@ -56,8 +52,6 @@ public class LocalWorkerTest {
 
         System.out.println("Ready...");
     }
-
-
 
     private static class MyWorker implements Worker {
 
