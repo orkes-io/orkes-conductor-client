@@ -33,7 +33,10 @@ ext {
             ioGRPC          : '1.49.0',
             ioGRPC          : '1.49.0',
             protoBuf     : '3.19.4',
-            lombok          : '1.18.24'
+            lombok          : '1.18.24',
+            revJAXRS : '2.1.1',
+            revJerseyCommon : '2.22.2'
+
     ]
 }
 
@@ -50,9 +53,12 @@ dependencies {
     implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
 
+    implementation "javax.ws.rs:javax.ws.rs-api:${versions.revJAXRS}"
+    implementation "org.glassfish.jersey.core:jersey-common:${versions.revJerseyCommon}"
+
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
-    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.13'
+    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.16'
 
     //Grpc dependencies
     implementation "io.grpc:grpc-okhttp:${versions.ioGRPC}"

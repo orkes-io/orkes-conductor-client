@@ -16,87 +16,93 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.netflix.conductor.client.config.ConductorClientConfiguration;
-import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
+import com.netflix.conductor.client.exception.ConductorClientException;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.discovery.EurekaClient;
 
 import io.orkes.conductor.client.TaskClient;
 
-import com.google.common.base.Preconditions;
-
 public class TaskRunnerConfigurer {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunnerConfigurer.class);
+    private static final String INVALID_THREAD_COUNT =
+            "Invalid worker thread count specified, use either shared thread pool or config thread count per task";
+    private static final String MISSING_TASK_THREAD_COUNT =
+            "Missing task thread count config for %s";
+
+    ScheduledExecutorService scheduledExecutorService;
 
     private final EurekaClient eurekaClient;
-    private final TaskClient taskClient;
-    private final List<Worker> workers;
+    final TaskClient taskClient;
+    final List<Worker> workers = new LinkedList<>();
     private final int sleepWhenRetry;
     private final int updateRetryCount;
+    private final int threadCount;
     private final int shutdownGracePeriodSeconds;
     private final String workerNamePrefix;
-    private final Map<String /* taskType */, String /* domain */> taskToDomain;
-    private final Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount;
-    private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout;
-
-    private final ConductorClientConfiguration conductorClientConfiguration;
-    private Integer defaultPollTimeout;
-    private final int threadCount;
-
-    private final List<TaskRunner> taskRunners;
-    private ExecutorService executorService;
+    private final Map<String /*taskType*/, String /*domain*/> taskToDomain;
+    private final Map<String /*taskType*/, Integer /*threadCount*/> taskThreadCount;
 
     /**
      * @see TaskRunnerConfigurer.Builder
      * @see TaskRunnerConfigurer#init()
      */
-    private TaskRunnerConfigurer(TaskRunnerConfigurer.Builder builder) {
+    TaskRunnerConfigurer(TaskRunnerConfigurer.Builder builder) {
+        // only allow either shared thread pool or per task thread pool
+        if (builder.threadCount != -1 && !builder.taskThreadCount.isEmpty()) {
+            LOGGER.error(INVALID_THREAD_COUNT);
+            throw new ConductorClientException(INVALID_THREAD_COUNT);
+        } else if (!builder.taskThreadCount.isEmpty()) {
+            for (Worker worker : builder.workers) {
+                if (!builder.taskThreadCount.containsKey(worker.getTaskDefName())) {
+                    String message =
+                            String.format(MISSING_TASK_THREAD_COUNT, worker.getTaskDefName());
+                    LOGGER.error(message);
+                    throw new ConductorClientException(message);
+                }
+                workers.add(worker);
+            }
+            this.taskThreadCount = builder.taskThreadCount;
+            this.threadCount = -1;
+        } else {
+            builder.workers.forEach(workers::add);
+            this.taskThreadCount = builder.taskThreadCount;
+            this.threadCount = (builder.threadCount == -1) ? workers.size() : builder.threadCount;
+        }
+
         this.eurekaClient = builder.eurekaClient;
         this.taskClient = builder.taskClient;
         this.sleepWhenRetry = builder.sleepWhenRetry;
         this.updateRetryCount = builder.updateRetryCount;
         this.workerNamePrefix = builder.workerNamePrefix;
         this.taskToDomain = builder.taskToDomain;
-        this.taskToThreadCount = builder.taskToThreadCount;
-        this.taskPollTimeout = builder.taskPollTimeout;
-        this.defaultPollTimeout = builder.defaultPollTimeout;
         this.shutdownGracePeriodSeconds = builder.shutdownGracePeriodSeconds;
-        this.conductorClientConfiguration = builder.conductorClientConfiguration;
-        this.workers = new LinkedList<>();
-        this.threadCount = builder.threadCount;
-        builder.workers.forEach(this.workers::add);
-        taskRunners = new LinkedList<>();
     }
 
     /** Builder used to create the instances of TaskRunnerConfigurer */
     public static class Builder {
+
         private String workerNamePrefix = "workflow-worker-%d";
         private int sleepWhenRetry = 500;
         private int updateRetryCount = 3;
         private int threadCount = -1;
         private int shutdownGracePeriodSeconds = 10;
-        private int defaultPollTimeout = 100;
         private final Iterable<Worker> workers;
         private EurekaClient eurekaClient;
         private final TaskClient taskClient;
-        private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
-        private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount =
-                new HashMap<>();
-        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout =
-                new HashMap<>();
-
-        private ConductorClientConfiguration conductorClientConfiguration =
-                new DefaultConductorClientConfiguration();
+        private Map<String /*taskType*/, String /*domain*/> taskToDomain = new HashMap<>();
+        private Map<String /*taskType*/, Integer /*threadCount*/> taskThreadCount = new HashMap<>();
 
         public Builder(TaskClient taskClient, Iterable<Worker> workers) {
-            Preconditions.checkNotNull(taskClient, "TaskClient cannot be null");
-            Preconditions.checkNotNull(workers, "Workers cannot be null");
+            Validate.notNull(taskClient, "TaskClient cannot be null");
+            Validate.notNull(workers, "Workers cannot be null");
             this.taskClient = taskClient;
             this.workers = workers;
         }
@@ -132,12 +138,15 @@ public class TaskRunnerConfigurer {
         }
 
         /**
-         * @param conductorClientConfiguration client configuration to handle external payloads
+         * @param threadCount # of threads assigned to the workers. Should be at-least the size of
+         *     taskWorkers to avoid starvation in a busy system.
          * @return Builder instance
          */
-        public TaskRunnerConfigurer.Builder withConductorClientConfiguration(
-                ConductorClientConfiguration conductorClientConfiguration) {
-            this.conductorClientConfiguration = conductorClientConfiguration;
+        public TaskRunnerConfigurer.Builder withThreadCount(int threadCount) {
+            if (threadCount < 1) {
+                throw new IllegalArgumentException("No. of threads cannot be less than 1");
+            }
+            this.threadCount = threadCount;
             return this;
         }
 
@@ -172,25 +181,8 @@ public class TaskRunnerConfigurer {
         }
 
         public TaskRunnerConfigurer.Builder withTaskThreadCount(
-                Map<String, Integer> taskToThreadCount) {
-            this.taskToThreadCount = taskToThreadCount;
-            return this;
-        }
-
-        public TaskRunnerConfigurer.Builder withTaskToThreadCount(
-                Map<String, Integer> taskToThreadCount) {
-            this.taskToThreadCount = taskToThreadCount;
-            return this;
-        }
-
-        public TaskRunnerConfigurer.Builder withTaskPollTimeout(
-                Map<String, Integer> taskPollTimeout) {
-            this.taskPollTimeout = taskPollTimeout;
-            return this;
-        }
-
-        public TaskRunnerConfigurer.Builder withTaskPollTimeout(Integer taskPollTimeout) {
-            this.defaultPollTimeout = taskPollTimeout;
+                Map<String, Integer> taskThreadCount) {
+            this.taskThreadCount = taskThreadCount;
             return this;
         }
 
@@ -199,25 +191,24 @@ public class TaskRunnerConfigurer {
          *
          * <p>Please see {@link TaskRunnerConfigurer#init()} method. The method must be called after
          * this constructor for the polling to start.
-         *
-         * @return Builder instance
          */
         public TaskRunnerConfigurer build() {
             return new TaskRunnerConfigurer(this);
         }
+    }
 
-        /**
-         * @param threadCount # of threads assigned to the workers. Should be at-least the size of
-         *     taskWorkers to avoid starvation in a busy system.
-         * @return Builder instance
-         */
-        public Builder withThreadCount(int threadCount) {
-            if (threadCount < 1) {
-                throw new IllegalArgumentException("No. of threads cannot be less than 1");
-            }
-            this.threadCount = threadCount;
-            return this;
-        }
+    /**
+     * @return Thread Count for the shared executor pool
+     */
+    public int getThreadCount() {
+        return threadCount;
+    }
+
+    /**
+     * @return Thread Count for individual task type
+     */
+    public Map<String, Integer> getTaskThreadCount() {
+        return taskThreadCount;
     }
 
     /**
@@ -250,12 +241,38 @@ public class TaskRunnerConfigurer {
         return workerNamePrefix;
     }
 
+    private List<TaskPollExecutor> taskPollExecutors;
+
     /**
      * Starts the polling. Must be called after {@link TaskRunnerConfigurer.Builder#build()} method.
      */
     public synchronized void init() {
-        this.executorService = Executors.newFixedThreadPool(workers.size());
-        workers.forEach(worker -> this.startWorker(worker));
+        this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
+        workers.forEach(
+                worker -> {
+                    Integer workerThreadCount = this.taskThreadCount.get(worker.getTaskDefName());
+                    if (workerThreadCount == null) {
+                        workerThreadCount = this.threadCount;
+                    }
+
+                    TaskPollExecutor taskPollExecutor =
+                            new TaskPollExecutor(
+                                    worker,
+                                    eurekaClient,
+                                    taskClient,
+                                    workerThreadCount,
+                                    updateRetryCount,
+                                    taskToDomain,
+                                    workerNamePrefix);
+
+                    taskPollExecutors.add(taskPollExecutor);
+
+                    scheduledExecutorService.scheduleWithFixedDelay(
+                            () -> taskPollExecutor.pollAndExecute(),
+                            worker.getPollingInterval(),
+                            worker.getPollingInterval(),
+                            TimeUnit.MILLISECONDS);
+                });
     }
 
     /**
@@ -263,27 +280,9 @@ public class TaskRunnerConfigurer {
      * shutdown of your worker, during process termination.
      */
     public void shutdown() {
-        this.executorService.shutdownNow();
-        this.taskRunners.forEach(taskRunner -> taskRunner.shutdown(shutdownGracePeriodSeconds));
-    }
-
-    private void startWorker(Worker worker) {
-        LOGGER.info("Starting worker: {} with ", worker.getTaskDefName());
-        final Integer threadCountForTask =
-                this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
-        final Integer taskPollTimeout =
-                this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
-        final TaskRunner taskRunner =
-                new TaskRunner(
-                        eurekaClient,
-                        taskClient,
-                        conductorClientConfiguration,
-                        updateRetryCount,
-                        taskToDomain,
-                        workerNamePrefix,
-                        threadCountForTask,
-                        taskPollTimeout);
-        this.taskRunners.add(taskRunner);
-        this.executorService.submit(() -> taskRunner.init(worker));
+        taskPollExecutors.forEach(
+                taskPollExecutor ->
+                        taskPollExecutor.shutdownExecutorService(
+                                scheduledExecutorService, shutdownGracePeriodSeconds));
     }
 }

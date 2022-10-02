@@ -55,7 +55,8 @@ public class TaskRunner {
                         .withSleepWhenRetry(
                                 500) // Time in millis to sleep when retrying for a task update.
                         // Default is 500ms
-                        .withTaskPollTimeout(100) // Poll timeout for long-poll.  Default is 100ms
+                        // .withTaskPollTimeout(100) // Poll timeout for long-poll.  Default is
+                        // 100ms
                         .withWorkerNamePrefix(
                                 "worker-") // Thread name prefix for the task worker executor.
                         // Useful for logging

@@ -41,7 +41,7 @@ public class GrpcTaskClient {
         this.channel = getChannel(apiClient);
         this.stub =
                 TaskServiceGrpc.newBlockingStub(this.channel)
-                        .withCallCredentials(new AuthToken(apiClient));
+                        .withInterceptors(new HeaderClientInterceptor(apiClient));
     }
 
     public List<Task> batchPoll(

@@ -14,40 +14,29 @@ package io.orkes.conductor.client.grpc;
 
 import java.util.concurrent.TimeUnit;
 
-import com.netflix.conductor.client.model.WorkflowRun;
-import com.netflix.conductor.common.config.ObjectMapperProvider;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.grpc.ProtoMapper;
 import com.netflix.conductor.proto.StartWorkflowRequestPb;
-import com.netflix.conductor.proto.WorkflowPb;
 
-import com.netflix.conductor.proto.WorkflowRunProtoMapper;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.proto.WorkflowRunPb;
-import io.orkes.conductor.proto.WorkflowService;
 import io.orkes.grpc.service.WorkflowServiceGrpc;
+import io.orkes.grpc.service.WorkflowServicePb;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.Uninterruptibles;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-import io.orkes.grpc.service.WorkflowServicePb;
 import lombok.extern.slf4j.Slf4j;
 
 import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 
 @Slf4j
-public class ExecuteWorkflowStream implements StreamObserver<WorkflowRunPb> {
-
-    private final ObjectMapper objectMapper = new ObjectMapperProvider().getObjectMapper();
+public class ExecuteWorkflowStream
+        implements StreamObserver<WorkflowServicePb.ExecuteWorkflowResponse> {
 
     private final WorkflowServiceGrpc.WorkflowServiceStub stub;
 
     private final WorkflowMonitor workflowMonitor = WorkflowMonitor.getInstance();
-
-    private final WorkflowRunProtoMapper protoMapper;
 
     private final ApiClient apiClient;
     private final HeaderClientInterceptor headerInterceptor;
@@ -58,9 +47,11 @@ public class ExecuteWorkflowStream implements StreamObserver<WorkflowRunPb> {
     private int reconnectBackoff = 10;
 
     public ExecuteWorkflowStream(ApiClient apiClient) {
-        this.protoMapper = new WorkflowRunProtoMapper(objectMapper);
         this.apiClient = apiClient;
-        this.headerInterceptor = new HeaderClientInterceptor();
+        this.headerInterceptor = new HeaderClientInterceptor(apiClient);
+        if (apiClient.useSecurity()) {
+            apiClient.getToken();
+        }
         this.stub =
                 WorkflowServiceGrpc.newStub(getChannel(apiClient))
                         .withInterceptors(headerInterceptor);
@@ -68,7 +59,6 @@ public class ExecuteWorkflowStream implements StreamObserver<WorkflowRunPb> {
     }
 
     private synchronized void connect() {
-        System.out.println("Connecting...");
         log.debug("Attempting to reconnect to the server with backoff {} sec", reconnectBackoff);
         backoff();
         try {
@@ -83,26 +73,21 @@ public class ExecuteWorkflowStream implements StreamObserver<WorkflowRunPb> {
     }
 
     @Override
-    public void onNext(WorkflowRunPb result) {
-        WorkflowRun workflow = protoMapper.fromProto(result);
-        workflowMonitor.notifyCompletion(workflow);
+    public void onNext(WorkflowServicePb.ExecuteWorkflowResponse result) {
+        workflowMonitor.notifyCompletion(result);
     }
 
     @Override
     public void onError(Throwable t) {
-        t.printStackTrace();
         System.out.println(t.getMessage());
         ready = false;
         Status status = Status.fromThrowable(t);
         Status.Code code = status.getCode();
         switch (code) {
+            case UNKNOWN:
+            case INTERNAL:
+                break;
             case UNAUTHENTICATED:
-                try {
-                    String token = apiClient.getToken();
-                    this.headerInterceptor.setToken(token);
-                } catch (Throwable tokenException) {
-                    log.error(tokenException.getMessage(), tokenException);
-                }
                 break;
             case PERMISSION_DENIED:
                 log.error("Key/Secret does not have permission to execute the workflow");

@@ -17,13 +17,20 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.netflix.conductor.client.model.WorkflowRun;
-import com.netflix.conductor.common.run.Workflow;
+import com.netflix.conductor.common.config.ObjectMapperProvider;
+import com.netflix.conductor.proto.WorkflowRunProtoMapper;
+
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.grpc.service.WorkflowServicePb;
 
 public class WorkflowMonitor {
     private Map<String, CompletableFuture<WorkflowRun>> runningWorkflowFutures =
             new ConcurrentHashMap<>();
 
     private static WorkflowMonitor instance = new WorkflowMonitor();
+
+    private final WorkflowRunProtoMapper protoMapper =
+            new WorkflowRunProtoMapper(new ObjectMapperProvider().getObjectMapper());
 
     private WorkflowMonitor() {}
 
@@ -37,12 +44,20 @@ public class WorkflowMonitor {
         return future;
     }
 
-    public void notifyCompletion(WorkflowRun workflowRun) {
-        String requestId = (String) workflowRun.getInput().get("_X-request-id");
+    public void notifyCompletion(WorkflowServicePb.ExecuteWorkflowResponse response) {
+        String requestId = response.getRequestId();
         CompletableFuture<WorkflowRun> future = runningWorkflowFutures.get(requestId);
-        if (future != null) {
-            future.complete(workflowRun);
-            runningWorkflowFutures.remove(requestId);
+        if (future == null) {
+            return;
         }
+        if (response.hasError()) {
+            ApiException exception =
+                    new ApiException(
+                            response.getError().getCode(), response.getError().getMessage());
+            future.completeExceptionally(exception);
+        } else {
+            future.complete(protoMapper.fromProto(response.getWorkflow()));
+        }
+        runningWorkflowFutures.remove(requestId);
     }
 }

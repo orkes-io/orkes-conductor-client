@@ -17,7 +17,6 @@ import java.util.concurrent.CompletableFuture;
 
 import com.netflix.conductor.client.model.WorkflowRun;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.ApiClient;
 

@@ -16,7 +16,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.UUID;
 
-import com.amazonaws.util.EC2MetadataUtils;
+import io.orkes.conductor.client.ApiClient;
+
 import io.grpc.*;
 
 public class HeaderClientInterceptor implements ClientInterceptor {
@@ -27,12 +28,13 @@ public class HeaderClientInterceptor implements ClientInterceptor {
     private static final Metadata.Key<String> CLIENT_ID_HEADER =
             Metadata.Key.of("X-Client-Id", Metadata.ASCII_STRING_MARSHALLER);
 
-    private String token;
-
     private final String clientId;
 
-    public HeaderClientInterceptor() {
+    private final ApiClient apiClient;
+
+    public HeaderClientInterceptor(ApiClient apiClient) {
         this.clientId = getIdentity();
+        this.apiClient = apiClient;
     }
 
     @Override
@@ -44,12 +46,11 @@ public class HeaderClientInterceptor implements ClientInterceptor {
             @Override
             public void start(Listener<RespT> responseListener, Metadata headers) {
                 try {
-                    if(token != null) {
-                        headers.put(AUTH_HEADER, token);
+                    if (apiClient.useSecurity()) {
+                        headers.put(AUTH_HEADER, apiClient.getToken());
                     }
                     headers.put(CLIENT_ID_HEADER, clientId);
                 } catch (Throwable t) {
-                    t.printStackTrace();
                 }
                 super.start(
                         new ForwardingClientCallListener.SimpleForwardingClientCallListener<RespT>(
@@ -57,10 +58,6 @@ public class HeaderClientInterceptor implements ClientInterceptor {
                         headers);
             }
         };
-    }
-
-    void setToken(String token) {
-        this.token = token;
     }
 
     private String getIdentity() {

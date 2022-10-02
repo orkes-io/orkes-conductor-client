@@ -104,7 +104,7 @@ public class ApiClient {
     }
 
     public ApiClient(String basePath) {
-        this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.SECONDS).build();
+        this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
         this.basePath = basePath;
         httpClient = new OkHttpClient();
         httpClient.setRetryOnConnectionFailure(true);

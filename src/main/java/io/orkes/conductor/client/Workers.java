@@ -94,7 +94,6 @@ public class Workers {
             TaskRunnerConfigurer runnerConfigurer =
                     new TaskRunnerConfigurer.Builder(taskClient, workers)
                             .withThreadCount(Math.max(1, workers.size()))
-                            .withTaskPollTimeout(100)
                             .build();
             runnerConfigurer.init();
             started = true;

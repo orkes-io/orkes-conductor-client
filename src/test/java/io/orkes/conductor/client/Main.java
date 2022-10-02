@@ -18,28 +18,22 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.netflix.conductor.client.model.WorkflowRun;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.grpc.GrpcWorkflowClient;
 
-import com.google.common.util.concurrent.Uninterruptibles;
-import io.orkes.conductor.proto.WorkflowRunPb;
-
 public class Main {
 
-    static String key = "a6b4f97c-2f91-4223-9374-cf7d29a0072e";
-    static String secret = "yudMp8M5o6a4282Ihom6q7QEpjSS6sNfv0b2twuCoqoFAWnw";
+    static String key = "869ed133-52b9-4967-9107-a5e5273c3492";
+    static String secret = "of9Af1EJvnVOHnSjzdySnSrO1P91AquQ7crAqamUphNB3GN1";
 
-    public static void main3(String[] args) {
+    public static void mainxx(String[] args) {
         ApiClient client = new ApiClient("http://localhost:8080/api");
         client.setUseGRPC(true);
 
@@ -54,11 +48,11 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ApiClient apiClient = new ApiClient("http://localhost:8080/api", key, secret);
+        ApiClient apiClient = new ApiClient("http://localhost:8080/api");
         apiClient.setUseGRPC(true);
 
         GrpcWorkflowClient client = new GrpcWorkflowClient(apiClient);
-        int count = 1;
+        int count = 100;
         CountDownLatch latch = new CountDownLatch(count);
         long s = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -67,33 +61,49 @@ public class Main {
             input.put("key", UUID.randomUUID().toString());
 
             StartWorkflowRequest request = new StartWorkflowRequest();
-            request.setName("load_test_2");
+            request.setName("load_test_4");
             request.setVersion(1);
+            if (i == 2) {
+                // request.setVersion(10);
+            }
             request.setInput(input);
             try {
                 CompletableFuture<WorkflowRun> future = client.executeWorkflow(request);
                 future.thenAccept(
-                        workflowRun -> {
-                            latch.countDown();
-                        });
+                                workflowRun -> {
+                                    System.out.println(
+                                            "time: "
+                                                    + (workflowRun.getUpdateTime()
+                                                            - workflowRun.getCreateTime()));
+                                    latch.countDown();
+                                })
+                        .exceptionally(
+                                error -> {
+                                    System.out.println("Error " + error);
+                                    latch.countDown();
+                                    return null;
+                                });
             } catch (Throwable t) {
                 System.out.println("Error " + t.getMessage());
-                // t.printStackTrace();
             }
         }
-        System.out.println("Time to to submit " + count + " execution requests: " + (System.currentTimeMillis()-s));
+        System.out.println(
+                "Time to to submit "
+                        + count
+                        + " execution requests: "
+                        + (System.currentTimeMillis() - s));
         latch.await();
-        long time = (System.currentTimeMillis()-s);
-        System.out.println("Time to to submit AND receive " + count + " execution requests: " + time + ", req/sec= " + ((double)count)/time);
-
+        long time = (System.currentTimeMillis() - s);
+        System.out.println(
+                "Time to to submit AND receive "
+                        + count
+                        + " execution requests: "
+                        + time
+                        + ", req/sec= "
+                        + ((double) count) / time);
     }
 
-
     private static class MyWorker implements Worker {
-
-
-
-
 
         @Override
         public String getTaskDefName() {
