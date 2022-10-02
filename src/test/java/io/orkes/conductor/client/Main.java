@@ -35,7 +35,6 @@ public class Main {
 
     public static void mainxx(String[] args) {
         ApiClient client = new ApiClient("http://localhost:8080/api");
-        client.setUseGRPC(true);
 
         OrkesClients clients = new OrkesClients(client);
         TaskClient taskClient = clients.getTaskClient();
@@ -49,7 +48,8 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         ApiClient apiClient = new ApiClient("http://localhost:8080/api");
-        apiClient.setUseGRPC(true);
+        apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
+        apiClient.setUseSSL(true);
 
         GrpcWorkflowClient client = new GrpcWorkflowClient(apiClient);
         int count = 100;

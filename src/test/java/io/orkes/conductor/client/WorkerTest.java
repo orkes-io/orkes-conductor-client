@@ -33,7 +33,6 @@ public class WorkerTest {
 
     public static void main2(String[] args) {
         ApiClient client = new ApiClient("http://localhost:8080/api", key, secret);
-        client.setUseGRPC(true);
 
         OrkesClients clients = new OrkesClients(client);
         TaskClient taskClient = clients.getTaskClient();
@@ -59,8 +58,8 @@ public class WorkerTest {
     }
 
     public static void main(String[] args) {
-        ApiClient client = new ApiClient("https://orkes-loadtest-grpc.orkesconductor.com/api", key, secret);
-        client.setUseGRPC(true);
+        ApiClient client =
+                new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
         int threadCount = 10;
 
         for (int i = 0; i < 6; i++) {

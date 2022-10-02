@@ -89,6 +89,7 @@ public class ApiClient {
     private String ssmKeyPath;
     private String ssmSecretPath;
 
+    private String grpcHost = "localhost";
     private int grpcPort = 8090;
 
     private boolean useSSL;
@@ -151,8 +152,10 @@ public class ApiClient {
         return useGRPC;
     }
 
-    public void setUseGRPC(boolean useGRPC) {
-        this.useGRPC = useGRPC;
+    public void setUseGRPC(String host, int port) {
+        this.grpcHost = host;
+        this.grpcPort = port;
+        this.useGRPC = true;
     }
 
     public boolean useSSL() {
@@ -219,6 +222,10 @@ public class ApiClient {
 
     public int getGrpcPort() {
         return grpcPort;
+    }
+
+    public String getGrpcHost() {
+        return grpcHost;
     }
 
     public void setGrpcPort(int grpcPort) {
