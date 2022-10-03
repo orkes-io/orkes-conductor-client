@@ -67,6 +67,9 @@ public class LocalWorker {
         @Override
         public TaskResult execute(Task task) {
             TaskResult result = new TaskResult(task);
+            result.getOutputData().put("a", "b");
+            result.getOutputData().put("a2", 42);
+            result.getOutputData().put("a3", Map.of("name", "orkes"));
             result.setStatus(TaskResult.Status.COMPLETED);
             return result;
         }

@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
         ApiClient apiClient = new ApiClient();
-        apiClient.setReadTimeout(10_000);
+        apiClient.setReadTimeout(20_000);
         OrkesClients clients = new OrkesClients(apiClient);
 
         WorkflowClient workflowClient = clients.getWorkflowClient();
