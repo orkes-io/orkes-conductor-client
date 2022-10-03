@@ -237,4 +237,7 @@ public interface WorkflowClient {
     BulkResponse retryWorkflow(List<String> workflowIds);
 
     BulkResponse terminateWorkflow(List<String> workflowIds, String reason);
+
+    /** Shutdown any background threads */
+    void shutdown();
 }
