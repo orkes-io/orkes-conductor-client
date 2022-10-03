@@ -42,7 +42,7 @@ public interface WorkflowClient {
      * @param waitUntilTaskRef Wait until the task identified by the reference name completes and
      *     return back the results. Useful when part of the workflow needs to be synchronous and
      *     rest can be monitored asynchronously.
-     * @return
+     * @return CompletableFuture of a WorkflowRun for the started workflow
      */
     CompletableFuture<WorkflowRun> executeWorkflow(
             StartWorkflowRequest startWorkflowRequest, String waitUntilTaskRef);
@@ -52,7 +52,7 @@ public interface WorkflowClient {
      *
      * @param workflowId Id of the workflow
      * @param includeTasks if false, no tasks are returned only input, output and variables.
-     * @return
+     * @return Workflow if a workflow exists with given workflowId
      */
     Workflow getWorkflow(String workflowId, boolean includeTasks);
 
@@ -63,13 +63,13 @@ public interface WorkflowClient {
      * @param correlationId correlation id
      * @param includeCompleted if the result should include
      * @param includeTasks
-     * @return
+     * @return List of Workflows matching name and correlationId
      */
     List<Workflow> getWorkflows(
             String name, String correlationId, boolean includeCompleted, boolean includeTasks);
 
     /**
-     * Removes the workflow from the system permenantly
+     * Removes the workflow from the system permanently
      *
      * @param workflowId
      * @param archiveWorkflow
@@ -81,7 +81,7 @@ public interface WorkflowClient {
      *
      * @param workflowIds
      * @param reason
-     * @return
+     * @return BulkResponse of terminated workflows
      */
     BulkResponse terminateWorkflows(List<String> workflowIds, String reason);
 
@@ -90,7 +90,7 @@ public interface WorkflowClient {
      *
      * @param workflowName
      * @param version
-     * @return
+     * @return List of running workflows matching workflowName and version
      */
     List<String> getRunningWorkflow(String workflowName, Integer version);
 
@@ -101,7 +101,7 @@ public interface WorkflowClient {
      * @param version
      * @param startTime
      * @param endTime
-     * @return
+     * @return List of workflowIds
      */
     List<String> getWorkflowsByTimePeriod(
             String workflowName, int version, Long startTime, Long endTime);
