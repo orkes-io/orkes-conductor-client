@@ -28,15 +28,20 @@ import io.orkes.conductor.client.model.WorkflowStatus;
 public interface WorkflowClient {
     /**
      * Start a new workflow execution
-     * @param startWorkflowRequest
-     * @return Id of the workflow that was started.  {@link #getWorkflow(String, boolean)} can be used to get the status of this workflow execution
+     *
+     * @param startWorkflowRequest start workflow request
+     * @return Id of the workflow that was started. {@link #getWorkflow(String, boolean)} can be
+     *     used to get the status of this workflow execution
      */
     String startWorkflow(StartWorkflowRequest startWorkflowRequest);
 
     /**
      * Starts a new workflow and waits until it completes.
-     * @param startWorkflowRequest
-     * @param waitUntilTaskRef Wait until the task identified by the reference name completes and return back the results.  Useful when part of the workflow needs to be synchronous and rest can be monitored asynchronously.
+     *
+     * @param startWorkflowRequest start workflow request
+     * @param waitUntilTaskRef Wait until the task identified by the reference name completes and
+     *     return back the results. Useful when part of the workflow needs to be synchronous and
+     *     rest can be monitored asynchronously.
      * @return
      */
     CompletableFuture<WorkflowRun> executeWorkflow(
@@ -44,6 +49,7 @@ public interface WorkflowClient {
 
     /**
      * Get the workflow execution
+     *
      * @param workflowId Id of the workflow
      * @param includeTasks if false, no tasks are returned only input, output and variables.
      * @return
@@ -52,9 +58,10 @@ public interface WorkflowClient {
 
     /**
      * Return workflows matching the correlation id
-     * @param name
-     * @param correlationId
-     * @param includeCompleted
+     *
+     * @param name workflow name
+     * @param correlationId correlation id
+     * @param includeCompleted if the result should include 
      * @param includeTasks
      * @return
      */
@@ -63,6 +70,7 @@ public interface WorkflowClient {
 
     /**
      * Removes the workflow from the system permenantly
+     *
      * @param workflowId
      * @param archiveWorkflow
      */
@@ -70,6 +78,7 @@ public interface WorkflowClient {
 
     /**
      * Terminates the workflows
+     *
      * @param workflowIds
      * @param reason
      * @return
@@ -78,6 +87,7 @@ public interface WorkflowClient {
 
     /**
      * Return currently running workflow ids
+     *
      * @param workflowName
      * @param version
      * @return
@@ -86,6 +96,7 @@ public interface WorkflowClient {
 
     /**
      * Return the ids of the workflow that were started in the given time period
+     *
      * @param workflowName
      * @param version
      * @param startTime
@@ -96,23 +107,31 @@ public interface WorkflowClient {
             String workflowName, int version, Long startTime, Long endTime);
 
     /**
-     * Forces workflow state evaluation.  Use with Caution, meant only for advanced use cases.
+     * Forces workflow state evaluation. Use with Caution, meant only for advanced use cases.
+     *
      * @param workflowId
      */
     void runDecider(String workflowId);
 
     /**
-     * Pause a running workflow.  No New tasks will be scheduled until resume is called
+     * Pause a running workflow. No New tasks will be scheduled until resume is called
+     *
      * @param workflowId
      */
     void pauseWorkflow(String workflowId);
 
     /**
      * Resume a paused workflow
+     *
      * @param workflowId
      */
     void resumeWorkflow(String workflowId);
 
+    /**
+     *
+     * @param workflowId
+     * @param taskReferenceName
+     */
     void skipTaskFromWorkflow(String workflowId, String taskReferenceName);
 
     String rerunWorkflow(String workflowId, RerunWorkflowRequest rerunWorkflowRequest);
