@@ -129,7 +129,7 @@ public interface WorkflowClient {
 
     /**
      * Skip one Task from a Workflow. If there exists a taskReferenceName for given workflowId.
-     * 
+     *
      * @param workflowId
      * @param taskReferenceName
      */
@@ -137,7 +137,7 @@ public interface WorkflowClient {
 
     /**
      * Rerun a Workflow. If there exists a workflowId, rerun it given a RerunWorkflowRequest
-     * 
+     *
      * @param workflowId
      * @param rerunWorkflowRequest
      * @return WorkflowId of started Workflow
@@ -146,7 +146,7 @@ public interface WorkflowClient {
 
     /**
      * Restart a workflow with given a workflowId
-     * 
+     *
      * @param workflowId
      * @param useLatestDefinitions
      */
@@ -154,21 +154,21 @@ public interface WorkflowClient {
 
     /**
      * Retry last failed task from a workflow given a workflowId
-     * 
+     *
      * @param workflowId
      */
     void retryLastFailedTask(String workflowId);
 
     /**
      * Reset the Callback for tasks in progress given a workflowId
-     * 
+     *
      * @param workflowId
      */
     void resetCallbacksForInProgressTasks(String workflowId);
 
     /**
      * Terminate a Workflow given workflowId and set a reason
-     * 
+     *
      * @param workflowId
      * @param reason
      */
@@ -176,7 +176,7 @@ public interface WorkflowClient {
 
     /**
      * Search for workflows matching query
-     * 
+     *
      * @param query
      * @return SearchResult of WorkflowSummary
      */
@@ -184,7 +184,7 @@ public interface WorkflowClient {
 
     /**
      * Search for workflows matching query
-     * 
+     *
      * @param query
      * @return SearchResult of Workflow
      */
@@ -192,7 +192,7 @@ public interface WorkflowClient {
 
     /**
      * Search for workflows matching query
-     * 
+     *
      * @param start
      * @param size
      * @param sort
@@ -205,7 +205,7 @@ public interface WorkflowClient {
 
     /**
      * Search for workflows matching query
-     * 
+     *
      * @param start
      * @param size
      * @param sort
@@ -216,17 +216,16 @@ public interface WorkflowClient {
     SearchResult<Workflow> searchV2(
             Integer start, Integer size, String sort, String freeText, String query);
 
-
-            /**
-             * Get the WorkflowStatus of a Workflow given workflowId
-             * 
-     * @param worklfowId
+    /**
+     * Get the WorkflowStatus of a Workflow given workflowId
+     *
+     * @param workflowId
      * @param includeOutput
      * @param includeVariables
      * @return WorkflowStatus of the workflow
      */
-        WorkflowStatus getWorkflowStatusSummary(
-                String workflowId, Boolean includeOutput, Boolean includeVariables);
+    WorkflowStatus getWorkflowStatusSummary(
+            String workflowId, Boolean includeOutput, Boolean includeVariables);
 
     // Bulk operations
     BulkResponse pauseWorkflow(List<String> workflowIds);
