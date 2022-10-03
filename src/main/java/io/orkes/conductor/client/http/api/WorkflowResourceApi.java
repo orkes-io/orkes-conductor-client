@@ -53,15 +53,16 @@ public class WorkflowResourceApi {
     /**
      * Execute a workflow synchronously
      *
-     * @param body  (required)
+     * @param req  (required)
      * @param name  (required)
      * @param version  (required)
+     * @param waitUntilTaskRef  (optional)
      * @param requestId  (optional)
      * @return WorkflowRun
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public WorkflowRun executeWorkflow(StartWorkflowRequest req, String name, Integer version, String requestId) throws ApiException {
-        ApiResponse<WorkflowRun> resp = executeWorkflowWithHttpInfo(req, name, version, requestId);
+    public WorkflowRun executeWorkflow(StartWorkflowRequest req, String name, Integer version, String waitUntilTaskRef, String requestId) throws ApiException {
+        ApiResponse<WorkflowRun> resp = executeWorkflowWithHttpInfo(req, name, version, waitUntilTaskRef, requestId);
         return resp.getData();
     }
 
@@ -75,13 +76,13 @@ public class WorkflowResourceApi {
      * @return ApiResponse&lt;WorkflowRun&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<WorkflowRun> executeWorkflowWithHttpInfo(StartWorkflowRequest body, String name, Integer version, String requestId) throws ApiException {
-        com.squareup.okhttp.Call call = executeWorkflowValidateBeforeCall(body, name, version, requestId, null, null);
+    public ApiResponse<WorkflowRun> executeWorkflowWithHttpInfo(StartWorkflowRequest body, String name, Integer version, String waitUntilTaskRef, String requestId) throws ApiException {
+        com.squareup.okhttp.Call call = executeWorkflowValidateBeforeCall(body, name, version, waitUntilTaskRef, requestId, null, null);
         Type localVarReturnType = new TypeToken<WorkflowRun>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
-    private com.squareup.okhttp.Call executeWorkflowValidateBeforeCall(StartWorkflowRequest body, String name, Integer version, String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call executeWorkflowValidateBeforeCall(StartWorkflowRequest body, String name, Integer version, String waitUntilTaskRef, String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling executeWorkflow(Async)");
@@ -95,11 +96,11 @@ public class WorkflowResourceApi {
             throw new ApiException("Missing the required parameter 'version' when calling executeWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call = executeWorkflowCall(body, name, version, requestId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = executeWorkflowCall(body, name, version, waitUntilTaskRef, requestId, progressListener, progressRequestListener);
         return call;
     }
 
-    public com.squareup.okhttp.Call executeWorkflowCall(StartWorkflowRequest body, String name, Integer version, String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call executeWorkflowCall(StartWorkflowRequest body, String name, Integer version, String waitUntilTaskRef, String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -111,6 +112,9 @@ public class WorkflowResourceApi {
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
         if (requestId != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("requestId", requestId));
+
+        if (waitUntilTaskRef != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("waitUntilTaskRef", waitUntilTaskRef));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -155,7 +159,7 @@ public class WorkflowResourceApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call executeWorkflowAsync(StartWorkflowRequest body, String name, Integer version, String requestId, final ApiCallback<WorkflowRun> callback) throws ApiException {
+    public com.squareup.okhttp.Call executeWorkflowAsync(StartWorkflowRequest body, String name, Integer version, String waitUntilTaskRef, String requestId, final ApiCallback<WorkflowRun> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -176,7 +180,7 @@ public class WorkflowResourceApi {
             };
         }
 
-        com.squareup.okhttp.Call call = executeWorkflowValidateBeforeCall(body, name, version, requestId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = executeWorkflowValidateBeforeCall(body, name, version, waitUntilTaskRef, requestId, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<WorkflowRun>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
 

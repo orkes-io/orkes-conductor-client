@@ -14,6 +14,7 @@ package io.orkes.conductor.client.http;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
@@ -55,10 +56,11 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String requestId) {
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String waitUntilTaskRef) {
         CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
         AsyncApiCallback<WorkflowRun> callback = new AsyncApiCallback<>(future);
-        httpClient.executeWorkflowAsync(startWorkflowRequest, startWorkflowRequest.getName(), startWorkflowRequest.getVersion(), requestId, callback);
+        String requestId = UUID.randomUUID().toString();
+        httpClient.executeWorkflowAsync(startWorkflowRequest, startWorkflowRequest.getName(), startWorkflowRequest.getVersion(), waitUntilTaskRef, requestId, callback);
         return future;
     }
 

@@ -29,7 +29,7 @@ import io.orkes.conductor.client.model.WorkflowStatus;
 public interface WorkflowClient {
     String startWorkflow(StartWorkflowRequest startWorkflowRequest);
 
-    CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String requestId);
+    CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String waitUntilTaskRef);
 
     Workflow getWorkflow(String workflowId, boolean includeTasks);
 
