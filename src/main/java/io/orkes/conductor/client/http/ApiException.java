@@ -113,6 +113,6 @@ public class ApiException extends OrkesClientException {
 
     @Override
     public String getMessage() {
-        return getCode() + ":" + responseBody;
+        return getCode() + ":" + responseBody != null ? responseBody : super.getMessage();
     }
 }
