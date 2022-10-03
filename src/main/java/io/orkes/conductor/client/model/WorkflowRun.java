@@ -12,11 +12,11 @@
  */
 package io.orkes.conductor.client.model;
 
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.run.Workflow;
-
 import java.util.List;
 import java.util.Map;
+
+import com.netflix.conductor.common.metadata.tasks.Task;
+import com.netflix.conductor.common.run.Workflow;
 
 public class WorkflowRun {
 

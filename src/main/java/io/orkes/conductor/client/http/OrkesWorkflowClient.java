@@ -13,13 +13,9 @@
 package io.orkes.conductor.client.http;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
-import io.orkes.conductor.client.http.api.AsyncApiCallback;
-import io.orkes.conductor.client.model.WorkflowRun;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -32,8 +28,10 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.http.api.AsyncApiCallback;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
+import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
 
 import com.google.common.base.Preconditions;
@@ -56,11 +54,18 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String waitUntilTaskRef) {
+    public CompletableFuture<WorkflowRun> executeWorkflow(
+            StartWorkflowRequest startWorkflowRequest, String waitUntilTaskRef) {
         CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
         AsyncApiCallback<WorkflowRun> callback = new AsyncApiCallback<>(future);
         String requestId = UUID.randomUUID().toString();
-        httpClient.executeWorkflowAsync(startWorkflowRequest, startWorkflowRequest.getName(), startWorkflowRequest.getVersion(), waitUntilTaskRef, requestId, callback);
+        httpClient.executeWorkflowAsync(
+                startWorkflowRequest,
+                startWorkflowRequest.getName(),
+                startWorkflowRequest.getVersion(),
+                waitUntilTaskRef,
+                requestId,
+                callback);
         return future;
     }
 

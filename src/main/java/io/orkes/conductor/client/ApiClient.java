@@ -37,8 +37,6 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.LocalDate;
@@ -53,6 +51,7 @@ import io.orkes.conductor.client.http.auth.HttpBasicAuth;
 import io.orkes.conductor.client.http.auth.OAuth;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
 import okio.BufferedSink;
@@ -161,7 +160,6 @@ public class ApiClient {
         this.httpClient = httpClient;
         return this;
     }
-
 
     public void shutdown() {
         this.httpClient.getDispatcher().getExecutorService().shutdown();
@@ -916,25 +914,26 @@ public class ApiClient {
      */
     @SuppressWarnings("unchecked")
     public <T> void executeAsync(Call call, final Type returnType, final ApiCallback<T> callback) {
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                callback.onFailure(new ApiException(e), 0, null);
-            }
+        call.enqueue(
+                new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        callback.onFailure(new ApiException(e), 0, null);
+                    }
 
-            @Override
-            public void onResponse(Response response) throws IOException {
-                T result;
-                try {
-                    result = (T) handleResponse(response, returnType);
-                } catch (ApiException e) {
-                    callback.onFailure(e, response.code(), response.headers().toMultimap());
-                    return;
-                }
-                callback.onSuccess(result, response.code(), response.headers().toMultimap());
-            }
-        });
-
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        T result;
+                        try {
+                            result = (T) handleResponse(response, returnType);
+                        } catch (ApiException e) {
+                            callback.onFailure(e, response.code(), response.headers().toMultimap());
+                            return;
+                        }
+                        callback.onSuccess(
+                                result, response.code(), response.headers().toMultimap());
+                    }
+                });
     }
 
     /**
