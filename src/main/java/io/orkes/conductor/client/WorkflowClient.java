@@ -61,7 +61,7 @@ public interface WorkflowClient {
      *
      * @param name workflow name
      * @param correlationId correlation id
-     * @param includeCompleted if the result should include 
+     * @param includeCompleted if the result should include
      * @param includeTasks
      * @return
      */
@@ -128,7 +128,6 @@ public interface WorkflowClient {
     void resumeWorkflow(String workflowId);
 
     /**
-     *
      * @param workflowId
      * @param taskReferenceName
      */
