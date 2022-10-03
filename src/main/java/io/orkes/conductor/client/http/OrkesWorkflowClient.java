@@ -82,11 +82,6 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public void populateWorkflowOutput(Workflow workflow) {
-        throw new UnsupportedOperationException("External storage upload is not supported yet!");
-    }
-
-    @Override
     public void deleteWorkflow(String workflowId, boolean archiveWorkflow) {
         httpClient.delete(workflowId, archiveWorkflow);
     }
