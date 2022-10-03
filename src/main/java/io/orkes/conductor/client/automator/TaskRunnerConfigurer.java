@@ -52,8 +52,6 @@ public class TaskRunnerConfigurer {
 
     private final List<TaskRunner> taskRunners;
 
-    private ScheduledExecutorService scheduledExecutorService;
-
     /**
      * @see TaskRunnerConfigurer.Builder
      * @see TaskRunnerConfigurer#init()
@@ -256,8 +254,7 @@ public class TaskRunnerConfigurer {
      * Starts the polling. Must be called after {@link TaskRunnerConfigurer.Builder#build()} method.
      */
     public synchronized void init() {
-        this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
-        workers.forEach(worker -> this.startWorker(worker));
+        workers.stream().parallel().forEach(worker -> this.startWorker(worker));
     }
 
     /**
@@ -266,7 +263,6 @@ public class TaskRunnerConfigurer {
      */
     public void shutdown() {
         this.taskRunners.forEach(taskRunner -> taskRunner.shutdown(shutdownGracePeriodSeconds));
-        this.scheduledExecutorService.shutdown();
     }
 
     private void startWorker(Worker worker) {
@@ -277,6 +273,7 @@ public class TaskRunnerConfigurer {
                 this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
         final TaskRunner taskRunner =
                 new TaskRunner(
+                        worker,
                         eurekaClient,
                         taskClient,
                         conductorClientConfiguration,
@@ -286,10 +283,6 @@ public class TaskRunnerConfigurer {
                         threadCountForTask,
                         taskPollTimeout);
         this.taskRunners.add(taskRunner);
-        this.scheduledExecutorService.scheduleWithFixedDelay(
-                () -> taskRunner.poll(worker),
-                0,
-                worker.getPollingInterval(),
-                TimeUnit.MILLISECONDS);
+        taskRunner.pollAndExecute();
     }
 }

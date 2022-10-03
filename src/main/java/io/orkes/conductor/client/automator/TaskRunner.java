@@ -20,6 +20,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
@@ -54,11 +55,14 @@ class TaskRunner {
     private final int threadCount;
     private final int taskPollTimeout;
 
+    private final Worker worker;
     private static final String DOMAIN = "domain";
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
     private static final String ALL_WORKERS = "all";
 
+
     TaskRunner(
+            Worker worker,
             EurekaClient eurekaClient,
             TaskClient taskClient,
             ConductorClientConfiguration conductorClientConfiguration,
@@ -67,6 +71,7 @@ class TaskRunner {
             String workerNamePrefix,
             int threadCount,
             int taskPollTimeout) {
+        this.worker = worker;
         this.eurekaClient = eurekaClient;
         this.taskClient = taskClient;
         this.updateRetryCount = updateRetryCount;
@@ -89,9 +94,15 @@ class TaskRunner {
                 workerNamePrefix);
     }
 
-    public void poll(Worker worker) {
-        pollTasksForWorker(worker)
-                .forEach(task -> this.executorService.submit(() -> this.processTask(task, worker)));
+    public void pollAndExecute() {
+        while(true) {
+            List<Task> tasks = pollTasksForWorker();
+            if(tasks.isEmpty()) {
+                Uninterruptibles.sleepUninterruptibly(worker.getPollingInterval(), TimeUnit.MILLISECONDS);
+                continue;
+            }
+            tasks.forEach(task -> this.executorService.submit(() -> this.processTask(task, worker)));
+        }
     }
 
     public void shutdown(int timeout) {
@@ -110,7 +121,7 @@ class TaskRunner {
         }
     }
 
-    private List<Task> pollTasksForWorker(Worker worker) {
+    private List<Task> pollTasksForWorker() {
         LOGGER.trace("Polling for {}", worker.getTaskDefName());
         List<Task> tasks = new LinkedList<>();
         Boolean discoveryOverride =
