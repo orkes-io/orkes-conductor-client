@@ -128,30 +128,105 @@ public interface WorkflowClient {
     void resumeWorkflow(String workflowId);
 
     /**
+     * Skip one Task from a Workflow. If there exists a taskReferenceName for given workflowId.
+     * 
      * @param workflowId
      * @param taskReferenceName
      */
     void skipTaskFromWorkflow(String workflowId, String taskReferenceName);
 
+    /**
+     * Rerun a Workflow. If there exists a workflowId, rerun it given a RerunWorkflowRequest
+     * 
+     * @param workflowId
+     * @param rerunWorkflowRequest
+     * @return WorkflowId of started Workflow
+     */
     String rerunWorkflow(String workflowId, RerunWorkflowRequest rerunWorkflowRequest);
 
+    /**
+     * Restart a workflow with given a workflowId
+     * 
+     * @param workflowId
+     * @param useLatestDefinitions
+     */
     void restart(String workflowId, boolean useLatestDefinitions);
 
+    /**
+     * Retry last failed task from a workflow given a workflowId
+     * 
+     * @param workflowId
+     */
     void retryLastFailedTask(String workflowId);
 
+    /**
+     * Reset the Callback for tasks in progress given a workflowId
+     * 
+     * @param workflowId
+     */
     void resetCallbacksForInProgressTasks(String workflowId);
 
+    /**
+     * Terminate a Workflow given workflowId and set a reason
+     * 
+     * @param workflowId
+     * @param reason
+     */
     void terminateWorkflow(String workflowId, String reason);
 
+    /**
+     * Search for workflows matching query
+     * 
+     * @param query
+     * @return SearchResult of WorkflowSummary
+     */
     SearchResult<WorkflowSummary> search(String query);
 
+    /**
+     * Search for workflows matching query
+     * 
+     * @param query
+     * @return SearchResult of Workflow
+     */
     SearchResult<Workflow> searchV2(String query);
 
+    /**
+     * Search for workflows matching query
+     * 
+     * @param start
+     * @param size
+     * @param sort
+     * @param freeText
+     * @param query
+     * @return SearchResult of WorkflowSummary
+     */
     SearchResult<WorkflowSummary> search(
             Integer start, Integer size, String sort, String freeText, String query);
 
+    /**
+     * Search for workflows matching query
+     * 
+     * @param start
+     * @param size
+     * @param sort
+     * @param freeText
+     * @param query
+     * @return SearchResult of Workflow
+     */
     SearchResult<Workflow> searchV2(
             Integer start, Integer size, String sort, String freeText, String query);
+
+
+            /**
+             * Get the WorkflowStatus of a Workflow given workflowId
+             * 
+     * @param worklfowId
+     * @param includeOutput
+     * @param includeVariables
+     * @return WorkflowStatus of the workflow
+     */
+        WorkflowStatus getWorkflowStatusSummary(
+                String workflowId, Boolean includeOutput, Boolean includeVariables);
 
     // Bulk operations
     BulkResponse pauseWorkflow(List<String> workflowIds);
@@ -163,7 +238,4 @@ public interface WorkflowClient {
     BulkResponse retryWorkflow(List<String> workflowIds);
 
     BulkResponse terminateWorkflow(List<String> workflowIds, String reason);
-
-    WorkflowStatus getWorkflowStatusSummary(
-            String workflowId, Boolean includeOutput, Boolean includeVariables);
 }
