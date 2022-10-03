@@ -15,6 +15,8 @@ package io.orkes.conductor.client.http;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -42,10 +44,13 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     private final WorkflowBulkResourceApi bulkResourceApi;
 
+    private final ExecutorService executorService;
+
     public OrkesWorkflowClient(ApiClient apiClient) {
         super(apiClient);
         this.httpClient = new WorkflowResourceApi(apiClient);
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
+        this.executorService = Executors.newFixedThreadPool(apiClient.getExecutorThreads());
     }
 
     @Override
@@ -59,13 +64,22 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
         CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
         AsyncApiCallback<WorkflowRun> callback = new AsyncApiCallback<>(future);
         String requestId = UUID.randomUUID().toString();
-        httpClient.executeWorkflowAsync(
-                startWorkflowRequest,
-                startWorkflowRequest.getName(),
-                startWorkflowRequest.getVersion(),
-                waitUntilTaskRef,
-                requestId,
-                callback);
+        executorService.submit(
+                () -> {
+                    try {
+                        WorkflowRun response =
+                                httpClient.executeWorkflow(
+                                        startWorkflowRequest,
+                                        startWorkflowRequest.getName(),
+                                        startWorkflowRequest.getVersion(),
+                                        waitUntilTaskRef,
+                                        requestId);
+                        future.complete(response);
+                    } catch (Throwable t) {
+                        future.completeExceptionally(t);
+                    }
+                });
+
         return future;
     }
 
@@ -206,5 +220,10 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     public WorkflowStatus getWorkflowStatusSummary(
             String workflowId, Boolean includeOutput, Boolean includeVariables) {
         return httpClient.getWorkflowStatusSummary(workflowId, includeOutput, includeVariables);
+    }
+
+    @Override
+    public void shutdown() {
+        this.executorService.shutdown();
     }
 }

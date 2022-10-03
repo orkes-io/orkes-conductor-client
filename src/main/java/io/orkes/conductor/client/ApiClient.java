@@ -85,6 +85,8 @@ public class ApiClient {
     private String ssmKeyPath;
     private String ssmSecretPath;
 
+    private int executorThreads = 10;
+
     /*
      * Constructor for ApiClient
      */
@@ -192,6 +194,14 @@ public class ApiClient {
      */
     public boolean isVerifyingSsl() {
         return verifyingSsl;
+    }
+
+    public void setExecutorThreads(int executorThreads) {
+        this.executorThreads = executorThreads;
+    }
+
+    public int getExecutorThreads() {
+        return executorThreads;
     }
 
     /**
