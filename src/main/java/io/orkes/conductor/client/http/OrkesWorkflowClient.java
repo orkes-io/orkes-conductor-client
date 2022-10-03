@@ -13,7 +13,12 @@
 package io.orkes.conductor.client.http;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
+import io.orkes.conductor.client.http.api.AsyncApiCallback;
+import io.orkes.conductor.client.model.WorkflowRun;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -47,6 +52,14 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     @Override
     public String startWorkflow(StartWorkflowRequest startWorkflowRequest) {
         return httpClient.startWorkflow(startWorkflowRequest);
+    }
+
+    @Override
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String requestId) {
+        CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
+        AsyncApiCallback<WorkflowRun> callback = new AsyncApiCallback<>(future);
+        httpClient.executeWorkflowAsync(startWorkflowRequest, startWorkflowRequest.getName(), startWorkflowRequest.getVersion(), requestId, callback);
+        return future;
     }
 
     @Override
