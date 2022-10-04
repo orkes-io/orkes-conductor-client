@@ -22,14 +22,22 @@ import com.netflix.conductor.common.metadata.events.EventHandler.StartWorkflow;
 
 import io.orkes.conductor.client.EventClient;
 import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.model.event.QueueConfiguration;
+import io.orkes.conductor.client.model.event.QueueWorkerConfiguration;
+import io.orkes.conductor.client.model.event.kafka.KafkaConfiguration;
+import io.orkes.conductor.client.model.event.kafka.KafkaConsumer;
+import io.orkes.conductor.client.model.event.kafka.KafkaProducer;
 import io.orkes.conductor.client.util.Commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 public class EventClientTests extends ClientTest {
-    private static final String EVENT_NAME = "test-sdk-java-event-name";
-    private static final String EVENT = "test-sdk-java-event";
+    private static final String EVENT_NAME = "test_sdk_java_event_name";
+    private static final String EVENT = "test_sdk_java_event";
+
+    private static final String KAFKA_QUEUE_TOPIC_NAME = "test_sdk_java_name";
+    private static final String KAFKA_BOOTSTRAP_SERVERS_CONFIG = "localhost:9092";
 
     private final EventClient eventClient;
 
@@ -38,7 +46,7 @@ public class EventClientTests extends ClientTest {
     }
 
     @Test
-    void testMethods() {
+    void testEventHandler() {
         try {
             eventClient.unregisterEventHandler(EVENT_NAME);
         } catch (ApiException e) {
@@ -58,6 +66,26 @@ public class EventClientTests extends ClientTest {
                 });
         eventClient.unregisterEventHandler(EVENT_NAME);
         assertIterableEquals(List.of(), eventClient.getEventHandlers(EVENT, false));
+    }
+
+    @Test
+    void testKafkaQueueConfiguration() throws Exception {
+        // QueueConfiguration queueConfiguration = getQueueConfiguration();
+        // ((OrkesEventClient) eventClient).putQueueConfig(queueConfiguration);
+    }
+
+    QueueConfiguration getQueueConfiguration() throws Exception {
+        return new KafkaConfiguration(KAFKA_QUEUE_TOPIC_NAME)
+                .withConsumer(getKafkaConsumer())
+                .withProducer(getKafkaConsumer());
+    }
+
+    QueueWorkerConfiguration getKafkaConsumer() throws Exception {
+        return new KafkaConsumer(KAFKA_BOOTSTRAP_SERVERS_CONFIG);
+    }
+
+    QueueWorkerConfiguration getKafkaProducer() throws Exception {
+        return new KafkaProducer(KAFKA_BOOTSTRAP_SERVERS_CONFIG);
     }
 
     EventHandler getEventHandler() {
