@@ -60,8 +60,10 @@ public class OrkesEventClient extends OrkesClient implements EventClient {
                 queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 
-    public void putQueueConfig(QueueConfiguration queueConfiguration) {
+    public void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception {
         eventResourceApi.putQueueConfig(
-                null, queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+                queueConfiguration.getConfiguration(),
+                queueConfiguration.getQueueType(),
+                queueConfiguration.getQueueName());
     }
 }

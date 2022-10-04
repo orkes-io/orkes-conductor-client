@@ -12,13 +12,28 @@
  */
 package io.orkes.conductor.client.model.event;
 
+import java.util.Map;
+
 public abstract class QueueConfiguration {
     private final String queueName;
     private final String queueType;
 
+    private QueueWorkerConfiguration consumer;
+    private QueueWorkerConfiguration producer;
+
     public QueueConfiguration(String queueName, String queueType) {
         this.queueName = queueName;
         this.queueType = queueType;
+    }
+
+    public QueueConfiguration withConsumer(QueueWorkerConfiguration consumer) {
+        this.consumer = consumer;
+        return this;
+    }
+
+    public QueueConfiguration withProducer(QueueWorkerConfiguration producer) {
+        this.producer = producer;
+        return this;
     }
 
     public String getQueueType() {
@@ -27,5 +42,19 @@ public abstract class QueueConfiguration {
 
     public String getQueueName() {
         return this.queueName;
+    }
+
+    public String getConfiguration() throws Exception {
+        if (this.consumer == null) {
+            throw new RuntimeException("consumer must be set");
+        }
+        if (this.producer == null) {
+            throw new RuntimeException("producer must be set");
+        }
+        Map<String, Object> config =
+                Map.of(
+                        "consumer", this.consumer.getConfiguration(),
+                        "producer", this.producer.getConfiguration());
+        return config.toString();
     }
 }

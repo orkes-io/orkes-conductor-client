@@ -10,12 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.model.event;
+package io.orkes.conductor.client.model.event.kafka;
 
-public class KafkaConfiguration extends QueueConfiguration {
-    private static String QUEUE_NAME = "kafka";
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 
-    public KafkaConfiguration(String queueTopicName) {
-        super(QUEUE_NAME, queueTopicName);
+import io.orkes.conductor.client.model.event.QueueWorkerConfiguration;
+
+public class KafkaConsumer extends QueueWorkerConfiguration {
+    public KafkaConsumer(String bootstrapServersConfig) throws Exception {
+        super(ConsumerConfig.configNames());
+        withConfiguration(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServersConfig);
     }
 }
