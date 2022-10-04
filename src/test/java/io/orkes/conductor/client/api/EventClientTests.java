@@ -22,6 +22,7 @@ import com.netflix.conductor.common.metadata.events.EventHandler.StartWorkflow;
 
 import io.orkes.conductor.client.EventClient;
 import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.OrkesEventClient;
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 import io.orkes.conductor.client.model.event.QueueWorkerConfiguration;
 import io.orkes.conductor.client.model.event.kafka.KafkaConfiguration;
@@ -36,7 +37,7 @@ public class EventClientTests extends ClientTest {
     private static final String EVENT_NAME = "test_sdk_java_event_name";
     private static final String EVENT = "test_sdk_java_event";
 
-    private static final String KAFKA_QUEUE_TOPIC_NAME = "test_sdk_java_name";
+    private static final String KAFKA_QUEUE_TOPIC_NAME = "test_sdk_java_kafka_queue_name";
     private static final String KAFKA_BOOTSTRAP_SERVERS_CONFIG = "localhost:9092";
 
     private final EventClient eventClient;
@@ -70,8 +71,9 @@ public class EventClientTests extends ClientTest {
 
     @Test
     void testKafkaQueueConfiguration() throws Exception {
-        // QueueConfiguration queueConfiguration = getQueueConfiguration();
-        // ((OrkesEventClient) eventClient).putQueueConfig(queueConfiguration);
+        QueueConfiguration queueConfiguration = getQueueConfiguration();
+        System.out.println("configuration: " + queueConfiguration.getConfiguration());
+        ((OrkesEventClient) eventClient).putQueueConfig(queueConfiguration);
     }
 
     QueueConfiguration getQueueConfiguration() throws Exception {
