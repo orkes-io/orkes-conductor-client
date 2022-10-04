@@ -19,6 +19,7 @@ import com.netflix.conductor.common.metadata.events.EventHandler;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.EventClient;
 import io.orkes.conductor.client.http.api.EventResourceApi;
+import io.orkes.conductor.client.model.event.QueueConfiguration;
 
 public class OrkesEventClient extends OrkesClient implements EventClient {
 
@@ -47,5 +48,20 @@ public class OrkesEventClient extends OrkesClient implements EventClient {
     @Override
     public void unregisterEventHandler(String name) {
         eventResourceApi.removeEventHandlerStatus(name);
+    }
+
+    public void getQueueConfig(QueueConfiguration queueConfiguration) {
+        eventResourceApi.getQueueConfig(
+                queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+    }
+
+    public void deleteQueueConfig(QueueConfiguration queueConfiguration) {
+        eventResourceApi.deleteQueueConfig(
+                queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+    }
+
+    public void putQueueConfig(QueueConfiguration queueConfiguration) {
+        eventResourceApi.putQueueConfig(
+                null, queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 }
