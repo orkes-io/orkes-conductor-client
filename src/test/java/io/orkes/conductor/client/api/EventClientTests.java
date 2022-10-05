@@ -30,6 +30,7 @@ import io.orkes.conductor.client.model.event.kafka.KafkaConsumer;
 import io.orkes.conductor.client.model.event.kafka.KafkaProducer;
 import io.orkes.conductor.client.util.Commons;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -74,9 +75,13 @@ public class EventClientTests extends ClientTest {
     void testKafkaQueueConfiguration() throws Exception {
         QueueConfiguration queueConfiguration = getQueueConfiguration();
         ((OrkesEventClient) eventClient).deleteQueueConfig(queueConfiguration);
+        assertThrows(
+                ApiException.class,
+                () -> {
+                    ((OrkesEventClient) eventClient).getQueueConfig(queueConfiguration);
+                });
         ((OrkesEventClient) eventClient).putQueueConfig(queueConfiguration);
-        String configurationResponse =
-                ((OrkesEventClient) eventClient).getQueueConfig(queueConfiguration);
+        String configurationResponse = ((OrkesEventClient) eventClient).getQueueConfig(queueConfiguration);
         assertTrue(configurationResponse.contains("consumer={bootstrap.servers=localhost:9092}"));
         assertTrue(configurationResponse.contains("producer={bootstrap.servers=localhost:9092}"));
         ((OrkesEventClient) eventClient).deleteQueueConfig(queueConfiguration);
