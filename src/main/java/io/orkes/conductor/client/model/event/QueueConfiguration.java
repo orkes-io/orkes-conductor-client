@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public abstract class QueueConfiguration {
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final Gson gson = new GsonBuilder().create();
 
     private final String queueName;
     private final String queueType;
@@ -56,9 +56,10 @@ public abstract class QueueConfiguration {
         if (this.producer == null) {
             throw new RuntimeException("producer must be set");
         }
-        Map<String, Object> config = Map.of(
-                "consumer", this.consumer.getConfiguration(),
-                "producer", this.producer.getConfiguration());
-        return new Gson().toJson(config);
+        Map<String, Object> config =
+                Map.of(
+                        "consumer", this.consumer.getConfiguration(),
+                        "producer", this.producer.getConfiguration());
+        return gson.toJson(config);
     }
 }

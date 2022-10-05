@@ -52,8 +52,6 @@ import io.orkes.conductor.client.http.auth.OAuth;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
 import okio.BufferedSink;

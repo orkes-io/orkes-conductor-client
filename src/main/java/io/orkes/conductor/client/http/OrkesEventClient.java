@@ -50,9 +50,11 @@ public class OrkesEventClient extends OrkesClient implements EventClient {
         eventResourceApi.removeEventHandlerStatus(name);
     }
 
-    public void getQueueConfig(QueueConfiguration queueConfiguration) {
-        eventResourceApi.getQueueConfig(
-                queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+    public String getQueueConfig(QueueConfiguration queueConfiguration) {
+        return eventResourceApi
+                .getQueueConfig(
+                        queueConfiguration.getQueueType(), queueConfiguration.getQueueName())
+                .toString();
     }
 
     public void deleteQueueConfig(QueueConfiguration queueConfiguration) {
