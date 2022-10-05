@@ -12,13 +12,14 @@
  */
 package io.orkes.conductor.client.grpc;
 
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.grpc.ProtoMapper;
 import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
+import com.netflix.conductor.proto.ProtoMappingHelper;
 import com.netflix.conductor.proto.TaskPb;
 
 import io.grpc.stub.StreamObserver;
@@ -27,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
 
-    private final ProtoMapper protoMapper = ProtoMapper.INSTANCE;
+    private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
 
     private final Worker worker;
 
@@ -35,26 +36,35 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
 
     private final TaskServiceGrpc.TaskServiceBlockingStub stub;
 
+    private final TaskServiceGrpc.TaskServiceStub asyncStub;
+
     public TaskPollObserver(
             Worker worker,
             ThreadPoolExecutor executor,
-            TaskServiceGrpc.TaskServiceBlockingStub stub) {
+            TaskServiceGrpc.TaskServiceBlockingStub stub,
+            TaskServiceGrpc.TaskServiceStub asyncStub) {
         this.worker = worker;
         this.executor = executor;
         this.stub = stub;
+        this.asyncStub = asyncStub;
     }
 
     @Override
     public void onNext(TaskPb.Task task) {
-        executor.execute(
-                () -> {
-                    try {
-                        TaskResult result = worker.execute(protoMapper.fromProto(task));
-                        updateTask(result);
-                    } catch (Exception e) {
-                        log.error("Error executing task: {}", e.getMessage(), e);
-                    }
-                });
+        try {
+            executor.execute(
+                    () -> {
+                        try {
+                            TaskResult result = worker.execute(protoMapper.fromProto(task));
+                            updateTask(result);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            log.error("Error executing task: {}", e.getMessage(), e);
+                        }
+                    });
+        } catch (RejectedExecutionException ree) {
+            ree.printStackTrace();
+        }
     }
 
     @Override
@@ -70,5 +80,33 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                 TaskServicePb.UpdateTaskRequest.newBuilder()
                         .setResult(protoMapper.toProto(taskResult))
                         .build());
+    }
+
+    private TaskServicePb.BatchPollRequest buildPollRequest(
+            String domain, int count, int timeoutInMillisecond) {
+        TaskServicePb.BatchPollRequest.Builder requestBuilder =
+                TaskServicePb.BatchPollRequest.newBuilder()
+                        .setCount(count)
+                        .setTaskType(worker.getTaskDefName())
+                        .setTimeout(timeoutInMillisecond)
+                        .setWorkerId(worker.getIdentity());
+        if (domain != null) {
+            requestBuilder = requestBuilder.setDomain(domain);
+        }
+        return requestBuilder.build();
+    }
+
+    private void next() {
+        TaskServicePb.BatchPollRequest request =
+                buildPollRequest(null, getAvailableWorkers(), 1000);
+        asyncStub.batchPoll(request, new TaskPollObserver(worker, executor, stub, asyncStub));
+    }
+
+    public void init() {
+        next();
+    }
+
+    private int getAvailableWorkers() {
+        return (this.executor.getMaximumPoolSize()) - this.executor.getActiveCount();
     }
 }

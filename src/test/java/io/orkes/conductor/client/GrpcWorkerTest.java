@@ -12,46 +12,43 @@
  */
 package io.orkes.conductor.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.netflix.conductor.client.telemetry.MetricsContainer;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
-import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
+import io.orkes.conductor.client.grpc.GrpcTaskWorker;
 
-public class LocalWorkerTest {
+import com.google.common.util.concurrent.Uninterruptibles;
+
+public class GrpcWorkerTest {
 
     static String key = "a0b92def-ea61-464e-a51c-b05bcc04ec51";
     static String secret = "YNGLncaOWsv4nQIeO71LGGv77sM5iQCRjH5FNkfOS9Jfi6G5";
 
     public static void main(String[] args) {
-        ApiClient apiClient = new ApiClient("http://localhost:8080/api");
-        // etUseGRPC("localhost", 8090);
+        ApiClient apiClient = new ApiClient();
+        apiClient.setUseGRPC("localhost", 8090);
+        int threadCount = 300;
 
-        OrkesClients clients = new OrkesClients(apiClient);
-        TaskClient taskClient = clients.getTaskClient();
-
-        List<Worker> workers = new ArrayList<>();
-        Map<String, Integer> taskThreadCount = new HashMap<>();
-
-        for (int i = 0; i < 6; i++) {
-            workers.add(new LoadTestWorker("simple_task_" + i));
-            taskThreadCount.put("simple_task_" + i, 10);
+        for (int i = 0; i < 7; i++) {
+            Worker worker = new LoadTestWorker("x_test_worker_" + i);
+            GrpcTaskWorker taskWorker =
+                    new GrpcTaskWorker(apiClient, worker, null, threadCount, 100);
+            taskWorker.init();
         }
-
-        TaskRunnerConfigurer configurer =
-                new TaskRunnerConfigurer.Builder(taskClient, workers)
-                        .withSleepWhenRetry(1)
-                        .withThreadCount(60)
-                        .build();
-        configurer.init();
-
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.DAYS);
         System.out.println("Ready...");
     }
+
+    private static final Thread.UncaughtExceptionHandler uncaughtExceptionHandler =
+            (thread, error) -> {
+                // JVM may be in unstable state, try to send metrics then exit
+                MetricsContainer.incrementUncaughtExceptionCount();
+                System.out.println("Uncaught exception. Thread {} will exit now" + thread + error);
+            };
 
     private static class MyWorker implements Worker {
 

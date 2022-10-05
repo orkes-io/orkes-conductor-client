@@ -263,7 +263,7 @@ public class TaskRunnerConfigurer {
                                     1000);
 
                     taskPollExecutors.add(taskPollExecutor);
-
+                    
                     scheduledExecutorService.scheduleWithFixedDelay(
                             () -> taskPollExecutor.pollAndExecute(),
                             worker.getPollingInterval(),

@@ -44,7 +44,6 @@ public class LoadTestWorker implements Worker {
 
     @Override
     public TaskResult execute(Task task) {
-
         TaskResult result = new TaskResult(task);
         result.setStatus(TaskResult.Status.COMPLETED);
         int resultCount = Math.max(20, secureRandom.nextInt(keyCount));

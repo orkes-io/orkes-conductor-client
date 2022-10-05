@@ -12,6 +12,7 @@
  */
 package io.orkes.conductor.client.grpc;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -52,12 +53,17 @@ public class GrpcTaskWorker {
             ApiClient apiClient,
             Worker worker,
             String domain,
-            ThreadPoolExecutor executor,
             int threadCount,
             int pollTimeoutInMills) {
         this.worker = worker;
         this.domain = domain;
-        this.executor = executor;
+        this.executor =
+                new ThreadPoolExecutor(
+                        threadCount,
+                        threadCount,
+                        1,
+                        TimeUnit.MINUTES,
+                        new ArrayBlockingQueue<>(threadCount * 100));
         this.threadCount = threadCount;
         this.pollTimeoutInMills = pollTimeoutInMills;
         this.channel = getChannel(apiClient);
@@ -79,16 +85,12 @@ public class GrpcTaskWorker {
     }
 
     public void pollAndExecute() {
-        try {
-            int count = getAvailableWorkers();
-            TaskServicePb.BatchPollRequest request = getRequest(count, pollTimeoutInMills);
-            asyncStub.batchPoll(request, new TaskPollObserver(worker, executor, stub));
-        } catch (Throwable t) {
-            log.error(t.getMessage(), t);
-        }
+        TaskServicePb.BatchPollRequest request =
+                buildPollRequest(getAvailableWorkers(), pollTimeoutInMills);
+        asyncStub.batchPoll(request, new TaskPollObserver(worker, executor, stub, asyncStub));
     }
 
-    private TaskServicePb.BatchPollRequest getRequest(int count, int timeoutInMillisecond) {
+    private TaskServicePb.BatchPollRequest buildPollRequest(int count, int timeoutInMillisecond) {
         TaskServicePb.BatchPollRequest.Builder requestBuilder =
                 TaskServicePb.BatchPollRequest.newBuilder()
                         .setCount(count)

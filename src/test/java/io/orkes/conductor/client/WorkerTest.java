@@ -35,7 +35,7 @@ public class WorkerTest {
         ApiClient apiClient =
                 new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
         apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
-        apiClient.setUseSSL(true);
+        // apiClient.setUseSSL(true);
 
         OrkesClients clients = new OrkesClients(apiClient);
         TaskClient taskClient = clients.getTaskClient();
@@ -62,6 +62,8 @@ public class WorkerTest {
         ApiClient apiClient =
                 new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
         apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
+        apiClient = new ApiClient();
+        apiClient.setUseGRPC("localhost", 8090);
         apiClient.setUseSSL(true);
         int threadCount = 10;
 
@@ -76,7 +78,7 @@ public class WorkerTest {
                                             .uncaughtExceptionHandler(uncaughtExceptionHandler)
                                             .build());
             GrpcTaskWorker taskWorker =
-                    new GrpcTaskWorker(apiClient, worker, null, executor, threadCount, 100);
+                    new GrpcTaskWorker(apiClient, worker, null, threadCount, 100);
             taskWorker.init();
         }
 
