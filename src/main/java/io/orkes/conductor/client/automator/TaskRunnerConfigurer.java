@@ -275,6 +275,7 @@ public class TaskRunnerConfigurer {
                 this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
         final Integer taskPollTimeout =
                 this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
+
         final TaskRunner taskRunner =
                 new TaskRunner(
                         eurekaClient,
@@ -286,6 +287,10 @@ public class TaskRunnerConfigurer {
                         threadCountForTask,
                         taskPollTimeout);
         this.taskRunners.add(taskRunner);
+
+        LOGGER.info("Starting task runner for {} with pollTimeout set to {} and polling interval set to {}",
+                worker.getTaskDefName(), taskPollTimeout, worker.getPollingInterval());
+
         this.scheduledExecutorService.scheduleWithFixedDelay(
                 () -> taskRunner.poll(worker),
                 0,

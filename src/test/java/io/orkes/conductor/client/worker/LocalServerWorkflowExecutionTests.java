@@ -46,7 +46,12 @@ public class LocalServerWorkflowExecutionTests {
     private static class MyWorker implements Worker {
         @Override
         public String getTaskDefName() {
-            return "simple_task_0";
+            return "sample_task_name_simple";
+        }
+
+        @Override
+        public int getPollingInterval() {
+            return 100;
         }
 
         @Override
