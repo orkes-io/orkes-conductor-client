@@ -81,7 +81,8 @@ public class EventClientTests extends ClientTest {
                     ((OrkesEventClient) eventClient).getQueueConfig(queueConfiguration);
                 });
         ((OrkesEventClient) eventClient).putQueueConfig(queueConfiguration);
-        String configurationResponse = ((OrkesEventClient) eventClient).getQueueConfig(queueConfiguration);
+        String configurationResponse =
+                ((OrkesEventClient) eventClient).getQueueConfig(queueConfiguration);
         assertTrue(configurationResponse.contains("consumer={bootstrap.servers=localhost:9092}"));
         assertTrue(configurationResponse.contains("producer={bootstrap.servers=localhost:9092}"));
         ((OrkesEventClient) eventClient).deleteQueueConfig(queueConfiguration);
