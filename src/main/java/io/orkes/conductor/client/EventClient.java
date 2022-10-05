@@ -16,6 +16,8 @@ import java.util.List;
 
 import com.netflix.conductor.common.metadata.events.EventHandler;
 
+import io.orkes.conductor.client.model.event.QueueConfiguration;
+
 public interface EventClient {
     void registerEventHandler(EventHandler eventHandler);
 
@@ -24,4 +26,10 @@ public interface EventClient {
     List<EventHandler> getEventHandlers(String event, boolean activeOnly);
 
     void unregisterEventHandler(String name);
+
+    String getQueueConfig(QueueConfiguration queueConfiguration);
+
+    void deleteQueueConfig(QueueConfiguration queueConfiguration);
+
+    void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception;
 }

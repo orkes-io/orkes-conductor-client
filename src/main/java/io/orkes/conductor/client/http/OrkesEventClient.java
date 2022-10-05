@@ -50,6 +50,7 @@ public class OrkesEventClient extends OrkesClient implements EventClient {
         eventResourceApi.removeEventHandlerStatus(name);
     }
 
+    @Override
     public String getQueueConfig(QueueConfiguration queueConfiguration) {
         return eventResourceApi
                 .getQueueConfig(
@@ -57,11 +58,13 @@ public class OrkesEventClient extends OrkesClient implements EventClient {
                 .toString();
     }
 
+    @Override
     public void deleteQueueConfig(QueueConfiguration queueConfiguration) {
         eventResourceApi.deleteQueueConfig(
                 queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 
+    @Override
     public void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception {
         eventResourceApi.putQueueConfig(
                 queueConfiguration.getConfiguration(),

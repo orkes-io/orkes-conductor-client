@@ -22,7 +22,6 @@ import com.netflix.conductor.common.metadata.events.EventHandler.StartWorkflow;
 
 import io.orkes.conductor.client.EventClient;
 import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.OrkesEventClient;
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 import io.orkes.conductor.client.model.event.QueueWorkerConfiguration;
 import io.orkes.conductor.client.model.event.kafka.KafkaConfiguration;
@@ -74,18 +73,17 @@ public class EventClientTests extends ClientTest {
     @Test
     void testKafkaQueueConfiguration() throws Exception {
         QueueConfiguration queueConfiguration = getQueueConfiguration();
-        ((OrkesEventClient) eventClient).deleteQueueConfig(queueConfiguration);
+        eventClient.deleteQueueConfig(queueConfiguration);
         assertThrows(
                 ApiException.class,
                 () -> {
-                    ((OrkesEventClient) eventClient).getQueueConfig(queueConfiguration);
+                    eventClient.getQueueConfig(queueConfiguration);
                 });
-        ((OrkesEventClient) eventClient).putQueueConfig(queueConfiguration);
-        String configurationResponse =
-                ((OrkesEventClient) eventClient).getQueueConfig(queueConfiguration);
+        eventClient.putQueueConfig(queueConfiguration);
+        String configurationResponse = eventClient.getQueueConfig(queueConfiguration);
         assertTrue(configurationResponse.contains("consumer={bootstrap.servers=localhost:9092}"));
         assertTrue(configurationResponse.contains("producer={bootstrap.servers=localhost:9092}"));
-        ((OrkesEventClient) eventClient).deleteQueueConfig(queueConfiguration);
+        eventClient.deleteQueueConfig(queueConfiguration);
     }
 
     QueueConfiguration getQueueConfiguration() throws Exception {
