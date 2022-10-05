@@ -52,6 +52,8 @@ import io.orkes.conductor.client.http.auth.OAuth;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
 import okio.BufferedSink;
@@ -751,11 +753,13 @@ public class ApiClient {
             // File body parameter support.
             return RequestBody.create(MediaType.parse(contentType), (File) obj);
         } else if (isJsonMime(contentType)) {
-            String content;
+            String content = null;
             if (obj != null) {
-                content = json.serialize(obj);
-            } else {
-                content = null;
+                if (obj instanceof String) {
+                    content = (String) obj;
+                } else {
+                    content = json.serialize(obj);
+                }
             }
             return RequestBody.create(MediaType.parse(contentType), content);
         } else {
