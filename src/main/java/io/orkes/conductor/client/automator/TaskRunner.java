@@ -143,6 +143,8 @@ class TaskRunner {
                                                                     ALL_WORKERS, DOMAIN, null))
                                                     .orElse(taskToDomain.get(taskType)));
             LOGGER.trace("Polling task of type: {} in domain: '{}'", taskType, domain);
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            long now = System.currentTimeMillis();
             List<Task> polledTasks =
                     MetricsContainer.getPollTimer(taskType)
                             .record(
@@ -152,6 +154,9 @@ class TaskRunner {
                                                     worker.getIdentity(),
                                                     domain,
                                                     this.getAvailableWorkers()));
+            stopwatch.stop();
+            LOGGER.info("Time taken to poll {} tassk with a batch size of {} is {} ms", taskType, getAvailableWorkers(),
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS));
             for (Task task : polledTasks) {
                 if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
                     LOGGER.trace(
@@ -160,6 +165,7 @@ class TaskRunner {
                             taskType,
                             domain,
                             worker.getIdentity());
+                    LOGGER.info("Task {} stayed in the queue for {} ms", taskType, (now-task.getScheduledTime()));
                     tasks.add(task);
                 }
             }
@@ -251,7 +257,10 @@ class TaskRunner {
                 worker.getClass().getSimpleName(),
                 worker.getIdentity(),
                 result.getStatus());
+        Stopwatch updateStopWatch = Stopwatch.createStarted();
         updateTaskResult(updateRetryCount, task, result, worker);
+        updateStopWatch.stop();
+        LOGGER.info("Time taken to update the {} {} ms", task.getTaskType(), updateStopWatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     private void updateTaskResult(int count, Task task, TaskResult result, Worker worker) {

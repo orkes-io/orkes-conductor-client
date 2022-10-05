@@ -32,11 +32,11 @@ public class LocalServerWorkflowExecutionTests {
         TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
         Iterable<Worker> workers = Arrays.asList(new MyWorker());
         Map<String, String> taskToDomain = new HashMap<>();
-        taskToDomain.put("simple_task_0", "viren");
         TaskRunnerConfigurer configurer =
                 new TaskRunnerConfigurer.Builder(taskClient, workers)
                         .withSleepWhenRetry(100)
                         .withThreadCount(10)
+                        .withTaskPollTimeout(1)
                         .withWorkerNamePrefix("Hello")
                         .withTaskToDomain(taskToDomain)
                         .build();
@@ -46,7 +46,7 @@ public class LocalServerWorkflowExecutionTests {
     private static class MyWorker implements Worker {
         @Override
         public String getTaskDefName() {
-            return "simple_task_0";
+            return "sample_task_name_simple";
         }
 
         @Override
@@ -60,12 +60,13 @@ public class LocalServerWorkflowExecutionTests {
                             + new Date());
             TaskResult result = new TaskResult(task);
             result.getOutputData().put("a", "b");
-            if (task.getPollCount() < 2) {
-                result.setCallbackAfterSeconds(5);
-            } else {
-                result.setStatus(TaskResult.Status.COMPLETED);
-            }
+            result.setStatus(TaskResult.Status.COMPLETED);
             return result;
+        }
+
+        @Override
+        public int getPollingInterval() {
+            return 1000;
         }
     }
 }
