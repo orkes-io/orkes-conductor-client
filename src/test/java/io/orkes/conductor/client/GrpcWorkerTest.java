@@ -35,8 +35,7 @@ public class GrpcWorkerTest {
 
         for (int i = 0; i < 7; i++) {
             Worker worker = new LoadTestWorker("x_test_worker_" + i);
-            GrpcTaskWorker taskWorker =
-                    new GrpcTaskWorker(apiClient, worker, null, threadCount, 1);
+            GrpcTaskWorker taskWorker = new GrpcTaskWorker(apiClient, worker, null, threadCount, 1);
             taskWorker.init();
         }
         Uninterruptibles.sleepUninterruptibly(1, TimeUnit.DAYS);

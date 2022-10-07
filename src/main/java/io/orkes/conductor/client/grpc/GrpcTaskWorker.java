@@ -18,7 +18,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.grpc.ProtoMapper;
 import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
 
@@ -85,8 +84,7 @@ public class GrpcTaskWorker {
     public void pollAndExecute() {
         int pollCount = getAvailableWorkers();
         log.debug("Polling for {} tasks", pollCount);
-        TaskServicePb.BatchPollRequest request =
-                buildPollRequest(pollCount, pollTimeoutInMills);
+        TaskServicePb.BatchPollRequest request = buildPollRequest(pollCount, pollTimeoutInMills);
         asyncStub.batchPoll(request, new TaskPollObserver(worker, executor, stub, asyncStub));
     }
 

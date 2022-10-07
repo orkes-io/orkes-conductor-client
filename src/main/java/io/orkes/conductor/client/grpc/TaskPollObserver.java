@@ -90,11 +90,11 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
     public void onCompleted() {}
 
     public void updateTask(TaskResult taskResult) {
-        TaskServicePb.UpdateTaskRequest request = TaskServicePb.UpdateTaskRequest.newBuilder()
-                .setResult(protoMapper.toProto(taskResult))
-                .build();
+        TaskServicePb.UpdateTaskRequest request =
+                TaskServicePb.UpdateTaskRequest.newBuilder()
+                        .setResult(protoMapper.toProto(taskResult))
+                        .build();
         asyncStub.updateTask(request, new TaskUpdateObserver());
-
     }
 
     private TaskServicePb.BatchPollRequest buildPollRequest(

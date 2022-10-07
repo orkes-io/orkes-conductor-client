@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -257,7 +256,7 @@ public class TaskRunnerConfigurer {
      */
     public synchronized void init() {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
-        workers.forEach(worker -> scheduledExecutorService.submit(()->this.startWorker(worker)));
+        workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startWorker(worker)));
     }
 
     /**
