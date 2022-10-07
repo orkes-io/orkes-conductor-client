@@ -35,27 +35,29 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
 
     private final ThreadPoolExecutor executor;
 
-    private final TaskServiceGrpc.TaskServiceBlockingStub stub;
+    private final TaskUpdateObserver taskUpdateObserver;
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
 
     public TaskPollObserver(
             Worker worker,
             ThreadPoolExecutor executor,
-            TaskServiceGrpc.TaskServiceBlockingStub stub,
-            TaskServiceGrpc.TaskServiceStub asyncStub) {
+            TaskServiceGrpc.TaskServiceStub asyncStub,
+            TaskUpdateObserver taskUpdateObserver) {
         this.worker = worker;
         this.executor = executor;
-        this.stub = stub;
+        this.taskUpdateObserver = taskUpdateObserver;
         this.asyncStub = asyncStub;
     }
 
     @Override
     public void onNext(TaskPb.Task task) {
         try {
+            log.debug("Executor size {}", executor.getActiveCount());
             executor.execute(
                     () -> {
                         try {
+                            log.info("Executing task {}", task.getTaskId());
                             TaskResult result = worker.execute(protoMapper.fromProto(task));
                             updateTask(result);
                         } catch (Exception e) {
@@ -70,11 +72,17 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
 
     @Override
     public void onError(Throwable t) {
+        log.error("Error {}", t.getMessage());
+        t.printStackTrace();
+        System.exit(1);
         Status status = Status.fromThrowable(t);
         Status.Code code = status.getCode();
         switch (code) {
             case UNAVAILABLE:
                 log.trace("Server not available ");
+                break;
+            case UNAUTHENTICATED:
+                log.error("{} - Invalid or missing api key/secret", code);
                 break;
             case CANCELLED:
             case ABORTED:
@@ -82,7 +90,7 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
             case DEADLINE_EXCEEDED:
                 break;
             default:
-                log.error("Error from server when polling for the task {}", code);
+                log.error("Error from server when polling for the task {} - {}", code);
         }
     }
 
@@ -90,11 +98,12 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
     public void onCompleted() {}
 
     public void updateTask(TaskResult taskResult) {
+        log.info("Updating task {}", taskResult.getTaskId());
         TaskServicePb.UpdateTaskRequest request =
                 TaskServicePb.UpdateTaskRequest.newBuilder()
                         .setResult(protoMapper.toProto(taskResult))
                         .build();
-        asyncStub.updateTask(request, new TaskUpdateObserver());
+        asyncStub.updateTask(request, taskUpdateObserver);
     }
 
     private TaskServicePb.BatchPollRequest buildPollRequest(
@@ -109,19 +118,5 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
             requestBuilder = requestBuilder.setDomain(domain);
         }
         return requestBuilder.build();
-    }
-
-    private void next() {
-        TaskServicePb.BatchPollRequest request =
-                buildPollRequest(null, getAvailableWorkers(), 1000);
-        asyncStub.batchPoll(request, new TaskPollObserver(worker, executor, stub, asyncStub));
-    }
-
-    public void init() {
-        next();
-    }
-
-    private int getAvailableWorkers() {
-        return (this.executor.getMaximumPoolSize()) - this.executor.getActiveCount();
     }
 }

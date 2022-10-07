@@ -15,7 +15,6 @@ package io.orkes.conductor.client;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import com.netflix.conductor.client.model.WorkflowRun;
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.model.BulkResponse;
@@ -23,6 +22,7 @@ import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowSummary;
 
+import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
 
 public interface WorkflowClient {

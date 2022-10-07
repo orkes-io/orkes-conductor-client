@@ -36,8 +36,6 @@ public class ExecuteWorkflowStream
 
     private final WorkflowServiceGrpc.WorkflowServiceStub stub;
 
-    private final WorkflowMonitor workflowMonitor = WorkflowMonitor.getInstance();
-
     private final ApiClient apiClient;
     private final HeaderClientInterceptor headerInterceptor;
     private StreamObserver<StartWorkflowRequestPb.StartWorkflowRequest> requests;
@@ -73,9 +71,7 @@ public class ExecuteWorkflowStream
     }
 
     @Override
-    public void onNext(WorkflowServicePb.ExecuteWorkflowResponse result) {
-        workflowMonitor.notifyCompletion(result);
-    }
+    public void onNext(WorkflowServicePb.ExecuteWorkflowResponse result) {}
 
     @Override
     public void onError(Throwable t) {

@@ -55,9 +55,9 @@ class TaskRunner {
     private final int threadCount;
     private final int taskPollTimeout;
 
-    private static final String DOMAIN = "domain";
+    public static final String DOMAIN = "domain";
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
-    private static final String ALL_WORKERS = "all";
+    public static final String ALL_WORKERS = "all";
 
     private final Worker worker;
 

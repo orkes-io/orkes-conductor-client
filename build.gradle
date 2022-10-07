@@ -60,7 +60,7 @@ dependencies {
 
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
-    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.18'
+    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.25'
 
     //Grpc dependencies
     //implementation "io.grpc:grpc-okhttp:${versions.ioGRPC}"
@@ -99,6 +99,9 @@ dependencies {
     implementation "com.azure:azure-security-keyvault-secrets:${versions.azureSsm}"
     implementation "com.azure:azure-identity:${versions.azureIdentity}"
 
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+
     // test dependencies
     testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
@@ -106,6 +109,7 @@ dependencies {
     testImplementation 'org.testcontainers:localstack:1.17.1'
     testImplementation 'org.testcontainers:testcontainers:1.17.1'
     testImplementation 'com.amazonaws:aws-java-sdk-core:1.12.138'
+    testCompileOnly "org.projectlombok:lombok:${versions.lombok}"
 }
 
 repositories {

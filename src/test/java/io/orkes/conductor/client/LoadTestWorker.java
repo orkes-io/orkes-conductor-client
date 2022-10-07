@@ -20,6 +20,9 @@ import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class LoadTestWorker implements Worker {
     private final String name;
     private int keyCount = 50;
@@ -44,7 +47,11 @@ public class LoadTestWorker implements Worker {
 
     @Override
     public TaskResult execute(Task task) {
+        log.info("Executing {} - {}", task.getTaskType(), task.getTaskId());
         TaskResult result = new TaskResult(task);
+
+        // Uninterruptibles.sleepUninterruptibly(400, TimeUnit.MILLISECONDS);
+
         result.setStatus(TaskResult.Status.COMPLETED);
         int resultCount = Math.max(20, secureRandom.nextInt(keyCount));
 

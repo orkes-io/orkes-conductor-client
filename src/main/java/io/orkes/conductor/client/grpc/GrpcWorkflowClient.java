@@ -15,26 +15,20 @@ package io.orkes.conductor.client.grpc;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import com.netflix.conductor.client.model.WorkflowRun;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.model.WorkflowRun;
 
 public class GrpcWorkflowClient {
 
-    private final ExecuteWorkflowStream responses;
-
-    private final WorkflowMonitor workflowMonitor = WorkflowMonitor.getInstance();
-
-    public GrpcWorkflowClient(ApiClient apiClient) {
-        this.responses = new ExecuteWorkflowStream(apiClient);
-    }
+    public GrpcWorkflowClient(ApiClient apiClient) {}
 
     public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request) {
         String requestId = UUID.randomUUID().toString();
         request.getInput().put("_X-request-id", requestId);
-        CompletableFuture<WorkflowRun> future = workflowMonitor.add(requestId);
-        responses.executeWorkflow(request);
+        CompletableFuture future = new CompletableFuture<>();
+        future.complete(new WorkflowRun());
         return future;
     }
 }

@@ -12,16 +12,17 @@
  */
 package io.orkes.conductor.client.grpc;
 
-import java.util.concurrent.*;
-
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
-
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
-public class GrpcTaskWorker {
+public class GrpcTaskWorker2 {
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
 
@@ -37,7 +38,7 @@ public class GrpcTaskWorker {
 
     private final TaskPollObserver taskPollObserver;
 
-    public GrpcTaskWorker(
+    public GrpcTaskWorker2(
             TaskServiceGrpc.TaskServiceStub asyncStub,
             TaskPollObserver taskPollObserver,
             ThreadPoolExecutor executor,

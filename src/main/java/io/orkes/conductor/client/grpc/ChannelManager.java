@@ -24,7 +24,7 @@ public abstract class ChannelManager {
 
     private ChannelManager() {}
 
-    static ManagedChannel getChannel(ApiClient apiClient) {
+    public static ManagedChannel getChannel(ApiClient apiClient) {
         String host = apiClient.getGrpcHost();
         int port = apiClient.getGrpcPort();
         boolean useSSL = apiClient.useSSL();
