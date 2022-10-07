@@ -25,9 +25,6 @@ import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 
 public class LocalWorkerTest {
 
-    static String key = "a0b92def-ea61-464e-a51c-b05bcc04ec51";
-    static String secret = "YNGLncaOWsv4nQIeO71LGGv77sM5iQCRjH5FNkfOS9Jfi6G5";
-
     public static void main(String[] args) {
         ApiClient apiClient = new ApiClient("http://localhost:8080/api");
         // etUseGRPC("localhost", 8090);
@@ -39,14 +36,15 @@ public class LocalWorkerTest {
         Map<String, Integer> taskThreadCount = new HashMap<>();
 
         for (int i = 0; i < 6; i++) {
-            workers.add(new LoadTestWorker("simple_task_" + i));
-            taskThreadCount.put("simple_task_" + i, 10);
+            workers.add(new LoadTestWorker("x_test_worker_" + i));
+            taskThreadCount.put("x_test_worker_" + i, 10);
         }
 
         TaskRunnerConfigurer configurer =
                 new TaskRunnerConfigurer.Builder(taskClient, workers)
                         .withSleepWhenRetry(1)
                         .withThreadCount(60)
+                        .withTaskPollTimeout(1)
                         .build();
         configurer.init();
 

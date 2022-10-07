@@ -213,5 +213,4 @@ signing {
     }
 }
 sourceSets.main.java.srcDirs += ['example/java', 'example/resources']
-configurations.all { exclude group: 'org.apache.logging.log4j'}
 

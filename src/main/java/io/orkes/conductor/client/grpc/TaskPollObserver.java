@@ -22,6 +22,7 @@ import com.netflix.conductor.grpc.TaskServicePb;
 import com.netflix.conductor.proto.ProtoMappingHelper;
 import com.netflix.conductor.proto.TaskPb;
 
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,23 +64,37 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                         }
                     });
         } catch (RejectedExecutionException ree) {
-            ree.printStackTrace();
+            log.error(ree.getMessage(), ree);
         }
     }
 
     @Override
     public void onError(Throwable t) {
-        log.error(t.getMessage(), t);
+        Status status = Status.fromThrowable(t);
+        Status.Code code = status.getCode();
+        switch (code) {
+            case UNAVAILABLE:
+                log.trace("Server not available ");
+                break;
+            case CANCELLED:
+            case ABORTED:
+            case DATA_LOSS:
+            case DEADLINE_EXCEEDED:
+                break;
+            default:
+                log.error("Error from server when polling for the task {}", code);
+        }
     }
 
     @Override
     public void onCompleted() {}
 
     public void updateTask(TaskResult taskResult) {
-        stub.updateTask(
-                TaskServicePb.UpdateTaskRequest.newBuilder()
-                        .setResult(protoMapper.toProto(taskResult))
-                        .build());
+        TaskServicePb.UpdateTaskRequest request = TaskServicePb.UpdateTaskRequest.newBuilder()
+                .setResult(protoMapper.toProto(taskResult))
+                .build();
+        asyncStub.updateTask(request, new TaskUpdateObserver());
+
     }
 
     private TaskServicePb.BatchPollRequest buildPollRequest(

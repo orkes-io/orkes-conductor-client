@@ -37,8 +37,6 @@ public class GrpcTaskWorker {
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
 
-    private final ProtoMapper protoMapper = ProtoMapper.INSTANCE;
-
     private final Worker worker;
 
     private final String domain;
@@ -85,8 +83,10 @@ public class GrpcTaskWorker {
     }
 
     public void pollAndExecute() {
+        int pollCount = getAvailableWorkers();
+        log.debug("Polling for {} tasks", pollCount);
         TaskServicePb.BatchPollRequest request =
-                buildPollRequest(getAvailableWorkers(), pollTimeoutInMills);
+                buildPollRequest(pollCount, pollTimeoutInMills);
         asyncStub.batchPoll(request, new TaskPollObserver(worker, executor, stub, asyncStub));
     }
 
