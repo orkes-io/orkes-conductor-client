@@ -31,12 +31,12 @@ public class GrpcWorkerTest {
     public static void main(String[] args) {
         ApiClient apiClient = new ApiClient();
         apiClient.setUseGRPC("localhost", 8090);
-        int threadCount = 300;
+        int threadCount = 10;
 
         for (int i = 0; i < 7; i++) {
             Worker worker = new LoadTestWorker("x_test_worker_" + i);
             GrpcTaskWorker taskWorker =
-                    new GrpcTaskWorker(apiClient, worker, null, threadCount, 100);
+                    new GrpcTaskWorker(apiClient, worker, null, threadCount, 1);
             taskWorker.init();
         }
         Uninterruptibles.sleepUninterruptibly(1, TimeUnit.DAYS);
