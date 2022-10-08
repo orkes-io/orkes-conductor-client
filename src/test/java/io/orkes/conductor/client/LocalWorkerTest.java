@@ -28,7 +28,7 @@ public class LocalWorkerTest {
 
     public static void main(String[] args) {
         ApiClient apiClient = new ApiClient("http://localhost:8080/api");
-        // apiClient.setUseGRPC("localhost", 8090);
+         apiClient.setUseGRPC("localhost", 8090);
 
         OrkesClients clients = new OrkesClients(apiClient);
         TaskClient taskClient = clients.getTaskClient();
@@ -36,9 +36,9 @@ public class LocalWorkerTest {
         List<Worker> workers = new ArrayList<>();
         Map<String, Integer> taskThreadCount = new HashMap<>();
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 4; i++) {
             workers.add(new LoadTestWorker("x_test_worker_" + i));
-            taskThreadCount.put("x_test_worker_" + i, 10);
+            taskThreadCount.put("x_test_worker_" + i, 300);
         }
 
         TaskRunnerConfigurer configurer =

@@ -104,6 +104,7 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                         .setResult(protoMapper.toProto(taskResult))
                         .build();
         asyncStub.updateTask(request, taskUpdateObserver);
+        log.info("Updated task {}", taskResult.getTaskId());
     }
 
     private TaskServicePb.BatchPollRequest buildPollRequest(

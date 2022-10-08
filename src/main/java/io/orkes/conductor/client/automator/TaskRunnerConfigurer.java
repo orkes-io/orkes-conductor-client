@@ -285,7 +285,8 @@ public class TaskRunnerConfigurer {
             TaskServiceGrpc.TaskServiceStub asyncStub =
                     TaskServiceGrpc.newStub(channel)
                             .withInterceptors(new HeaderClientInterceptor(apiClient))
-                            .withExecutor(Executors.newFixedThreadPool(totalThreads * 2));
+                            .withWaitForReady()
+                            .withExecutor(Executors.newFixedThreadPool(totalThreads));
 
             TaskUpdateObserver taskUpdateObserver = new TaskUpdateObserver();
             LOGGER.info("Going to start {}", workers);
