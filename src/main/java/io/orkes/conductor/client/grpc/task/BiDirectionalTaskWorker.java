@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.grpc;
+package io.orkes.conductor.client.grpc.task;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -20,10 +20,14 @@ import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
 
+import io.orkes.conductor.client.grpc.TaskPollObserver;
+import io.orkes.grpc.service.TaskServiceStreamGrpc;
+
+import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GrpcTaskWorker2 {
+public class BiDirectionalTaskWorker {
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
 
@@ -39,7 +43,14 @@ public class GrpcTaskWorker2 {
 
     private final TaskPollObserver taskPollObserver;
 
-    public GrpcTaskWorker2(
+    private StreamObserver<TaskServicePb.BatchPollRequest> requestObserver;
+
+    private final PollResponseObserver pollResponseObserver;
+
+    private final TaskServiceStreamGrpc.TaskServiceStreamStub bidiService;
+
+    public BiDirectionalTaskWorker(
+            TaskServiceStreamGrpc.TaskServiceStreamStub bidiService,
             TaskServiceGrpc.TaskServiceStub asyncStub,
             TaskPollObserver taskPollObserver,
             ThreadPoolExecutor executor,
@@ -47,6 +58,7 @@ public class GrpcTaskWorker2 {
             String domain,
             int threadCount,
             int pollTimeoutInMills) {
+        this.bidiService = bidiService;
         this.worker = worker;
         this.domain = domain;
         this.threadCount = threadCount;
@@ -54,11 +66,14 @@ public class GrpcTaskWorker2 {
         this.asyncStub = asyncStub;
         this.taskPollObserver = taskPollObserver;
         this.executor = executor;
+        this.pollResponseObserver = new PollResponseObserver();
     }
 
     public void init() {
+        requestObserver = bidiService.taskPoll(pollResponseObserver);
+        pollResponseObserver.setReady();
         Executors.newSingleThreadScheduledExecutor()
-                .scheduleWithFixedDelay(
+                .scheduleAtFixedRate(
                         () -> _pollAndExecute(),
                         worker.getPollingInterval(),
                         worker.getPollingInterval(),
@@ -70,9 +85,18 @@ public class GrpcTaskWorker2 {
         if (pollCount < 1) {
             return;
         }
-        log.debug("Polling {} for {} tasks", worker.getTaskDefName(), pollCount);
-        TaskServicePb.BatchPollRequest request = buildPollRequest(pollCount, pollTimeoutInMills);
-        asyncStub.batchPoll(request, taskPollObserver);
+
+        try {
+            if (!pollResponseObserver.isReady()) {
+                log.warn("Connection not ready yet...");
+                requestObserver = bidiService.taskPoll(pollResponseObserver);
+                pollResponseObserver.setReady();
+                return;
+            }
+            requestObserver.onNext(buildPollRequest(pollCount, pollTimeoutInMills));
+        } catch (Throwable t) {
+            log.error("Error sending request {}", t.getMessage());
+        }
     }
 
     private TaskServicePb.BatchPollRequest buildPollRequest(int count, int timeoutInMillisecond) {
@@ -89,6 +113,6 @@ public class GrpcTaskWorker2 {
     }
 
     private int getAvailableWorkers() {
-        return (this.threadCount) - this.executor.getActiveCount();
+        return (this.threadCount * 2) - this.executor.getActiveCount();
     }
 }

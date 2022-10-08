@@ -21,7 +21,6 @@ import com.netflix.conductor.proto.StartWorkflowRequestPb;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.grpc.service.WorkflowServiceGrpc;
-import io.orkes.grpc.service.WorkflowServicePb;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import io.grpc.Status;
@@ -31,8 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 
 @Slf4j
-public class ExecuteWorkflowStream
-        implements StreamObserver<WorkflowServicePb.ExecuteWorkflowResponse> {
+public class ExecuteWorkflowStream {
 
     private final WorkflowServiceGrpc.WorkflowServiceStub stub;
 
@@ -61,7 +59,7 @@ public class ExecuteWorkflowStream
         backoff();
         try {
             Uninterruptibles.sleepUninterruptibly(reconnectBackoff, TimeUnit.MILLISECONDS);
-            this.requests = this.stub.executeWorkflow(this);
+            // this.requests = this.stub.executeWorkflow(this);
             this.ready = true;
             System.out.println("Ready...");
         } catch (Throwable t) {
@@ -70,10 +68,9 @@ public class ExecuteWorkflowStream
         }
     }
 
-    @Override
-    public void onNext(WorkflowServicePb.ExecuteWorkflowResponse result) {}
+    // public void onNext(WorkflowServicePb.ExecuteWorkflowResponse result) {}
 
-    @Override
+    // @Override
     public void onError(Throwable t) {
         System.out.println(t.getMessage());
         t.printStackTrace();
@@ -95,7 +92,7 @@ public class ExecuteWorkflowStream
         }
     }
 
-    @Override
+    // @Override
     public void onCompleted() {}
 
     public void executeWorkflow(StartWorkflowRequest request) {

@@ -165,7 +165,7 @@ public class ApiClient {
     /**
      * Used for GRPC
      *
-     * @param useSSL
+     * @param useSSL set f using SSL connection for gRPC
      */
     public void setUseSSL(boolean useSSL) {
         this.useSSL = useSSL;

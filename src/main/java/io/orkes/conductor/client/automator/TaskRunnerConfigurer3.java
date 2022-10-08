@@ -28,11 +28,9 @@ import com.netflix.discovery.EurekaClient;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.grpc.GrpcTaskWorker;
-import io.orkes.conductor.client.grpc.HeaderClientInterceptor;
-import io.orkes.conductor.client.grpc.TaskPollObserver;
-import io.orkes.conductor.client.grpc.TaskUpdateObserver;
+import io.orkes.conductor.client.grpc.*;
 import io.orkes.conductor.client.http.OrkesTaskClient;
+import io.orkes.grpc.service.TaskServiceStreamGrpc;
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -42,8 +40,8 @@ import static io.orkes.conductor.client.automator.TaskRunner.ALL_WORKERS;
 import static io.orkes.conductor.client.automator.TaskRunner.DOMAIN;
 import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 
-public class TaskRunnerConfigurer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunnerConfigurer.class);
+public class TaskRunnerConfigurer3 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunnerConfigurer3.class);
 
     private final EurekaClient eurekaClient;
     private final TaskClient taskClient;
@@ -67,10 +65,10 @@ public class TaskRunnerConfigurer {
     private ScheduledExecutorService scheduledExecutorService;
 
     /**
-     * @see TaskRunnerConfigurer.Builder
-     * @see TaskRunnerConfigurer#init()
+     * @see TaskRunnerConfigurer3.Builder
+     * @see TaskRunnerConfigurer3#init()
      */
-    private TaskRunnerConfigurer(TaskRunnerConfigurer.Builder builder) {
+    private TaskRunnerConfigurer3(TaskRunnerConfigurer3.Builder builder) {
         this.eurekaClient = builder.eurekaClient;
         this.taskClient = builder.taskClient;
         this.apiClient = ((OrkesTaskClient) builder.taskClient).getApiClient();
@@ -121,7 +119,7 @@ public class TaskRunnerConfigurer {
          *     if not supplied.
          * @return Returns the current instance.
          */
-        public TaskRunnerConfigurer.Builder withWorkerNamePrefix(String workerNamePrefix) {
+        public TaskRunnerConfigurer3.Builder withWorkerNamePrefix(String workerNamePrefix) {
             this.workerNamePrefix = workerNamePrefix;
             return this;
         }
@@ -131,7 +129,7 @@ public class TaskRunnerConfigurer {
          *     update call fails, before retrying the operation.
          * @return Returns the current instance.
          */
-        public TaskRunnerConfigurer.Builder withSleepWhenRetry(int sleepWhenRetry) {
+        public TaskRunnerConfigurer3.Builder withSleepWhenRetry(int sleepWhenRetry) {
             this.sleepWhenRetry = sleepWhenRetry;
             return this;
         }
@@ -141,7 +139,7 @@ public class TaskRunnerConfigurer {
          * @return Builder instance
          * @see #withSleepWhenRetry(int)
          */
-        public TaskRunnerConfigurer.Builder withUpdateRetryCount(int updateRetryCount) {
+        public TaskRunnerConfigurer3.Builder withUpdateRetryCount(int updateRetryCount) {
             this.updateRetryCount = updateRetryCount;
             return this;
         }
@@ -150,7 +148,7 @@ public class TaskRunnerConfigurer {
          * @param conductorClientConfiguration client configuration to handle external payloads
          * @return Builder instance
          */
-        public TaskRunnerConfigurer.Builder withConductorClientConfiguration(
+        public TaskRunnerConfigurer3.Builder withConductorClientConfiguration(
                 ConductorClientConfiguration conductorClientConfiguration) {
             this.conductorClientConfiguration = conductorClientConfiguration;
             return this;
@@ -160,7 +158,7 @@ public class TaskRunnerConfigurer {
          * @param shutdownGracePeriodSeconds waiting seconds before forcing shutdown of your worker
          * @return Builder instance
          */
-        public TaskRunnerConfigurer.Builder withShutdownGracePeriodSeconds(
+        public TaskRunnerConfigurer3.Builder withShutdownGracePeriodSeconds(
                 int shutdownGracePeriodSeconds) {
             if (shutdownGracePeriodSeconds < 1) {
                 throw new IllegalArgumentException(
@@ -176,35 +174,35 @@ public class TaskRunnerConfigurer {
          *     null, discovery check is not done.
          * @return Builder instance
          */
-        public TaskRunnerConfigurer.Builder withEurekaClient(EurekaClient eurekaClient) {
+        public TaskRunnerConfigurer3.Builder withEurekaClient(EurekaClient eurekaClient) {
             this.eurekaClient = eurekaClient;
             return this;
         }
 
-        public TaskRunnerConfigurer.Builder withTaskToDomain(Map<String, String> taskToDomain) {
+        public TaskRunnerConfigurer3.Builder withTaskToDomain(Map<String, String> taskToDomain) {
             this.taskToDomain = taskToDomain;
             return this;
         }
 
-        public TaskRunnerConfigurer.Builder withTaskThreadCount(
+        public TaskRunnerConfigurer3.Builder withTaskThreadCount(
                 Map<String, Integer> taskToThreadCount) {
             this.taskToThreadCount = taskToThreadCount;
             return this;
         }
 
-        public TaskRunnerConfigurer.Builder withTaskToThreadCount(
+        public TaskRunnerConfigurer3.Builder withTaskToThreadCount(
                 Map<String, Integer> taskToThreadCount) {
             this.taskToThreadCount = taskToThreadCount;
             return this;
         }
 
-        public TaskRunnerConfigurer.Builder withTaskPollTimeout(
+        public TaskRunnerConfigurer3.Builder withTaskPollTimeout(
                 Map<String, Integer> taskPollTimeout) {
             this.taskPollTimeout = taskPollTimeout;
             return this;
         }
 
-        public TaskRunnerConfigurer.Builder withTaskPollTimeout(Integer taskPollTimeout) {
+        public TaskRunnerConfigurer3.Builder withTaskPollTimeout(Integer taskPollTimeout) {
             this.defaultPollTimeout = taskPollTimeout;
             return this;
         }
@@ -212,13 +210,13 @@ public class TaskRunnerConfigurer {
         /**
          * Builds an instance of the TaskRunnerConfigurer.
          *
-         * <p>Please see {@link TaskRunnerConfigurer#init()} method. The method must be called after
-         * this constructor for the polling to start.
+         * <p>Please see {@link TaskRunnerConfigurer3#init()} method. The method must be called
+         * after this constructor for the polling to start.
          *
          * @return Builder instance
          */
-        public TaskRunnerConfigurer build() {
-            return new TaskRunnerConfigurer(this);
+        public TaskRunnerConfigurer3 build() {
+            return new TaskRunnerConfigurer3(this);
         }
 
         /**
@@ -266,7 +264,8 @@ public class TaskRunnerConfigurer {
     }
 
     /**
-     * Starts the polling. Must be called after {@link TaskRunnerConfigurer.Builder#build()} method.
+     * Starts the polling. Must be called after {@link TaskRunnerConfigurer3.Builder#build()}
+     * method.
      */
     public synchronized void init() {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
@@ -288,6 +287,11 @@ public class TaskRunnerConfigurer {
                             .withInterceptors(new HeaderClientInterceptor(apiClient))
                             .withExecutor(executor);
 
+            TaskServiceStreamGrpc.TaskServiceStreamStub orkesTaskService =
+                    TaskServiceStreamGrpc.newStub(channel)
+                            .withInterceptors(new HeaderClientInterceptor(apiClient))
+                            .withExecutor(executor);
+
             TaskUpdateObserver taskUpdateObserver = new TaskUpdateObserver();
             LOGGER.info("Going to start {}", workers);
             workers.forEach(
@@ -295,7 +299,10 @@ public class TaskRunnerConfigurer {
                             scheduledExecutorService.submit(
                                     () ->
                                             this.startGRPCWorker(
-                                                    worker, asyncStub, taskUpdateObserver)));
+                                                    worker,
+                                                    orkesTaskService,
+                                                    asyncStub,
+                                                    taskUpdateObserver)));
         } else {
             workers.forEach(
                     worker -> scheduledExecutorService.submit(() -> this.startWorker(worker)));
@@ -318,7 +325,7 @@ public class TaskRunnerConfigurer {
                         }
                     }
                 },
-                new ThreadFactoryBuilder().setNameFormat("task-poll-execute-thread-%d").build());
+                new ThreadFactoryBuilder().setNameFormat("task-update-thread-%d").build());
     }
 
     /**
@@ -353,6 +360,7 @@ public class TaskRunnerConfigurer {
 
     private void startGRPCWorker(
             Worker worker,
+            TaskServiceStreamGrpc.TaskServiceStreamStub orkesTaskService,
             TaskServiceGrpc.TaskServiceStub asyncStub,
             TaskUpdateObserver taskUpdateObserver) {
 
@@ -382,10 +390,11 @@ public class TaskRunnerConfigurer {
                         TimeUnit.MINUTES,
                         new ArrayBlockingQueue<>(threadCountForTask * 100));
 
-        TaskPollObserver taskPollObserver =
-                new TaskPollObserver(worker, executor, asyncStub, taskUpdateObserver);
-        GrpcTaskWorker grpcTaskWorker =
-                new GrpcTaskWorker(
+        TaskPollObserver3 taskPollObserver =
+                new TaskPollObserver3(
+                        worker, orkesTaskService, executor, asyncStub, taskUpdateObserver);
+        GrpcTaskWorker3 grpcTaskWorker =
+                new GrpcTaskWorker3(
                         asyncStub,
                         taskPollObserver,
                         executor,

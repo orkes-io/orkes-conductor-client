@@ -23,12 +23,14 @@ import com.netflix.conductor.proto.ProtoMappingHelper;
 import com.netflix.conductor.proto.TaskPb;
 import com.netflix.conductor.proto.TaskResultPb;
 
+import io.orkes.grpc.service.TaskServiceStreamGrpc;
+
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
+public class TaskPollObserver3 implements StreamObserver<TaskPb.Task> {
 
     private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
 
@@ -40,17 +42,23 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
 
+    private final TaskServiceStreamGrpc.TaskServiceStreamStub orkesTaskService;
+
     private StreamObserver<TaskResultPb.TaskResult> taskUpdateStream;
 
-    public TaskPollObserver(
+    public TaskPollObserver3(
             Worker worker,
+            TaskServiceStreamGrpc.TaskServiceStreamStub orkesTaskService,
             ThreadPoolExecutor executor,
             TaskServiceGrpc.TaskServiceStub asyncStub,
             TaskUpdateObserver taskUpdateObserver) {
         this.worker = worker;
         this.executor = executor;
         this.taskUpdateObserver = taskUpdateObserver;
+        this.orkesTaskService = orkesTaskService;
         this.asyncStub = asyncStub;
+
+        taskUpdateStream = orkesTaskService.updateTaskResult(new TaskUpdateObserver());
     }
 
     @Override
@@ -63,14 +71,12 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                             log.info("Executing task {}", task.getTaskId());
                             TaskResult result = worker.execute(protoMapper.fromProto(task));
                             log.info("Executed task {}", task.getTaskId());
-                            updateTask(result);
+                            updateTaskAsync(result);
                         } catch (Exception e) {
-                            // todo: retry here...
                             log.error("Error executing task: {}", e.getMessage(), e);
                         }
                     });
         } catch (RejectedExecutionException ree) {
-            // todo: retry here after some wait
             log.error(ree.getMessage(), ree);
         }
     }
@@ -110,5 +116,30 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                         .build();
         asyncStub.updateTask(request, taskUpdateObserver);
         log.info("Updated task {}", taskResult.getTaskId());
+    }
+
+    public void updateTaskAsync(TaskResult taskResult) {
+        try {
+            log.info("Updating task async {}", taskResult.getTaskId());
+            taskUpdateStream.onNext(protoMapper.toProto(taskResult));
+            log.info("Updated task async {}", taskResult.getTaskId());
+        } catch (Throwable e) {
+            log.error(e.getMessage(), e);
+            System.exit(1);
+        }
+    }
+
+    private TaskServicePb.BatchPollRequest buildPollRequest(
+            String domain, int count, int timeoutInMillisecond) {
+        TaskServicePb.BatchPollRequest.Builder requestBuilder =
+                TaskServicePb.BatchPollRequest.newBuilder()
+                        .setCount(count)
+                        .setTaskType(worker.getTaskDefName())
+                        .setTimeout(timeoutInMillisecond)
+                        .setWorkerId(worker.getIdentity());
+        if (domain != null) {
+            requestBuilder = requestBuilder.setDomain(domain);
+        }
+        return requestBuilder.build();
     }
 }

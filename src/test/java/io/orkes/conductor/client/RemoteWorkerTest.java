@@ -12,13 +12,14 @@
  */
 package io.orkes.conductor.client;
 
-import com.netflix.conductor.client.worker.Worker;
-import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.netflix.conductor.client.worker.Worker;
+
+import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 
 public class RemoteWorkerTest {
 
@@ -26,7 +27,8 @@ public class RemoteWorkerTest {
     static String secret = "srpOd6DyslEA42lZuBuPwPFAe3kFhxnn0iBvJcaFjwFxawds";
 
     public static void main(String[] args) {
-        ApiClient apiClient = new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
+        ApiClient apiClient =
+                new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
         apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
         apiClient.setUseSSL(true);
 

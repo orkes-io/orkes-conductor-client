@@ -21,14 +21,13 @@ import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
 import com.netflix.conductor.proto.ProtoMappingHelper;
 import com.netflix.conductor.proto.TaskPb;
-import com.netflix.conductor.proto.TaskResultPb;
 
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
+public class TaskPollObserver2 implements StreamObserver<TaskPb.Task> {
 
     private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
 
@@ -40,9 +39,7 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
 
-    private StreamObserver<TaskResultPb.TaskResult> taskUpdateStream;
-
-    public TaskPollObserver(
+    public TaskPollObserver2(
             Worker worker,
             ThreadPoolExecutor executor,
             TaskServiceGrpc.TaskServiceStub asyncStub,
@@ -65,12 +62,10 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                             log.info("Executed task {}", task.getTaskId());
                             updateTask(result);
                         } catch (Exception e) {
-                            // todo: retry here...
                             log.error("Error executing task: {}", e.getMessage(), e);
                         }
                     });
         } catch (RejectedExecutionException ree) {
-            // todo: retry here after some wait
             log.error(ree.getMessage(), ree);
         }
     }
@@ -110,5 +105,19 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                         .build();
         asyncStub.updateTask(request, taskUpdateObserver);
         log.info("Updated task {}", taskResult.getTaskId());
+    }
+
+    private TaskServicePb.BatchPollRequest buildPollRequest(
+            String domain, int count, int timeoutInMillisecond) {
+        TaskServicePb.BatchPollRequest.Builder requestBuilder =
+                TaskServicePb.BatchPollRequest.newBuilder()
+                        .setCount(count)
+                        .setTaskType(worker.getTaskDefName())
+                        .setTimeout(timeoutInMillisecond)
+                        .setWorkerId(worker.getIdentity());
+        if (domain != null) {
+            requestBuilder = requestBuilder.setDomain(domain);
+        }
+        return requestBuilder.build();
     }
 }

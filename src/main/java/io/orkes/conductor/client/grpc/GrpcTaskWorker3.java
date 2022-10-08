@@ -23,7 +23,7 @@ import com.netflix.conductor.grpc.TaskServicePb;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GrpcTaskWorker2 {
+public class GrpcTaskWorker3 {
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
 
@@ -37,11 +37,13 @@ public class GrpcTaskWorker2 {
 
     private final int pollTimeoutInMills;
 
-    private final TaskPollObserver taskPollObserver;
+    private final TaskPollObserver3 taskPollObserver;
 
-    public GrpcTaskWorker2(
+    private final int bufferSize;
+
+    public GrpcTaskWorker3(
             TaskServiceGrpc.TaskServiceStub asyncStub,
-            TaskPollObserver taskPollObserver,
+            TaskPollObserver3 taskPollObserver,
             ThreadPoolExecutor executor,
             Worker worker,
             String domain,
@@ -54,11 +56,12 @@ public class GrpcTaskWorker2 {
         this.asyncStub = asyncStub;
         this.taskPollObserver = taskPollObserver;
         this.executor = executor;
+        this.bufferSize = this.threadCount * 2;
     }
 
     public void init() {
         Executors.newSingleThreadScheduledExecutor()
-                .scheduleWithFixedDelay(
+                .scheduleAtFixedRate(
                         () -> _pollAndExecute(),
                         worker.getPollingInterval(),
                         worker.getPollingInterval(),
@@ -66,7 +69,7 @@ public class GrpcTaskWorker2 {
     }
 
     private void _pollAndExecute() {
-        int pollCount = getAvailableWorkers();
+        int pollCount = getPollCount();
         if (pollCount < 1) {
             return;
         }
@@ -88,7 +91,7 @@ public class GrpcTaskWorker2 {
         return requestBuilder.build();
     }
 
-    private int getAvailableWorkers() {
-        return (this.threadCount) - this.executor.getActiveCount();
+    private int getPollCount() {
+        return (this.bufferSize) - this.executor.getActiveCount();
     }
 }

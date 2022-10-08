@@ -37,6 +37,8 @@ public class GrpcTaskWorker {
 
     private final TaskPollObserver taskPollObserver;
 
+    private final int bufferSize;
+
     public GrpcTaskWorker(
             TaskServiceGrpc.TaskServiceStub asyncStub,
             TaskPollObserver taskPollObserver,
@@ -52,11 +54,12 @@ public class GrpcTaskWorker {
         this.asyncStub = asyncStub;
         this.taskPollObserver = taskPollObserver;
         this.executor = executor;
+        this.bufferSize = this.threadCount * 2;
     }
 
     public void init() {
         Executors.newSingleThreadScheduledExecutor()
-                .scheduleWithFixedDelay(
+                .scheduleAtFixedRate(
                         () -> _pollAndExecute(),
                         worker.getPollingInterval(),
                         worker.getPollingInterval(),
@@ -64,7 +67,7 @@ public class GrpcTaskWorker {
     }
 
     private void _pollAndExecute() {
-        int pollCount = getAvailableWorkers();
+        int pollCount = getPollCount();
         if (pollCount < 1) {
             return;
         }
@@ -86,7 +89,7 @@ public class GrpcTaskWorker {
         return requestBuilder.build();
     }
 
-    private int getAvailableWorkers() {
-        return (this.threadCount) - this.executor.getActiveCount();
+    private int getPollCount() {
+        return (this.bufferSize) - this.executor.getActiveCount();
     }
 }
