@@ -40,10 +40,10 @@ public class LoadTestWorker implements Worker {
 
     @Override
     public TaskResult execute(Task task) {
-        log.info("Executing {} - {}", task.getTaskType(), task.getTaskId());
+        //log.info("Executing {} - {}", task.getTaskType(), task.getTaskId());
         TaskResult result = new TaskResult(task);
 
-        Uninterruptibles.sleepUninterruptibly(400, TimeUnit.MILLISECONDS);
+        Uninterruptibles.sleepUninterruptibly(3000, TimeUnit.MILLISECONDS);
 
         result.setStatus(TaskResult.Status.COMPLETED);
         int resultCount = Math.max(20, secureRandom.nextInt(keyCount));
@@ -65,6 +65,6 @@ public class LoadTestWorker implements Worker {
 
     @Override
     public int getPollingInterval() {
-        return 10;
+        return 100;
     }
 }

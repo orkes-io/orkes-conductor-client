@@ -14,6 +14,7 @@ package io.orkes.conductor.client.automator;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -374,25 +375,15 @@ public class TaskRunnerConfigurer {
                 "Starting gRPC worker: {} with {} threads",
                 worker.getTaskDefName(),
                 threadCountForTask);
-        ThreadPoolExecutor executor =
-                new ThreadPoolExecutor(
-                        threadCountForTask,
-                        threadCountForTask,
-                        1,
-                        TimeUnit.MINUTES,
-                        new ArrayBlockingQueue<>(threadCountForTask * 100));
-
-        TaskPollObserver taskPollObserver =
-                new TaskPollObserver(worker, executor, asyncStub, taskUpdateObserver);
+        //TaskPollObserver taskPollObserver = new TaskPollObserver(worker, executor, asyncStub, taskUpdateObserver);
         GrpcTaskWorker grpcTaskWorker =
                 new GrpcTaskWorker(
                         asyncStub,
-                        taskPollObserver,
-                        executor,
                         worker,
                         domain,
                         threadCountForTask,
-                        taskPollTimeout);
+                        taskPollTimeout,
+                        taskUpdateObserver);
         grpcTaskWorker.init();
     }
 }

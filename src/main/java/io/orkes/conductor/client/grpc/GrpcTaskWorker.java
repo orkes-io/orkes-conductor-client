@@ -13,6 +13,7 @@
 package io.orkes.conductor.client.grpc;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.grpc.TaskServiceGrpc;
@@ -31,30 +32,40 @@ public class GrpcTaskWorker {
 
     private final ThreadPoolExecutor executor;
 
-    private final int threadCount;
+    private final TaskUpdateObserver taskUpdateObserver;
 
     private final int pollTimeoutInMills;
 
-    private final TaskPollObserver taskPollObserver;
+    private final AtomicInteger busyThreads;
 
-    private final int bufferSize;
+    private final int threadCount;
+
+    private final ArrayBlockingQueue<Runnable> executionQueue;
 
     public GrpcTaskWorker(
             TaskServiceGrpc.TaskServiceStub asyncStub,
-            TaskPollObserver taskPollObserver,
-            ThreadPoolExecutor executor,
             Worker worker,
             String domain,
             int threadCount,
-            int pollTimeoutInMills) {
+            int pollTimeoutInMills,
+            TaskUpdateObserver taskUpdateObserver) {
         this.worker = worker;
         this.domain = domain;
-        this.threadCount = threadCount;
+        this.taskUpdateObserver = taskUpdateObserver;
         this.pollTimeoutInMills = pollTimeoutInMills;
         this.asyncStub = asyncStub;
-        this.taskPollObserver = taskPollObserver;
-        this.executor = executor;
-        this.bufferSize = this.threadCount * 2;
+        this.threadCount = threadCount;
+        this.busyThreads = new AtomicInteger(0);
+        this.executionQueue = new ArrayBlockingQueue<>(threadCount){
+
+        };
+        this.executor =
+                new ThreadPoolExecutor(
+                        threadCount,
+                        threadCount,
+                        1,
+                        TimeUnit.MINUTES,
+                        executionQueue);
     }
 
     public void init() {
@@ -67,13 +78,17 @@ public class GrpcTaskWorker {
     }
 
     private void _pollAndExecute() {
-        int pollCount = getPollCount();
-        if (pollCount < 1) {
-            return;
+        try {
+            int pollCount = getPollCount();
+            if (pollCount < 1) {
+                return;
+            }
+            log.debug("Polling {} for {} tasks", worker.getTaskDefName(), pollCount);
+            TaskServicePb.BatchPollRequest request = buildPollRequest(pollCount, pollTimeoutInMills);
+            asyncStub.batchPoll(request, new TaskPollObserver(worker, executor, asyncStub, taskUpdateObserver, busyThreads));
+        } catch (Throwable t) {
+            log.error(t.getMessage(), t);
         }
-        log.debug("Polling {} for {} tasks", worker.getTaskDefName(), pollCount);
-        TaskServicePb.BatchPollRequest request = buildPollRequest(pollCount, pollTimeoutInMills);
-        asyncStub.batchPoll(request, taskPollObserver);
     }
 
     private TaskServicePb.BatchPollRequest buildPollRequest(int count, int timeoutInMillisecond) {
@@ -90,6 +105,38 @@ public class GrpcTaskWorker {
     }
 
     private int getPollCount() {
-        return (this.bufferSize) - this.executor.getActiveCount();
+
+        int busyCount = busyThreads.get();
+        int pollCount = threadCount - busyCount;
+        log.info("poll count {}, busy threads = {}, execution queue size", pollCount, busyThreads.get());
+        if(pollCount < 1) {
+            return 0;
+        }
+        return pollCount;
+
+        /*
+        if(busyThreads.compareAndSet(busyCount, pollCount)){
+            log.info("returning {} polls", pollCount);
+            return pollCount;
+        }
+        return 0;
+        */
     }
+
+    public static void main(String[] args) {
+        AtomicInteger ai = new AtomicInteger(10);
+        System.out.println(ai.get());
+
+
+
+        int what = ai.getAndUpdate(operand -> 0);
+        System.out.println(what);
+        System.out.println(ai.get());
+
+        ai.set(3);
+        what = ai.getAndUpdate(operand -> 0);
+        System.out.println(what);
+        System.out.println(ai.get());
+    }
+
 }

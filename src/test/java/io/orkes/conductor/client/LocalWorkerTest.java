@@ -36,9 +36,9 @@ public class LocalWorkerTest {
         List<Worker> workers = new ArrayList<>();
         Map<String, Integer> taskThreadCount = new HashMap<>();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 1; i < 2; i++) {
             workers.add(new LoadTestWorker("x_test_worker_" + i));
-            taskThreadCount.put("x_test_worker_" + i, 100);
+            taskThreadCount.put("x_test_worker_" + i, 1);
         }
 
         TaskRunnerConfigurer configurer =
