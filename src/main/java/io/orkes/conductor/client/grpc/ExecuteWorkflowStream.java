@@ -20,7 +20,7 @@ import com.netflix.conductor.proto.StartWorkflowRequestPb;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
-import io.orkes.grpc.service.WorkflowServiceGrpc;
+import io.orkes.grpc.service.WorkflowServiceStreamGrpc;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import io.grpc.Status;
@@ -32,7 +32,7 @@ import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 @Slf4j
 public class ExecuteWorkflowStream {
 
-    private final WorkflowServiceGrpc.WorkflowServiceStub stub;
+    private final WorkflowServiceStreamGrpc.WorkflowServiceStreamStub stub;
 
     private final ApiClient apiClient;
     private final HeaderClientInterceptor headerInterceptor;
@@ -49,7 +49,7 @@ public class ExecuteWorkflowStream {
             apiClient.getToken();
         }
         this.stub =
-                WorkflowServiceGrpc.newStub(getChannel(apiClient))
+                WorkflowServiceStreamGrpc.newStub(getChannel(apiClient))
                         .withInterceptors(headerInterceptor);
         connect();
     }

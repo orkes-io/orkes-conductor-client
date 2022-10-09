@@ -16,6 +16,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.netflix.conductor.client.worker.Worker;
+import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
@@ -61,7 +62,20 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                     () -> {
                         try {
                             log.info("Executing task {}", task.getTaskId());
-                            TaskResult result = worker.execute(protoMapper.fromProto(task));
+                            Task taskModel = protoMapper.fromProto(task);
+                            try {
+                                Long serverSentTime =
+                                        (Long) taskModel.getOutputData().get("_severSendTime");
+                                if (serverSentTime != null) {
+                                    long networkLatency =
+                                            System.currentTimeMillis() - serverSentTime;
+                                    taskModel
+                                            .getOutputData()
+                                            .put("_pollNetworkLatency", networkLatency);
+                                }
+                            } catch (Exception e) {
+                            }
+                            TaskResult result = worker.execute(taskModel);
                             log.info("Executed task {}", task.getTaskId());
                             updateTask(result);
                         } catch (Exception e) {
@@ -78,8 +92,6 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
     @Override
     public void onError(Throwable t) {
         log.error("Error {}", t.getMessage());
-        t.printStackTrace();
-        System.exit(1);
         Status status = Status.fromThrowable(t);
         Status.Code code = status.getCode();
         switch (code) {
@@ -104,6 +116,7 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
 
     public void updateTask(TaskResult taskResult) {
         log.info("Updating task {}", taskResult.getTaskId());
+        taskResult.getOutputData().put("_clientSendTime", System.currentTimeMillis());
         TaskServicePb.UpdateTaskRequest request =
                 TaskServicePb.UpdateTaskRequest.newBuilder()
                         .setResult(protoMapper.toProto(taskResult))
