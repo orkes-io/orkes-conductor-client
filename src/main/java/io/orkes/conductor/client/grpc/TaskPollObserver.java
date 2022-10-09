@@ -63,20 +63,22 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                         try {
                             log.info("Executing task {}", task.getTaskId());
                             Task taskModel = protoMapper.fromProto(task);
+                            long networkLatency = -1;
                             try {
-                                Long serverSentTime =
-                                        (Long) taskModel.getOutputData().get("_severSendTime");
+                                Number serverSentTime =
+                                        (Number) taskModel.getOutputData().get("_severSendTime");
                                 if (serverSentTime != null) {
-                                    long networkLatency =
-                                            System.currentTimeMillis() - serverSentTime;
-                                    taskModel
-                                            .getOutputData()
-                                            .put("_pollNetworkLatency", networkLatency);
+                                    networkLatency =
+                                            System.currentTimeMillis() - serverSentTime.longValue();
                                 }
                             } catch (Exception e) {
+                                e.printStackTrace();
                             }
                             TaskResult result = worker.execute(taskModel);
                             log.info("Executed task {}", task.getTaskId());
+                            if (networkLatency > 0) {
+                                result.getOutputData().put("_pollNetworkLatency", networkLatency);
+                            }
                             updateTask(result);
                         } catch (Exception e) {
                             // todo: retry here...

@@ -13,7 +13,6 @@
 package io.orkes.conductor.client;
 
 import java.security.SecureRandom;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -32,14 +31,6 @@ public class LoadTestWorker implements Worker {
 
     public LoadTestWorker(String name) {
         this.name = name;
-    }
-
-    private static String generateRandomString() {
-
-        Random random = new Random();
-        int wordCount = Math.max(1, random.nextInt(5));
-        StringBuilder sb = new StringBuilder();
-        return sb.toString();
     }
 
     @Override
@@ -68,10 +59,6 @@ public class LoadTestWorker implements Worker {
         result.getOutputData().put("uuid1", UUID.randomUUID().toString());
         result.getOutputData().put("uuid2", UUID.randomUUID().toString());
         result.getOutputData().put("float", secureRandom.nextDouble());
-
-        for (int i = 0; i < resultCount; i++) {
-            result.getOutputData().put("key" + i, generateRandomString());
-        }
 
         return result;
     }
