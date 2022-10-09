@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LoadTestWorker implements Worker {
+
     private final String name;
     private int keyCount = 50;
     private SecureRandom secureRandom = new SecureRandom();
@@ -68,6 +69,9 @@ public class LoadTestWorker implements Worker {
         result.getOutputData().put("uuid1", UUID.randomUUID().toString());
         result.getOutputData().put("uuid2", UUID.randomUUID().toString());
         result.getOutputData().put("float", secureRandom.nextDouble());
+
+        result.addOutputData("scheduledTime", task.getScheduledTime());
+        result.addOutputData("startTime", task.getStartTime());
 
         for (int i = 0; i < resultCount; i++) {
             result.getOutputData().put("key" + i, generateRandomString());

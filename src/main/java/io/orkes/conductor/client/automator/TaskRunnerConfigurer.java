@@ -14,7 +14,6 @@ package io.orkes.conductor.client.automator;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,7 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.grpc.GrpcTaskWorker;
 import io.orkes.conductor.client.grpc.HeaderClientInterceptor;
+import io.orkes.conductor.client.grpc.PooledPoller;
 import io.orkes.conductor.client.grpc.TaskPollObserver;
 import io.orkes.conductor.client.grpc.TaskUpdateObserver;
 import io.orkes.conductor.client.http.OrkesTaskClient;
@@ -272,12 +272,9 @@ public class TaskRunnerConfigurer {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
         if (apiClient.isUseGRPC()) {
             LOGGER.info("Using gRPC for task poll/update");
-
             ManagedChannel channel = getChannel(apiClient);
-
             int totalThreads =
-                    this.taskToThreadCount.values().stream()
-                            .collect(Collectors.summingInt(Integer::intValue));
+                    this.taskToThreadCount.values().stream().mapToInt(Integer::intValue).sum();
             if (totalThreads == 0) {
                 totalThreads = this.threadCount;
             }
@@ -287,14 +284,14 @@ public class TaskRunnerConfigurer {
                     TaskServiceGrpc.newStub(channel)
                             .withInterceptors(new HeaderClientInterceptor(apiClient))
                             .withExecutor(executor);
-
             TaskUpdateObserver taskUpdateObserver = new TaskUpdateObserver();
             LOGGER.info("Going to start {}", workers);
+
             workers.forEach(
                     worker ->
                             scheduledExecutorService.submit(
                                     () ->
-                                            this.startGRPCWorker(
+                                            this.startPooledGRPCWorker(
                                                     worker, asyncStub, taskUpdateObserver)));
         } else {
             workers.forEach(
@@ -349,6 +346,50 @@ public class TaskRunnerConfigurer {
                         taskPollTimeout);
         this.taskRunners.add(taskRunner);
         taskRunner.pollAndExecute();
+    }
+
+    private void startPooledGRPCWorker(
+            Worker worker,
+            TaskServiceGrpc.TaskServiceStub asyncStub,
+            TaskUpdateObserver taskUpdateObserver) {
+
+        final Integer threadCountForTask =
+                this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
+        final Integer taskPollTimeout =
+                this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
+        String taskType = worker.getTaskDefName();
+        String domain =
+                Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
+                        .orElseGet(
+                                () ->
+                                        Optional.ofNullable(
+                                                        PropertyFactory.getString(
+                                                                ALL_WORKERS, DOMAIN, null))
+                                                .orElse(taskToDomain.get(taskType)));
+
+        LOGGER.info(
+                "Starting gRPC worker: {} with {} threads",
+                worker.getTaskDefName(),
+                threadCountForTask);
+        ThreadPoolExecutor executor =
+                new ThreadPoolExecutor(
+                        threadCountForTask,
+                        threadCountForTask,
+                        1,
+                        TimeUnit.MINUTES,
+                        new ArrayBlockingQueue<>(threadCountForTask * 100));
+        Semaphore semaphore = new Semaphore(threadCountForTask);
+        PooledPoller pooledPoller =
+                new PooledPoller(
+                        asyncStub,
+                        worker,
+                        domain,
+                        taskUpdateObserver,
+                        taskPollTimeout,
+                        executor,
+                        threadCountForTask,
+                        semaphore);
+        pooledPoller.start();
     }
 
     private void startGRPCWorker(

@@ -1,14 +1,18 @@
 <!-- default log configuration -->
 <Configuration status="WARN">
     <Appenders>
-        <Console name="CONSOLE">
-            <PatternLayout pattern="%-4r [%t] %-5p %c %x - %m%n"/>
-        </Console>
+        <File name="MyFile" fileName="worker.log">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+        <Async name="Async">
+            <AppenderRef ref="MyFile"/>
+        </Async>
     </Appenders>
-
     <Loggers>
-        <Root level="INFO">
-            <AppenderRef ref="CONSOLE" />
+        <Root level="info">
+            <AppenderRef ref="Async"/>
         </Root>
     </Loggers>
 </Configuration>

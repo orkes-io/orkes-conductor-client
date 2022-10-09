@@ -68,9 +68,9 @@ public class TaskPollObserver3 implements StreamObserver<TaskPb.Task> {
             executor.execute(
                     () -> {
                         try {
-                            log.info("Executing task {}", task.getTaskId());
+                            log.debug("Executing task {}", task.getTaskId());
                             TaskResult result = worker.execute(protoMapper.fromProto(task));
-                            log.info("Executed task {}", task.getTaskId());
+                            log.debug("Executed task {}", task.getTaskId());
                             updateTaskAsync(result);
                         } catch (Exception e) {
                             log.error("Error executing task: {}", e.getMessage(), e);

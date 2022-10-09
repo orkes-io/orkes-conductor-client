@@ -36,16 +36,16 @@ public class LocalWorkerTest {
         List<Worker> workers = new ArrayList<>();
         Map<String, Integer> taskThreadCount = new HashMap<>();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 1; i <= 2; i++) {
             workers.add(new LoadTestWorker("x_test_worker_" + i));
             taskThreadCount.put("x_test_worker_" + i, 100);
         }
 
         TaskRunnerConfigurer configurer =
                 new TaskRunnerConfigurer.Builder(taskClient, workers)
-                        .withSleepWhenRetry(1)
+                        .withSleepWhenRetry(10)
                         .withTaskThreadCount(taskThreadCount)
-                        .withTaskPollTimeout(1)
+                        .withTaskPollTimeout(10)
                         .build();
         configurer.init();
 
