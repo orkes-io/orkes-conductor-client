@@ -13,7 +13,10 @@
 package io.orkes.conductor.client.grpc;
 
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -27,6 +30,7 @@ import com.netflix.conductor.proto.TaskResultPb;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 
 @Slf4j
 public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
@@ -41,57 +45,67 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
 
-    private StreamObserver<TaskResultPb.TaskResult> taskUpdateStream;
+    private final AtomicInteger busyThreads;
 
     public TaskPollObserver(
             Worker worker,
             ThreadPoolExecutor executor,
             TaskServiceGrpc.TaskServiceStub asyncStub,
-            TaskUpdateObserver taskUpdateObserver) {
+            TaskUpdateObserver taskUpdateObserver,
+            AtomicInteger busyThreads) {
         this.worker = worker;
         this.executor = executor;
         this.taskUpdateObserver = taskUpdateObserver;
         this.asyncStub = asyncStub;
+        this.busyThreads = busyThreads;
     }
 
     @Override
     public void onNext(TaskPb.Task task) {
         try {
-            log.debug("Executor size {}", executor.getActiveCount());
+            log.info("on Next {}", task.getTaskId());
+            StopWatch stopWatch = StopWatch.createStarted();
             executor.execute(
                     () -> {
                         try {
-                            log.info("Executing task {}", task.getTaskId());
+                            log.info("Executing task {}, {} ms after picking up", task.getTaskId(), stopWatch.getTime(TimeUnit.MILLISECONDS));
                             Task taskModel = protoMapper.fromProto(task);
+                            long networkLatency = -1;
+
                             try {
-                                Long serverSentTime =
-                                        (Long) taskModel.getOutputData().get("_severSendTime");
+                                Number serverSentTime =
+                                        (Number) taskModel.getOutputData().get("_severSendTime");
                                 if (serverSentTime != null) {
-                                    long networkLatency =
-                                            System.currentTimeMillis() - serverSentTime;
-                                    taskModel
-                                            .getOutputData()
-                                            .put("_pollNetworkLatency", networkLatency);
+                                    networkLatency =
+                                            System.currentTimeMillis() - serverSentTime.longValue();
                                 }
-                            } catch (Exception e) {
-                            }
+                            } catch (Exception e) {}
+
                             TaskResult result = worker.execute(taskModel);
-                            log.info("Executed task {}", task.getTaskId());
+                            //log.info("Executed task {}, {} ms after picking up", task.getTaskId(), stopWatch.getTime(TimeUnit.MILLISECONDS));
+                            if (networkLatency > 0) {
+                                result.getOutputData().put("_pollNetworkLatency", networkLatency);
+                            }
                             updateTask(result);
                         } catch (Exception e) {
                             // todo: retry here...
                             log.error("Error executing task: {}", e.getMessage(), e);
+                        } finally {
+                            busyThreads.decrementAndGet();
                         }
                     });
         } catch (RejectedExecutionException ree) {
             // todo: retry here after some wait
             log.error(ree.getMessage(), ree);
+            busyThreads.decrementAndGet();      //tood: is this the right thing to do?
         }
     }
 
     @Override
     public void onError(Throwable t) {
         log.error("Error {}", t.getMessage());
+        busyThreads.set(0);
+
         Status status = Status.fromThrowable(t);
         Status.Code code = status.getCode();
         switch (code) {
@@ -112,16 +126,18 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
     }
 
     @Override
-    public void onCompleted() {}
+    public void onCompleted() {
+        busyThreads.set(0);
+    }
 
     public void updateTask(TaskResult taskResult) {
-        log.info("Updating task {}", taskResult.getTaskId());
+        //log.info("Updating task {}", taskResult.getTaskId());
         taskResult.getOutputData().put("_clientSendTime", System.currentTimeMillis());
         TaskServicePb.UpdateTaskRequest request =
                 TaskServicePb.UpdateTaskRequest.newBuilder()
                         .setResult(protoMapper.toProto(taskResult))
                         .build();
         asyncStub.updateTask(request, taskUpdateObserver);
-        log.info("Updated task {}", taskResult.getTaskId());
+        //log.info("Updated task {}", taskResult.getTaskId());
     }
 }

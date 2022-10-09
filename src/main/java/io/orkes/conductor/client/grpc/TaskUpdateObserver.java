@@ -23,7 +23,7 @@ public class TaskUpdateObserver implements StreamObserver<TaskServicePb.UpdateTa
 
     @Override
     public void onNext(TaskServicePb.UpdateTaskResponse response) {
-        log.info("Task update {} successful", response.getTaskId());
+        //log.info("Task update {} successful", response.getTaskId());
     }
 
     @Override
