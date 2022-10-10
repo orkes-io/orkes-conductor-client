@@ -14,6 +14,8 @@ package io.orkes.conductor.client.api;
 
 import java.util.List;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.events.EventHandler;
@@ -81,23 +83,31 @@ public class EventClientTests extends ClientTest {
                 });
         eventClient.putQueueConfig(queueConfiguration);
         String configurationResponse = eventClient.getQueueConfig(queueConfiguration);
-        assertTrue(configurationResponse.contains("consumer={bootstrap.servers=localhost:9092}"));
-        assertTrue(configurationResponse.contains("producer={bootstrap.servers=localhost:9092}"));
+        assertTrue(
+                configurationResponse.contains(
+                        "consumer={bootstrap.servers=localhost:9092, heartbeat.interval.ms=1000}"));
+        assertTrue(
+                configurationResponse.contains(
+                        "producer={batch.size=1024, bootstrap.servers=localhost:9092}"));
         eventClient.deleteQueueConfig(queueConfiguration);
     }
 
     QueueConfiguration getQueueConfiguration() throws Exception {
         return new KafkaConfiguration(KAFKA_QUEUE_TOPIC_NAME)
                 .withConsumer(getKafkaConsumer())
-                .withProducer(getKafkaConsumer());
+                .withProducer(getKafkaProducer());
     }
 
     QueueWorkerConfiguration getKafkaConsumer() throws Exception {
-        return new KafkaConsumer(KAFKA_BOOTSTRAP_SERVERS_CONFIG);
+        return new KafkaConsumer(KAFKA_BOOTSTRAP_SERVERS_CONFIG)
+                // 1 second, instead of default 2 seconds
+                .withConfiguration(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "1000");
     }
 
     QueueWorkerConfiguration getKafkaProducer() throws Exception {
-        return new KafkaProducer(KAFKA_BOOTSTRAP_SERVERS_CONFIG);
+        return new KafkaProducer(KAFKA_BOOTSTRAP_SERVERS_CONFIG)
+                // send messages in chunks of 1024 bytes, instead of default every new data
+                .withConfiguration(ProducerConfig.BATCH_SIZE_CONFIG, "1024");
     }
 
     EventHandler getEventHandler() {

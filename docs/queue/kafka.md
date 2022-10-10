@@ -17,15 +17,19 @@ private static final String KAFKA_BOOTSTRAP_SERVERS_CONFIG = "localhost:9092";
 QueueConfiguration getKafkaQueueConfiguration() throws Exception {
     return new KafkaConfiguration(KAFKA_QUEUE_TOPIC_NAME)
             .withConsumer(getKafkaConsumer())
-            .withProducer(getKafkaConsumer());
+            .withProducer(getKafkaProducer());
 }
 
 QueueWorkerConfiguration getKafkaConsumer() throws Exception {
-    return new KafkaConsumer(KAFKA_BOOTSTRAP_SERVERS_CONFIG);
+    return new KafkaConsumer(KAFKA_BOOTSTRAP_SERVERS_CONFIG)
+            // 1 second, instead of default 2 seconds
+            .withConfiguration(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "1000");
 }
 
 QueueWorkerConfiguration getKafkaProducer() throws Exception {
-    return new KafkaProducer(KAFKA_BOOTSTRAP_SERVERS_CONFIG);
+    return new KafkaProducer(KAFKA_BOOTSTRAP_SERVERS_CONFIG)
+            // send messages in chunks of 1024 bytes, instead of default every new data
+            .withConfiguration(ProducerConfig.BATCH_SIZE_CONFIG, "1024");
 }
 ```
 
