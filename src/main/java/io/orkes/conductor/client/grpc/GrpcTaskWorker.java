@@ -56,16 +56,11 @@ public class GrpcTaskWorker {
         this.asyncStub = asyncStub;
         this.threadCount = threadCount;
         this.busyThreads = new AtomicInteger(0);
-        this.executionQueue = new ArrayBlockingQueue<>(threadCount){
+        this.executionQueue = new ArrayBlockingQueue<>(threadCount) {};
 
-        };
         this.executor =
                 new ThreadPoolExecutor(
-                        threadCount,
-                        threadCount,
-                        1,
-                        TimeUnit.MINUTES,
-                        executionQueue);
+                        threadCount, threadCount, 1, TimeUnit.MINUTES, executionQueue);
     }
 
     public void init() {
@@ -84,8 +79,12 @@ public class GrpcTaskWorker {
                 return;
             }
             log.debug("Polling {} for {} tasks", worker.getTaskDefName(), pollCount);
-            TaskServicePb.BatchPollRequest request = buildPollRequest(pollCount, pollTimeoutInMills);
-            asyncStub.batchPoll(request, new TaskPollObserver(worker, executor, asyncStub, taskUpdateObserver, busyThreads));
+            TaskServicePb.BatchPollRequest request =
+                    buildPollRequest(pollCount, pollTimeoutInMills);
+            asyncStub.batchPoll(
+                    request,
+                    new TaskPollObserver(
+                            worker, executor, asyncStub, taskUpdateObserver, busyThreads));
         } catch (Throwable t) {
             log.error(t.getMessage(), t);
         }
@@ -108,8 +107,11 @@ public class GrpcTaskWorker {
 
         int busyCount = busyThreads.get();
         int pollCount = threadCount - busyCount;
-        log.info("poll count {}, busy threads = {}, execution queue size", pollCount, busyThreads.get());
-        if(pollCount < 1) {
+        log.info(
+                "poll count {}, busy threads = {}, execution queue size",
+                pollCount,
+                busyThreads.get());
+        if (pollCount < 1) {
             return 0;
         }
         return pollCount;
@@ -127,8 +129,6 @@ public class GrpcTaskWorker {
         AtomicInteger ai = new AtomicInteger(10);
         System.out.println(ai.get());
 
-
-
         int what = ai.getAndUpdate(operand -> 0);
         System.out.println(what);
         System.out.println(ai.get());
@@ -138,5 +138,4 @@ public class GrpcTaskWorker {
         System.out.println(what);
         System.out.println(ai.get());
     }
-
 }

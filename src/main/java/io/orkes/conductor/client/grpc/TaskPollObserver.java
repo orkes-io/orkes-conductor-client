@@ -13,10 +13,11 @@
 package io.orkes.conductor.client.grpc;
 
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.commons.lang3.time.StopWatch;
 
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -25,12 +26,10 @@ import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
 import com.netflix.conductor.proto.ProtoMappingHelper;
 import com.netflix.conductor.proto.TaskPb;
-import com.netflix.conductor.proto.TaskResultPb;
 
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
 
 @Slf4j
 public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
@@ -68,7 +67,10 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
             executor.execute(
                     () -> {
                         try {
-                            log.info("Executing task {}, {} ms after picking up", task.getTaskId(), stopWatch.getTime(TimeUnit.MILLISECONDS));
+                            log.info(
+                                    "Executing task {}, {} ms after picking up",
+                                    task.getTaskId(),
+                                    stopWatch.getTime(TimeUnit.MILLISECONDS));
                             Task taskModel = protoMapper.fromProto(task);
                             long networkLatency = -1;
 
@@ -79,10 +81,12 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
                                     networkLatency =
                                             System.currentTimeMillis() - serverSentTime.longValue();
                                 }
-                            } catch (Exception e) {}
+                            } catch (Exception e) {
+                            }
 
                             TaskResult result = worker.execute(taskModel);
-                            //log.info("Executed task {}, {} ms after picking up", task.getTaskId(), stopWatch.getTime(TimeUnit.MILLISECONDS));
+                            // log.info("Executed task {}, {} ms after picking up",
+                            // task.getTaskId(), stopWatch.getTime(TimeUnit.MILLISECONDS));
                             if (networkLatency > 0) {
                                 result.getOutputData().put("_pollNetworkLatency", networkLatency);
                             }
@@ -97,7 +101,7 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
         } catch (RejectedExecutionException ree) {
             // todo: retry here after some wait
             log.error(ree.getMessage(), ree);
-            busyThreads.decrementAndGet();      //tood: is this the right thing to do?
+            busyThreads.decrementAndGet(); // tood: is this the right thing to do?
         }
     }
 
@@ -131,13 +135,13 @@ public class TaskPollObserver implements StreamObserver<TaskPb.Task> {
     }
 
     public void updateTask(TaskResult taskResult) {
-        //log.info("Updating task {}", taskResult.getTaskId());
+        // log.info("Updating task {}", taskResult.getTaskId());
         taskResult.getOutputData().put("_clientSendTime", System.currentTimeMillis());
         TaskServicePb.UpdateTaskRequest request =
                 TaskServicePb.UpdateTaskRequest.newBuilder()
                         .setResult(protoMapper.toProto(taskResult))
                         .build();
         asyncStub.updateTask(request, taskUpdateObserver);
-        //log.info("Updated task {}", taskResult.getTaskId());
+        // log.info("Updated task {}", taskResult.getTaskId());
     }
 }
