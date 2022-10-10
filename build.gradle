@@ -60,7 +60,7 @@ dependencies {
 
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
-    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.29'
+    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.33'
 
     //Grpc dependencies
     //implementation "io.grpc:grpc-okhttp:${versions.ioGRPC}"
@@ -193,7 +193,7 @@ configurations.implementation {
 
 spotless {
     java {
-        googleJavaFormat().aosp()
+        googleJavaFormat().aosp().reflowLongStrings(false)
         removeUnusedImports()
         importOrder('java', 'javax', 'org', 'com.netflix', 'io.orkes','', '\\#com.netflix', '\\#')
         licenseHeaderFile("$rootDir/licenseheader.txt")

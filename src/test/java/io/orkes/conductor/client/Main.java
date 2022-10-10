@@ -25,7 +25,7 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-import io.orkes.conductor.client.grpc.GrpcWorkflowClient;
+import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
 import io.orkes.conductor.client.model.WorkflowRun;
 
 public class Main {
@@ -69,7 +69,7 @@ public class Main {
             }
             request.setInput(input);
             try {
-                CompletableFuture<WorkflowRun> future = client.executeWorkflow(request);
+                CompletableFuture<WorkflowRun> future = client.executeWorkflow(request, null);
                 future.thenAccept(
                                 workflowRun -> {
                                     System.out.println(

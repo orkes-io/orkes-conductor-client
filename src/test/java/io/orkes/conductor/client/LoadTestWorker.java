@@ -34,14 +34,6 @@ public class LoadTestWorker implements Worker {
         this.name = name;
     }
 
-    private static String generateRandomString() {
-
-        Random random = new Random();
-        int wordCount = Math.max(1, random.nextInt(5));
-        StringBuilder sb = new StringBuilder();
-        return sb.toString();
-    }
-
     @Override
     public String getTaskDefName() {
         return name;
@@ -71,10 +63,6 @@ public class LoadTestWorker implements Worker {
 
         result.addOutputData("scheduledTime", task.getScheduledTime());
         result.addOutputData("startTime", task.getStartTime());
-
-        for (int i = 0; i < resultCount; i++) {
-            result.getOutputData().put("key" + i, generateRandomString());
-        }
 
         return result;
     }

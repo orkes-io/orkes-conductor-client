@@ -27,7 +27,7 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
-import io.orkes.conductor.client.grpc.GrpcWorkflowClient;
+import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.model.WorkflowRun;
@@ -56,7 +56,7 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request) {
-        return grpcWorkflowClient.executeWorkflow(request);
+        return grpcWorkflowClient.executeWorkflow(request, null);
     }
 
     @Override
