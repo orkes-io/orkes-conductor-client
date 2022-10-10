@@ -13,6 +13,10 @@
 package io.orkes.conductor.client.http;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -26,8 +30,10 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.http.api.AsyncApiCallback;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
+import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
 
 import com.google.common.base.Preconditions;
@@ -38,15 +44,43 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     private final WorkflowBulkResourceApi bulkResourceApi;
 
+    private final ExecutorService executorService;
+
     public OrkesWorkflowClient(ApiClient apiClient) {
         super(apiClient);
         this.httpClient = new WorkflowResourceApi(apiClient);
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
+        this.executorService = Executors.newFixedThreadPool(apiClient.getExecutorThreads());
     }
 
     @Override
     public String startWorkflow(StartWorkflowRequest startWorkflowRequest) {
         return httpClient.startWorkflow(startWorkflowRequest);
+    }
+
+    @Override
+    public CompletableFuture<WorkflowRun> executeWorkflow(
+            StartWorkflowRequest startWorkflowRequest, String waitUntilTaskRef) {
+        CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
+        AsyncApiCallback<WorkflowRun> callback = new AsyncApiCallback<>(future);
+        String requestId = UUID.randomUUID().toString();
+        executorService.submit(
+                () -> {
+                    try {
+                        WorkflowRun response =
+                                httpClient.executeWorkflow(
+                                        startWorkflowRequest,
+                                        startWorkflowRequest.getName(),
+                                        startWorkflowRequest.getVersion(),
+                                        waitUntilTaskRef,
+                                        requestId);
+                        future.complete(response);
+                    } catch (Throwable t) {
+                        future.completeExceptionally(t);
+                    }
+                });
+
+        return future;
     }
 
     @Override
@@ -59,11 +93,6 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
             String name, String correlationId, boolean includeClosed, boolean includeTasks) {
         return httpClient.getWorkflowsByCorrelationId(
                 name, correlationId, includeClosed, includeTasks);
-    }
-
-    @Override
-    public void populateWorkflowOutput(Workflow workflow) {
-        throw new UnsupportedOperationException("External storage upload is not supported yet!");
     }
 
     @Override
@@ -191,5 +220,10 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     public WorkflowStatus getWorkflowStatusSummary(
             String workflowId, Boolean includeOutput, Boolean includeVariables) {
         return httpClient.getWorkflowStatusSummary(workflowId, includeOutput, includeVariables);
+    }
+
+    @Override
+    public void shutdown() {
+        this.executorService.shutdown();
     }
 }
