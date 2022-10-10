@@ -7,6 +7,7 @@
 1. [Setup package](#Setup-conductor-python-package)
 2. [Create and run task workers](docs/worker/README.md)
 3. [Create workflows using code](docs/workflow/README.md)
+4. [Create Kafka queue configuration using code](docs/queue/kafka.md)
 
 ### Setup package
 
