@@ -30,8 +30,8 @@ import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
-import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
+import io.orkes.conductor.common.model.WorkflowRun;
 
 import com.google.common.base.Preconditions;
 

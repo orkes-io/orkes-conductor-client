@@ -12,14 +12,18 @@
  */
 package io.orkes.conductor.client.grpc.workflow;
 
+import java.net.ConnectException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
+import io.grpc.stub.ClientCallStreamObserver;
+import io.grpc.stub.ClientResponseObserver;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.grpc.HeaderClientInterceptor;
-import io.orkes.conductor.client.model.WorkflowRun;
+import io.orkes.conductor.common.model.WorkflowRun;
 import io.orkes.conductor.proto.ProtoMappingHelper;
 import io.orkes.grpc.service.OrkesWorkflowService;
 import io.orkes.grpc.service.WorkflowServiceStreamGrpc;
@@ -36,17 +40,38 @@ public class GrpcWorkflowClient {
 
     private StreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream;
 
+    private final StartWorkflowResponseStream responseStream;
+
     private final ProtoMappingHelper protoMappingHelper = ProtoMappingHelper.INSTANCE;
 
+    private final WorkflowExecutionMonitor executionMonitor;
+
     public GrpcWorkflowClient(ApiClient apiClient) {
+        this.executionMonitor = new WorkflowExecutionMonitor();
         stub =
                 WorkflowServiceStreamGrpc.newStub(getChannel(apiClient))
                         .withInterceptors(new HeaderClientInterceptor(apiClient));
-        requestStream = stub.startWorkflow(new StartWorkflowResponseStream());
+        this.responseStream = new StartWorkflowResponseStream(executionMonitor);
+        requestStream = stub.startWorkflow(responseStream);
+
     }
 
-    public CompletableFuture<WorkflowRun> executeWorkflow(
-            StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
+    private boolean reConnect() {
+        try {
+            requestStream = stub.startWorkflow(responseStream);
+            return true;
+        } catch(Exception connectException) {
+            log.error("Server not ready {}", connectException.getMessage(), connectException);
+            return false;
+        }
+
+    }
+
+    public CompletableFuture<WorkflowRun> executeWorkflow( StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
+        if(!responseStream.isReady()) {
+            log.info("Reconnecting to the server...");
+            reConnect();
+        }
         String requestId = UUID.randomUUID().toString();
 
         OrkesWorkflowService.StartWorkflowRequest.Builder requestBuilder =
@@ -56,14 +81,10 @@ public class GrpcWorkflowClient {
             requestBuilder.setWaitUntilTask(waitUntilTask);
         }
         requestBuilder.setRequest(protoMappingHelper.toProto(startWorkflowRequest));
-
-        try {
+        CompletableFuture future = executionMonitor.monitorRequest(requestId);
+        synchronized (requestStream) {
             requestStream.onNext(requestBuilder.build());
-        } catch (Throwable t) {
-            log.error("Error starting a workflow {}", t.getMessage(), t);
         }
-
-        CompletableFuture future = new CompletableFuture<>();
         return future;
     }
 }

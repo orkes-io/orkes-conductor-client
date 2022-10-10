@@ -12,6 +12,16 @@
  */
 package io.orkes.conductor.client.grpc.workflow;
 
+import java.util.concurrent.CompletableFuture;
+
+import com.netflix.conductor.common.config.ObjectMapperProvider;
+
+import io.grpc.Context;
+import io.grpc.stub.ClientCallStreamObserver;
+import io.grpc.stub.ClientResponseObserver;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.common.model.WorkflowRun;
+import io.orkes.conductor.proto.WorkflowRunProtoMapper;
 import io.orkes.grpc.service.OrkesWorkflowService;
 
 import io.grpc.Status;
@@ -19,12 +29,46 @@ import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StartWorkflowResponseStream
-        implements StreamObserver<OrkesWorkflowService.StartWorkflowResponse> {
+public class StartWorkflowResponseStream  implements ClientResponseObserver<OrkesWorkflowService.StartWorkflowRequest, OrkesWorkflowService.StartWorkflowResponse> {
+
+    private final WorkflowExecutionMonitor executionMonitor;
+
+    private final WorkflowRunProtoMapper protoMapper;
+
+    private boolean ready;
+
+    public StartWorkflowResponseStream(WorkflowExecutionMonitor executionMonitor) {
+        this.executionMonitor = executionMonitor;
+        this.protoMapper = new WorkflowRunProtoMapper(new ObjectMapperProvider().getObjectMapper());
+        this.ready = false;
+    }
+
+
 
     @Override
     public void onNext(OrkesWorkflowService.StartWorkflowResponse response) {
-        log.info("Workflow completed {}", response);
+
+        log.debug("Workflow completed {}", response);
+        try {
+
+            CompletableFuture<WorkflowRun> future =
+                    this.executionMonitor.getFuture(response.getRequestId());
+            if (future == null) {
+                log.warn("No waiting client for the request {}", response.getRequestId());
+                return;
+            }
+            if (response.hasError()) {
+                String message = response.getError().getMessage();
+                int code = response.getError().getCode();
+                future.completeExceptionally(new ApiException(code, message));
+            } else {
+                WorkflowRun workflowRun = protoMapper.fromProto(response.getWorkflow());
+                future.complete(workflowRun);
+            }
+
+        } catch (Throwable t) {
+            log.error("Error while trying to notify the client {}", t.getMessage(), t);
+        }
     }
 
     @Override
@@ -36,6 +80,7 @@ public class StartWorkflowResponseStream
             case CANCELLED:
             case ABORTED:
                 // We should reconnect here
+                ready = false;
                 break;
             case INTERNAL:
             case UNKNOWN:
@@ -46,6 +91,21 @@ public class StartWorkflowResponseStream
         }
     }
 
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
     @Override
-    public void onCompleted() {}
+    public void onCompleted() {
+        log.info("Completed....");
+    }
+
+    @Override
+    public void beforeStart(ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream) {
+
+    }
 }

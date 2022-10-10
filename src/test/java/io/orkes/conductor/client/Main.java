@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -26,7 +27,8 @@ import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
-import io.orkes.conductor.client.model.WorkflowRun;
+import io.orkes.conductor.common.model.WorkflowRun;
+import org.testcontainers.shaded.com.google.common.util.concurrent.Uninterruptibles;
 
 public class Main {
 
@@ -57,7 +59,7 @@ public class Main {
         apiClient.setUseGRPC("localhost", 8090);
 
         GrpcWorkflowClient client = new GrpcWorkflowClient(apiClient);
-        int count = 1000;
+        int count = 10000;
         CountDownLatch latch = new CountDownLatch(count);
         long s = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -71,6 +73,7 @@ public class Main {
             request.setInput(input);
             try {
                 CompletableFuture<WorkflowRun> future = client.executeWorkflow(request, null);
+                System.out.println("Submitted a request ");
                 future.thenAccept(
                                 workflowRun -> {
                                     System.out.println(
@@ -90,6 +93,7 @@ public class Main {
                 t.printStackTrace();
                 System.out.println("Error " + t.getMessage());
             }
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
         }
         System.out.println(
                 "Time to to submit "

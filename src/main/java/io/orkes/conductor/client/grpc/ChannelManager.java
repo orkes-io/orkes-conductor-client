@@ -36,8 +36,8 @@ public abstract class ChannelManager {
                                 ChannelOption.CONNECT_TIMEOUT_MILLIS,
                                 (int) TimeUnit.SECONDS.toMillis(5000))
                         .maxRetryAttempts(3)
-                        .keepAliveTimeout(1, TimeUnit.MINUTES)
-                        .keepAliveTime(1, TimeUnit.MINUTES)
+                        .keepAliveTimeout(10, TimeUnit.MINUTES)
+                        .keepAliveTime(10, TimeUnit.MINUTES)
                         .defaultLoadBalancingPolicy("round_robin")
                         .disableServiceConfigLookUp();
 
