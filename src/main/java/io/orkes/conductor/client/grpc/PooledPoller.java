@@ -236,10 +236,12 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
 
     private void drain() {
         long didntGetMessageCount = lastAskedForMessageCount.get();
-        log.info("Didn't get {} messages", didntGetMessageCount);
-        for (int i = 0; i < didntGetMessageCount; i++) {
-            this.saveTask(TaskPb.Task.newBuilder().setTaskId("NO_OP").build());
-            semaphore.release();
+        if(didntGetMessageCount > 0) {
+            log.info("Didn't get {} messages from server as expected", didntGetMessageCount);
+            for (int i = 0; i < didntGetMessageCount; i++) {
+                this.saveTask(TaskPb.Task.newBuilder().setTaskId("NO_OP").build());
+                semaphore.release();
+            }
         }
         callAgain.set(true);
     }
