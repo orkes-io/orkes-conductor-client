@@ -15,7 +15,6 @@ package io.orkes.conductor.client.grpc;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -172,7 +171,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
         if (callAgain.get()) {
             callAgain.set(false);
             lastAskedForMessageCount.set(currentPending);
-            log.info("Accumulated {} for {}", currentPending, worker.getTaskDefName());
+            log.debug("Accumulated {} for {}", currentPending, worker.getTaskDefName());
             TaskServicePb.BatchPollRequest request = buildPollRequest(currentPending, 1);
             asyncStub.batchPoll(request, this);
         }
@@ -194,18 +193,16 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
     @Override
     public void onNext(TaskPb.Task task) {
         try {
-            this.saveTask(task);
+            saveTask(task);
             semaphore.release();
             lastAskedForMessageCount.decrementAndGet();
-        } catch (RejectedExecutionException ree) {
-            // todo: retry here after some wait
-            log.error(ree.getMessage(), ree);
+        } catch (Throwable t) {
+            log.error(t.getMessage(), t);
         }
     }
 
     @Override
     public void onError(Throwable t) {
-        log.error("Error {}", t.getMessage());
         Status status = Status.fromThrowable(t);
         Status.Code code = status.getCode();
         drain();
@@ -222,10 +219,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
             case DEADLINE_EXCEEDED:
                 break;
             default:
-                log.error(
-                        "Error from server when polling for the task {} - {}",
-                        worker.getTaskDefName(),
-                        code);
+                log.error("Error from server when polling for the task {} - {}", worker.getTaskDefName(), code);
         }
     }
 
@@ -237,7 +231,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
     private void drain() {
         long didntGetMessageCount = lastAskedForMessageCount.get();
         if (didntGetMessageCount > 0) {
-            log.info("Didn't get {} messages from server as expected", didntGetMessageCount);
+            log.debug("Didn't get {} messages from server as expected", didntGetMessageCount);
             for (int i = 0; i < didntGetMessageCount; i++) {
                 this.saveTask(TaskPb.Task.newBuilder().setTaskId("NO_OP").build());
                 semaphore.release();

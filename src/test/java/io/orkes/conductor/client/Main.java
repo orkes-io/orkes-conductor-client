@@ -20,6 +20,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.testcontainers.shaded.com.google.common.util.concurrent.Uninterruptibles;
+
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
@@ -28,7 +30,6 @@ import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
 import io.orkes.conductor.common.model.WorkflowRun;
-import org.testcontainers.shaded.com.google.common.util.concurrent.Uninterruptibles;
 
 public class Main {
 

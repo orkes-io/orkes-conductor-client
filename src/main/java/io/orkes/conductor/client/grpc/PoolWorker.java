@@ -56,7 +56,7 @@ public class PoolWorker {
             semaphore.acquireUninterruptibly();
             TaskPb.Task task = pooledPoller.getTask(threadId);
             if (task != null && !"NO_OP".equals(task.getTaskId())) {
-                log.info("Executing task {}", task.getTaskId());
+                log.debug("Executing task {}", task.getTaskId());
                 Task taskModel = protoMapper.fromProto(task);
                 try {
                     if (taskModel.getOutputData().containsKey("_severSendTime")) {
@@ -70,7 +70,7 @@ public class PoolWorker {
                     log.warn("Error", e);
                 }
                 TaskResult result = worker.execute(taskModel);
-                log.info("Executed task {}", task.getTaskId());
+                log.debug("Executed task {}", task.getTaskId());
                 updateTask(result);
             }
         } catch (Throwable e) {
@@ -80,13 +80,13 @@ public class PoolWorker {
     }
 
     public void updateTask(TaskResult taskResult) {
-        log.info("Updating task {}", taskResult.getTaskId());
+        log.debug("Updating task {}", taskResult.getTaskId());
         taskResult.getOutputData().put("_clientSendTime", System.currentTimeMillis());
         TaskServicePb.UpdateTaskRequest request =
                 TaskServicePb.UpdateTaskRequest.newBuilder()
                         .setResult(protoMapper.toProto(taskResult))
                         .build();
         asyncStub.updateTask(request, taskUpdateObserver);
-        log.info("Updated task {}", taskResult.getTaskId());
+        log.debug("Updated task {}", taskResult.getTaskId());
     }
 }

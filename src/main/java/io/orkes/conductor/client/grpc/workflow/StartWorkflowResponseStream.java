@@ -16,20 +16,21 @@ import java.util.concurrent.CompletableFuture;
 
 import com.netflix.conductor.common.config.ObjectMapperProvider;
 
-import io.grpc.Context;
-import io.grpc.stub.ClientCallStreamObserver;
-import io.grpc.stub.ClientResponseObserver;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.common.model.WorkflowRun;
 import io.orkes.conductor.proto.WorkflowRunProtoMapper;
 import io.orkes.grpc.service.OrkesWorkflowService;
 
 import io.grpc.Status;
-import io.grpc.stub.StreamObserver;
+import io.grpc.stub.ClientCallStreamObserver;
+import io.grpc.stub.ClientResponseObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StartWorkflowResponseStream  implements ClientResponseObserver<OrkesWorkflowService.StartWorkflowRequest, OrkesWorkflowService.StartWorkflowResponse> {
+public class StartWorkflowResponseStream
+        implements ClientResponseObserver<
+                OrkesWorkflowService.StartWorkflowRequest,
+                OrkesWorkflowService.StartWorkflowResponse> {
 
     private final WorkflowExecutionMonitor executionMonitor;
 
@@ -43,12 +44,9 @@ public class StartWorkflowResponseStream  implements ClientResponseObserver<Orke
         this.ready = false;
     }
 
-
-
     @Override
     public void onNext(OrkesWorkflowService.StartWorkflowResponse response) {
 
-        log.debug("Workflow completed {}", response);
         try {
 
             CompletableFuture<WorkflowRun> future =
@@ -105,7 +103,6 @@ public class StartWorkflowResponseStream  implements ClientResponseObserver<Orke
     }
 
     @Override
-    public void beforeStart(ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream) {
-
-    }
+    public void beforeStart(
+            ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream) {}
 }

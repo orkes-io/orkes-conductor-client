@@ -53,7 +53,6 @@ public class HeaderClientInterceptor implements ClientInterceptor {
                     if (apiClient.useSecurity()) {
                         headers.put(AUTH_HEADER, apiClient.getToken());
                     }
-                    log.info("client_id: {}", clientId);
                     headers.put(CLIENT_ID_HEADER, clientId);
                 } catch (Throwable t) {
                 }

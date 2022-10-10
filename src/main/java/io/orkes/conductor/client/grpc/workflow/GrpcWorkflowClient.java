@@ -12,15 +12,11 @@
  */
 package io.orkes.conductor.client.grpc.workflow;
 
-import java.net.ConnectException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
-import io.grpc.stub.ClientCallStreamObserver;
-import io.grpc.stub.ClientResponseObserver;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.grpc.HeaderClientInterceptor;
 import io.orkes.conductor.common.model.WorkflowRun;
@@ -53,22 +49,21 @@ public class GrpcWorkflowClient {
                         .withInterceptors(new HeaderClientInterceptor(apiClient));
         this.responseStream = new StartWorkflowResponseStream(executionMonitor);
         requestStream = stub.startWorkflow(responseStream);
-
     }
 
     private boolean reConnect() {
         try {
             requestStream = stub.startWorkflow(responseStream);
             return true;
-        } catch(Exception connectException) {
+        } catch (Exception connectException) {
             log.error("Server not ready {}", connectException.getMessage(), connectException);
             return false;
         }
-
     }
 
-    public CompletableFuture<WorkflowRun> executeWorkflow( StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
-        if(!responseStream.isReady()) {
+    public CompletableFuture<WorkflowRun> executeWorkflow(
+            StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
+        if (!responseStream.isReady()) {
             log.info("Reconnecting to the server...");
             reConnect();
         }

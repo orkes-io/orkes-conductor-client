@@ -61,9 +61,6 @@ public class GrpcTaskClient {
     }
 
     public void updateTask(TaskResult taskResult) {
-        stub.updateTask(
-                TaskServicePb.UpdateTaskRequest.newBuilder()
-                        .setResult(protoMapper.toProto(taskResult))
-                        .build());
+        stub.updateTask(TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build());
     }
 }

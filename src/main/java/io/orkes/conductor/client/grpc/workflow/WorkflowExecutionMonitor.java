@@ -27,7 +27,7 @@ public class WorkflowExecutionMonitor {
     public WorkflowExecutionMonitor() {
         this.pendingExecutions =
                 CacheBuilder.newBuilder()
-                        .expireAfterAccess(1, TimeUnit.HOURS)
+                        .expireAfterWrite(15, TimeUnit.MINUTES)
                         .concurrencyLevel(100)
                         .build();
     }
