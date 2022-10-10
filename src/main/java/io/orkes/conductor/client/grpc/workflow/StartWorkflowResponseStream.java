@@ -14,16 +14,37 @@ package io.orkes.conductor.client.grpc.workflow;
 
 import io.orkes.grpc.service.OrkesWorkflowService;
 
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class StartWorkflowResponseStream
         implements StreamObserver<OrkesWorkflowService.StartWorkflowResponse> {
 
     @Override
-    public void onNext(OrkesWorkflowService.StartWorkflowResponse value) {}
+    public void onNext(OrkesWorkflowService.StartWorkflowResponse response) {
+        log.info("Workflow completed {}", response);
+    }
 
     @Override
-    public void onError(Throwable t) {}
+    public void onError(Throwable t) {
+        Status status = Status.fromThrowable(t);
+        Status.Code code = status.getCode();
+        switch (code) {
+            case UNAVAILABLE:
+            case CANCELLED:
+            case ABORTED:
+                // We should reconnect here
+                break;
+            case INTERNAL:
+            case UNKNOWN:
+                log.error("Received an error from the server {}-{}", code, t.getMessage(), t);
+                break;
+            default:
+                log.warn("Server Error {} - {}", code, t.getMessage(), t);
+        }
+    }
 
     @Override
     public void onCompleted() {}

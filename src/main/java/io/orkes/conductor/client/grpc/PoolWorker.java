@@ -19,8 +19,9 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
-import com.netflix.conductor.proto.ProtoMappingHelper;
 import com.netflix.conductor.proto.TaskPb;
+
+import io.orkes.conductor.proto.ProtoMappingHelper;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -14,12 +14,15 @@ package io.orkes.conductor.client.grpc;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
 
 import io.orkes.conductor.client.ApiClient;
 
 import io.grpc.*;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class HeaderClientInterceptor implements ClientInterceptor {
 
     private static final Metadata.Key<String> AUTH_HEADER =
@@ -35,6 +38,7 @@ public class HeaderClientInterceptor implements ClientInterceptor {
     public HeaderClientInterceptor(ApiClient apiClient) {
         this.clientId = getIdentity();
         this.apiClient = apiClient;
+        log.info("Setting client id to {}", clientId);
     }
 
     @Override
@@ -49,6 +53,7 @@ public class HeaderClientInterceptor implements ClientInterceptor {
                     if (apiClient.useSecurity()) {
                         headers.put(AUTH_HEADER, apiClient.getToken());
                     }
+                    log.info("client_id: {}", clientId);
                     headers.put(CLIENT_ID_HEADER, clientId);
                 } catch (Throwable t) {
                 }
@@ -61,15 +66,17 @@ public class HeaderClientInterceptor implements ClientInterceptor {
     }
 
     private String getIdentity() {
-        String clientId;
-        try {
-            clientId = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            clientId = System.getenv("HOSTNAME");
+        String serverId = System.getenv("LOCAL_HOST_IP");
+        if (StringUtils.isBlank(serverId)) {
+            try {
+                serverId = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+            }
         }
-        if (clientId == null) {
-            clientId = UUID.randomUUID().toString();
+
+        if (StringUtils.isBlank(serverId)) {
+            serverId = System.getenv("HOSTNAME");
         }
-        return clientId;
+        return serverId;
     }
 }

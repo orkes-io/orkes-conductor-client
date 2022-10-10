@@ -47,13 +47,17 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ApiClient apiClient =
-                new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key, secret);
-        apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
-        apiClient.setUseSSL(true);
+        //        ApiClient apiClient =
+        //                new ApiClient("https://orkes-loadtest.orkesconductor.com/api", key,
+        // secret);
+        //        apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
+        //        apiClient.setUseSSL(true);
+
+        ApiClient apiClient = new ApiClient("http://localhost:8080/api");
+        apiClient.setUseGRPC("localhost", 8090);
 
         GrpcWorkflowClient client = new GrpcWorkflowClient(apiClient);
-        int count = 1;
+        int count = 1000;
         CountDownLatch latch = new CountDownLatch(count);
         long s = System.currentTimeMillis();
         for (int i = 0; i < count; i++) {
@@ -64,9 +68,6 @@ public class Main {
             StartWorkflowRequest request = new StartWorkflowRequest();
             request.setName("load_test");
             request.setVersion(1);
-            if (i == 2) {
-                // request.setVersion(10);
-            }
             request.setInput(input);
             try {
                 CompletableFuture<WorkflowRun> future = client.executeWorkflow(request, null);
@@ -80,11 +81,13 @@ public class Main {
                                 })
                         .exceptionally(
                                 error -> {
+                                    error.printStackTrace();
                                     System.out.println("Error " + error);
                                     latch.countDown();
                                     return null;
                                 });
             } catch (Throwable t) {
+                t.printStackTrace();
                 System.out.println("Error " + t.getMessage());
             }
         }

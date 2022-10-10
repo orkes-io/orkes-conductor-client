@@ -60,7 +60,7 @@ dependencies {
 
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
-    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.33'
+    implementation 'io.orkes.conductor:orkes-conductor-common-protos:0.0.40'
 
     //Grpc dependencies
     //implementation "io.grpc:grpc-okhttp:${versions.ioGRPC}"

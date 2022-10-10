@@ -20,6 +20,7 @@ import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.grpc.HeaderClientInterceptor;
 import io.orkes.conductor.client.model.WorkflowRun;
+import io.orkes.conductor.proto.ProtoMappingHelper;
 import io.orkes.grpc.service.OrkesWorkflowService;
 import io.orkes.grpc.service.WorkflowServiceStreamGrpc;
 
@@ -35,6 +36,8 @@ public class GrpcWorkflowClient {
 
     private StreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream;
 
+    private final ProtoMappingHelper protoMappingHelper = ProtoMappingHelper.INSTANCE;
+
     public GrpcWorkflowClient(ApiClient apiClient) {
         stub =
                 WorkflowServiceStreamGrpc.newStub(getChannel(apiClient))
@@ -45,16 +48,15 @@ public class GrpcWorkflowClient {
     public CompletableFuture<WorkflowRun> executeWorkflow(
             StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
         String requestId = UUID.randomUUID().toString();
-        startWorkflowRequest.getInput().put("_X-request-id", requestId);
 
         OrkesWorkflowService.StartWorkflowRequest.Builder requestBuilder =
                 OrkesWorkflowService.StartWorkflowRequest.newBuilder();
-        requestBuilder
-                .setRequestId(requestId)
-                .setIdempotencyKey(requestId)
-                .setMonitor(true)
-                .setWaitUntilTask(waitUntilTask)
-                .build();
+        requestBuilder.setRequestId(requestId).setIdempotencyKey(requestId).setMonitor(true);
+        if (waitUntilTask != null) {
+            requestBuilder.setWaitUntilTask(waitUntilTask);
+        }
+        requestBuilder.setRequest(protoMappingHelper.toProto(startWorkflowRequest));
+
         try {
             requestStream.onNext(requestBuilder.build());
         } catch (Throwable t) {
@@ -62,7 +64,6 @@ public class GrpcWorkflowClient {
         }
 
         CompletableFuture future = new CompletableFuture<>();
-        future.complete(new WorkflowRun());
         return future;
     }
 }
