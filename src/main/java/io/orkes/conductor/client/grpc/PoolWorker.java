@@ -12,9 +12,6 @@
  */
 package io.orkes.conductor.client.grpc;
 
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicLong;
-
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
@@ -22,8 +19,9 @@ import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
 import com.netflix.conductor.proto.ProtoMappingHelper;
 import com.netflix.conductor.proto.TaskPb;
-
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.Semaphore;
 
 @Slf4j
 public class PoolWorker {
@@ -52,9 +50,6 @@ public class PoolWorker {
     }
 
     public void run() {
-        // I am ready to run
-        // I ask the poller to get me a message
-        // Poller gives me message, I run
         try {
             semaphore.acquireUninterruptibly();
             TaskPb.Task task = pooledPoller.getTask(threadId);
@@ -77,12 +72,10 @@ public class PoolWorker {
                 updateTask(result);
             }
         } catch (Throwable e) {
-            // todo: retry here...
+            // TODO: retry here...
             log.error("Error executing task: {}", e.getMessage(), e);
         }
     }
-
-    public static AtomicLong maxExecutionTime = new AtomicLong(0);
 
     public void updateTask(TaskResult taskResult) {
         log.info("Updating task {}", taskResult.getTaskId());
@@ -92,13 +85,6 @@ public class PoolWorker {
                         .setResult(protoMapper.toProto(taskResult))
                         .build();
         asyncStub.updateTask(request, taskUpdateObserver);
-        long executionTimeLocally =
-                System.currentTimeMillis()
-                        - ((Number) taskResult.getOutputData().get("startTime")).longValue();
-        maxExecutionTime.set(Math.max(maxExecutionTime.get(), executionTimeLocally));
-        log.info(
-                "Updated task {} - max exec time - {} ms",
-                taskResult.getTaskId(),
-                executionTimeLocally);
+        log.info("Updated task {}", taskResult.getTaskId());
     }
 }
