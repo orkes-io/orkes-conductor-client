@@ -82,22 +82,15 @@ public class WorkflowClientTests extends ClientTest {
 
     @Test
     void testUnsupportedMethods() {
-        String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
-        Workflow workflow = workflowClient.getWorkflow(workflowId, false);
         assertThrows(
                 UnsupportedOperationException.class,
                 () -> {
-                    workflowClient.populateWorkflowOutput(workflow);
+                    workflowClient.resetCallbacksForInProgressTasks("");
                 });
         assertThrows(
                 UnsupportedOperationException.class,
                 () -> {
-                    workflowClient.resetCallbacksForInProgressTasks(workflowId);
-                });
-        assertThrows(
-                UnsupportedOperationException.class,
-                () -> {
-                    workflowClient.searchV2(Commons.WORKFLOW_NAME);
+                    workflowClient.searchV2("");
                 });
         assertThrows(
                 UnsupportedOperationException.class,

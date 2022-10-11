@@ -15,6 +15,10 @@ package io.orkes.conductor.client.http;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -32,9 +36,13 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
+
+import io.orkes.conductor.client.http.api.AsyncApiCallback;
 import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
+
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
+import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.common.model.WorkflowRun;
 
@@ -81,11 +89,6 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
             String name, String correlationId, boolean includeClosed, boolean includeTasks) {
         return httpClient.getWorkflowsByCorrelationId(
                 name, correlationId, includeClosed, includeTasks);
-    }
-
-    @Override
-    public void populateWorkflowOutput(Workflow workflow) {
-        throw new UnsupportedOperationException("External storage upload is not supported yet!");
     }
 
     @Override
@@ -213,5 +216,10 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     public WorkflowStatus getWorkflowStatusSummary(
             String workflowId, Boolean includeOutput, Boolean includeVariables) {
         return httpClient.getWorkflowStatusSummary(workflowId, includeOutput, includeVariables);
+    }
+
+    @Override
+    public void shutdown() {
+        this.executorService.shutdown();
     }
 }

@@ -10,26 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client;
-
-import java.util.List;
-
-import com.netflix.conductor.common.metadata.events.EventHandler;
+package io.orkes.conductor.client.model.event.kafka;
 
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 
-public interface EventClient {
-    void registerEventHandler(EventHandler eventHandler);
+public class KafkaConfiguration extends QueueConfiguration {
+    private static String QUEUE_NAME = "kafka";
 
-    void updateEventHandler(EventHandler eventHandler);
-
-    List<EventHandler> getEventHandlers(String event, boolean activeOnly);
-
-    void unregisterEventHandler(String name);
-
-    String getQueueConfig(QueueConfiguration queueConfiguration);
-
-    void deleteQueueConfig(QueueConfiguration queueConfiguration);
-
-    void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception;
+    public KafkaConfiguration(String queueTopicName) {
+        super(QUEUE_NAME, queueTopicName);
+    }
 }

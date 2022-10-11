@@ -210,6 +210,10 @@ public class ApiClient {
         return this;
     }
 
+    public void shutdown() {
+        this.httpClient.getDispatcher().getExecutorService().shutdown();
+    }
+
     /**
      * Get JSON
      *
@@ -256,6 +260,14 @@ public class ApiClient {
      */
     public boolean isVerifyingSsl() {
         return verifyingSsl;
+    }
+
+    public void setExecutorThreads(int executorThreads) {
+        this.executorThreads = executorThreads;
+    }
+
+    public int getExecutorThreads() {
+        return executorThreads;
     }
 
     /**
@@ -801,11 +813,13 @@ public class ApiClient {
             // File body parameter support.
             return RequestBody.create(MediaType.parse(contentType), (File) obj);
         } else if (isJsonMime(contentType)) {
-            String content;
+            String content = null;
             if (obj != null) {
-                content = json.serialize(obj);
-            } else {
-                content = null;
+                if (obj instanceof String) {
+                    content = (String) obj;
+                } else {
+                    content = json.serialize(obj);
+                }
             }
             return RequestBody.create(MediaType.parse(contentType), content);
         } else {
@@ -950,6 +964,50 @@ public class ApiClient {
             throw new ApiException(
                     response.message(), response.code(), response.headers().toMultimap(), respBody);
         }
+    }
+
+    /**
+     * {@link #executeAsync(Call, Type, ApiCallback)}
+     *
+     * @param <T> Type
+     * @param call An instance of the Call object
+     * @param callback ApiCallback&lt;T&gt;
+     */
+    public <T> void executeAsync(Call call, ApiCallback<T> callback) {
+        executeAsync(call, null, callback);
+    }
+
+    /**
+     * Execute HTTP call asynchronously.
+     *
+     * @see #execute(Call, Type)
+     * @param <T> Type
+     * @param call The callback to be executed when the API call finishes
+     * @param returnType Return type
+     * @param callback ApiCallback
+     */
+    @SuppressWarnings("unchecked")
+    public <T> void executeAsync(Call call, final Type returnType, final ApiCallback<T> callback) {
+        call.enqueue(
+                new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        callback.onFailure(new ApiException(e), 0, null);
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        T result;
+                        try {
+                            result = (T) handleResponse(response, returnType);
+                        } catch (ApiException e) {
+                            callback.onFailure(e, response.code(), response.headers().toMultimap());
+                            return;
+                        }
+                        callback.onSuccess(
+                                result, response.code(), response.headers().toMultimap());
+                    }
+                });
     }
 
     /**
