@@ -28,7 +28,6 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 public class Main {
@@ -58,8 +57,8 @@ public class Main {
 
         ApiClient apiClient = new ApiClient("http://localhost:8080/api", "0c0b8252-7c69-456c-a02a-66454e0c71a8", "rPJZV24o8BnbMHMAATsC9NaYQhs7ZkBljimicK5n79BD5Tvq");
         apiClient.setUseGRPC("localhost", 8090);
-
-        GrpcWorkflowClient client = new GrpcWorkflowClient(apiClient);
+        OrkesClients orkesClients = new OrkesClients(apiClient);
+        WorkflowClient client = orkesClients.getWorkflowClient();
         int count = 10000;
         CountDownLatch latch = new CountDownLatch(count);
         long s = System.currentTimeMillis();

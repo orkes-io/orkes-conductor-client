@@ -17,7 +17,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.ApiClient;
@@ -27,6 +26,7 @@ import io.orkes.conductor.proto.ProtoMappingHelper;
 import io.orkes.grpc.service.OrkesWorkflowService;
 import io.orkes.grpc.service.WorkflowServiceStreamGrpc;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;

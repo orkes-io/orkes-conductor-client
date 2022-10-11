@@ -43,7 +43,7 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient {
     @Override
     public Task pollTask(String taskType, String workerId, String domain) {
         List<Task> tasks = batchPollTasksInDomain(taskType, domain, workerId, 1, 100);
-        if (tasks == null) {
+        if (tasks == null || tasks.isEmpty()) {
             return null;
         }
         return tasks.get(0);
