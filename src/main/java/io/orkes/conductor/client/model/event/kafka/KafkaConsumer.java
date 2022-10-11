@@ -17,8 +17,11 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import io.orkes.conductor.client.model.event.QueueWorkerConfiguration;
 
 public class KafkaConsumer extends QueueWorkerConfiguration {
+    private static final String MAX_POLL_RECORDS_CONFIG = "1000";
+
     public KafkaConsumer(String bootstrapServersConfig) throws Exception {
         super(ConsumerConfig.configNames());
         withConfiguration(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServersConfig);
+        withConfiguration(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, MAX_POLL_RECORDS_CONFIG);
     }
 }
