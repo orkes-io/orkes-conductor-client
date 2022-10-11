@@ -12,6 +12,7 @@
  */
 package io.orkes.conductor.client.grpc;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import io.orkes.conductor.client.ApiClient;
@@ -39,6 +40,7 @@ public abstract class ChannelManager {
                         .keepAliveTimeout(10, TimeUnit.MINUTES)
                         .keepAliveTime(10, TimeUnit.MINUTES)
                         .defaultLoadBalancingPolicy("round_robin")
+                        .executor(Executors.newFixedThreadPool(apiClient.getExecutorThreadCount()))
                         .disableServiceConfigLookUp();
 
         if (!useSSL) {

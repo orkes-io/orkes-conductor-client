@@ -12,8 +12,13 @@
  */
 package io.orkes.conductor.client.http;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -55,8 +60,21 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
         return httpClient.startWorkflow(startWorkflowRequest);
     }
 
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request) {
-        return grpcWorkflowClient.executeWorkflow(request, null);
+    @Override
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask) {
+        return grpcWorkflowClient.executeWorkflow(request, waitUntilTask);
+    }
+
+    @Override
+    public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) {
+        CompletableFuture<WorkflowRun> future = grpcWorkflowClient.executeWorkflow(request, waitUntilTask);
+        try {
+            return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | TimeoutException exception) {
+            return null;
+        } catch (ExecutionException exceptionException) {
+            return null;
+        }
     }
 
     @Override

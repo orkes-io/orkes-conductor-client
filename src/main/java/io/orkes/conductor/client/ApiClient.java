@@ -96,6 +96,8 @@ public class ApiClient {
 
     private boolean useGRPC;
 
+    private int executorThreadCount = 50;
+
     /*
      * Constructor for ApiClient
      */
@@ -178,6 +180,14 @@ public class ApiClient {
      */
     public String getBasePath() {
         return basePath;
+    }
+
+    public int getExecutorThreadCount() {
+        return executorThreadCount;
+    }
+
+    public void setExecutorThreadCount(int executorThreadCount) {
+        this.executorThreadCount = executorThreadCount;
     }
 
     /**

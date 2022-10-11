@@ -14,6 +14,8 @@ package io.orkes.conductor.client.grpc.workflow;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
@@ -24,6 +26,8 @@ import io.orkes.conductor.proto.ProtoMappingHelper;
 import io.orkes.grpc.service.OrkesWorkflowService;
 import io.orkes.grpc.service.WorkflowServiceStreamGrpc;
 
+import io.grpc.ConnectivityState;
+import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,11 +48,32 @@ public class GrpcWorkflowClient {
 
     public GrpcWorkflowClient(ApiClient apiClient) {
         this.executionMonitor = new WorkflowExecutionMonitor();
+        ManagedChannel channel = getChannel(apiClient);
         stub =
-                WorkflowServiceStreamGrpc.newStub(getChannel(apiClient))
+                WorkflowServiceStreamGrpc.newStub(channel)
                         .withInterceptors(new HeaderClientInterceptor(apiClient));
         this.responseStream = new StartWorkflowResponseStream(executionMonitor);
         requestStream = stub.startWorkflow(responseStream);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(()-> monitorChannel(channel), 1, 1, TimeUnit.SECONDS);
+    }
+
+    private void monitorChannel(ManagedChannel channel) {
+        ConnectivityState state = channel.getState(false);
+        switch (state) {
+            case READY:
+                if(!responseStream.isReady()) {
+                    log.info("Connection State {}", state);
+                }
+                responseStream.setReady(true);
+                break;
+            case SHUTDOWN:
+            case CONNECTING:
+            case TRANSIENT_FAILURE:
+                log.info("Connection state {}", state);
+                responseStream.setReady(false);
+                channel.resetConnectBackoff();
+                reConnect();
+        }
     }
 
     private boolean reConnect() {
@@ -65,7 +90,10 @@ public class GrpcWorkflowClient {
             StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
         if (!responseStream.isReady()) {
             log.info("Reconnecting to the server...");
-            reConnect();
+            if(!reConnect()) {
+                log.error("server not ready yet....");
+                throw new RuntimeException("Server not responding");
+            }
         }
         String requestId = UUID.randomUUID().toString();
 

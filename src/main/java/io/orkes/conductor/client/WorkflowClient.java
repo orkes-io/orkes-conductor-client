@@ -12,6 +12,7 @@
  */
 package io.orkes.conductor.client;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -28,7 +29,9 @@ import io.orkes.conductor.common.model.WorkflowRun;
 public interface WorkflowClient {
     String startWorkflow(StartWorkflowRequest startWorkflowRequest);
 
-    CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request);
+    CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask);
+
+    WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout);
 
     Workflow getWorkflow(String workflowId, boolean includeTasks);
 

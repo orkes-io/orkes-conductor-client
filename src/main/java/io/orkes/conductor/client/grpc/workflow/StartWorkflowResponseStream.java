@@ -27,10 +27,7 @@ import io.grpc.stub.ClientResponseObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StartWorkflowResponseStream
-        implements ClientResponseObserver<
-                OrkesWorkflowService.StartWorkflowRequest,
-                OrkesWorkflowService.StartWorkflowResponse> {
+public class StartWorkflowResponseStream  implements ClientResponseObserver<OrkesWorkflowService.StartWorkflowRequest, OrkesWorkflowService.StartWorkflowResponse> {
 
     private final WorkflowExecutionMonitor executionMonitor;
 
@@ -41,7 +38,7 @@ public class StartWorkflowResponseStream
     public StartWorkflowResponseStream(WorkflowExecutionMonitor executionMonitor) {
         this.executionMonitor = executionMonitor;
         this.protoMapper = new WorkflowRunProtoMapper(new ObjectMapperProvider().getObjectMapper());
-        this.ready = false;
+        this.ready = true;
     }
 
     @Override
@@ -75,7 +72,6 @@ public class StartWorkflowResponseStream
         Status.Code code = status.getCode();
         switch (code) {
             case UNAVAILABLE:
-            case CANCELLED:
             case ABORTED:
                 // We should reconnect here
                 ready = false;
@@ -84,6 +80,8 @@ public class StartWorkflowResponseStream
             case UNKNOWN:
                 log.error("Received an error from the server {}-{}", code, t.getMessage(), t);
                 break;
+            case CANCELLED:
+                log.info("Server cancelled");       //TODO: move this to trace
             default:
                 log.warn("Server Error {} - {}", code, t.getMessage(), t);
         }
@@ -103,6 +101,7 @@ public class StartWorkflowResponseStream
     }
 
     @Override
-    public void beforeStart(
-            ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream) {}
+    public void beforeStart(ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream) {
+
+    }
 }
