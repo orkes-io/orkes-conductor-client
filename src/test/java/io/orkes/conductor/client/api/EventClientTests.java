@@ -85,7 +85,7 @@ public class EventClientTests extends ClientTest {
         String configurationResponse = eventClient.getQueueConfig(queueConfiguration);
         assertTrue(
                 configurationResponse.contains(
-                        "consumer={bootstrap.servers=localhost:9092, heartbeat.interval.ms=1000}"));
+                        "consumer={max.poll.records=1000, bootstrap.servers=localhost:9092, heartbeat.interval.ms=1000}"));
         assertTrue(
                 configurationResponse.contains(
                         "producer={batch.size=1024, bootstrap.servers=localhost:9092}"));
