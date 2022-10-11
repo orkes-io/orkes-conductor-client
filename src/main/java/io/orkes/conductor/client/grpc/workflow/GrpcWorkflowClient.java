@@ -72,8 +72,6 @@ public class GrpcWorkflowClient {
             case SHUTDOWN:
             case CONNECTING:
             case TRANSIENT_FAILURE:
-                log.info("Connection state {}", state);
-                reConnect();
                 break;
             default:
                 log.info("Channel state: {}", state);

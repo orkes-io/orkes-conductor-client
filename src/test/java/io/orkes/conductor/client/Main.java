@@ -32,8 +32,8 @@ import io.orkes.conductor.common.model.WorkflowRun;
 
 public class Main {
 
-    static String key = "f55005c1-9110-464b-b4e6-ad53bedcad79";
-    static String secret = "mxukrZPTncrLahBD7yqmYLt2cNTAJi1Y683UKu79KgmynXux";
+    static String key = "f7915af8-fc14-4b52-afa1-afbcd8b0fa26";
+    static String secret = "CQm0skOrxtdNhZjCyS364xols5y4lxYAqW4BMCCSlIO32GxX";
 
     public static void mainxx(String[] args) {
         ApiClient client = new ApiClient("http://localhost:8080/api");
@@ -93,7 +93,7 @@ public class Main {
                 t.printStackTrace();
                 System.out.println("Error " + t.getMessage());
             }
-            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.MILLISECONDS);
         }
         System.out.println(
                 "Time to to submit "
