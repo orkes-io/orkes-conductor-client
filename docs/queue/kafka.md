@@ -28,10 +28,12 @@ QueueWorkerConfiguration getKafkaConsumer() throws Exception {
 
 QueueWorkerConfiguration getKafkaProducer() throws Exception {
     return new KafkaProducer(KAFKA_BOOTSTRAP_SERVERS_CONFIG)
-            // send messages in chunks of 1024 bytes, instead of default every new data
-            .withConfiguration(ProducerConfig.BATCH_SIZE_CONFIG, "1024");
+            // send messages in chunks of 16kb, instead of default every new data
+            .withConfiguration(ProducerConfig.BATCH_SIZE_CONFIG, "16384");
 }
 ```
+
+**Before sending this configuration to the Conductor server, don't forget to create a topic with the same name at your Kafka cluster before proceeding into next steps.** Here's a little handy reference to help you [quickstart](https://kafka.apache.org/quickstart#quickstart_createtopic).
 
 Now, the Conductor server must receive this brand new configuration:
 
