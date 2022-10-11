@@ -17,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.ApiClient;
@@ -72,7 +73,7 @@ public class GrpcWorkflowClient {
             case CONNECTING:
             case TRANSIENT_FAILURE:
                 log.info("Connection state {}", state);
-                //reConnect();
+                reConnect();
                 break;
             default:
                 log.info("Channel state: {}", state);
@@ -82,6 +83,7 @@ public class GrpcWorkflowClient {
     private boolean reConnect() {
         try {
             requestStream = stub.startWorkflow(this.responseStream);
+            Uninterruptibles.sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
             return true;
         } catch (Exception connectException) {
             log.error("Server not ready {}", connectException.getMessage(), connectException);
