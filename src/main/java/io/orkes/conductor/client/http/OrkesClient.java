@@ -36,4 +36,8 @@ public abstract class OrkesClient {
         apiClient.setConnectTimeout(connectTimeout);
         return this;
     }
+
+    public ApiClient getApiClient() {
+        return apiClient;
+    }
 }

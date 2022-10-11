@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -37,6 +38,7 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.LocalDate;
@@ -51,14 +53,20 @@ import io.orkes.conductor.client.http.auth.HttpBasicAuth;
 import io.orkes.conductor.client.http.auth.OAuth;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.*;
 import com.squareup.okhttp.internal.http.HttpMethod;
+import lombok.SneakyThrows;
 import okio.BufferedSink;
 import okio.Okio;
 
 public class ApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
+
+    private static final String TOKEN_CACHE_KEY = "TOKEN";
+    private final Cache<String, String> tokenCache;
 
     private final String basePath;
     private final Map<String, String> defaultHeaderMap = new HashMap<String, String>();
@@ -66,8 +74,6 @@ public class ApiClient {
     private String tempFolderPath;
 
     private Map<String, Authentication> authentications;
-
-    private DateFormat dateFormat;
 
     private InputStream sslCaCert;
     private boolean verifyingSsl;
@@ -79,13 +85,18 @@ public class ApiClient {
     private String keyId;
     private String keySecret;
 
-    private String token;
-
     private SecretsManager secretsManager;
     private String ssmKeyPath;
     private String ssmSecretPath;
 
-    private int executorThreads = 10;
+    private String grpcHost = "localhost";
+    private int grpcPort = 8090;
+
+    private boolean useSSL;
+
+    private boolean useGRPC;
+
+    private int executorThreadCount = 0;
 
     /*
      * Constructor for ApiClient
@@ -96,8 +107,10 @@ public class ApiClient {
     }
 
     public ApiClient(String basePath) {
+        this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
         this.basePath = basePath;
         httpClient = new OkHttpClient();
+        httpClient.setRetryOnConnectionFailure(true);
         verifyingSsl = true;
         json = new JSON();
         GsonBuilder builder = new GsonBuilder().serializeNulls();
@@ -112,9 +125,9 @@ public class ApiClient {
         this.ssmKeyPath = keyPath;
         this.ssmSecretPath = secretPath;
         try {
-            this.refreshToken();
-        } catch (Exception e) {
-            LOGGER.warn("Failed to set authentication token. Reason: " + e.getMessage());
+            getToken();
+        } catch (Throwable t) {
+            LOGGER.error(t.getMessage(), t);
         }
     }
 
@@ -123,15 +136,41 @@ public class ApiClient {
         this.keyId = keyId;
         this.keySecret = keySecret;
         try {
-            this.refreshToken();
-        } catch (Exception e) {
-            LOGGER.warn("Failed to set authentication token. Reason: " + e.getMessage());
+            getToken();
+        } catch (Throwable t) {
+            LOGGER.error(t.getMessage(), t);
         }
     }
 
     public ApiClient(String basePath, String token) {
         this(basePath);
-        this.setToken(token);
+    }
+
+    public boolean useSecurity() {
+        return StringUtils.isNotBlank(keyId) && StringUtils.isNotBlank(keySecret);
+    }
+
+    public boolean isUseGRPC() {
+        return useGRPC;
+    }
+
+    public void setUseGRPC(String host, int port) {
+        this.grpcHost = host;
+        this.grpcPort = port;
+        this.useGRPC = true;
+    }
+
+    public boolean useSSL() {
+        return useSSL;
+    }
+
+    /**
+     * Used for GRPC
+     *
+     * @param useSSL set f using SSL connection for gRPC
+     */
+    public void setUseSSL(boolean useSSL) {
+        this.useSSL = useSSL;
     }
 
     /**
@@ -141,6 +180,14 @@ public class ApiClient {
      */
     public String getBasePath() {
         return basePath;
+    }
+
+    public int getExecutorThreadCount() {
+        return executorThreadCount;
+    }
+
+    public void setExecutorThreadCount(int executorThreadCount) {
+        this.executorThreadCount = executorThreadCount;
     }
 
     /**
@@ -187,6 +234,25 @@ public class ApiClient {
         return this;
     }
 
+    public int getGrpcPort() {
+        return grpcPort;
+    }
+
+    public String getGrpcHost() {
+        return grpcHost;
+    }
+
+    public void setGrpcPort(int grpcPort) {
+        this.grpcPort = grpcPort;
+    }
+
+    public String getHost() {
+        try {
+            return new URL(basePath).getHost();
+        } catch (Exception e) {
+            return null;
+        }
+    }
     /**
      * True if isVerifyingSsl flag is on
      *
@@ -255,10 +321,6 @@ public class ApiClient {
         this.keyManagers = managers;
         applySslSettings();
         return this;
-    }
-
-    public DateFormat getDateFormat() {
-        return dateFormat;
     }
 
     public ApiClient setDateFormat(DateFormat dateFormat) {
@@ -1285,36 +1347,32 @@ public class ApiClient {
         }
     }
 
-    public synchronized String getToken() {
-        return this.token;
+    @SneakyThrows
+    public String getToken() {
+        return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
     }
 
-    synchronized void refreshToken() throws Exception {
-        if (this.getToken() != null) {
-            return;
-        }
+    private String refreshToken() {
+        System.out.println("Refreshing API Token");
+
         if (secretsManager != null) {
             keyId = secretsManager.getSecret(this.ssmKeyPath);
             keySecret = secretsManager.getSecret(this.ssmSecretPath);
         }
         if (this.keyId == null || this.keySecret == null) {
-            throw new Exception(
+            throw new RuntimeException(
                     "KeyId and KeySecret must be set in order to get an authentication token");
         }
         GenerateTokenRequest generateTokenRequest =
                 new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
         Map<String, String> response =
                 TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
-        final String token = response.get("token");
-        this.setToken(token);
-    }
-
-    synchronized void setToken(String token) {
-        this.token = token;
+        String token = response.get("token");
         this.setApiKeyHeader(token);
+        return token;
     }
 
-    synchronized void setApiKeyHeader(String token) {
+    private synchronized void setApiKeyHeader(String token) {
         ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
         apiKeyAuth.setApiKey(token);
         authentications.put("api_key", apiKeyAuth);

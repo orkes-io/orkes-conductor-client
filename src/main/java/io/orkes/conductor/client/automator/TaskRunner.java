@@ -41,6 +41,7 @@ import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.http.ApiException;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.util.concurrent.Uninterruptibles;
 
 class TaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunner.class);
@@ -54,11 +55,14 @@ class TaskRunner {
     private final int threadCount;
     private final int taskPollTimeout;
 
-    private static final String DOMAIN = "domain";
+    public static final String DOMAIN = "domain";
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
-    private static final String ALL_WORKERS = "all";
+    public static final String ALL_WORKERS = "all";
+
+    private final Worker worker;
 
     TaskRunner(
+            Worker worker,
             EurekaClient eurekaClient,
             TaskClient taskClient,
             ConductorClientConfiguration conductorClientConfiguration,
@@ -67,6 +71,7 @@ class TaskRunner {
             String workerNamePrefix,
             int threadCount,
             int taskPollTimeout) {
+        this.worker = worker;
         this.eurekaClient = eurekaClient;
         this.taskClient = taskClient;
         this.updateRetryCount = updateRetryCount;
@@ -89,9 +94,33 @@ class TaskRunner {
                 workerNamePrefix);
     }
 
-    public void poll(Worker worker) {
-        pollTasksForWorker(worker)
-                .forEach(task -> this.executorService.submit(() -> this.processTask(task, worker)));
+    public void pollAndExecute() {
+        Stopwatch stopwatch = null;
+        while (true) {
+            try {
+                List<Task> tasks = pollTasksForWorker(worker);
+                if (tasks.isEmpty()) {
+                    if (stopwatch == null) {
+                        stopwatch = Stopwatch.createStarted();
+                    }
+                    Uninterruptibles.sleepUninterruptibly(
+                            worker.getPollingInterval(), TimeUnit.MILLISECONDS);
+                    continue;
+                }
+                if (stopwatch != null) {
+                    stopwatch.stop();
+                    LOGGER.info(
+                            "Poller for task {} waited for {} ms before getting {} tasks to execute",
+                            worker.getTaskDefName(),
+                            stopwatch.elapsed(TimeUnit.MILLISECONDS),
+                            tasks.size());
+                    stopwatch = null;
+                }
+                tasks.forEach(task -> this.executorService.submit(() -> this.processTask(task)));
+            } catch (Throwable t) {
+                LOGGER.error(t.getMessage(), t);
+            }
+        }
     }
 
     public void shutdown(int timeout) {
@@ -143,6 +172,8 @@ class TaskRunner {
                                                                     ALL_WORKERS, DOMAIN, null))
                                                     .orElse(taskToDomain.get(taskType)));
             LOGGER.trace("Polling task of type: {} in domain: '{}'", taskType, domain);
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            long now = System.currentTimeMillis();
             List<Task> polledTasks =
                     MetricsContainer.getPollTimer(taskType)
                             .record(
@@ -152,6 +183,12 @@ class TaskRunner {
                                                     worker.getIdentity(),
                                                     domain,
                                                     this.getAvailableWorkers()));
+            stopwatch.stop();
+            LOGGER.debug(
+                    "Time taken to poll {} task with a batch size of {} is {} ms",
+                    taskType,
+                    polledTasks.size(),
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS));
             for (Task task : polledTasks) {
                 if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
                     LOGGER.trace(
@@ -160,6 +197,10 @@ class TaskRunner {
                             taskType,
                             domain,
                             worker.getIdentity());
+                    LOGGER.info(
+                            "Task {} stayed in the queue for {} ms",
+                            taskType,
+                            (now - task.getScheduledTime()));
                     tasks.add(task);
                 }
             }
@@ -195,7 +236,7 @@ class TaskRunner {
                 LOGGER.error("Uncaught exception. Thread {} will exit now", thread, error);
             };
 
-    private void processTask(Task task, Worker worker) {
+    private void processTask(Task task) {
         LOGGER.trace(
                 "Executing task: {} of type: {} in worker: {} at {}",
                 task.getTaskId(),
@@ -203,7 +244,13 @@ class TaskRunner {
                 worker.getClass().getSimpleName(),
                 worker.getIdentity());
         try {
+            Stopwatch stopwatch = Stopwatch.createStarted();
             executeTask(worker, task);
+            stopwatch.stop();
+            LOGGER.info(
+                    "Took {} ms to execute and update task with id {}",
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS),
+                    task.getTaskId());
         } catch (Throwable t) {
             task.setStatus(Task.Status.FAILED);
             TaskResult result = new TaskResult(task);
@@ -251,7 +298,13 @@ class TaskRunner {
                 worker.getClass().getSimpleName(),
                 worker.getIdentity(),
                 result.getStatus());
+        Stopwatch updateStopWatch = Stopwatch.createStarted();
         updateTaskResult(updateRetryCount, task, result, worker);
+        updateStopWatch.stop();
+        LOGGER.info(
+                "Time taken to update the {} {} ms",
+                task.getTaskType(),
+                updateStopWatch.elapsed(TimeUnit.MILLISECONDS));
     }
 
     private void updateTaskResult(int count, Task task, TaskResult result, Worker worker) {

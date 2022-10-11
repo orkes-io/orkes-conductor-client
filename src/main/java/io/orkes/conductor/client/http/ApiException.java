@@ -15,6 +15,8 @@ package io.orkes.conductor.client.http;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.orkes.conductor.client.OrkesClientException;
 
 public class ApiException extends OrkesClientException {
@@ -113,6 +115,8 @@ public class ApiException extends OrkesClientException {
 
     @Override
     public String getMessage() {
-        return getCode() + ":" + responseBody != null ? responseBody : super.getMessage();
+        return getCode()
+                + ":"
+                + (StringUtils.isBlank(responseBody) ? super.getMessage() : responseBody);
     }
 }

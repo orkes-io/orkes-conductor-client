@@ -12,11 +12,17 @@
  */
 package io.orkes.conductor.client.http;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -30,11 +36,15 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
+
 import io.orkes.conductor.client.http.api.AsyncApiCallback;
+import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
+
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
+import io.orkes.conductor.common.model.WorkflowRun;
 
 import com.google.common.base.Preconditions;
 
@@ -44,13 +54,13 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     private final WorkflowBulkResourceApi bulkResourceApi;
 
-    private final ExecutorService executorService;
+    private final GrpcWorkflowClient grpcWorkflowClient;
 
     public OrkesWorkflowClient(ApiClient apiClient) {
         super(apiClient);
         this.httpClient = new WorkflowResourceApi(apiClient);
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
-        this.executorService = Executors.newFixedThreadPool(apiClient.getExecutorThreads());
+        this.grpcWorkflowClient = new GrpcWorkflowClient(apiClient);
     }
 
     @Override
@@ -59,28 +69,14 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public CompletableFuture<WorkflowRun> executeWorkflow(
-            StartWorkflowRequest startWorkflowRequest, String waitUntilTaskRef) {
-        CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
-        AsyncApiCallback<WorkflowRun> callback = new AsyncApiCallback<>(future);
-        String requestId = UUID.randomUUID().toString();
-        executorService.submit(
-                () -> {
-                    try {
-                        WorkflowRun response =
-                                httpClient.executeWorkflow(
-                                        startWorkflowRequest,
-                                        startWorkflowRequest.getName(),
-                                        startWorkflowRequest.getVersion(),
-                                        waitUntilTaskRef,
-                                        requestId);
-                        future.complete(response);
-                    } catch (Throwable t) {
-                        future.completeExceptionally(t);
-                    }
-                });
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask) {
+        return grpcWorkflowClient.executeWorkflow(request, waitUntilTask);
+    }
 
-        return future;
+    @Override
+    public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<WorkflowRun> future = executeWorkflow(request, waitUntilTask);
+        return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
     }
 
     @Override

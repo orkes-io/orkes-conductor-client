@@ -12,8 +12,11 @@
  */
 package io.orkes.conductor.client;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
@@ -24,6 +27,7 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
+import io.orkes.conductor.common.model.WorkflowRun;
 
 public interface WorkflowClient {
     /**
@@ -46,6 +50,9 @@ public interface WorkflowClient {
      */
     CompletableFuture<WorkflowRun> executeWorkflow(
             StartWorkflowRequest startWorkflowRequest, String waitUntilTaskRef);
+
+    WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException;
+
 
     /**
      * Get the workflow execution
