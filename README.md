@@ -30,4 +30,4 @@ See [Access Control](https://orkes.io/content/docs/getting-started/concepts/acce
 ApiClient apiClient = new ApiClient("https://play.orkes.io/api", "key", "secret");
 ```
 
-### Next: [Create and run Task Workers](docs/worker/README.md)
+### Next: [Create and run task workers](docs/worker/README.md)

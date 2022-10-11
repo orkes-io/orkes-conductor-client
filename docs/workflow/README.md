@@ -13,7 +13,4 @@ You can find more examples at the following GitHub repository:
 
 https://github.com/Netflix/conductor/tree/main/java-sdk/example/java/com/netflix/conductor/sdk/example/shipment
 
-### Workflow Management APIs
-<!-- TODO -->
-<!-- Generate javadocs and add workflowExecutor link here -->
-See Docs for APIs to start, pause, resume, terminate, search and get workflow execution status.
+### Next: [Create Kafka queue configuration using code](../queue/kafka.md)
