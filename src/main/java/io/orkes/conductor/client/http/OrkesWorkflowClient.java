@@ -66,15 +66,9 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     }
 
     @Override
-    public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) {
-        CompletableFuture<WorkflowRun> future = grpcWorkflowClient.executeWorkflow(request, waitUntilTask);
-        try {
-            return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
-        } catch (InterruptedException | TimeoutException exception) {
-            return null;
-        } catch (ExecutionException exceptionException) {
-            return null;
-        }
+    public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<WorkflowRun> future = executeWorkflow(request, waitUntilTask);
+        return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
     }
 
     @Override
