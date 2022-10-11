@@ -31,7 +31,7 @@ import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 public class Main {
-    
+
     public static void mainxx(String[] args) {
         ApiClient client = new ApiClient("http://localhost:8080/api");
 
@@ -90,7 +90,7 @@ public class Main {
                 t.printStackTrace();
                 System.out.println("Error " + t.getMessage());
             }
-            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
         }
         System.out.println(
                 "Time to to submit "

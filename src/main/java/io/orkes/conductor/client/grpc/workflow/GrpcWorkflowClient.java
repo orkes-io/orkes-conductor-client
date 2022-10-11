@@ -14,7 +14,6 @@ package io.orkes.conductor.client.grpc.workflow;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
@@ -58,30 +57,11 @@ public class GrpcWorkflowClient {
                         .withInterceptors(new HeaderClientInterceptor(apiClient));
         this.responseStream = new StartWorkflowResponseStream(executionMonitor);
         requestStream = stub.startWorkflow(responseStream);
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(()-> monitorChannel(channel), 1, 1, TimeUnit.SECONDS);
     }
 
-    private void monitorChannel(ManagedChannel channel) {
-        ConnectivityState state = channel.getState(false);
-        switch (state) {
-            case READY:
-                if(!responseStream.isReady()) {
-                    log.info("Connection State {}", state);
-                }
-                break;
-            case SHUTDOWN:
-            case CONNECTING:
-            case TRANSIENT_FAILURE:
-                break;
-            default:
-                log.info("Channel state: {}", state);
-        }
-    }
-
-    private boolean reConnect() {
+    private synchronized boolean reConnect() {
         try {
             requestStream = stub.startWorkflow(this.responseStream);
-            Uninterruptibles.sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
             return true;
         } catch (Exception connectException) {
             log.error("Server not ready {}", connectException.getMessage(), connectException);
@@ -89,16 +69,28 @@ public class GrpcWorkflowClient {
         }
     }
 
-    public CompletableFuture<WorkflowRun> executeWorkflow(
-            StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
         if (!responseStream.isReady()) {
-            reConnect();
-            throw new RuntimeException("Server is not yet ready to accept the requests");
+            int connectAttempts = 3;
+            int sleepTime = 200;
+
+            while (connectAttempts > 0) {
+                reConnect();
+                log.info("Connection attempt {} backoff for {} millis", connectAttempts, sleepTime);
+                Uninterruptibles.sleepUninterruptibly(sleepTime, TimeUnit.MILLISECONDS);
+                if(responseStream.isReady()) {
+                    break;
+                }
+                connectAttempts--;
+                sleepTime = sleepTime * 2;
+            }
+            if(!responseStream.isReady()) {
+                throw new RuntimeException("Server is not yet ready to accept the requests");
+            }
         }
         String requestId = UUID.randomUUID().toString();
 
-        OrkesWorkflowService.StartWorkflowRequest.Builder requestBuilder =
-                OrkesWorkflowService.StartWorkflowRequest.newBuilder();
+        OrkesWorkflowService.StartWorkflowRequest.Builder requestBuilder = OrkesWorkflowService.StartWorkflowRequest.newBuilder();
         requestBuilder.setRequestId(requestId).setIdempotencyKey(requestId).setMonitor(true);
         if (waitUntilTask != null) {
             requestBuilder.setWaitUntilTask(waitUntilTask);

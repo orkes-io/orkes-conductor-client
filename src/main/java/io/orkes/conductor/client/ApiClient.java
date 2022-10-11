@@ -32,6 +32,7 @@ import java.security.cert.X509Certificate;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1339,9 +1340,12 @@ public class ApiClient {
         }
     }
 
-    @SneakyThrows
     public String getToken() {
-        return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
+        try {
+            return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
+        } catch (ExecutionException e) {
+            return null;
+        }
     }
 
     private String refreshToken() {

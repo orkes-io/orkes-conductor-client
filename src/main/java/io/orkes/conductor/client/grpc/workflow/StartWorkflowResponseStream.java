@@ -72,12 +72,9 @@ public class StartWorkflowResponseStream  implements ClientResponseObserver<Orke
         switch (code) {
             case UNAVAILABLE:
             case ABORTED:
-                // We should reconnect here
-                log.warn("Server aborted connection");
-                break;
             case INTERNAL:
             case UNKNOWN:
-                log.error("Received an error from the server {}-{}", code, t.getMessage(), t);
+                log.error("Received an error from the server {}-{}", code, t.getMessage());
                 break;
             case CANCELLED:
                 log.info("Server cancelled");       //TODO: move this to trace
