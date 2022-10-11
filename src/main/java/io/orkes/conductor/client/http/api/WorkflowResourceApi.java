@@ -27,6 +27,7 @@ import com.netflix.conductor.common.run.Workflow;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
+import io.orkes.conductor.common.model.WorkflowRun;
 
 import com.google.gson.reflect.TypeToken;
 

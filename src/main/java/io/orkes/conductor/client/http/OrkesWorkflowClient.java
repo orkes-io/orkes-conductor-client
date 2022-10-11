@@ -16,13 +16,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -36,13 +30,10 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
-
-import io.orkes.conductor.client.http.api.AsyncApiCallback;
 import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
-
+import io.orkes.conductor.client.http.api.AsyncApiCallback;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
-import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.common.model.WorkflowRun;
 
@@ -56,11 +47,21 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     private final GrpcWorkflowClient grpcWorkflowClient;
 
+    private ExecutorService executorService;
+
     public OrkesWorkflowClient(ApiClient apiClient) {
         super(apiClient);
         this.httpClient = new WorkflowResourceApi(apiClient);
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
         this.grpcWorkflowClient = new GrpcWorkflowClient(apiClient);
+        if(!apiClient.isUseGRPC()) {
+            int threadCount = apiClient.getExecutorThreadCount();
+            if(threadCount < 1) {
+                this.executorService = Executors.newCachedThreadPool();
+            } else {
+                this.executorService = Executors.newFixedThreadPool(threadCount);
+            }
+        }
     }
 
     @Override
@@ -70,13 +71,40 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     @Override
     public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask) {
-        return grpcWorkflowClient.executeWorkflow(request, waitUntilTask);
+        if(apiClient.isUseGRPC()) {
+            return grpcWorkflowClient.executeWorkflow(request, waitUntilTask);
+        } else {
+            return executeWorkflowHttp(request, waitUntilTask);
+        }
     }
 
     @Override
     public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<WorkflowRun> future = executeWorkflow(request, waitUntilTask);
         return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
+    }
+
+    private CompletableFuture<WorkflowRun> executeWorkflowHttp(StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
+        CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
+        AsyncApiCallback<WorkflowRun> callback = new AsyncApiCallback<>(future);
+        String requestId = UUID.randomUUID().toString();
+        executorService.submit(
+                () -> {
+                    try {
+                        WorkflowRun response =
+                                httpClient.executeWorkflow(
+                                        startWorkflowRequest,
+                                        startWorkflowRequest.getName(),
+                                        startWorkflowRequest.getVersion(),
+                                        waitUntilTask,
+                                        requestId);
+                        future.complete(response);
+                    } catch (Throwable t) {
+                        future.completeExceptionally(t);
+                    }
+                });
+
+        return future;
     }
 
     @Override
@@ -220,6 +248,11 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     @Override
     public void shutdown() {
-        this.executorService.shutdown();
+        if(apiClient.isUseGRPC()) {
+            grpcWorkflowClient.shutdown();
+        }
+        if(executorService != null) {
+            executorService.shutdown();;
+        }
     }
 }

@@ -33,12 +33,11 @@ public class StartWorkflowResponseStream  implements ClientResponseObserver<Orke
 
     private final WorkflowRunProtoMapper protoMapper;
 
-    private boolean ready;
+    private ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream;
 
     public StartWorkflowResponseStream(WorkflowExecutionMonitor executionMonitor) {
         this.executionMonitor = executionMonitor;
         this.protoMapper = new WorkflowRunProtoMapper(new ObjectMapperProvider().getObjectMapper());
-        this.ready = true;
     }
 
     @Override
@@ -74,7 +73,7 @@ public class StartWorkflowResponseStream  implements ClientResponseObserver<Orke
             case UNAVAILABLE:
             case ABORTED:
                 // We should reconnect here
-                ready = false;
+                log.warn("Server aborted connection");
                 break;
             case INTERNAL:
             case UNKNOWN:
@@ -88,11 +87,7 @@ public class StartWorkflowResponseStream  implements ClientResponseObserver<Orke
     }
 
     public boolean isReady() {
-        return ready;
-    }
-
-    public void setReady(boolean ready) {
-        this.ready = ready;
+        return requestStream.isReady();
     }
 
     @Override
@@ -102,6 +97,6 @@ public class StartWorkflowResponseStream  implements ClientResponseObserver<Orke
 
     @Override
     public void beforeStart(ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream) {
-
+        this.requestStream = requestStream;
     }
 }

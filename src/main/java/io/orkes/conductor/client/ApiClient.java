@@ -262,14 +262,6 @@ public class ApiClient {
         return verifyingSsl;
     }
 
-    public void setExecutorThreads(int executorThreads) {
-        this.executorThreads = executorThreads;
-    }
-
-    public int getExecutorThreads() {
-        return executorThreads;
-    }
-
     /**
      * Configure whether to verify certificate and hostname when making https requests. Default to
      * true. NOTE: Do NOT set to false in production code, otherwise you would face multiple types

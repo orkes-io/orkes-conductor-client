@@ -25,7 +25,6 @@ import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowSummary;
 
-import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.common.model.WorkflowRun;
 

@@ -40,15 +40,18 @@ public class GrpcWorkflowClient {
 
     private StreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream;
 
-    private final StartWorkflowResponseStream responseStream;
+    private StartWorkflowResponseStream responseStream;
 
     private final ProtoMappingHelper protoMappingHelper = ProtoMappingHelper.INSTANCE;
 
     private final WorkflowExecutionMonitor executionMonitor;
 
+    private final ManagedChannel channel;
+
     public GrpcWorkflowClient(ApiClient apiClient) {
         this.executionMonitor = new WorkflowExecutionMonitor();
-        ManagedChannel channel = getChannel(apiClient);
+        this.channel = getChannel(apiClient);
+
         stub =
                 WorkflowServiceStreamGrpc.newStub(channel)
                         .withInterceptors(new HeaderClientInterceptor(apiClient));
@@ -64,21 +67,21 @@ public class GrpcWorkflowClient {
                 if(!responseStream.isReady()) {
                     log.info("Connection State {}", state);
                 }
-                responseStream.setReady(true);
                 break;
             case SHUTDOWN:
             case CONNECTING:
             case TRANSIENT_FAILURE:
                 log.info("Connection state {}", state);
-                responseStream.setReady(false);
-                channel.resetConnectBackoff();
-                reConnect();
+                //reConnect();
+                break;
+            default:
+                log.info("Channel state: {}", state);
         }
     }
 
     private boolean reConnect() {
         try {
-            requestStream = stub.startWorkflow(responseStream);
+            requestStream = stub.startWorkflow(this.responseStream);
             return true;
         } catch (Exception connectException) {
             log.error("Server not ready {}", connectException.getMessage(), connectException);
@@ -89,11 +92,8 @@ public class GrpcWorkflowClient {
     public CompletableFuture<WorkflowRun> executeWorkflow(
             StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
         if (!responseStream.isReady()) {
-            log.info("Reconnecting to the server...");
-            if(!reConnect()) {
-                log.error("server not ready yet....");
-                throw new RuntimeException("Server not responding");
-            }
+            reConnect();
+            throw new RuntimeException("Server is not yet ready to accept the requests");
         }
         String requestId = UUID.randomUUID().toString();
 
@@ -109,5 +109,9 @@ public class GrpcWorkflowClient {
             requestStream.onNext(requestBuilder.build());
         }
         return future;
+    }
+
+    public void shutdown() {
+        channel.shutdown();
     }
 }

@@ -58,24 +58,12 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient {
     @Override
     public List<Task> batchPollTasksInDomain(
             String taskType, String domain, String workerId, int count, int timeoutInMillisecond) {
-        if (apiClient.isUseGRPC()) {
-            return grpcTaskClient.batchPoll(
-                    taskType, workerId, domain, count, timeoutInMillisecond);
-        }
         return taskResourceApi.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
     }
 
     @Override
     public void updateTask(TaskResult taskResult) {
-        if (apiClient.isUseGRPC()) {
-            try {
-                grpcTaskClient.updateTask(taskResult);
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        } else {
-            taskResourceApi.updateTask(taskResult);
-        }
+        taskResourceApi.updateTask(taskResult);
     }
 
     @Override

@@ -56,7 +56,7 @@ public class Main {
         //        apiClient.setUseGRPC("orkes-loadtest-grpc.orkesconductor.com", 443);
         //        apiClient.setUseSSL(true);
 
-        ApiClient apiClient = new ApiClient("http://localhost:8080/api");
+        ApiClient apiClient = new ApiClient("http://localhost:8080/api", "0c0b8252-7c69-456c-a02a-66454e0c71a8", "rPJZV24o8BnbMHMAATsC9NaYQhs7ZkBljimicK5n79BD5Tvq");
         apiClient.setUseGRPC("localhost", 8090);
 
         GrpcWorkflowClient client = new GrpcWorkflowClient(apiClient);
