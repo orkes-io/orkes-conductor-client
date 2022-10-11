@@ -96,7 +96,7 @@ public class ApiClient {
 
     private boolean useGRPC;
 
-    private int executorThreadCount = 50;
+    private int executorThreadCount = 0;
 
     /*
      * Constructor for ApiClient

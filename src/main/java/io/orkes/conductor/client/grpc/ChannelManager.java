@@ -40,8 +40,10 @@ public abstract class ChannelManager {
                         .keepAliveTimeout(10, TimeUnit.MINUTES)
                         .keepAliveTime(10, TimeUnit.MINUTES)
                         .defaultLoadBalancingPolicy("round_robin")
-                        .executor(Executors.newFixedThreadPool(apiClient.getExecutorThreadCount()))
                         .disableServiceConfigLookUp();
+        if(apiClient.getExecutorThreadCount() > 0) {
+            channelBuilder = channelBuilder.executor(Executors.newFixedThreadPool(apiClient.getExecutorThreadCount()));
+        }
 
         if (!useSSL) {
             channelBuilder = channelBuilder.usePlaintext();
