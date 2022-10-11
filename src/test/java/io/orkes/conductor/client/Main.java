@@ -31,10 +31,7 @@ import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 public class Main {
-
-    static String key = "f7915af8-fc14-4b52-afa1-afbcd8b0fa26";
-    static String secret = "CQm0skOrxtdNhZjCyS364xols5y4lxYAqW4BMCCSlIO32GxX";
-
+    
     public static void mainxx(String[] args) {
         ApiClient client = new ApiClient("http://localhost:8080/api");
 

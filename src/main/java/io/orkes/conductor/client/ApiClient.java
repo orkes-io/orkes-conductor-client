@@ -1345,7 +1345,6 @@ public class ApiClient {
     }
 
     private String refreshToken() {
-        System.out.println("Refreshing API Token");
 
         if (secretsManager != null) {
             keyId = secretsManager.getSecret(this.ssmKeyPath);
