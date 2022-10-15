@@ -28,7 +28,7 @@ public class LocalWorkerTest {
 
     public static void main(String[] args) {
         ApiClient apiClient = new ApiClient("http://localhost:8080/api");
-        apiClient.setUseGRPC("localhost", 8090);
+        //apiClient.setUseGRPC("localhost", 8090);
 
         OrkesClients clients = new OrkesClients(apiClient);
         TaskClient taskClient = clients.getTaskClient();

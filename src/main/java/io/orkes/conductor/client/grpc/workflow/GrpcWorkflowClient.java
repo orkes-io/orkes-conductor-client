@@ -26,7 +26,6 @@ import io.orkes.grpc.service.OrkesWorkflowService;
 import io.orkes.grpc.service.WorkflowServiceStreamGrpc;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;

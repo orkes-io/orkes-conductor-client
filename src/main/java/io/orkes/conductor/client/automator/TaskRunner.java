@@ -16,11 +16,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +59,8 @@ class TaskRunner {
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
     public static final String ALL_WORKERS = "all";
 
+    private final Semaphore permits;
+
     private final Worker worker;
 
     TaskRunner(
@@ -78,6 +80,7 @@ class TaskRunner {
         this.taskToDomain = taskToDomain;
         this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
+        this.permits = new Semaphore(threadCount);
         this.executorService =
                 (ThreadPoolExecutor)
                         Executors.newFixedThreadPool(
@@ -98,22 +101,17 @@ class TaskRunner {
         Stopwatch stopwatch = null;
         while (true) {
             try {
-                List<Task> tasks = pollTasksForWorker(worker);
+                List<Task> tasks = pollTasksForWorker();
                 if (tasks.isEmpty()) {
                     if (stopwatch == null) {
                         stopwatch = Stopwatch.createStarted();
                     }
-                    Uninterruptibles.sleepUninterruptibly(
-                            worker.getPollingInterval(), TimeUnit.MILLISECONDS);
+                    Uninterruptibles.sleepUninterruptibly(worker.getPollingInterval(), TimeUnit.MILLISECONDS);
                     continue;
                 }
                 if (stopwatch != null) {
                     stopwatch.stop();
-                    LOGGER.info(
-                            "Poller for task {} waited for {} ms before getting {} tasks to execute",
-                            worker.getTaskDefName(),
-                            stopwatch.elapsed(TimeUnit.MILLISECONDS),
-                            tasks.size());
+                    LOGGER.info("Poller for task {} waited for {} ms before getting {} tasks to execute", worker.getTaskDefName(), stopwatch.elapsed(TimeUnit.MILLISECONDS), tasks.size());
                     stopwatch = null;
                 }
                 tasks.forEach(task -> this.executorService.submit(() -> this.processTask(task)));
@@ -139,9 +137,9 @@ class TaskRunner {
         }
     }
 
-    private List<Task> pollTasksForWorker(Worker worker) {
-        LOGGER.trace("Polling for {}", worker.getTaskDefName());
+    private List<Task> pollTasksForWorker() {
         List<Task> tasks = new LinkedList<>();
+
         Boolean discoveryOverride =
                 Optional.ofNullable(
                                 PropertyFactory.getBoolean(
@@ -162,48 +160,26 @@ class TaskRunner {
             return tasks;
         }
         String taskType = worker.getTaskDefName();
+        int pollCount = 0;
+        while(permits.tryAcquire()){
+            pollCount++;
+        }
+        if(pollCount == 0) {
+            return tasks;
+        }
+
         try {
-            String domain =
-                    Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
-                            .orElseGet(
-                                    () ->
-                                            Optional.ofNullable(
-                                                            PropertyFactory.getString(
-                                                                    ALL_WORKERS, DOMAIN, null))
-                                                    .orElse(taskToDomain.get(taskType)));
-            LOGGER.trace("Polling task of type: {} in domain: '{}'", taskType, domain);
+
+            String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null)).orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
+            LOGGER.info("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
             Stopwatch stopwatch = Stopwatch.createStarted();
             long now = System.currentTimeMillis();
-            List<Task> polledTasks =
-                    MetricsContainer.getPollTimer(taskType)
-                            .record(
-                                    () ->
-                                            pollTask(
-                                                    taskType,
-                                                    worker.getIdentity(),
-                                                    domain,
-                                                    this.getAvailableWorkers()));
+            int tasksToPoll = pollCount;
+            tasks = MetricsContainer.getPollTimer(taskType).record(() -> pollTask(domain, tasksToPoll));
             stopwatch.stop();
-            LOGGER.debug(
-                    "Time taken to poll {} task with a batch size of {} is {} ms",
-                    taskType,
-                    polledTasks.size(),
-                    stopwatch.elapsed(TimeUnit.MILLISECONDS));
-            for (Task task : polledTasks) {
-                if (Objects.nonNull(task) && StringUtils.isNotBlank(task.getTaskId())) {
-                    LOGGER.trace(
-                            "Polled task: {} of type: {} in domain: '{}', from worker: {}",
-                            task.getTaskId(),
-                            taskType,
-                            domain,
-                            worker.getIdentity());
-                    LOGGER.info(
-                            "Task {} stayed in the queue for {} ms",
-                            taskType,
-                            (now - task.getScheduledTime()));
-                    tasks.add(task);
-                }
-            }
+            permits.release(pollCount-tasks.size());        //release extra permits
+            LOGGER.debug("Time taken to poll {} task with a batch size of {} is {} ms", taskType, tasks.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+
         } catch (ApiException ae) {
             MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), ae);
             LOGGER.error(
@@ -215,14 +191,12 @@ class TaskRunner {
         return tasks;
     }
 
-    private int getAvailableWorkers() {
-        return (this.threadCount) - this.executorService.getActiveCount();
-    }
-
-    private List<Task> pollTask(String taskType, String workerId, String domain, int count) {
+    private List<Task> pollTask(String domain, int count) {
         if (count < 1) {
             return Collections.emptyList();
         }
+        String taskType = worker.getTaskDefName();
+        String workerId = worker.getIdentity();
         LOGGER.debug("poll {} in the domain {} with batch size {}", taskType, domain, count);
         return taskClient.batchPollTasksInDomain(
                 taskType, domain, workerId, count, this.taskPollTimeout);
@@ -237,12 +211,8 @@ class TaskRunner {
             };
 
     private void processTask(Task task) {
-        LOGGER.trace(
-                "Executing task: {} of type: {} in worker: {} at {}",
-                task.getTaskId(),
-                task.getTaskDefName(),
-                worker.getClass().getSimpleName(),
-                worker.getIdentity());
+        LOGGER.trace("Executing task: {} of type: {} in worker: {} at {}", task.getTaskId(), task.getTaskDefName(), worker.getClass().getSimpleName(), worker.getIdentity());
+        LOGGER.info("task {} is getting executed after {} ms of getting polled", task.getTaskId(), (System.currentTimeMillis()-task.getStartTime()));
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
             executeTask(worker, task);
@@ -255,6 +225,8 @@ class TaskRunner {
             task.setStatus(Task.Status.FAILED);
             TaskResult result = new TaskResult(task);
             handleException(t, result, worker, task);
+        } finally {
+            permits.release();
         }
     }
 
