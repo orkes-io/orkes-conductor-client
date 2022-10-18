@@ -63,7 +63,11 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
     @Override
     public void updateTask(TaskResult taskResult) {
-        taskResourceApi.updateTask(taskResult);
+        if(apiClient.isUseGRPC()) {
+            grpcTaskClient.updateTask(taskResult);
+        } else {
+            taskResourceApi.updateTask(taskResult);
+        }
     }
 
     @Override

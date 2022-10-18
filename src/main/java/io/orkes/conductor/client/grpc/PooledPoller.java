@@ -166,6 +166,9 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
         if (currentPending <= 0) {
             return;
         }
+        if(currentPending > 20) {
+            currentPending = 20;
+        }
         // Make GRPC call for these many
         // Observe for results, add them to local queue
         if (callAgain.get()) {
