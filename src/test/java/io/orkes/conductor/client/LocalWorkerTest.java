@@ -23,9 +23,6 @@ import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 
 public class LocalWorkerTest {
 
-    static String key = "6f91984b-ae29-4814-804b-cdda439e0d00";
-    static String secret = "a19Rv4oy6XhBdhYQjLYeA7k8ci2ztRBFcsxfT4Lpn5q7KkZM";
-
     public static void main(String[] args) {
         ApiClient apiClient = new ApiClient("http://localhost:8080/api");
         apiClient.setUseGRPC("localhost", 8090);
@@ -39,7 +36,7 @@ public class LocalWorkerTest {
         workers.add(new LoadTestWorker("x_test_worker_4"));
         taskThreadCount.put("x_test_worker_4", 1000);
 
-        for (int i = 0; i < 0; i++) {
+        for (int i = 0; i < 4; i++) {
             workers.add(new LoadTestWorker("x_test_worker_" + i));
             taskThreadCount.put("x_test_worker_" + i, 100);
         }

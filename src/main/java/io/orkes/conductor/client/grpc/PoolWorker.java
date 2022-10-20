@@ -13,7 +13,9 @@
 package io.orkes.conductor.client.grpc;
 
 import java.util.concurrent.Semaphore;
+import java.util.function.Function;
 
+import com.netflix.conductor.client.telemetry.MetricsContainer;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
@@ -30,8 +32,8 @@ public class PoolWorker {
 
     private final PooledPoller pooledPoller;
     private final Worker worker;
-    private final TaskUpdateObserver taskUpdateObserver;
-    private final TaskServiceGrpc.TaskServiceStub asyncStub;
+
+    private final TaskServiceGrpc.TaskServiceBlockingStub blockingStub;
     private int threadId;
     private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
     private final Semaphore semaphore;
@@ -39,14 +41,13 @@ public class PoolWorker {
     public PoolWorker(
             PooledPoller pooledPoller,
             Worker worker,
-            TaskUpdateObserver taskUpdateObserver,
             TaskServiceGrpc.TaskServiceStub asyncStub,
+            TaskServiceGrpc.TaskServiceBlockingStub blockingStub,
             int threadId,
             Semaphore semaphore) {
         this.pooledPoller = pooledPoller;
         this.worker = worker;
-        this.taskUpdateObserver = taskUpdateObserver;
-        this.asyncStub = asyncStub;
+        this.blockingStub = blockingStub;
         this.threadId = threadId;
         this.semaphore = semaphore;
     }
@@ -71,22 +72,54 @@ public class PoolWorker {
                 }
                 TaskResult result = worker.execute(taskModel);
                 log.debug("Executed task {}", task.getTaskId());
-                updateTask(result);
+                updateTaskResult(3, taskModel, result, worker);
             }
         } catch (Throwable e) {
-            // TODO: retry here...
             log.error("Error executing task: {}", e.getMessage(), e);
         }
     }
 
-    public void updateTask(TaskResult taskResult) {
+
+    private void updateTaskResult(int count, Task task, TaskResult result, Worker worker) {
+        try {
+
+            retryOperation(
+                    (TaskResult taskResult) -> {
+                        _updateTask(taskResult);
+                        return null;
+                    },
+                    count,
+                    result,
+                    "updateTask");
+        } catch (Exception e) {
+            worker.onErrorUpdate(task);
+            MetricsContainer.incrementTaskUpdateErrorCount(worker.getTaskDefName(), e);
+            log.error("Failed to update result: {} for task: {} in worker: {}", result.toString(), task.getTaskDefName(), worker.getIdentity(),e);
+        }
+    }
+
+    private void _updateTask(TaskResult taskResult) {
         log.debug("Updating task {}", taskResult.getTaskId());
         taskResult.getOutputData().put("_clientSendTime", System.currentTimeMillis());
-        TaskServicePb.UpdateTaskRequest request =
-                TaskServicePb.UpdateTaskRequest.newBuilder()
-                        .setResult(protoMapper.toProto(taskResult))
-                        .build();
-        asyncStub.updateTask(request, taskUpdateObserver);
+        TaskServicePb.UpdateTaskRequest request = TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build();
+        blockingStub.updateTask(request);
         log.debug("Updated task {}", taskResult.getTaskId());
+    }
+
+    private <T, R> R retryOperation(Function<T, R> operation, int count, T input, String opName) {
+        int index = 0;
+        while (index < count) {
+            try {
+                return operation.apply(input);
+            } catch (Exception e) {
+                index++;
+                try {
+                    Thread.sleep(500L * (index+1));
+                } catch (InterruptedException ie) {
+                    log.error("Retry interrupted", ie);
+                }
+            }
+        }
+        throw new RuntimeException("Exhausted retries performing " + opName);
     }
 }

@@ -27,10 +27,8 @@ import com.netflix.discovery.EurekaClient;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.grpc.GrpcTaskWorker;
 import io.orkes.conductor.client.grpc.HeaderClientInterceptor;
 import io.orkes.conductor.client.grpc.PooledPoller;
-import io.orkes.conductor.client.grpc.TaskUpdateObserver;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 
 import com.google.common.base.Preconditions;
@@ -283,18 +281,15 @@ public class TaskRunnerConfigurer {
                     TaskServiceGrpc.newStub(channel)
                             .withInterceptors(new HeaderClientInterceptor(apiClient))
                             .withExecutor(executor);
-            TaskUpdateObserver taskUpdateObserver = new TaskUpdateObserver();
-            LOGGER.info("Going to start {}", workers);
 
-            workers.forEach(
-                    worker ->
-                            scheduledExecutorService.submit(
-                                    () ->
-                                            this.startPooledGRPCWorker(
-                                                    worker, asyncStub, taskUpdateObserver)));
+            TaskServiceGrpc.TaskServiceBlockingStub blockingStub =
+                    TaskServiceGrpc.newBlockingStub(channel)
+                            .withInterceptors(new HeaderClientInterceptor(apiClient))
+                            .withExecutor(executor);
+            LOGGER.info("Going to start {}", workers);
+            workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startPooledGRPCWorker(worker, asyncStub, blockingStub)));
         } else {
-            workers.forEach(
-                    worker -> scheduledExecutorService.submit(() -> this.startWorker(worker)));
+            workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startWorker(worker)));
         }
     }
 
@@ -347,29 +342,16 @@ public class TaskRunnerConfigurer {
         taskRunner.pollAndExecute();
     }
 
-    private void startPooledGRPCWorker(
-            Worker worker,
-            TaskServiceGrpc.TaskServiceStub asyncStub,
-            TaskUpdateObserver taskUpdateObserver) {
+    private void startPooledGRPCWorker(Worker worker, TaskServiceGrpc.TaskServiceStub asyncStub, TaskServiceGrpc.TaskServiceBlockingStub blockingStub) {
 
-        final Integer threadCountForTask =
-                this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
-        final Integer taskPollTimeout =
-                this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
+        final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
+        final Integer taskPollTimeout = this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
         String taskType = worker.getTaskDefName();
         String domain =
                 Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
-                        .orElseGet(
-                                () ->
-                                        Optional.ofNullable(
-                                                        PropertyFactory.getString(
-                                                                ALL_WORKERS, DOMAIN, null))
-                                                .orElse(taskToDomain.get(taskType)));
+                        .orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
+        LOGGER.info("Starting gRPC worker: {} with {} threads", worker.getTaskDefName(), threadCountForTask);
 
-        LOGGER.info(
-                "Starting gRPC worker: {} with {} threads",
-                worker.getTaskDefName(),
-                threadCountForTask);
         ThreadPoolExecutor executor =
                 new ThreadPoolExecutor(
                         threadCountForTask,
@@ -381,49 +363,13 @@ public class TaskRunnerConfigurer {
         PooledPoller pooledPoller =
                 new PooledPoller(
                         asyncStub,
+                        blockingStub,
                         worker,
                         domain,
-                        taskUpdateObserver,
                         taskPollTimeout,
                         executor,
                         threadCountForTask,
                         semaphore);
         pooledPoller.start();
-    }
-
-    private void startGRPCWorker(
-            Worker worker,
-            TaskServiceGrpc.TaskServiceStub asyncStub,
-            TaskUpdateObserver taskUpdateObserver) {
-
-        final Integer threadCountForTask =
-                this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
-        final Integer taskPollTimeout =
-                this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
-        String taskType = worker.getTaskDefName();
-        String domain =
-                Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
-                        .orElseGet(
-                                () ->
-                                        Optional.ofNullable(
-                                                        PropertyFactory.getString(
-                                                                ALL_WORKERS, DOMAIN, null))
-                                                .orElse(taskToDomain.get(taskType)));
-
-        LOGGER.info(
-                "Starting gRPC worker: {} with {} threads",
-                worker.getTaskDefName(),
-                threadCountForTask);
-        // TaskPollObserver taskPollObserver = new TaskPollObserver(worker, executor, asyncStub,
-        // taskUpdateObserver);
-        GrpcTaskWorker grpcTaskWorker =
-                new GrpcTaskWorker(
-                        asyncStub,
-                        worker,
-                        domain,
-                        threadCountForTask,
-                        taskPollTimeout,
-                        taskUpdateObserver);
-        grpcTaskWorker.init();
     }
 }

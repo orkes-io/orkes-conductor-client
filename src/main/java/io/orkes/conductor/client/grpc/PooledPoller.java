@@ -38,9 +38,10 @@ import lombok.extern.slf4j.Slf4j;
 public class PooledPoller implements StreamObserver<TaskPb.Task> {
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
+
+    private final TaskServiceGrpc.TaskServiceBlockingStub blockingStub;
     private final Worker worker;
     private final String domain;
-    private TaskUpdateObserver taskUpdateObserver;
     private final Integer taskPollTimeout;
     private ThreadPoolExecutor executor;
     private Integer threadCountForTask;
@@ -52,17 +53,17 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
 
     public PooledPoller(
             TaskServiceGrpc.TaskServiceStub asyncStub,
+            TaskServiceGrpc.TaskServiceBlockingStub blockingStub,
             Worker worker,
             String domain,
-            TaskUpdateObserver taskUpdateObserver,
             Integer taskPollTimeout,
             ThreadPoolExecutor executor,
             Integer threadCountForTask,
             Semaphore semaphore) {
         this.asyncStub = asyncStub;
+        this.blockingStub = blockingStub;
         this.worker = worker;
         this.domain = domain;
-        this.taskUpdateObserver = taskUpdateObserver;
         this.taskPollTimeout = taskPollTimeout;
         this.executor = executor;
         this.threadCountForTask = threadCountForTask;
@@ -70,6 +71,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
     }
 
     public void start() {
+        log.info("Starting {} worker with {} threads and polling interval at {} ms", worker.getTaskDefName(), this.threadCountForTask, worker.getPollingInterval());
         Executors.newSingleThreadScheduledExecutor()
                 .scheduleWithFixedDelay(
                         () -> {
@@ -83,23 +85,19 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
                         worker.getPollingInterval(),
                         TimeUnit.MILLISECONDS);
 
-        log.info("Starting {} threads for worker {}", threadCountForTask, worker.getTaskDefName());
         for (int i = 0; i < threadCountForTask; i++) {
-            PoolWorker poolWorker =
-                    new PoolWorker(this, worker, taskUpdateObserver, asyncStub, i, semaphore);
+            PoolWorker poolWorker = new PoolWorker(this, worker, asyncStub, blockingStub, i, semaphore);
             executor.execute(
                     () -> {
                         try {
                             while (runWorkers.get()) {
                                 try {
                                     poolWorker.run();
-                                } catch (Exception e) {
+                                } catch (Throwable e) {
                                     log.warn("Unable to run", e);
                                 }
                             }
-                        } finally {
-                            log.error("DISASTER");
-                        }
+                        } finally {}
                     });
         }
     }
