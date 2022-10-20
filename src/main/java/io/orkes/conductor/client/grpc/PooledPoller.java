@@ -51,11 +51,14 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
     private final AtomicLong lastAskedForMessageCount = new AtomicLong(0);
     private final Semaphore semaphore;
 
+    private final int taskPollCount;
+
     public PooledPoller(
             TaskServiceGrpc.TaskServiceStub asyncStub,
             TaskServiceGrpc.TaskServiceBlockingStub blockingStub,
             Worker worker,
             String domain,
+            int taskPollCount,
             Integer taskPollTimeout,
             ThreadPoolExecutor executor,
             Integer threadCountForTask,
@@ -68,6 +71,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
         this.executor = executor;
         this.threadCountForTask = threadCountForTask;
         this.semaphore = semaphore;
+        this.taskPollCount = taskPollCount;
     }
 
     public void start() {
@@ -164,15 +168,15 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
         if (currentPending <= 0) {
             return;
         }
-        if(currentPending > 20) {
-            currentPending = 20;
+        if(currentPending > taskPollCount) {
+            currentPending = taskPollCount;
         }
         // Make GRPC call for these many
         // Observe for results, add them to local queue
         if (callAgain.get()) {
             callAgain.set(false);
             lastAskedForMessageCount.set(currentPending);
-            log.debug("Accumulated {} for {}", currentPending, worker.getTaskDefName());
+            log.trace("Polling {} for {} tasks", worker.getTaskDefName(), currentPending);
             TaskServicePb.BatchPollRequest request = buildPollRequest(currentPending, 1);
             asyncStub.batchPoll(request, this);
         }

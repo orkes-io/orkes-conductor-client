@@ -55,8 +55,11 @@ public class TaskRunnerConfigurer {
     private final Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount;
     private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout;
 
+    private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollCount;
+
     private final ConductorClientConfiguration conductorClientConfiguration;
     private Integer defaultPollTimeout;
+    private Integer defaultPollCount;
     private final int threadCount;
 
     private final List<TaskRunner> taskRunners;
@@ -77,7 +80,9 @@ public class TaskRunnerConfigurer {
         this.taskToDomain = builder.taskToDomain;
         this.taskToThreadCount = builder.taskToThreadCount;
         this.taskPollTimeout = builder.taskPollTimeout;
+        this.taskPollCount = builder.taskPollCount;
         this.defaultPollTimeout = builder.defaultPollTimeout;
+        this.defaultPollCount = builder.defaultPollCount;
         this.shutdownGracePeriodSeconds = builder.shutdownGracePeriodSeconds;
         this.conductorClientConfiguration = builder.conductorClientConfiguration;
         this.workers = new LinkedList<>();
@@ -94,14 +99,17 @@ public class TaskRunnerConfigurer {
         private int threadCount = -1;
         private int shutdownGracePeriodSeconds = 10;
         private int defaultPollTimeout = 100;
+
+        private int defaultPollCount = 20;
         private final Iterable<Worker> workers;
         private EurekaClient eurekaClient;
         private final TaskClient taskClient;
         private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
         private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount =
                 new HashMap<>();
-        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout =
-                new HashMap<>();
+        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout =  new HashMap<>();
+
+        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollCount = new HashMap<>();
 
         private ConductorClientConfiguration conductorClientConfiguration =
                 new DefaultConductorClientConfiguration();
@@ -203,6 +211,16 @@ public class TaskRunnerConfigurer {
 
         public TaskRunnerConfigurer.Builder withTaskPollTimeout(Integer taskPollTimeout) {
             this.defaultPollTimeout = taskPollTimeout;
+            return this;
+        }
+
+        public TaskRunnerConfigurer.Builder withTaskPollCount(Map<String, Integer> taskPollCount) {
+            this.taskPollCount = taskPollCount;
+            return this;
+        }
+
+        public TaskRunnerConfigurer.Builder withTaskPollCount(int defaultPollCount) {
+            this.defaultPollCount = defaultPollCount;
             return this;
         }
 
@@ -346,6 +364,7 @@ public class TaskRunnerConfigurer {
 
         final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
         final Integer taskPollTimeout = this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
+        final Integer taskPollcount = this.taskPollCount.getOrDefault(worker.getTaskDefName(), defaultPollCount);
         String taskType = worker.getTaskDefName();
         String domain =
                 Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
@@ -366,6 +385,7 @@ public class TaskRunnerConfigurer {
                         blockingStub,
                         worker,
                         domain,
+                        taskPollcount,
                         taskPollTimeout,
                         executor,
                         threadCountForTask,

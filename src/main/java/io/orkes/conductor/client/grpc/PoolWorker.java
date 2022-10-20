@@ -99,11 +99,11 @@ public class PoolWorker {
     }
 
     private void _updateTask(TaskResult taskResult) {
-        log.debug("Updating task {}", taskResult.getTaskId());
+        log.trace("Updating task {}", taskResult.getTaskId());
         taskResult.getOutputData().put("_clientSendTime", System.currentTimeMillis());
         TaskServicePb.UpdateTaskRequest request = TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build();
         blockingStub.updateTask(request);
-        log.debug("Updated task {}", taskResult.getTaskId());
+        log.trace("Updated task {}", taskResult.getTaskId());
     }
 
     private <T, R> R retryOperation(Function<T, R> operation, int count, T input, String opName) {

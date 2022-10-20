@@ -46,6 +46,7 @@ public class LocalWorkerTest {
                         .withSleepWhenRetry(10)
                         .withTaskThreadCount(taskThreadCount)
                         .withTaskPollTimeout(10)
+                        .withTaskPollCount(5)
                         .build();
         configurer.init();
 
