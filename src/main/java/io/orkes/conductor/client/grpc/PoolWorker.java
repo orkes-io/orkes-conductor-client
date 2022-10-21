@@ -53,7 +53,7 @@ public class PoolWorker {
         this.taskServiceStub = asyncStub;
         this.threadId = threadId;
         this.semaphore = semaphore;
-        this.taskUpdateObserver = new TaskUpdateObserver(worker);
+        this.taskUpdateObserver = new TaskUpdateObserver();
     }
 
     public void run() {
@@ -108,7 +108,7 @@ public class PoolWorker {
         TaskServicePb.UpdateTaskRequest request = TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build();
         ListenableFuture<TaskServicePb.UpdateTaskResponse> future = taskServiceStub.updateTask(request);
         try {
-            future.get(2_000,  TimeUnit.MILLISECONDS);
+            future.get(30_000,  TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
