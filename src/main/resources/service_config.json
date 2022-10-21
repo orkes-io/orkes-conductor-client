@@ -1,0 +1,22 @@
+{
+  "methodConfig": [
+    {
+      "name": [
+        {
+          "service": "conductor.grpc.tasks.TaskService",
+          "method": "UpdateTask"
+        }
+      ],
+
+      "retryPolicy": {
+        "maxAttempts": 50.0,
+        "initialBackoff": "0.5s",
+        "maxBackoff": "240s",
+        "backoffMultiplier": 2.0,
+        "retryableStatusCodes": [
+          "UNAVAILABLE","CANCELLED","ABORTED"
+        ]
+      }
+    }
+  ]
+}

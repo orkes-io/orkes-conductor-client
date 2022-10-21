@@ -12,8 +12,12 @@
  */
 package io.orkes.conductor.client.grpc;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import com.netflix.conductor.common.config.ObjectMapperProvider;
 
 import io.orkes.conductor.client.ApiClient;
 
@@ -29,18 +33,22 @@ public abstract class ChannelManager {
         String host = apiClient.getGrpcHost();
         int port = apiClient.getGrpcPort();
         boolean useSSL = apiClient.useSSL();
-
+        Map<String, Object> serviceConfig = new HashMap<>();
+        try {
+            serviceConfig = new ObjectMapperProvider().getObjectMapper().readValue(ChannelManager.class.getResourceAsStream("/service_config.json"), Map.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to find the service config", e);
+        }
         NettyChannelBuilder channelBuilder =
                 NettyChannelBuilder.forAddress(host, port)
                         .enableRetry()
                         .withOption(
                                 ChannelOption.CONNECT_TIMEOUT_MILLIS,
                                 (int) TimeUnit.SECONDS.toMillis(5000))
-                        .maxRetryAttempts(3)
+                        .defaultServiceConfig(serviceConfig)
                         .keepAliveTimeout(10, TimeUnit.MINUTES)
                         .keepAliveTime(10, TimeUnit.MINUTES)
-                        .defaultLoadBalancingPolicy("round_robin")
-                        .disableServiceConfigLookUp();
+                        .defaultLoadBalancingPolicy("round_robin");
         if(apiClient.getExecutorThreadCount() > 0) {
             channelBuilder = channelBuilder.executor(Executors.newFixedThreadPool(apiClient.getExecutorThreadCount()));
         }

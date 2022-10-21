@@ -14,6 +14,7 @@ package io.orkes.conductor.client.automator;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -286,26 +287,8 @@ public class TaskRunnerConfigurer {
     public synchronized void init() {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
         if (apiClient.isUseGRPC()) {
-            LOGGER.info("Using gRPC for task poll/update");
-            ManagedChannel channel = getChannel(apiClient);
-            int totalThreads =
-                    this.taskToThreadCount.values().stream().mapToInt(Integer::intValue).sum();
-            if (totalThreads == 0) {
-                totalThreads = this.threadCount;
-            }
-            LOGGER.info("Using {} threads for grpc channels", totalThreads);
-            ExecutorService executor = getExecutor(totalThreads);
-            TaskServiceGrpc.TaskServiceStub asyncStub =
-                    TaskServiceGrpc.newStub(channel)
-                            .withInterceptors(new HeaderClientInterceptor(apiClient))
-                            .withExecutor(executor);
-
-            TaskServiceGrpc.TaskServiceBlockingStub blockingStub =
-                    TaskServiceGrpc.newBlockingStub(channel)
-                            .withInterceptors(new HeaderClientInterceptor(apiClient))
-                            .withExecutor(executor);
-            LOGGER.info("Going to start {}", workers);
-            workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startPooledGRPCWorker(worker, asyncStub, blockingStub)));
+            LOGGER.info("Using gRPC for task poll/update for ", workers.stream().map(worker -> worker.getTaskDefName()).collect(Collectors.toList()));
+            workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startPooledGRPCWorker(worker)));
         } else {
             workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startWorker(worker)));
         }
@@ -360,7 +343,31 @@ public class TaskRunnerConfigurer {
         taskRunner.pollAndExecute();
     }
 
-    private void startPooledGRPCWorker(Worker worker, TaskServiceGrpc.TaskServiceStub asyncStub, TaskServiceGrpc.TaskServiceBlockingStub blockingStub) {
+    private void startPooledGRPCWorker(Worker worker) {
+
+        ManagedChannel channel = getChannel(apiClient);
+        int totalThreads =
+                this.taskToThreadCount.values().stream().mapToInt(Integer::intValue).sum();
+        if (totalThreads == 0) {
+            totalThreads = this.threadCount;
+        }
+        LOGGER.trace("Using {} threads for grpc channels", totalThreads);
+        ExecutorService channelExecutor = getExecutor(totalThreads);
+
+        TaskServiceGrpc.TaskServiceStub asyncStub =
+                TaskServiceGrpc.newStub(channel)
+                        .withInterceptors(new HeaderClientInterceptor(apiClient))
+                        .withExecutor(channelExecutor);
+
+        TaskServiceGrpc.TaskServiceBlockingStub blockingStub =
+                TaskServiceGrpc.newBlockingStub(channel)
+                        .withInterceptors(new HeaderClientInterceptor(apiClient))
+                        .withExecutor(channelExecutor);
+
+        TaskServiceGrpc.TaskServiceFutureStub futureStub =
+                TaskServiceGrpc.newFutureStub(channel)
+                        .withInterceptors(new HeaderClientInterceptor(apiClient))
+                        .withExecutor(channelExecutor);
 
         final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
         final Integer taskPollTimeout = this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
@@ -382,6 +389,7 @@ public class TaskRunnerConfigurer {
         PooledPoller pooledPoller =
                 new PooledPoller(
                         asyncStub,
+                        futureStub,
                         blockingStub,
                         worker,
                         domain,

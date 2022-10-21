@@ -13,6 +13,7 @@
 package io.orkes.conductor.client.grpc;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import com.netflix.conductor.client.telemetry.MetricsContainer;
@@ -25,6 +26,7 @@ import com.netflix.conductor.proto.TaskPb;
 
 import io.orkes.conductor.proto.ProtoMappingHelper;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,23 +35,25 @@ public class PoolWorker {
     private final PooledPoller pooledPoller;
     private final Worker worker;
 
-    private final TaskServiceGrpc.TaskServiceBlockingStub blockingStub;
+    private final TaskServiceGrpc.TaskServiceFutureStub taskServiceStub;
     private int threadId;
     private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
     private final Semaphore semaphore;
 
+    private final TaskUpdateObserver taskUpdateObserver;
+
     public PoolWorker(
             PooledPoller pooledPoller,
             Worker worker,
-            TaskServiceGrpc.TaskServiceStub asyncStub,
-            TaskServiceGrpc.TaskServiceBlockingStub blockingStub,
+            TaskServiceGrpc.TaskServiceFutureStub asyncStub,
             int threadId,
             Semaphore semaphore) {
         this.pooledPoller = pooledPoller;
         this.worker = worker;
-        this.blockingStub = blockingStub;
+        this.taskServiceStub = asyncStub;
         this.threadId = threadId;
         this.semaphore = semaphore;
+        this.taskUpdateObserver = new TaskUpdateObserver(worker);
     }
 
     public void run() {
@@ -99,11 +103,16 @@ public class PoolWorker {
     }
 
     private void _updateTask(TaskResult taskResult) {
-        log.trace("Updating task {}", taskResult.getTaskId());
+        log.info("Updating task {}", taskResult.getTaskId());
         taskResult.getOutputData().put("_clientSendTime", System.currentTimeMillis());
         TaskServicePb.UpdateTaskRequest request = TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build();
-        blockingStub.updateTask(request);
-        log.trace("Updated task {}", taskResult.getTaskId());
+        ListenableFuture<TaskServicePb.UpdateTaskResponse> future = taskServiceStub.updateTask(request);
+        try {
+            future.get(2_000,  TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private <T, R> R retryOperation(Function<T, R> operation, int count, T input, String opName) {

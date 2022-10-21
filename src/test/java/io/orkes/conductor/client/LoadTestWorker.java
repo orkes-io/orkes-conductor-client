@@ -14,11 +14,13 @@ package io.orkes.conductor.client;
 
 import java.security.SecureRandom;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -42,7 +44,7 @@ public class LoadTestWorker implements Worker {
         log.info("Executing {} - {}", task.getTaskType(), task.getTaskId());
         TaskResult result = new TaskResult(task);
 
-        //Uninterruptibles.sleepUninterruptibly(10000, TimeUnit.MILLISECONDS);
+        Uninterruptibles.sleepUninterruptibly(10_000, TimeUnit.MILLISECONDS);
 
         result.setStatus(TaskResult.Status.COMPLETED);
         int resultCount = Math.max(20, secureRandom.nextInt(keyCount));
@@ -61,8 +63,12 @@ public class LoadTestWorker implements Worker {
 
         result.addOutputData("scheduledTime", task.getScheduledTime());
         result.addOutputData("startTime", task.getStartTime());
-
+        log.info("Done executing task {} @the worker", task.getTaskId());
         return result;
+    }
+
+    public void onErrorUpdate(Task task) {
+        log.info("I just can't update the task {}", task.getTaskId());
     }
 
     @Override

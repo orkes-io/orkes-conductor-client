@@ -39,6 +39,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
 
     private final TaskServiceGrpc.TaskServiceStub asyncStub;
 
+    private final TaskServiceGrpc.TaskServiceFutureStub futureStub;
     private final TaskServiceGrpc.TaskServiceBlockingStub blockingStub;
     private final Worker worker;
     private final String domain;
@@ -55,6 +56,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
 
     public PooledPoller(
             TaskServiceGrpc.TaskServiceStub asyncStub,
+            TaskServiceGrpc.TaskServiceFutureStub futureStub,
             TaskServiceGrpc.TaskServiceBlockingStub blockingStub,
             Worker worker,
             String domain,
@@ -64,6 +66,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
             Integer threadCountForTask,
             Semaphore semaphore) {
         this.asyncStub = asyncStub;
+        this.futureStub = futureStub;
         this.blockingStub = blockingStub;
         this.worker = worker;
         this.domain = domain;
@@ -75,7 +78,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
     }
 
     public void start() {
-        log.info("Starting {} worker with {} threads and polling interval at {} ms", worker.getTaskDefName(), this.threadCountForTask, worker.getPollingInterval());
+        log.info("Starting {} worker with {} threads and polling interval at {} ms with pollCount at {}", worker.getTaskDefName(), this.threadCountForTask, this.worker.getPollingInterval(), this.taskPollCount);
         Executors.newSingleThreadScheduledExecutor()
                 .scheduleWithFixedDelay(
                         () -> {
@@ -90,7 +93,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
                         TimeUnit.MILLISECONDS);
 
         for (int i = 0; i < threadCountForTask; i++) {
-            PoolWorker poolWorker = new PoolWorker(this, worker, asyncStub, blockingStub, i, semaphore);
+            PoolWorker poolWorker = new PoolWorker(this, worker, futureStub, i, semaphore);
             executor.execute(
                     () -> {
                         try {
