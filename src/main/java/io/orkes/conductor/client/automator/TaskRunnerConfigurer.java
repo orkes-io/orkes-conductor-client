@@ -23,22 +23,18 @@ import com.netflix.conductor.client.config.ConductorClientConfiguration;
 import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
 import com.netflix.conductor.client.config.PropertyFactory;
 import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.discovery.EurekaClient;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.grpc.HeaderClientInterceptor;
 import io.orkes.conductor.client.grpc.PooledPoller;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import io.grpc.ManagedChannel;
 
 import static io.orkes.conductor.client.automator.TaskRunner.ALL_WORKERS;
 import static io.orkes.conductor.client.automator.TaskRunner.DOMAIN;
-import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 
 public class TaskRunnerConfigurer {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunnerConfigurer.class);
@@ -345,30 +341,6 @@ public class TaskRunnerConfigurer {
 
     private void startPooledGRPCWorker(Worker worker) {
 
-        ManagedChannel channel = getChannel(apiClient);
-        int totalThreads =
-                this.taskToThreadCount.values().stream().mapToInt(Integer::intValue).sum();
-        if (totalThreads == 0) {
-            totalThreads = this.threadCount;
-        }
-        LOGGER.trace("Using {} threads for grpc channels", totalThreads);
-        ExecutorService channelExecutor = getExecutor(totalThreads);
-
-        TaskServiceGrpc.TaskServiceStub asyncStub =
-                TaskServiceGrpc.newStub(channel)
-                        .withInterceptors(new HeaderClientInterceptor(apiClient))
-                        .withExecutor(channelExecutor);
-
-        TaskServiceGrpc.TaskServiceBlockingStub blockingStub =
-                TaskServiceGrpc.newBlockingStub(channel)
-                        .withInterceptors(new HeaderClientInterceptor(apiClient))
-                        .withExecutor(channelExecutor);
-
-        TaskServiceGrpc.TaskServiceFutureStub futureStub =
-                TaskServiceGrpc.newFutureStub(channel)
-                        .withInterceptors(new HeaderClientInterceptor(apiClient))
-                        .withExecutor(channelExecutor);
-
         final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
         final Integer taskPollTimeout = this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
         final Integer taskPollcount = this.taskPollCount.getOrDefault(worker.getTaskDefName(), defaultPollCount);
@@ -378,26 +350,8 @@ public class TaskRunnerConfigurer {
                         .orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
         LOGGER.info("Starting gRPC worker: {} with {} threads", worker.getTaskDefName(), threadCountForTask);
 
-        ThreadPoolExecutor executor =
-                new ThreadPoolExecutor(
-                        threadCountForTask,
-                        threadCountForTask,
-                        1,
-                        TimeUnit.MINUTES,
-                        new ArrayBlockingQueue<>(threadCountForTask * 100));
-        Semaphore semaphore = new Semaphore(threadCountForTask);
-        PooledPoller pooledPoller =
-                new PooledPoller(
-                        asyncStub,
-                        futureStub,
-                        blockingStub,
-                        worker,
-                        domain,
-                        taskPollcount,
-                        taskPollTimeout,
-                        executor,
-                        threadCountForTask,
-                        semaphore);
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCountForTask, threadCountForTask, 1, TimeUnit.MINUTES, new ArrayBlockingQueue<>(threadCountForTask * 100));
+        PooledPoller pooledPoller = new PooledPoller(apiClient, worker, domain, taskPollcount, taskPollTimeout, executor, threadCountForTask);
         pooledPoller.start();
     }
 }

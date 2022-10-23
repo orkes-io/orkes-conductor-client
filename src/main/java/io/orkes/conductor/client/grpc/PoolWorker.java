@@ -29,6 +29,7 @@ import io.orkes.conductor.proto.ProtoMappingHelper;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 
+
 @Slf4j
 public class PoolWorker {
 
@@ -40,20 +41,12 @@ public class PoolWorker {
     private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
     private final Semaphore semaphore;
 
-    private final TaskUpdateObserver taskUpdateObserver;
-
-    public PoolWorker(
-            PooledPoller pooledPoller,
-            Worker worker,
-            TaskServiceGrpc.TaskServiceFutureStub asyncStub,
-            int threadId,
-            Semaphore semaphore) {
+    public PoolWorker(TaskServiceGrpc.TaskServiceFutureStub taskServiceStub, PooledPoller pooledPoller, Worker worker, int threadId, Semaphore semaphore) {
+        this.taskServiceStub = taskServiceStub;
         this.pooledPoller = pooledPoller;
         this.worker = worker;
-        this.taskServiceStub = asyncStub;
         this.threadId = threadId;
         this.semaphore = semaphore;
-        this.taskUpdateObserver = new TaskUpdateObserver();
     }
 
     public void run() {
@@ -103,14 +96,16 @@ public class PoolWorker {
     }
 
     private void _updateTask(TaskResult taskResult) {
-        log.info("Updating task {}", taskResult.getTaskId());
-        taskResult.getOutputData().put("_clientSendTime", System.currentTimeMillis());
+        long now = System.currentTimeMillis();
+        taskResult.getOutputData().put("_clientSendTime", now);
         TaskServicePb.UpdateTaskRequest request = TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build();
         ListenableFuture<TaskServicePb.UpdateTaskResponse> future = taskServiceStub.updateTask(request);
         try {
             future.get(30_000,  TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            log.info("Took {} ms to update task", (System.currentTimeMillis() - now));
         }
 
     }

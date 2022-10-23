@@ -46,7 +46,6 @@ public abstract class ChannelManager {
                                 ChannelOption.CONNECT_TIMEOUT_MILLIS,
                                 (int) TimeUnit.SECONDS.toMillis(5000))
                         .defaultServiceConfig(serviceConfig)
-                        .keepAliveTimeout(10, TimeUnit.MINUTES)
                         .keepAliveTime(10, TimeUnit.MINUTES)
                         .defaultLoadBalancingPolicy("round_robin");
         if(apiClient.getExecutorThreadCount() > 0) {

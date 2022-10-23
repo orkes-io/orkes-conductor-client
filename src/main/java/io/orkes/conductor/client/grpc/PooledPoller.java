@@ -26,21 +26,24 @@ import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
 import com.netflix.conductor.proto.TaskPb;
 
+import io.orkes.conductor.client.ApiClient;
+
 import com.google.common.base.Stopwatch;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.Uninterruptibles;
+import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
+
 @Slf4j
 public class PooledPoller implements StreamObserver<TaskPb.Task> {
 
-    private final TaskServiceGrpc.TaskServiceStub asyncStub;
-
-    private final TaskServiceGrpc.TaskServiceFutureStub futureStub;
-    private final TaskServiceGrpc.TaskServiceBlockingStub blockingStub;
+    private final TaskServiceGrpc.TaskServiceStub taskPollClient;
     private final Worker worker;
     private final String domain;
     private final Integer taskPollTimeout;
@@ -51,30 +54,21 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
     private final AtomicBoolean callAgain = new AtomicBoolean(true);
     private final AtomicLong lastAskedForMessageCount = new AtomicLong(0);
     private final Semaphore semaphore;
-
     private final int taskPollCount;
+    private final ApiClient apiClient;
 
-    public PooledPoller(
-            TaskServiceGrpc.TaskServiceStub asyncStub,
-            TaskServiceGrpc.TaskServiceFutureStub futureStub,
-            TaskServiceGrpc.TaskServiceBlockingStub blockingStub,
-            Worker worker,
-            String domain,
-            int taskPollCount,
-            Integer taskPollTimeout,
-            ThreadPoolExecutor executor,
-            Integer threadCountForTask,
-            Semaphore semaphore) {
-        this.asyncStub = asyncStub;
-        this.futureStub = futureStub;
-        this.blockingStub = blockingStub;
+    public PooledPoller(ApiClient apiClient, Worker worker, String domain, int taskPollCount, Integer taskPollTimeout, ThreadPoolExecutor executor, Integer threadCountForTask) {
+
+        this.apiClient = apiClient;
+        ManagedChannel channel = getChannel(apiClient);
+        this.taskPollClient = TaskServiceGrpc.newStub(channel).withInterceptors(new HeaderClientInterceptor(apiClient));
         this.worker = worker;
         this.domain = domain;
         this.taskPollTimeout = taskPollTimeout;
         this.executor = executor;
         this.threadCountForTask = threadCountForTask;
-        this.semaphore = semaphore;
         this.taskPollCount = taskPollCount;
+        this.semaphore = new Semaphore(threadCountForTask);;
     }
 
     public void start() {
@@ -92,8 +86,10 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
                         worker.getPollingInterval(),
                         TimeUnit.MILLISECONDS);
 
+        ManagedChannel channel = getChannel(apiClient);
+        TaskServiceGrpc.TaskServiceFutureStub taskServiceStub = TaskServiceGrpc.newFutureStub(channel).withInterceptors(new HeaderClientInterceptor(apiClient));
         for (int i = 0; i < threadCountForTask; i++) {
-            PoolWorker poolWorker = new PoolWorker(this, worker, futureStub, i, semaphore);
+            PoolWorker poolWorker = new PoolWorker(taskServiceStub,this, worker, i, semaphore);
             executor.execute(
                     () -> {
                         try {
@@ -181,7 +177,7 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
             lastAskedForMessageCount.set(currentPending);
             log.trace("Polling {} for {} tasks", worker.getTaskDefName(), currentPending);
             TaskServicePb.BatchPollRequest request = buildPollRequest(currentPending, 1);
-            asyncStub.batchPoll(request, this);
+            taskPollClient.batchPoll(request, this);
         }
     }
 
@@ -246,5 +242,15 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
             }
         }
         callAgain.set(true);
+    }
+
+    private ThreadPoolExecutor getExecutor(int threadPoolSize) {
+        return new ThreadPoolExecutor(
+                threadPoolSize,
+                threadPoolSize,
+                0,
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(threadPoolSize * 100),
+                new ThreadFactoryBuilder().setNameFormat("task-poll-execute-thread-%d").build());
     }
 }
