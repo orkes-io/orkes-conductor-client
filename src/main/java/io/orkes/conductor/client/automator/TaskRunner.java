@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -59,8 +58,6 @@ class TaskRunner {
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
     public static final String ALL_WORKERS = "all";
 
-    private final Semaphore permits;
-
     private final Worker worker;
 
     TaskRunner(
@@ -80,15 +77,12 @@ class TaskRunner {
         this.taskToDomain = taskToDomain;
         this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
-        this.permits = new Semaphore(threadCount);
-        this.executorService =
-                (ThreadPoolExecutor)
-                        Executors.newFixedThreadPool(
-                                threadCount,
-                                new BasicThreadFactory.Builder()
-                                        .namingPattern(workerNamePrefix)
-                                        .uncaughtExceptionHandler(uncaughtExceptionHandler)
-                                        .build());
+        this.executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(
+                threadCount,
+                new BasicThreadFactory.Builder()
+                        .namingPattern(workerNamePrefix)
+                        .uncaughtExceptionHandler(uncaughtExceptionHandler)
+                        .build());
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
         LOGGER.info(
                 "Initialized the TaskPollExecutor for {} with {} threads and threadPrefix {}",
@@ -111,7 +105,8 @@ class TaskRunner {
                 }
                 if (stopwatch != null) {
                     stopwatch.stop();
-                    LOGGER.trace("Poller for task {} waited for {} ms before getting {} tasks to execute", worker.getTaskDefName(), stopwatch.elapsed(TimeUnit.MILLISECONDS), tasks.size());
+                    LOGGER.trace("Poller for task {} waited for {} ms before getting {} tasks to execute",
+                            worker.getTaskDefName(), stopwatch.elapsed(TimeUnit.MILLISECONDS), tasks.size());
                     stopwatch = null;
                 }
                 tasks.forEach(task -> this.executorService.submit(() -> this.processTask(task)));
@@ -140,14 +135,12 @@ class TaskRunner {
     private List<Task> pollTasksForWorker() {
         List<Task> tasks = new LinkedList<>();
 
-        Boolean discoveryOverride =
-                Optional.ofNullable(
-                                PropertyFactory.getBoolean(
-                                        worker.getTaskDefName(), OVERRIDE_DISCOVERY, null))
-                        .orElseGet(
-                                () ->
-                                        PropertyFactory.getBoolean(
-                                                ALL_WORKERS, OVERRIDE_DISCOVERY, false));
+        Boolean discoveryOverride = Optional.ofNullable(
+                PropertyFactory.getBoolean(
+                        worker.getTaskDefName(), OVERRIDE_DISCOVERY, null))
+                .orElseGet(
+                        () -> PropertyFactory.getBoolean(
+                                ALL_WORKERS, OVERRIDE_DISCOVERY, false));
         if (eurekaClient != null
                 && !eurekaClient.getInstanceRemoteStatus().equals(InstanceInfo.InstanceStatus.UP)
                 && !discoveryOverride) {
@@ -160,25 +153,21 @@ class TaskRunner {
             return tasks;
         }
         String taskType = worker.getTaskDefName();
-        int pollCount = 0;
-        while(permits.tryAcquire()){
-            pollCount++;
-        }
-        if(pollCount == 0) {
+        final int availableWorkers = getAvailableWorkers();
+        if (availableWorkers == 0) {
             return tasks;
         }
-
         try {
-
-            String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null)).orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
-            LOGGER.trace("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
+            String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
+                    .orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null))
+                            .orElse(taskToDomain.get(taskType)));
+            LOGGER.trace("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, availableWorkers);
             Stopwatch stopwatch = Stopwatch.createStarted();
-            long now = System.currentTimeMillis();
-            int tasksToPoll = pollCount;
+            int tasksToPoll = availableWorkers;
             tasks = MetricsContainer.getPollTimer(taskType).record(() -> pollTask(domain, tasksToPoll));
             stopwatch.stop();
-            permits.release(pollCount-tasks.size());        //release extra permits
-            LOGGER.debug("Time taken to poll {} task with a batch size of {} is {} ms", taskType, tasks.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            LOGGER.debug("Time taken to poll {} task with a batch size of {} is {} ms", taskType, tasks.size(),
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
         } catch (ApiException ae) {
             MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), ae);
@@ -189,6 +178,10 @@ class TaskRunner {
             LOGGER.error("Error when polling for tasks", e);
         }
         return tasks;
+    }
+
+    private synchronized int getAvailableWorkers() {
+        return this.threadCount - this.executorService.getActiveCount();
     }
 
     private List<Task> pollTask(String domain, int count) {
@@ -203,16 +196,17 @@ class TaskRunner {
     }
 
     @SuppressWarnings("FieldCanBeLocal")
-    private final Thread.UncaughtExceptionHandler uncaughtExceptionHandler =
-            (thread, error) -> {
-                // JVM may be in unstable state, try to send metrics then exit
-                MetricsContainer.incrementUncaughtExceptionCount();
-                LOGGER.error("Uncaught exception. Thread {} will exit now", thread, error);
-            };
+    private final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = (thread, error) -> {
+        // JVM may be in unstable state, try to send metrics then exit
+        MetricsContainer.incrementUncaughtExceptionCount();
+        LOGGER.error("Uncaught exception. Thread {} will exit now", thread, error);
+    };
 
     private void processTask(Task task) {
-        LOGGER.trace("Executing task: {} of type: {} in worker: {} at {}", task.getTaskId(), task.getTaskDefName(), worker.getClass().getSimpleName(), worker.getIdentity());
-        LOGGER.trace("task {} is getting executed after {} ms of getting polled", task.getTaskId(), (System.currentTimeMillis()-task.getStartTime()));
+        LOGGER.trace("Executing task: {} of type: {} in worker: {} at {}", task.getTaskId(), task.getTaskDefName(),
+                worker.getClass().getSimpleName(), worker.getIdentity());
+        LOGGER.trace("task {} is getting executed after {} ms of getting polled", task.getTaskId(),
+                (System.currentTimeMillis() - task.getStartTime()));
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
             executeTask(worker, task);
@@ -225,8 +219,6 @@ class TaskRunner {
             task.setStatus(Task.Status.FAILED);
             TaskResult result = new TaskResult(task);
             handleException(t, result, worker, task);
-        } finally {
-            permits.release();
         }
     }
 
@@ -282,12 +274,11 @@ class TaskRunner {
     private void updateTaskResult(int count, Task task, TaskResult result, Worker worker) {
         try {
             // upload if necessary
-            Optional<String> optionalExternalStorageLocation =
-                    retryOperation(
-                            (TaskResult taskResult) -> upload(taskResult, task.getTaskType()),
-                            count,
-                            result,
-                            "evaluateAndUploadLargePayload");
+            Optional<String> optionalExternalStorageLocation = retryOperation(
+                    (TaskResult taskResult) -> upload(taskResult, task.getTaskType()),
+                    count,
+                    result,
+                    "evaluateAndUploadLargePayload");
 
             if (optionalExternalStorageLocation.isPresent()) {
                 result.setExternalOutputPayloadStoragePath(optionalExternalStorageLocation.get());
