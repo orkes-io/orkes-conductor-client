@@ -111,7 +111,7 @@ class TaskRunner {
                 }
                 if (stopwatch != null) {
                     stopwatch.stop();
-                    LOGGER.info("Poller for task {} waited for {} ms before getting {} tasks to execute", worker.getTaskDefName(), stopwatch.elapsed(TimeUnit.MILLISECONDS), tasks.size());
+                    LOGGER.trace("Poller for task {} waited for {} ms before getting {} tasks to execute", worker.getTaskDefName(), stopwatch.elapsed(TimeUnit.MILLISECONDS), tasks.size());
                     stopwatch = null;
                 }
                 tasks.forEach(task -> this.executorService.submit(() -> this.processTask(task)));
@@ -171,7 +171,7 @@ class TaskRunner {
         try {
 
             String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null)).orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
-            LOGGER.info("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
+            LOGGER.trace("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
             Stopwatch stopwatch = Stopwatch.createStarted();
             long now = System.currentTimeMillis();
             int tasksToPoll = pollCount;
@@ -212,12 +212,12 @@ class TaskRunner {
 
     private void processTask(Task task) {
         LOGGER.trace("Executing task: {} of type: {} in worker: {} at {}", task.getTaskId(), task.getTaskDefName(), worker.getClass().getSimpleName(), worker.getIdentity());
-        LOGGER.info("task {} is getting executed after {} ms of getting polled", task.getTaskId(), (System.currentTimeMillis()-task.getStartTime()));
+        LOGGER.trace("task {} is getting executed after {} ms of getting polled", task.getTaskId(), (System.currentTimeMillis()-task.getStartTime()));
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
             executeTask(worker, task);
             stopwatch.stop();
-            LOGGER.info(
+            LOGGER.trace(
                     "Took {} ms to execute and update task with id {}",
                     stopwatch.elapsed(TimeUnit.MILLISECONDS),
                     task.getTaskId());
@@ -273,7 +273,7 @@ class TaskRunner {
         Stopwatch updateStopWatch = Stopwatch.createStarted();
         updateTaskResult(updateRetryCount, task, result, worker);
         updateStopWatch.stop();
-        LOGGER.info(
+        LOGGER.trace(
                 "Time taken to update the {} {} ms",
                 task.getTaskType(),
                 updateStopWatch.elapsed(TimeUnit.MILLISECONDS));
