@@ -953,8 +953,7 @@ public class ApiClient {
                             response.headers().toMultimap());
                 }
             }
-            throw new ApiException(
-                    response.message(), response.code(), response.headers().toMultimap(), respBody);
+            throw new ApiException(response.message(), response.code(), response.headers().toMultimap(), respBody);
         }
     }
 

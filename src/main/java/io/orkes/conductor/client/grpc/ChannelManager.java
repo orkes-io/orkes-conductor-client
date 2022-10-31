@@ -24,6 +24,8 @@ import io.orkes.conductor.client.ApiClient;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
 public abstract class ChannelManager {
 
@@ -41,6 +43,8 @@ public abstract class ChannelManager {
         }
         NettyChannelBuilder channelBuilder =
                 NettyChannelBuilder.forAddress(host, port)
+                        .eventLoopGroup(new NioEventLoopGroup())
+                        .channelType(NioSocketChannel.class)
                         .enableRetry()
                         .withOption(
                                 ChannelOption.CONNECT_TIMEOUT_MILLIS,

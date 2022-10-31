@@ -28,16 +28,37 @@ import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.grpc.GrpcTaskClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 
-public class OrkesTaskClient extends OrkesClient implements TaskClient {
+public class OrkesTaskClient extends TaskClient {
+
+    protected ApiClient apiClient;
 
     private TaskResourceApi taskResourceApi;
 
     private GrpcTaskClient grpcTaskClient;
 
     public OrkesTaskClient(ApiClient apiClient) {
-        super(apiClient);
+        this.apiClient = apiClient;
         this.taskResourceApi = new TaskResourceApi(apiClient);
         this.grpcTaskClient = new GrpcTaskClient(apiClient);
+    }
+
+    public OrkesTaskClient withReadTimeout(int readTimeout) {
+        apiClient.setReadTimeout(readTimeout);
+        return this;
+    }
+
+    public OrkesTaskClient setWriteTimeout(int writeTimeout) {
+        apiClient.setWriteTimeout(writeTimeout);
+        return this;
+    }
+
+    public OrkesTaskClient withConnectTimeout(int connectTimeout) {
+        apiClient.setConnectTimeout(connectTimeout);
+        return this;
+    }
+
+    public ApiClient getApiClient() {
+        return apiClient;
     }
 
     @Override
@@ -134,23 +155,21 @@ public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
     @Override
     public SearchResult<TaskSummary> search(String query) {
-        throw new UnsupportedOperationException("search operation on tasks is no longer supported");
+        throw new UnsupportedOperationException("search operation on tasks is not supported");
     }
 
     @Override
     public SearchResult<Task> searchV2(String query) {
-        throw new UnsupportedOperationException("search operation on tasks is no longer supported");
+        throw new UnsupportedOperationException("search operation on tasks is not supported");
     }
 
     @Override
-    public SearchResult<TaskSummary> search(
-            Integer start, Integer size, String sort, String freeText, String query) {
-        throw new UnsupportedOperationException("search operation on tasks is no longer supported");
+    public SearchResult<TaskSummary> search(Integer start, Integer size, String sort, String freeText, String query) {
+        throw new UnsupportedOperationException("search operation on tasks is not supported");
     }
 
     @Override
-    public SearchResult<Task> searchV2(
-            Integer start, Integer size, String sort, String freeText, String query) {
-        throw new UnsupportedOperationException("search operation on tasks is no longer supported");
+    public SearchResult<Task> searchV2(Integer start, Integer size, String sort, String freeText, String query) {
+        throw new UnsupportedOperationException("search operation on tasks is not supported");
     }
 }

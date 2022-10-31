@@ -49,6 +49,7 @@ dependencies {
     api ("io.orkes.conductor:conductor-client:${versions.conductor}")
     api ("io.orkes.conductor:conductor-common:${versions.conductor}")
     api ("io.orkes.conductor:conductor-grpc:${versions.conductor}")
+    api ("io.orkes.conductor:conductor-java-sdk:${versions.conductor}")
     implementation "com.sun.jersey:jersey-client:${versions.jersey}"
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
 

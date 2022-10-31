@@ -24,13 +24,34 @@ import io.orkes.conductor.client.http.api.TagsApi;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
-public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
+public class OrkesMetadataClient extends MetadataClient  {
+
+    protected ApiClient apiClient;
+
+    public OrkesMetadataClient withReadTimeout(int readTimeout) {
+        apiClient.setReadTimeout(readTimeout);
+        return this;
+    }
+
+    public OrkesMetadataClient setWriteTimeout(int writeTimeout) {
+        apiClient.setWriteTimeout(writeTimeout);
+        return this;
+    }
+
+    public OrkesMetadataClient withConnectTimeout(int connectTimeout) {
+        apiClient.setConnectTimeout(connectTimeout);
+        return this;
+    }
+
+    public ApiClient getApiClient() {
+        return apiClient;
+    }
 
     private final MetadataResourceApi metadataResourceApi;
     private final TagsApi tagsApi;
 
     public OrkesMetadataClient(ApiClient apiClient) {
-        super(apiClient);
+        this.apiClient = apiClient;
         this.metadataResourceApi = new MetadataResourceApi(apiClient);
         this.tagsApi = new TagsApi(apiClient);
     }

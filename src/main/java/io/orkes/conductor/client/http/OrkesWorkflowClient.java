@@ -31,7 +31,6 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
-import io.orkes.conductor.client.http.api.AsyncApiCallback;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.model.WorkflowStatus;
@@ -39,7 +38,9 @@ import io.orkes.conductor.common.model.WorkflowRun;
 
 import com.google.common.base.Preconditions;
 
-public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
+public class OrkesWorkflowClient extends WorkflowClient {
+
+    protected ApiClient apiClient;
 
     private final WorkflowResourceApi httpClient;
 
@@ -50,7 +51,7 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
     private ExecutorService executorService;
 
     public OrkesWorkflowClient(ApiClient apiClient) {
-        super(apiClient);
+        this.apiClient = apiClient;
         this.httpClient = new WorkflowResourceApi(apiClient);
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
         this.grpcWorkflowClient = new GrpcWorkflowClient(apiClient);
@@ -62,6 +63,21 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
                 this.executorService = Executors.newFixedThreadPool(threadCount);
             }
         }
+    }
+
+    public WorkflowClient withReadTimeout(int readTimeout) {
+        apiClient.setReadTimeout(readTimeout);
+        return this;
+    }
+
+    public WorkflowClient setWriteTimeout(int writeTimeout) {
+        apiClient.setWriteTimeout(writeTimeout);
+        return this;
+    }
+
+    public WorkflowClient withConnectTimeout(int connectTimeout) {
+        apiClient.setConnectTimeout(connectTimeout);
+        return this;
     }
 
     @Override
@@ -86,7 +102,6 @@ public class OrkesWorkflowClient extends OrkesClient implements WorkflowClient {
 
     private CompletableFuture<WorkflowRun> executeWorkflowHttp(StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
         CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
-        AsyncApiCallback<WorkflowRun> callback = new AsyncApiCallback<>(future);
         String requestId = UUID.randomUUID().toString();
         executorService.submit(
                 () -> {
