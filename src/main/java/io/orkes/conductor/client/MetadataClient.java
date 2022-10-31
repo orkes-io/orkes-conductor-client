@@ -14,10 +14,8 @@ package io.orkes.conductor.client;
 
 import java.util.List;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
