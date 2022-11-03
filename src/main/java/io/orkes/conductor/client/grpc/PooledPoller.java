@@ -243,14 +243,4 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
         }
         callAgain.set(true);
     }
-
-    private ThreadPoolExecutor getExecutor(int threadPoolSize) {
-        return new ThreadPoolExecutor(
-                threadPoolSize,
-                threadPoolSize,
-                0,
-                TimeUnit.SECONDS,
-                new ArrayBlockingQueue<>(threadPoolSize * 100),
-                new ThreadFactoryBuilder().setNameFormat("task-poll-execute-thread-%d").build());
-    }
 }
