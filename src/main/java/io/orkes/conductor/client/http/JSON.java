@@ -32,7 +32,7 @@ import com.google.gson.stream.JsonWriter;
 import io.gsonfire.GsonFireBuilder;
 
 public class JSON {
-    private Gson gson;
+    private final Gson gson;
     private boolean isLenientOnJson = false;
     private DateTypeAdapter dateTypeAdapter = new DateTypeAdapter();
     private SqlDateTypeAdapter sqlDateTypeAdapter = new SqlDateTypeAdapter();
@@ -74,26 +74,6 @@ public class JSON {
                 .registerTypeAdapter(LocalDate.class, localDateTypeAdapter)
                 .serializeNulls()
                 .create();
-    }
-
-    /**
-     * Get Gson.
-     *
-     * @return Gson
-     */
-    public Gson getGson() {
-        return gson;
-    }
-
-    /**
-     * Set Gson.
-     *
-     * @param gson Gson
-     * @return JSON
-     */
-    public JSON setGson(Gson gson) {
-        this.gson = gson;
-        return this;
     }
 
     public JSON setLenientOnJson(boolean lenientOnJson) {
