@@ -12,31 +12,37 @@
  */
 package io.orkes.conductor.client.automator;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netflix.conductor.client.config.ConductorClientConfiguration;
 import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
+import com.netflix.conductor.client.config.PropertyFactory;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.discovery.EurekaClient;
 
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.grpc.PooledPoller;
+import io.orkes.conductor.client.http.OrkesTaskClient;
 
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import static io.orkes.conductor.client.automator.TaskRunner.ALL_WORKERS;
+import static io.orkes.conductor.client.automator.TaskRunner.DOMAIN;
 
 public class TaskRunnerConfigurer {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunnerConfigurer.class);
 
     private final EurekaClient eurekaClient;
     private final TaskClient taskClient;
+
+    private final ApiClient apiClient;
     private final List<Worker> workers;
     private final int sleepWhenRetry;
     private final int updateRetryCount;
@@ -46,8 +52,11 @@ public class TaskRunnerConfigurer {
     private final Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount;
     private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout;
 
+    private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollCount;
+
     private final ConductorClientConfiguration conductorClientConfiguration;
     private Integer defaultPollTimeout;
+    private Integer defaultPollCount;
     private final int threadCount;
 
     private final List<TaskRunner> taskRunners;
@@ -61,13 +70,16 @@ public class TaskRunnerConfigurer {
     private TaskRunnerConfigurer(TaskRunnerConfigurer.Builder builder) {
         this.eurekaClient = builder.eurekaClient;
         this.taskClient = builder.taskClient;
+        this.apiClient = ((OrkesTaskClient) builder.taskClient).getApiClient();
         this.sleepWhenRetry = builder.sleepWhenRetry;
         this.updateRetryCount = builder.updateRetryCount;
         this.workerNamePrefix = builder.workerNamePrefix;
         this.taskToDomain = builder.taskToDomain;
         this.taskToThreadCount = builder.taskToThreadCount;
         this.taskPollTimeout = builder.taskPollTimeout;
+        this.taskPollCount = builder.taskPollCount;
         this.defaultPollTimeout = builder.defaultPollTimeout;
+        this.defaultPollCount = builder.defaultPollCount;
         this.shutdownGracePeriodSeconds = builder.shutdownGracePeriodSeconds;
         this.conductorClientConfiguration = builder.conductorClientConfiguration;
         this.workers = new LinkedList<>();
@@ -84,14 +96,17 @@ public class TaskRunnerConfigurer {
         private int threadCount = -1;
         private int shutdownGracePeriodSeconds = 10;
         private int defaultPollTimeout = 100;
+
+        private int defaultPollCount = 20;
         private final Iterable<Worker> workers;
         private EurekaClient eurekaClient;
         private final TaskClient taskClient;
         private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
         private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount =
                 new HashMap<>();
-        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout =
-                new HashMap<>();
+        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout =  new HashMap<>();
+
+        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollCount = new HashMap<>();
 
         private ConductorClientConfiguration conductorClientConfiguration =
                 new DefaultConductorClientConfiguration();
@@ -196,6 +211,16 @@ public class TaskRunnerConfigurer {
             return this;
         }
 
+        public TaskRunnerConfigurer.Builder withTaskPollCount(Map<String, Integer> taskPollCount) {
+            this.taskPollCount = taskPollCount;
+            return this;
+        }
+
+        public TaskRunnerConfigurer.Builder withTaskPollCount(int defaultPollCount) {
+            this.defaultPollCount = defaultPollCount;
+            return this;
+        }
+
         /**
          * Builds an instance of the TaskRunnerConfigurer.
          *
@@ -257,7 +282,31 @@ public class TaskRunnerConfigurer {
      */
     public synchronized void init() {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
-        workers.forEach(worker -> this.startWorker(worker));
+        if (apiClient.isUseGRPC()) {
+            LOGGER.info("Using gRPC for task poll/update for ", workers.stream().map(worker -> worker.getTaskDefName()).collect(Collectors.toList()));
+            workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startPooledGRPCWorker(worker)));
+        } else {
+            workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startWorker(worker)));
+        }
+    }
+
+    private ThreadPoolExecutor getExecutor(int threadPoolSize) {
+        return new ThreadPoolExecutor(
+                threadPoolSize,
+                threadPoolSize,
+                0,
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(threadPoolSize) {
+                    @Override
+                    public boolean offer(Runnable runnable) {
+                        try {
+                            return super.offer(runnable, 200, TimeUnit.MILLISECONDS);
+                        } catch (InterruptedException ie) {
+                            return false;
+                        }
+                    }
+                },
+                new ThreadFactoryBuilder().setNameFormat("task-poll-execute-thread-%d").build());
     }
 
     /**
@@ -277,6 +326,7 @@ public class TaskRunnerConfigurer {
                 this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
         final TaskRunner taskRunner =
                 new TaskRunner(
+                        worker,
                         eurekaClient,
                         taskClient,
                         conductorClientConfiguration,
@@ -286,10 +336,22 @@ public class TaskRunnerConfigurer {
                         threadCountForTask,
                         taskPollTimeout);
         this.taskRunners.add(taskRunner);
-        this.scheduledExecutorService.scheduleWithFixedDelay(
-                () -> taskRunner.poll(worker),
-                0,
-                worker.getPollingInterval(),
-                TimeUnit.MILLISECONDS);
+        taskRunner.pollAndExecute();
+    }
+
+    private void startPooledGRPCWorker(Worker worker) {
+
+        final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
+        final Integer taskPollTimeout = this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
+        final Integer taskPollcount = this.taskPollCount.getOrDefault(worker.getTaskDefName(), defaultPollCount);
+        String taskType = worker.getTaskDefName();
+        String domain =
+                Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
+                        .orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
+        LOGGER.info("Starting gRPC worker: {} with {} threads", worker.getTaskDefName(), threadCountForTask);
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCountForTask, threadCountForTask, 1, TimeUnit.MINUTES, new ArrayBlockingQueue<>(threadCountForTask * 100));
+        PooledPoller pooledPoller = new PooledPoller(apiClient, worker, domain, taskPollcount, taskPollTimeout, executor, threadCountForTask);
+        pooledPoller.start();
     }
 }

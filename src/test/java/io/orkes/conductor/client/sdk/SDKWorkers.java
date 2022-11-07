@@ -10,8 +10,16 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client;
+package io.orkes.conductor.client.sdk;
 
+import com.netflix.conductor.sdk.workflow.task.InputParam;
+import com.netflix.conductor.sdk.workflow.task.OutputParam;
+import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 
+public class SDKWorkers {
 
-public class TaskClient extends com.netflix.conductor.client.http.TaskClient {}
+    @WorkerTask("task1")
+    public @OutputParam("greetings") String task1(@InputParam("name") String name) {
+        return "Hello, " + name;
+    }
+}

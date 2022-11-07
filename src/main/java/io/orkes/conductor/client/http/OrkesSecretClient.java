@@ -21,6 +21,7 @@ import io.orkes.conductor.client.http.api.SecretResourceApi;
 
 public class OrkesSecretClient extends OrkesClient implements SecretClient {
 
+
     private SecretResourceApi secretResourceApi;
 
     public OrkesSecretClient(ApiClient apiClient) {

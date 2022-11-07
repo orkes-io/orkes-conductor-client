@@ -173,21 +173,17 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public void removeRoleFromApplicationUser(String applicationId, String role)
-            throws ApiException {
+    public void removeRoleFromApplicationUser(String applicationId, String role) throws ApiException {
         applicationResourceApi.removeRoleFromApplicationUser(applicationId, role);
     }
 
     @Override
-    public AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId)
-            throws ApiException {
+    public AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException {
         return applicationResourceApi.toggleAccessKeyStatus(applicationId, keyId);
     }
 
     @Override
-    public ConductorApplication updateApplication(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id)
-            throws ApiException {
+    public ConductorApplication updateApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id) throws ApiException {
         return applicationResourceApi.updateApplication(createOrUpdateApplicationRequest, id);
     }
 }

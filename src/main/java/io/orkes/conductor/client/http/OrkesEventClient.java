@@ -21,13 +21,34 @@ import io.orkes.conductor.client.EventClient;
 import io.orkes.conductor.client.http.api.EventResourceApi;
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 
-public class OrkesEventClient extends OrkesClient implements EventClient {
+public class OrkesEventClient extends EventClient {
 
     private EventResourceApi eventResourceApi;
 
+    protected ApiClient apiClient;
+
     public OrkesEventClient(ApiClient apiClient) {
-        super(apiClient);
+        this.apiClient = apiClient;
         this.eventResourceApi = new EventResourceApi(apiClient);
+    }
+
+    public EventClient withReadTimeout(int readTimeout) {
+        apiClient.setReadTimeout(readTimeout);
+        return this;
+    }
+
+    public EventClient setWriteTimeout(int writeTimeout) {
+        apiClient.setWriteTimeout(writeTimeout);
+        return this;
+    }
+
+    public EventClient withConnectTimeout(int connectTimeout) {
+        apiClient.setConnectTimeout(connectTimeout);
+        return this;
+    }
+
+    public ApiClient getApiClient() {
+        return apiClient;
     }
 
     @Override
@@ -52,23 +73,16 @@ public class OrkesEventClient extends OrkesClient implements EventClient {
 
     @Override
     public String getQueueConfig(QueueConfiguration queueConfiguration) {
-        return eventResourceApi
-                .getQueueConfig(
-                        queueConfiguration.getQueueType(), queueConfiguration.getQueueName())
-                .toString();
+        return eventResourceApi.getQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName()).toString();
     }
 
     @Override
     public void deleteQueueConfig(QueueConfiguration queueConfiguration) {
-        eventResourceApi.deleteQueueConfig(
-                queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+        eventResourceApi.deleteQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 
     @Override
     public void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception {
-        eventResourceApi.putQueueConfig(
-                queueConfiguration.getConfiguration(),
-                queueConfiguration.getQueueType(),
-                queueConfiguration.getQueueName());
+        eventResourceApi.putQueueConfig(queueConfiguration.getConfiguration(), queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 }

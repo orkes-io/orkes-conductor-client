@@ -14,49 +14,32 @@ package io.orkes.conductor.client;
 
 import java.util.List;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
-public interface MetadataClient {
-    void registerWorkflowDef(WorkflowDef workflowDef);
+public abstract class MetadataClient extends com.netflix.conductor.client.http.MetadataClient {
 
-    void updateWorkflowDefs(List<WorkflowDef> workflowDefs);
+    public abstract void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite);
 
-    WorkflowDef getWorkflowDef(String name, Integer version);
+    public abstract void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite);
 
-    void unregisterWorkflowDef(String name, Integer version);
+    public abstract void addTaskTag(TagObject tagObject, String taskName);
 
-    void registerTaskDefs(List<TaskDef> taskDefs);
+    public abstract void addWorkflowTag(TagObject tagObject, String name);
 
-    void updateTaskDef(TaskDef taskDef);
+    public abstract void deleteTaskTag(TagString tagString, String taskName);
 
-    TaskDef getTaskDef(String taskType);
+    public abstract void deleteWorkflowTag(TagObject tagObject, String name);
 
-    void unregisterTaskDef(String taskType);
+    public abstract List<TagObject> getTags();
 
-    void addTaskTag(TagObject tagObject, String taskName) throws ApiException;
+    public abstract List<TagObject> getTaskTags(String taskName);
 
-    void addWorkflowTag(TagObject tagObject, String name) throws ApiException;
+    public abstract List<TagObject> getWorkflowTags(String name);
 
-    void deleteTaskTag(TagString tagString, String taskName) throws ApiException;
+    public abstract void setTaskTags(List<TagObject> tagObjects, String taskName);
 
-    void deleteWorkflowTag(TagObject tagObject, String name) throws ApiException;
-
-    List<TagObject> getTags() throws ApiException;
-
-    List<TagObject> getTaskTags(String taskName) throws ApiException;
-
-    List<TagObject> getWorkflowTags(String name) throws ApiException;
-
-    void setTaskTags(List<TagObject> tagObjects, String taskName) throws ApiException;
-
-    void setWorkflowTags(List<TagObject> tagObjects, String name) throws ApiException;
-
-    void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite);
-
-    void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite);
+    public abstract void setWorkflowTags(List<TagObject> tagObjects, String name);
 }
