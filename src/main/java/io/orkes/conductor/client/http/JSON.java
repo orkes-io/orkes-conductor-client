@@ -65,13 +65,15 @@ public class JSON {
     }
 
     public JSON() {
-        gson =
-                createGson()
-                        .registerTypeAdapter(Date.class, dateTypeAdapter)
-                        .registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter)
-                        .registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter)
-                        .registerTypeAdapter(LocalDate.class, localDateTypeAdapter)
-                        .create();
+        gson = createGson()
+                .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+                .setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+                .registerTypeAdapter(Date.class, dateTypeAdapter)
+                .registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter)
+                .registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter)
+                .registerTypeAdapter(LocalDate.class, localDateTypeAdapter)
+                .serializeNulls()
+                .create();
     }
 
     /**
