@@ -29,7 +29,6 @@ import com.netflix.conductor.proto.TaskPb;
 import io.orkes.conductor.client.ApiClient;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.Uninterruptibles;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
