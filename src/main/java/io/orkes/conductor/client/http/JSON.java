@@ -67,7 +67,6 @@ public class JSON {
     public JSON() {
         gson = createGson()
                 .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
-                .setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
                 .registerTypeAdapter(Date.class, dateTypeAdapter)
                 .registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter)
                 .registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter)
