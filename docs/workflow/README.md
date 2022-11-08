@@ -1,4 +1,4 @@
-# Authoring Workflows with the Go SDK
+# Authoring Workflows
 
 ## A simple workflow
 
@@ -14,4 +14,3 @@ You can find more examples at the following GitHub repository:
 
 https://github.com/Netflix/conductor/tree/main/java-sdk/example/java/com/netflix/conductor/sdk/example/shipment
 
-### Next: [Create Kafka queue configuration using code](../queue/kafka.md)
