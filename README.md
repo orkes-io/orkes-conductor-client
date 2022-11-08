@@ -5,7 +5,7 @@ metadata (Workflows and tasks), run workflows, create workers and more.
 
 ## Examples
 
-Check out [the examples in this project](https://github.com/conductor-sdk/java-sdk-examples)
+Check out [the examples in this project](https://github.com/conductor-sdk/java-sdk-examples).
 
 ## Quick Guides
 
@@ -26,7 +26,8 @@ ApiClient apiClient = new ApiClient("https://play.orkes.io/api");
 Use if your conductor server requires authentication.
 
 #### Access Control Setup
-See [Access Control](https://orkes.io/content/docs/getting-started/concepts/access-control) for more details on role based access control with Conductor and generating API keys for your environment. [Detailed example](https://github.com/conductor-sdk/java-sdk-examples/blob/main/src/main/java/io/orkes/samples/quickstart/ExecuteWorkflow.java#L48-L55).
+See [Access Control](https://orkes.io/content/docs/getting-started/concepts/access-control) for more details on role based access control with Conductor and generating API keys for your environment. 
+[Detailed example](https://github.com/conductor-sdk/java-sdk-examples/blob/16d23ce13f7c400659d4ef7435f5f5f30bc6af88/src/main/java/io/orkes/samples/quickstart/ExecuteWorkflow.java#L48-L55).
 
 ```java
 ApiClient apiClient = new ApiClient("https://play.orkes.io/api", "key", "secret");

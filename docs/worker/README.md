@@ -18,7 +18,7 @@ Task workers must implement methods from `WorkflowInterface`. [Code sample](http
 
 
 ## Starting Workers
-`TaskRunner` interface is used to start the workers, which takes care of polling server for the work, executing worker code and updating the results back to the server. [Code sample](https://github.com/conductor-sdk/java-sdk-examples/blob/main/src/main/java/io/orkes/samples/quickstart/ExecuteWorkflow.java#L82-L94)
+`TaskRunner` interface is used to start the workers, which takes care of polling server for the work, executing worker code and updating the results back to the server. [Code sample](https://github.com/conductor-sdk/java-sdk-examples/blob/16d23ce13f7c400659d4ef7435f5f5f30bc6af88/src/main/java/io/orkes/samples/quickstart/ExecuteWorkflow.java#L82-L94)
 
 See [Using Conductor Playground](https://orkes.io/content/docs/getting-started/playground/using-conductor-playground) for more details on how to use Playground environment for testing.
 
