@@ -24,7 +24,7 @@ ApiClient apiClient = new ApiClient("https://play.orkes.io/api");
 Use if your conductor server requires authentication.
 
 ##### Access Control Setup
-See [Access Control](https://orkes.io/content/docs/getting-started/concepts/access-control) for more details on role based access control with Conductor and generating API keys for your environment. [Detailed example](https://github.com/conductor-sdk/java-sdk-examples/blob/main/src/main/java/io/orkes/samples/quickstart/WorkflowManagement.java#L96-L103).
+See [Access Control](https://orkes.io/content/docs/getting-started/concepts/access-control) for more details on role based access control with Conductor and generating API keys for your environment. [Detailed example](https://github.com/conductor-sdk/java-sdk-examples/blob/main/src/main/java/io/orkes/samples/quickstart/ExecuteWorkflow.java#L48-L55).
 
 ```java
 ApiClient apiClient = new ApiClient("https://play.orkes.io/api", "key", "secret");
