@@ -1,17 +1,19 @@
-# Netflix Conductor SDK
+# Orkes Conductor Client
 
-`conductor-java` repository provides the client SDKs to build Task Workers in Java
+This repository provides a Java client for Orkes Conductor Server. With this client you can manage
+metadata (Workflows and tasks), run workflows, create workers and more. 
 
-## Quick Start
+## Examples
 
-1. [Setup package](#Setup-conductor-python-package)
-2. [Create and run task workers](docs/worker/README.md)
-3. [Create workflows using code](docs/workflow/README.md)
-4. [Create Kafka queue configuration using code](docs/queue/kafka.md)
+Check out [the examples in this project](https://github.com/conductor-sdk/java-sdk-examples)
 
-### Setup package
+## Quick Guides
 
-Check out [this example project](https://github.com/conductor-sdk/java-sdk-examples), go ahead and create a fork!
+- [Create and run workers](docs/worker/README.md)
+- [Create workflows using code](docs/workflow/README.md)
+- [Create Kafka queue configuration using code](docs/queue/kafka.md)
+
+---
 
 ### Conductor server settings
 Everything related to server settings should be done within the `ApiClient` class, by setting the required parameters when initializing an object, like this:
@@ -23,11 +25,12 @@ ApiClient apiClient = new ApiClient("https://play.orkes.io/api");
 #### Authentication settings (optional)
 Use if your conductor server requires authentication.
 
-##### Access Control Setup
+#### Access Control Setup
 See [Access Control](https://orkes.io/content/docs/getting-started/concepts/access-control) for more details on role based access control with Conductor and generating API keys for your environment. [Detailed example](https://github.com/conductor-sdk/java-sdk-examples/blob/main/src/main/java/io/orkes/samples/quickstart/ExecuteWorkflow.java#L48-L55).
 
 ```java
 ApiClient apiClient = new ApiClient("https://play.orkes.io/api", "key", "secret");
 ```
 
-### Next: [Create and run task workers](docs/worker/README.md)
+---
+### Next: [Create and run workers](docs/worker/README.md)
