@@ -128,6 +128,10 @@ java {
     withJavadocJar()
 }
 
+jar {
+    exclude 'io/orkes/conductor/sdk/examples'
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -208,7 +212,7 @@ build.dependsOn(spotlessApply)
 
 signing {
     def signingKeyId = findProperty('signingKeyId')
-    if(signingKeyId) {
+    if (signingKeyId) {
         println 'Signing the artifact with keys'
         signing {
             def signingKey = findProperty('signingKey')
