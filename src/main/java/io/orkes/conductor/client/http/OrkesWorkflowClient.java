@@ -54,7 +54,11 @@ public class OrkesWorkflowClient extends WorkflowClient {
         this.apiClient = apiClient;
         this.httpClient = new WorkflowResourceApi(apiClient);
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
-        this.grpcWorkflowClient = new GrpcWorkflowClient(apiClient);
+        if(apiClient.isUseGRPC()) {
+            this.grpcWorkflowClient = new GrpcWorkflowClient(apiClient);
+        } else {
+            this.grpcWorkflowClient = null;
+        }
         if(!apiClient.isUseGRPC()) {
             int threadCount = apiClient.getExecutorThreadCount();
             if(threadCount < 1) {
