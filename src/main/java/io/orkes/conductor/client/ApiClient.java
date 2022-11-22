@@ -107,6 +107,9 @@ public class ApiClient {
 
     public ApiClient(String basePath) {
         this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
+        if(basePath.endsWith("/")) {
+            basePath = basePath.substring(0, basePath.length()-1);
+        }
         this.basePath = basePath;
         httpClient = new OkHttpClient();
         httpClient.setRetryOnConnectionFailure(true);
@@ -115,8 +118,7 @@ public class ApiClient {
         authentications = new HashMap<>();
     }
 
-    public ApiClient(
-            String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
+    public ApiClient(String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
         this(basePath);
         this.secretsManager = secretsManager;
         this.ssmKeyPath = keyPath;
