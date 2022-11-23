@@ -124,8 +124,7 @@ public class WorkflowSearchTests {
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
         authorizationRequest.setSubject(new SubjectRef().id("workflow-search-group").type(SubjectRef.TypeEnum.GROUP));
-        authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ, AuthorizationRequest.AccessEnum.EXECUTE,
-        AuthorizationRequest.AccessEnum.UPDATE, AuthorizationRequest.AccessEnum.DELETE, AuthorizationRequest.AccessEnum.CREATE));
+        authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ));
         authorizationRequest.setTarget(new TargetRef().id("department:account").type(TargetRef.TypeEnum.TAG));
         authorizationClient.grantPermissions(authorizationRequest);
 
