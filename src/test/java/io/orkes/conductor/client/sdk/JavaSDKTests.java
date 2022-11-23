@@ -14,11 +14,11 @@ package io.orkes.conductor.client.sdk;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -27,15 +27,12 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.WorkflowSummary;
+
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
-
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.util.ApiUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
