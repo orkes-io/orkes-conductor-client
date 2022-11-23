@@ -18,9 +18,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.orkes.conductor.client.AuthorizationClient;
-import io.orkes.conductor.client.http.OrkesAuthorizationClient;
-import io.orkes.conductor.client.model.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -34,10 +31,13 @@ import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.WorkflowSummary;
 
 import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.AuthorizationClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.http.OrkesAuthorizationClient;
 import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
+import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
