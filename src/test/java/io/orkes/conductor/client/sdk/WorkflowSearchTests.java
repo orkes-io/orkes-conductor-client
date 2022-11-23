@@ -13,11 +13,16 @@
 package io.orkes.conductor.client.sdk;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.orkes.conductor.client.AuthorizationClient;
+import io.orkes.conductor.client.http.OrkesAuthorizationClient;
+import io.orkes.conductor.client.model.*;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -43,61 +48,107 @@ public class WorkflowSearchTests {
     @Test
     public void testSDK() {
 
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
-        MetadataClient metadataClient  =new OrkesMetadataClient(apiClient);
+        ApiClient apiClient1 = ApiUtil.getApiClientWithCredentials();
+        WorkflowClient workflowClient1 = new OrkesWorkflowClient(apiClient1);
+        MetadataClient metadataClient1  =new OrkesMetadataClient(apiClient1);
         String taskName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String workflowName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         // Run workflow search it should return 0 result
-        AtomicReference<SearchResult<WorkflowSummary>> workflowSummarySearchResult = new AtomicReference<>(workflowClient.search("workflowType IN (" + workflowName1 + ")"));
+        AtomicReference<SearchResult<WorkflowSummary>> workflowSummarySearchResult = new AtomicReference<>(workflowClient1.search("workflowType IN (" + workflowName1 + ")"));
         assertEquals(workflowSummarySearchResult.get().getResults().size(), 0);
 
         // Register workflow
-        registerWorkflowDef(workflowName1, taskName1, metadataClient);
+        registerWorkflowDef(workflowName1, taskName1, metadataClient1);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName1);
         startWorkflowRequest.setVersion(1);
 
-        workflowClient.startWorkflow(startWorkflowRequest);
-        workflowClient.startWorkflow(startWorkflowRequest);
+        workflowClient1.startWorkflow(startWorkflowRequest);
+        workflowClient1.startWorkflow(startWorkflowRequest);
         await().pollInterval(100, TimeUnit.MILLISECONDS).until(() ->
         {
-            workflowSummarySearchResult.set(workflowClient.search("workflowType IN (" + workflowName1 + ")"));
+            workflowSummarySearchResult.set(workflowClient1.search("workflowType IN (" + workflowName1 + ")"));
             return workflowSummarySearchResult.get().getResults().size() == 2;
         });
 
         // Register another workflow
         String taskName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String workflowName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        registerWorkflowDef(workflowName2, taskName2, metadataClient);
+        registerWorkflowDef(workflowName2, taskName2, metadataClient1);
 
         startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName2);
         startWorkflowRequest.setVersion(1);
 
         // Trigger workflow
-        workflowClient.startWorkflow(startWorkflowRequest);
-        workflowClient.startWorkflow(startWorkflowRequest);
+        workflowClient1.startWorkflow(startWorkflowRequest);
+        workflowClient1.startWorkflow(startWorkflowRequest);
         // In search result when only this workflow searched 2 results should come
         await().pollInterval(100, TimeUnit.MILLISECONDS).until(() ->
         {
-            workflowSummarySearchResult.set(workflowClient.search("workflowType IN (" + workflowName2 + ")"));
+            workflowSummarySearchResult.set(workflowClient1.search("workflowType IN (" + workflowName2 + ")"));
             return workflowSummarySearchResult.get().getResults().size() == 2;
         });
 
         // In search result when both workflow searched then 4 results should come
         await().pollInterval(100, TimeUnit.MILLISECONDS).until(() ->
         {
-            workflowSummarySearchResult.set(workflowClient.search("workflowType IN (" + workflowName1 + "," + workflowName2 + ")"));
+            workflowSummarySearchResult.set(workflowClient1.search("workflowType IN (" + workflowName1 + "," + workflowName2 + ")"));
             return workflowSummarySearchResult.get().getResults().size() == 4;
         });
+
         // Terminate all the workflows
-        workflowSummarySearchResult.get().getResults().forEach(workflowSummary -> workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
+        workflowSummarySearchResult.get().getResults().forEach(workflowSummary -> workflowClient1.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
+
+        TagObject tagObject = new TagObject().type(TagObject.TypeEnum.METADATA).key("department").value("account");
+        metadataClient1.addWorkflowTag(tagObject, workflowName1);
+
+        // Create admin Client and add permissions to the tag
+        ApiClient adminClient = ApiUtil.getAdminClient();
+        AuthorizationClient authorizationClient = new OrkesAuthorizationClient(adminClient);
+
+        // Create user2 client and check access should not be there workflow1
+        ApiClient apiClient2 = ApiUtil.getUser2Client();
+        WorkflowClient workflowClient2 = new OrkesWorkflowClient(apiClient2);
+        SearchResult<WorkflowSummary> workflowSummarySearchResult1 = workflowClient2.search("workflowType IN (" + workflowName2 + ")");
+        // There should be no workflow in search.
+        Assert.assertTrue(workflowSummarySearchResult1.getResults().size() == 0);
+
+        // Create group and add these two users in the group
+        Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "workflow-search-group");
+        authorizationClient.addUserToGroup("home", "manan16489@gmail.com");
+        authorizationClient.addUserToGroup("home", "tinukonduit@gmail.com");
+
+        // Give permissions to tag in the group
+        AuthorizationRequest authorizationRequest = new AuthorizationRequest();
+        authorizationRequest.setSubject(new SubjectRef().id("workflow-search-group").type(SubjectRef.TypeEnum.GROUP));
+        authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ, AuthorizationRequest.AccessEnum.EXECUTE,
+        AuthorizationRequest.AccessEnum.UPDATE, AuthorizationRequest.AccessEnum.DELETE, AuthorizationRequest.AccessEnum.CREATE));
+        authorizationRequest.setTarget(new TargetRef().id("department:account").type(TargetRef.TypeEnum.TAG));
+        authorizationClient.grantPermissions(authorizationRequest);
+
+        // Search should give results
+        workflowSummarySearchResult1 = workflowClient2.search("workflowType IN (" + workflowName2 + ")");
+        // There should be 2 workflow in search.
+        Assert.assertTrue(workflowSummarySearchResult1.getResults().size() == 2);
+
+        metadataClient1.unregisterWorkflowDef(workflowName1, 1);
+        metadataClient1.unregisterWorkflowDef(workflowName2, 1);
     }
 
-    private void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient) {
+    UpsertGroupRequest getUpsertGroupRequest() {
+        return new UpsertGroupRequest()
+                .description("Group used for SDK testing")
+                .roles(List.of(UpsertGroupRequest.RolesEnum.USER));
+    }
+
+    List<String> getAccessListAll() {
+        return List.of("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
+    }
+
+    private void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient1) {
         TaskDef taskDef = new TaskDef(taskName);
         taskDef.setOwnerEmail("test@orkes.io");
         WorkflowTask workflowTask = new WorkflowTask();
@@ -112,8 +163,8 @@ public class WorkflowSearchTests {
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to monitor order state");
         workflowDef.setTasks(Arrays.asList(workflowTask));
-        metadataClient.registerWorkflowDef(workflowDef);
-        metadataClient.registerTaskDefs(Arrays.asList(taskDef));
+        metadataClient1.registerWorkflowDef(workflowDef);
+        metadataClient1.registerTaskDefs(Arrays.asList(taskDef));
     }
 
 }
