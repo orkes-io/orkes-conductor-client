@@ -37,6 +37,16 @@ public class ApiUtil {
         return new ApiClient(basePath, keyId, keySecret);
     }
 
+    public static ApiClient getAdminClient() {
+        return new ApiClient("http://localhost:8080/api",
+                "admin_key", "admin_secret");
+    }
+
+    public static ApiClient getUser2Client() {
+        return new ApiClient("http://localhost:8080/api",
+                "user2_key", "user2_secret");
+    }
+
     public static String getBasePath() {
         return getEnv(ENV_ROOT_URI);
     }
