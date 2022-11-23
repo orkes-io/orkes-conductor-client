@@ -12,108 +12,52 @@
  */
 package io.orkes.conductor.client.sdk;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.tasks.TaskType;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
-import com.netflix.conductor.common.run.SearchResult;
-import com.netflix.conductor.common.run.WorkflowSummary;
+import com.netflix.conductor.client.http.MetadataClient;
+import com.netflix.conductor.client.http.TaskClient;
+import com.netflix.conductor.client.http.WorkflowClient;
+import com.netflix.conductor.common.run.Workflow;
+import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
+import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
+import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.MetadataClient;
-import io.orkes.conductor.client.WorkflowClient;
-import io.orkes.conductor.client.http.OrkesMetadataClient;
-import io.orkes.conductor.client.http.OrkesWorkflowClient;
+import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.util.ApiUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 public class JavaSDKTests {
 
     @Test
-    public void testSDK() {
-
+    public void testSDK() throws ExecutionException, InterruptedException, TimeoutException {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
-        MetadataClient metadataClient  =new OrkesMetadataClient(apiClient);
-        String taskName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String workflowName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        // Run workflow search it should return 0 result
-        AtomicReference<SearchResult<WorkflowSummary>> workflowSummarySearchResult = new AtomicReference<>(workflowClient.search("workflowType IN (" + workflowName1 + ")"));
-        assertEquals(workflowSummarySearchResult.get().getResults().size(), 0);
+        TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
+        WorkflowClient workflowClient = new OrkesClients(apiClient).getWorkflowClient();
+        MetadataClient metadataClient = new OrkesClients(apiClient).getMetadataClient();
+        WorkflowExecutor executor = new WorkflowExecutor(taskClient, workflowClient, metadataClient, 10);
+        executor.initWorkers("io.orkes.conductor.client.sdk");
 
-        // Register workflow
-        registerWorkflowDef(workflowName1, taskName1, metadataClient);
-
-        // Trigger two workflows
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName1);
-        startWorkflowRequest.setVersion(1);
-
-        workflowClient.startWorkflow(startWorkflowRequest);
-        workflowClient.startWorkflow(startWorkflowRequest);
-        await().pollInterval(100, TimeUnit.MILLISECONDS).until(() ->
-        {
-            workflowSummarySearchResult.set(workflowClient.search("workflowType IN (" + workflowName1 + ")"));
-            return workflowSummarySearchResult.get().getResults().size() == 2;
-        });
-
-        // Register another workflow
-        String taskName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String workflowName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        registerWorkflowDef(workflowName2, taskName2, metadataClient);
-
-        startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName2);
-        startWorkflowRequest.setVersion(1);
-
-        // Trigger workflow
-        workflowClient.startWorkflow(startWorkflowRequest);
-        workflowClient.startWorkflow(startWorkflowRequest);
-        // In search result when only this workflow searched 2 results should come
-        await().pollInterval(100, TimeUnit.MILLISECONDS).until(() ->
-        {
-            workflowSummarySearchResult.set(workflowClient.search("workflowType IN (" + workflowName2 + ")"));
-            return workflowSummarySearchResult.get().getResults().size() == 2;
-        });
-
-        // In search result when both workflow searched then 4 results should come
-        await().pollInterval(100, TimeUnit.MILLISECONDS).until(() ->
-        {
-            workflowSummarySearchResult.set(workflowClient.search("workflowType IN (" + workflowName1 + "," + workflowName2 + ")"));
-            return workflowSummarySearchResult.get().getResults().size() == 4;
-        });
-        // Terminate all the workflows
-        workflowSummarySearchResult.get().getResults().forEach(workflowSummary -> workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
-    }
-
-    private void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient) {
-        TaskDef taskDef = new TaskDef(taskName);
-        taskDef.setOwnerEmail("test@orkes.io");
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.setTaskReferenceName(taskName);
-        workflowTask.setName(taskName);
-        workflowTask.setTaskDefinition(taskDef);
-        workflowTask.setWorkflowTaskType(TaskType.SIMPLE);
-        workflowTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
-        WorkflowDef workflowDef = new WorkflowDef();
-        workflowDef.setName(workflowName);
-        workflowDef.setOwnerEmail("test@orkes.io");
-        workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
-        workflowDef.setDescription("Workflow to monitor order state");
-        workflowDef.setTasks(Arrays.asList(workflowTask));
-        metadataClient.registerWorkflowDef(workflowDef);
-        metadataClient.registerTaskDefs(Arrays.asList(taskDef));
+        ConductorWorkflow<Map<String, Object>> workflow = new ConductorWorkflow<>(executor);
+        workflow.setName("sdk_integration_test");
+        workflow.setVersion(1);
+        workflow.setVariables(new HashMap<>());
+        workflow.add(new SimpleTask("task1", "task1").input("name", "orkes"));
+        CompletableFuture<Workflow> future = workflow.executeDynamic(new HashMap<>());
+        assertNotNull(future);
+        Workflow run = future.get(2, TimeUnit.SECONDS);
+        assertNotNull(run);
+        assertEquals(Workflow.WorkflowStatus.COMPLETED, run.getStatus());
+        assertEquals(1, run.getTasks().size());
+        assertEquals("Hello, orkes", run.getTasks().get(0).getOutputData().get("greetings"));
     }
 
 }
