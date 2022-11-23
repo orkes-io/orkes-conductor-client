@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -95,6 +96,8 @@ public class JavaSDKTests {
             workflowSummarySearchResult.set(workflowClient.search("workflowType IN (" + workflowName1 + "," + workflowName2 + ")"));
             return workflowSummarySearchResult.get().getResults().size() == 4;
         });
+        // Terminate all the workflows
+        workflowSummarySearchResult.get().getResults().forEach(workflowSummary -> workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
     }
 
     private void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient) {
