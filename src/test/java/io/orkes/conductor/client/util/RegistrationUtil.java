@@ -46,23 +46,25 @@ public class RegistrationUtil {
         metadataClient1.registerTaskDefs(Arrays.asList(taskDef, taskDef2));
     }
 
-    public static void registerWorkflowWithSubWorkflowDef(String workflowName, String subWorkflowName, MetadataClient metadataClient) {
-        TaskDef taskDef = new TaskDef("simple");
+    public static void registerWorkflowWithSubWorkflowDef(String workflowName, String subWorkflowName, String taskName, MetadataClient metadataClient) {
+        TaskDef taskDef = new TaskDef(taskName);
         taskDef.setOwnerEmail("test@orkes.io");
         taskDef.setRetryCount(0);
-
+        TaskDef taskDef2 = new TaskDef(subWorkflowName);
+        taskDef2.setOwnerEmail("test@orkes.io");
+        taskDef2.setRetryCount(0);
 
         WorkflowTask inline = new WorkflowTask();
-        inline.setTaskReferenceName("simple");
-        inline.setName("simple");
+        inline.setTaskReferenceName(taskName);
+        inline.setName(taskName);
         inline.setTaskDefinition(taskDef);
         inline.setWorkflowTaskType(TaskType.SIMPLE);
         inline.setInputParameters(Map.of("evaluatorType", "graaljs", "expression", "true;"));
 
         WorkflowTask subworkflowTask = new WorkflowTask();
-        subworkflowTask.setTaskReferenceName("sub_workflow");
-        subworkflowTask.setName("sub_workflow");
-        subworkflowTask.setTaskDefinition(taskDef);
+        subworkflowTask.setTaskReferenceName(subWorkflowName);
+        subworkflowTask.setName(subWorkflowName);
+        subworkflowTask.setTaskDefinition(taskDef2);
         subworkflowTask.setWorkflowTaskType(TaskType.SUB_WORKFLOW);
         SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
         subWorkflowParams.setName(subWorkflowName);
@@ -77,8 +79,6 @@ public class RegistrationUtil {
         subworkflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         subworkflowDef.setDescription("Sub Workflow to test retry");
         subworkflowDef.setTasks(Arrays.asList(inline));
-        metadataClient.registerWorkflowDef(subworkflowDef);
-        metadataClient.registerTaskDefs(Arrays.asList(taskDef));
 
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName(workflowName);
@@ -87,6 +87,8 @@ public class RegistrationUtil {
         workflowDef.setDescription("Workflow to test retry");
         workflowDef.setTasks(Arrays.asList(subworkflowTask));
         metadataClient.registerWorkflowDef(workflowDef);
+        metadataClient.registerWorkflowDef(subworkflowDef);
+        metadataClient.registerTaskDefs(Arrays.asList(taskDef, taskDef2));
     }
 
 }

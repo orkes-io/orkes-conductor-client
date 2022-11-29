@@ -13,9 +13,7 @@
 package io.orkes.conductor.client.sdk;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.metadata.workflow.*;
 import com.netflix.conductor.common.run.Workflow;
 import io.orkes.conductor.client.ApiClient;
@@ -32,8 +30,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static io.orkes.conductor.client.util.RegistrationUtil.registerWorkflowDef;
@@ -129,7 +125,7 @@ public class WorkflowRerunTests {
         String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         // Register workflow
-        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, metadataClient);
+        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, "simple", metadataClient);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -155,13 +151,7 @@ public class WorkflowRerunTests {
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
 
-        //Archive the workflow
-        workflowClient.deleteWorkflow(workflowId, true);
-
-        // Wait till workflow gets uploaded.
-        await().atLeast(5, TimeUnit.SECONDS);
-
-        // Retry the workflow. This will fail because of bug.
+        // Retry the workflow.
         workflowClient.retryLastFailedTask(workflowId);
         // Check the workflow status and few other parameters
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {

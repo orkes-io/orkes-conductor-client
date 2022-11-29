@@ -210,7 +210,7 @@ public class WorkflowRestartTests {
         String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         // Register workflow
-        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, metadataClient);
+        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, "simple", metadataClient);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -236,13 +236,7 @@ public class WorkflowRestartTests {
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
 
-        //Archive the workflow
-        workflowClient.deleteWorkflow(workflowId, true);
-
-        // Wait till workflow gets uploaded.
-        await().atLeast(5, TimeUnit.SECONDS);
-
-        // Retry the workflow. This will fail because of bug.
+        // Retry the workflow.
         workflowClient.restart(workflowId, false);
         // Check the workflow status and few other parameters
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
