@@ -12,22 +12,24 @@
  */
 package io.orkes.conductor.client.sdk;
 
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
+
 import io.orkes.conductor.client.*;
 import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.TimeUnit;
 
 import static io.orkes.conductor.client.util.RegistrationUtil.registerWorkflowDef;
 import static io.orkes.conductor.client.util.RegistrationUtil.registerWorkflowWithSubWorkflowDef;
@@ -56,7 +58,7 @@ public class WorkflowRetryTests {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         // Register workflow
-        registerWorkflowDef(workflowName, metadataClient);
+        registerWorkflowDef(workflowName, "simple", metadataClient);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();

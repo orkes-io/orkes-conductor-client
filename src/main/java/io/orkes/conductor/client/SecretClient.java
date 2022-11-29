@@ -15,6 +15,8 @@ package io.orkes.conductor.client;
 import java.util.List;
 import java.util.Set;
 
+import io.orkes.conductor.client.model.TagObject;
+
 public interface SecretClient {
     void deleteSecret(String key);
 
@@ -24,7 +26,8 @@ public interface SecretClient {
 
     List<String> listSecretsThatUserCanGrantAccessTo();
 
-    void putSecret(String name, String key);
+    void putSecret(String value, String key);
 
     boolean secretExists(String key);
+    void putTagForSecret(List<TagObject> tags, String key);
 }

@@ -18,6 +18,7 @@ import java.util.Set;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.SecretClient;
 import io.orkes.conductor.client.http.api.SecretResourceApi;
+import io.orkes.conductor.client.model.TagObject;
 
 public class OrkesSecretClient extends OrkesClient implements SecretClient {
 
@@ -50,12 +51,17 @@ public class OrkesSecretClient extends OrkesClient implements SecretClient {
     }
 
     @Override
-    public void putSecret(String body, String key) throws ApiException {
-        secretResourceApi.putSecret(body, key);
+    public void putSecret(String value, String key) throws ApiException {
+        secretResourceApi.putSecret(value, key);
     }
 
     @Override
     public boolean secretExists(String key) throws ApiException {
         return secretResourceApi.secretExists(key);
+    }
+
+    @Override
+    public void putTagForSecret(List<TagObject> tags, String key) {
+        secretResourceApi.putTagForSecret(tags, key);
     }
 }
