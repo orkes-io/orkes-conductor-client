@@ -63,6 +63,8 @@ class TaskRunner {
 
     private final Worker worker;
 
+    private int pollIterations = 0;
+
     TaskRunner(
             Worker worker,
             EurekaClient eurekaClient,
@@ -100,6 +102,7 @@ class TaskRunner {
     public void pollAndExecute() {
         Stopwatch stopwatch = null;
         while (true) {
+            this.pollIterations += 1;
             try {
                 List<Task> tasks = pollTasksForWorker();
                 if (tasks.isEmpty()) {
@@ -119,6 +122,10 @@ class TaskRunner {
                 LOGGER.error(t.getMessage(), t);
             }
         }
+    }
+
+    public int getPollIterations() {
+        return this.pollIterations;
     }
 
     public void shutdown(int timeout) {

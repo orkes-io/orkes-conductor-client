@@ -88,6 +88,14 @@ public class TaskRunnerConfigurer {
         taskRunners = new LinkedList<>();
     }
 
+    public List<Integer> getPollIterationsList() {
+        List<Integer> pollingIterationList = new ArrayList<>();
+        for (TaskRunner taskRunner : this.taskRunners) {
+            pollingIterationList.add(taskRunner.getPollIterations());
+        }
+        return pollingIterationList;
+    }
+
     /** Builder used to create the instances of TaskRunnerConfigurer */
     public static class Builder {
         private String workerNamePrefix = "workflow-worker-%d";
