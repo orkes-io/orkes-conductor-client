@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netflix.appinfo.InstanceInfo;
-import com.netflix.conductor.client.config.ConductorClientConfiguration;
 import com.netflix.conductor.client.config.PropertyFactory;
 import com.netflix.conductor.client.telemetry.MetricsContainer;
 import com.netflix.conductor.client.worker.Worker;
@@ -38,7 +37,6 @@ import com.netflix.spectator.api.Spectator;
 import com.netflix.spectator.api.patterns.ThreadPoolMonitor;
 
 import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.http.ApiException;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -67,7 +65,6 @@ class TaskRunner {
             Worker worker,
             EurekaClient eurekaClient,
             TaskClient taskClient,
-            ConductorClientConfiguration conductorClientConfiguration,
             int updateRetryCount,
             Map<String, String> taskToDomain,
             String workerNamePrefix,
@@ -177,16 +174,12 @@ class TaskRunner {
             int tasksToPoll = pollCount;
             tasks = MetricsContainer.getPollTimer(taskType).record(() -> pollTask(domain, tasksToPoll));
             stopwatch.stop();
-            permits.release(pollCount-tasks.size());        //release extra permits
+            permits.release(pollCount - tasks.size());        //release extra permits
             LOGGER.debug("Time taken to poll {} task with a batch size of {} is {} ms", taskType, tasks.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
-        } catch (ApiException ae) {
-            MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), ae);
-            LOGGER.error(
-                    "Error when polling for tasks {} - {}", ae.getCode(), ae.getResponseBody(), ae);
-        } catch (Exception e) {
-            MetricsContainer.incrementTaskPollErrorCount(worker.getTaskDefName(), e);
-            LOGGER.error("Error when polling for tasks", e);
+        }  catch (Throwable e) {
+            LOGGER.error("Error when polling for tasks: {}", e.getMessage(), e);
+            permits.release(pollCount - tasks.size());
         }
         return tasks;
     }

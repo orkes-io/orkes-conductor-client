@@ -54,7 +54,6 @@ public class TaskRunnerConfigurer {
 
     private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollCount;
 
-    private final ConductorClientConfiguration conductorClientConfiguration;
     private Integer defaultPollTimeout;
     private Integer defaultPollCount;
     private final int threadCount;
@@ -81,7 +80,6 @@ public class TaskRunnerConfigurer {
         this.defaultPollTimeout = builder.defaultPollTimeout;
         this.defaultPollCount = builder.defaultPollCount;
         this.shutdownGracePeriodSeconds = builder.shutdownGracePeriodSeconds;
-        this.conductorClientConfiguration = builder.conductorClientConfiguration;
         this.workers = new LinkedList<>();
         this.threadCount = builder.threadCount;
         builder.workers.forEach(this.workers::add);
@@ -329,7 +327,6 @@ public class TaskRunnerConfigurer {
                         worker,
                         eurekaClient,
                         taskClient,
-                        conductorClientConfiguration,
                         updateRetryCount,
                         taskToDomain,
                         workerNamePrefix,
