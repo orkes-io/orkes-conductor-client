@@ -48,65 +48,63 @@ public class WorkflowSearchTests {
     @Test
     public void testSDK() {
 
-        ApiClient apiClient1 = ApiUtil.getApiClientWithCredentials();
-        WorkflowClient workflowClient1 = new OrkesWorkflowClient(apiClient1);
-        MetadataClient metadataClient1  =new OrkesMetadataClient(apiClient1);
+        ApiClient adminClient = ApiUtil.getApiClientWithCredentials();
+        WorkflowClient workflowAdminClient = new OrkesWorkflowClient(adminClient);
+        MetadataClient metadataAdminClient  =new OrkesMetadataClient(adminClient);
         String taskName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String workflowName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         // Run workflow search it should return 0 result
-        AtomicReference<SearchResult<WorkflowSummary>> workflowSummarySearchResult = new AtomicReference<>(workflowClient1.search("workflowType IN (" + workflowName1 + ")"));
+        AtomicReference<SearchResult<WorkflowSummary>> workflowSummarySearchResult = new AtomicReference<>(workflowAdminClient.search("workflowType IN (" + workflowName1 + ")"));
         assertEquals(workflowSummarySearchResult.get().getResults().size(), 0);
 
         // Register workflow
-        registerWorkflowDef(workflowName1, taskName1, metadataClient1);
+        registerWorkflowDef(workflowName1, taskName1, metadataAdminClient);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName1);
         startWorkflowRequest.setVersion(1);
 
-        workflowClient1.startWorkflow(startWorkflowRequest);
-        workflowClient1.startWorkflow(startWorkflowRequest);
+        workflowAdminClient.startWorkflow(startWorkflowRequest);
+        workflowAdminClient.startWorkflow(startWorkflowRequest);
         await().pollInterval(100, TimeUnit.MILLISECONDS).until(() ->
         {
-            workflowSummarySearchResult.set(workflowClient1.search("workflowType IN (" + workflowName1 + ")"));
+            workflowSummarySearchResult.set(workflowAdminClient.search("workflowType IN (" + workflowName1 + ")"));
             return workflowSummarySearchResult.get().getResults().size() == 2;
         });
 
         // Register another workflow
         String taskName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String workflowName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        registerWorkflowDef(workflowName2, taskName2, metadataClient1);
+        registerWorkflowDef(workflowName2, taskName2, metadataAdminClient);
 
         startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName2);
         startWorkflowRequest.setVersion(1);
 
         // Trigger workflow
-        workflowClient1.startWorkflow(startWorkflowRequest);
-        workflowClient1.startWorkflow(startWorkflowRequest);
+        workflowAdminClient.startWorkflow(startWorkflowRequest);
+        workflowAdminClient.startWorkflow(startWorkflowRequest);
         // In search result when only this workflow searched 2 results should come
         await().pollInterval(100, TimeUnit.MILLISECONDS).until(() ->
         {
-            workflowSummarySearchResult.set(workflowClient1.search("workflowType IN (" + workflowName2 + ")"));
+            workflowSummarySearchResult.set(workflowAdminClient.search("workflowType IN (" + workflowName2 + ")"));
             return workflowSummarySearchResult.get().getResults().size() == 2;
         });
 
         // In search result when both workflow searched then 4 results should come
         await().pollInterval(100, TimeUnit.MILLISECONDS).until(() ->
         {
-            workflowSummarySearchResult.set(workflowClient1.search("workflowType IN (" + workflowName1 + "," + workflowName2 + ")"));
+            workflowSummarySearchResult.set(workflowAdminClient.search("workflowType IN (" + workflowName1 + "," + workflowName2 + ")"));
             return workflowSummarySearchResult.get().getResults().size() == 4;
         });
 
         // Terminate all the workflows
-        workflowSummarySearchResult.get().getResults().forEach(workflowSummary -> workflowClient1.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
+        workflowSummarySearchResult.get().getResults().forEach(workflowSummary -> workflowAdminClient.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
 
         TagObject tagObject = new TagObject().type(TagObject.TypeEnum.METADATA).key("department").value("account");
-        metadataClient1.addWorkflowTag(tagObject, workflowName1);
+        metadataAdminClient.addWorkflowTag(tagObject, workflowName1);
 
-        // Create admin Client and add permissions to the tag
-        ApiClient adminClient = ApiUtil.getAdminClient();
         AuthorizationClient authorizationClient = new OrkesAuthorizationClient(adminClient);
 
         // Create user2 client and check access should not be there workflow1
@@ -118,8 +116,8 @@ public class WorkflowSearchTests {
 
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "workflow-search-group");
-        authorizationClient.addUserToGroup("home", "manan16489@gmail.com");
-        authorizationClient.addUserToGroup("home", "tinukonduit@gmail.com");
+        authorizationClient.addUserToGroup("workflow-search-group", "conductoruser1@gmail.com");
+        authorizationClient.addUserToGroup("workflow-search-group", "conductoruser2@gmail.com");
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
@@ -133,8 +131,8 @@ public class WorkflowSearchTests {
         // There should be 2 workflow in search.
         Assert.assertTrue(workflowSummarySearchResult1.getResults().size() == 2);
 
-        metadataClient1.unregisterWorkflowDef(workflowName1, 1);
-        metadataClient1.unregisterWorkflowDef(workflowName2, 1);
+        metadataAdminClient.unregisterWorkflowDef(workflowName1, 1);
+        metadataAdminClient.unregisterWorkflowDef(workflowName2, 1);
     }
 
     UpsertGroupRequest getUpsertGroupRequest() {
