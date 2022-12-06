@@ -45,9 +45,9 @@ public class ApiUtil {
     public static ApiClient getUser1Client() {
         String basePath = getBasePath();
         assertNotNull(basePath, ENV_ROOT_URI + " env not set");
-        String keyId = getKeyId();
+        String keyId = getEnv(USER1_KEY_ID);
         assertNotNull(keyId, USER1_KEY_ID + " env not set");
-        String keySecret = getKeySecret();
+        String keySecret = getEnv(USER1_SECRET);
         assertNotNull(keySecret, USER1_SECRET + " env not set");
         return new ApiClient(basePath, keyId, keySecret);
     }
@@ -55,9 +55,9 @@ public class ApiUtil {
     public static ApiClient getUser2Client() {
         String basePath = getBasePath();
         assertNotNull(basePath, ENV_ROOT_URI + " env not set");
-        String keyId = getKeyId();
+        String keyId = getEnv(USER2_KEY_ID);
         assertNotNull(keyId, USER2_KEY_ID + " env not set");
-        String keySecret = getKeySecret();
+        String keySecret = getEnv(USER2_SECRET);
         assertNotNull(keySecret, USER2_SECRET + " env not set");
         return new ApiClient(basePath, keyId, keySecret);
     }
