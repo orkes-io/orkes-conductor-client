@@ -128,8 +128,7 @@ public class TokenResourceApi {
      */
     public static ApiResponse<Map<String, String>> generateTokenWithHttpInfo(
             ApiClient apiClient, GenerateTokenRequest generateTokenRequest) throws ApiException {
-        com.squareup.okhttp.Call call =
-                generateTokenValidateBeforeCall(apiClient, generateTokenRequest, null, null);
+        com.squareup.okhttp.Call call = generateTokenValidateBeforeCall(apiClient, generateTokenRequest, null, null);
         Type localVarReturnType = new TypeToken<Map<String, String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
