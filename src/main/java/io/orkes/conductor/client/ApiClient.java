@@ -1263,12 +1263,7 @@ public class ApiClient {
 
     public String getToken() {
         try {
-            String token = tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
-            if(token == null) {
-                LOGGER.info("null token found....");
-                System.exit(1);
-            }
-            return token;
+            return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
         } catch (ExecutionException e) {
             return null;
         }
