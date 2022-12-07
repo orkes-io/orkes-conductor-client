@@ -32,15 +32,16 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class WorkflowRateLimiterTests {
 
     @Test
-    @DisplayName("Check workflow with simple task and rerun functionality")
-    public void testRerunSimpleWorkflow() {
+    @DisplayName("Check workflow with simple rate limit by name")
+    public void testRateLimitByWorkflowName() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
         MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
         TaskClient taskClient = new OrkesTaskClient(apiClient);
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         // Register workflow
-        registerWorkflowDef(workflowName, "simple", metadataClient);
+        registerWorkflowDef(workflowName, taskName, metadataClient);
         TagObject tagObject = new TagObject();
         tagObject.setType(TagObject.TypeEnum.RATE_LIMIT);
         tagObject.setKey(workflowName);
@@ -59,7 +60,7 @@ public class WorkflowRateLimiterTests {
         Workflow workflow2 = workflowClient.getWorkflow(workflowId2, true);
         Workflow workflow3 = workflowClient.getWorkflow(workflowId3, true);
         AtomicReference<Workflow> workflow4 = new AtomicReference<>(workflowClient.getWorkflow(workflowId4, true));
-        AtomicReference<Workflow> workflow5 = new AtomicReference<>(workflowClient.getWorkflow(workflowId4, true));
+        AtomicReference<Workflow> workflow5 = new AtomicReference<>(workflowClient.getWorkflow(workflowId5, true));
 
         // Assertions
         Assertions.assertEquals(workflow1.getStatus(), Workflow.WorkflowStatus.RUNNING);
@@ -67,7 +68,7 @@ public class WorkflowRateLimiterTests {
         Assertions.assertEquals(workflow3.getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow4.get().getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow5.get().getStatus(), Workflow.WorkflowStatus.RUNNING);
-        // Workflow4 tasks should not get scheduled.
+        // Workflow4 and workflow5 tasks should not get scheduled.
         Assertions.assertEquals(workflow1.getTasks().size(), 1);
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
         Assertions.assertEquals(workflow3.getTasks().size(), 1);
@@ -100,6 +101,72 @@ public class WorkflowRateLimiterTests {
             workflow5.set(workflowClient.getWorkflow(workflowId5, true));
             assertEquals(workflow4.get().getTasks().size(), 1);
         });
+        metadataClient.unregisterWorkflowDef(workflowName, 1);
+        metadataClient.unregisterTaskDef(taskName);
+    }
+
+    @Test
+    @DisplayName("Check workflow with simple rate limit by name")
+    public void testRateLimitByWorkflowCorrelationId() {
+        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
+        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
+        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
+        TaskClient taskClient = new OrkesTaskClient(apiClient);
+        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        // Register workflow
+        registerWorkflowDef(workflowName, taskName, metadataClient);
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.RATE_LIMIT);
+        tagObject.setKey("${workflow.correlationId}");
+        tagObject.setValue(3); // Only 3 invocations are allowed for same correlationId
+        metadataClient.addWorkflowTag(tagObject, workflowName);
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setCorrelationId("rate_limited");
+        startWorkflowRequest.setName(workflowName);
+        String workflowId1 = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId2 = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId3 = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId4 = workflowClient.startWorkflow(startWorkflowRequest);
+        // Triger workflow5 without. It should not get rate limited.
+        startWorkflowRequest.setCorrelationId("");
+        String workflowId5 = workflowClient.startWorkflow(startWorkflowRequest);
+
+        Workflow workflow1 = workflowClient.getWorkflow(workflowId1, true);
+        Workflow workflow2 = workflowClient.getWorkflow(workflowId2, true);
+        Workflow workflow3 = workflowClient.getWorkflow(workflowId3, true);
+        AtomicReference<Workflow> workflow4 = new AtomicReference<>(workflowClient.getWorkflow(workflowId4, true));
+        AtomicReference<Workflow> workflow5 = new AtomicReference<>(workflowClient.getWorkflow(workflowId5, true));
+
+        // Assertions
+        Assertions.assertEquals(workflow1.getStatus(), Workflow.WorkflowStatus.RUNNING);
+        Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
+        Assertions.assertEquals(workflow3.getStatus(), Workflow.WorkflowStatus.RUNNING);
+        Assertions.assertEquals(workflow4.get().getStatus(), Workflow.WorkflowStatus.RUNNING);
+        Assertions.assertEquals(workflow5.get().getStatus(), Workflow.WorkflowStatus.RUNNING);
+        // Workflow4 and workflow5 tasks should not get scheduled.
+        Assertions.assertEquals(workflow1.getTasks().size(), 1);
+        Assertions.assertEquals(workflow2.getTasks().size(), 1);
+        Assertions.assertEquals(workflow3.getTasks().size(), 1);
+        Assertions.assertEquals(workflow4.get().getTasks().size(), 0);
+        Assertions.assertEquals(workflow5.get().getTasks().size(), 1);
+
+        // Complete workflow1.
+        TaskResult taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(workflowId1);
+        taskResult.setTaskId(workflow1.getTasks().get(0).getTaskId());
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskClient.updateTask(taskResult);
+
+        // Now workflow4 task get scheduled. Workflow5 tasks should not get scheduled.
+        // Wait for 1 second to let sweeper run
+        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            workflow4.set(workflowClient.getWorkflow(workflowId4, true));
+            assertEquals(workflow4.get().getTasks().size(), 1);
+        });
+        metadataClient.unregisterWorkflowDef(workflowName, 1);
+        metadataClient.unregisterTaskDef(taskName);
     }
 
     private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient) {
