@@ -106,7 +106,7 @@ public class WorkflowRateLimiterTests {
     }
 
     @Test
-    @DisplayName("Check workflow with simple rate limit by name")
+    @DisplayName("Check workflow with simple rate limit by correlationId")
     public void testRateLimitByWorkflowCorrelationId() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
@@ -129,7 +129,7 @@ public class WorkflowRateLimiterTests {
         String workflowId2 = workflowClient.startWorkflow(startWorkflowRequest);
         String workflowId3 = workflowClient.startWorkflow(startWorkflowRequest);
         String workflowId4 = workflowClient.startWorkflow(startWorkflowRequest);
-        // Triger workflow5 without. It should not get rate limited.
+        // Triger workflow5 without correlationId. It should not get rate limited.
         startWorkflowRequest.setCorrelationId("");
         String workflowId5 = workflowClient.startWorkflow(startWorkflowRequest);
 
