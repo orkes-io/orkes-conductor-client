@@ -50,8 +50,6 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.api.TokenResourceApi;
 import io.orkes.conductor.client.http.auth.ApiKeyAuth;
 import io.orkes.conductor.client.http.auth.Authentication;
-import io.orkes.conductor.client.http.auth.HttpBasicAuth;
-import io.orkes.conductor.client.http.auth.OAuth;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
 import com.google.common.cache.Cache;
@@ -340,55 +338,6 @@ public class ApiClient {
     }
 
     /**
-     * Get authentications (key: authentication name, value: authentication).
-     *
-     * @return Map of authentication objects
-     */
-    public Map<String, Authentication> getAuthentications() {
-        return authentications;
-    }
-
-    /**
-     * Get authentication for the given name.
-     *
-     * @param authName The authentication name
-     * @return The authentication, null if not found
-     */
-    public Authentication getAuthentication(String authName) {
-        return authentications.get(authName);
-    }
-
-    /**
-     * Helper method to set username for the first HTTP basic authentication.
-     *
-     * @param username Username
-     */
-    public void setUsername(String username) {
-        for (Authentication auth : authentications.values()) {
-            if (auth instanceof HttpBasicAuth) {
-                ((HttpBasicAuth) auth).setUsername(username);
-                return;
-            }
-        }
-        throw new RuntimeException("No HTTP basic authentication configured!");
-    }
-
-    /**
-     * Helper method to set password for the first HTTP basic authentication.
-     *
-     * @param password Password
-     */
-    public void setPassword(String password) {
-        for (Authentication auth : authentications.values()) {
-            if (auth instanceof HttpBasicAuth) {
-                ((HttpBasicAuth) auth).setPassword(password);
-                return;
-            }
-        }
-        throw new RuntimeException("No HTTP basic authentication configured!");
-    }
-
-    /**
      * Helper method to set API key value for the first API key authentication.
      *
      * @param apiKey API key
@@ -401,36 +350,6 @@ public class ApiClient {
             }
         }
         throw new RuntimeException("No API key authentication configured!");
-    }
-
-    /**
-     * Helper method to set API key prefix for the first API key authentication.
-     *
-     * @param apiKeyPrefix API key prefix
-     */
-    public void setApiKeyPrefix(String apiKeyPrefix) {
-        for (Authentication auth : authentications.values()) {
-            if (auth instanceof ApiKeyAuth) {
-                ((ApiKeyAuth) auth).setApiKeyPrefix(apiKeyPrefix);
-                return;
-            }
-        }
-        throw new RuntimeException("No API key authentication configured!");
-    }
-
-    /**
-     * Helper method to set access token for the first OAuth2 authentication.
-     *
-     * @param accessToken Access token
-     */
-    public void setAccessToken(String accessToken) {
-        for (Authentication auth : authentications.values()) {
-            if (auth instanceof OAuth) {
-                ((OAuth) auth).setAccessToken(accessToken);
-                return;
-            }
-        }
-        throw new RuntimeException("No OAuth2 authentication configured!");
     }
 
     /**
@@ -1068,7 +987,9 @@ public class ApiClient {
             String[] authNames,
             ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        updateParamsForAuth(authNames, queryParams, headerParams);
+        if(!"/token".equalsIgnoreCase(path)) {
+            updateParamsForAuth(authNames, queryParams, headerParams);
+        }
 
         final String url = buildUrl(path, queryParams, collectionQueryParams);
         final Request.Builder reqBuilder = new Request.Builder().url(url);
@@ -1187,8 +1108,11 @@ public class ApiClient {
      * @param queryParams List of query parameters
      * @param headerParams Map of header parameters
      */
-    public void updateParamsForAuth(
-            String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
+    public void updateParamsForAuth(String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
+        if(useSecurity() && authentications.isEmpty()) {
+            LOGGER.debug("No authentication set, will refresh token");
+            refreshToken();
+        }
         for (String authName : authNames) {
             Authentication auth = authentications.get(authName);
             if (auth != null) {
@@ -1346,19 +1270,15 @@ public class ApiClient {
     }
 
     private String refreshToken() {
-
         if (secretsManager != null) {
             keyId = secretsManager.getSecret(this.ssmKeyPath);
             keySecret = secretsManager.getSecret(this.ssmSecretPath);
         }
         if (this.keyId == null || this.keySecret == null) {
-            throw new RuntimeException(
-                    "KeyId and KeySecret must be set in order to get an authentication token");
+            throw new RuntimeException("KeyId and KeySecret must be set in order to get an authentication token");
         }
-        GenerateTokenRequest generateTokenRequest =
-                new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
-        Map<String, String> response =
-                TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
+        GenerateTokenRequest generateTokenRequest = new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
+        Map<String, String> response = TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
         String token = response.get("token");
         this.setApiKeyHeader(token);
         return token;
