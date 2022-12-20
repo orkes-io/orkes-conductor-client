@@ -82,10 +82,6 @@ public class ApiClient {
     private String keyId;
     private String keySecret;
 
-    private SecretsManager secretsManager;
-    private String ssmKeyPath;
-    private String ssmSecretPath;
-
     private String grpcHost = "localhost";
     private int grpcPort = 8090;
 
@@ -118,10 +114,9 @@ public class ApiClient {
 
     public ApiClient(String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
         this(basePath);
-        this.secretsManager = secretsManager;
-        this.ssmKeyPath = keyPath;
-        this.ssmSecretPath = secretPath;
         try {
+            keyId = secretsManager.getSecret(keyPath);
+            keySecret = secretsManager.getSecret(secretPath);
             getToken();
         } catch (Throwable t) {
             LOGGER.error(t.getMessage(), t);
@@ -460,14 +455,6 @@ public class ApiClient {
     public ApiClient setWriteTimeout(int writeTimeout) {
         httpClient.setWriteTimeout(writeTimeout, TimeUnit.MILLISECONDS);
         return this;
-    }
-
-    public SecretsManager getSecretsManager() {
-        return secretsManager;
-    }
-
-    public void setSecretsManager(SecretsManager secretsManager) {
-        this.secretsManager = secretsManager;
     }
 
     /**
@@ -1263,6 +1250,9 @@ public class ApiClient {
 
     public String getToken() {
         try {
+            if (!useSecurity()) {
+                return null;
+            }
             return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
         } catch (ExecutionException e) {
             return null;
@@ -1270,10 +1260,6 @@ public class ApiClient {
     }
 
     private String refreshToken() {
-        if (secretsManager != null) {
-            keyId = secretsManager.getSecret(this.ssmKeyPath);
-            keySecret = secretsManager.getSecret(this.ssmSecretPath);
-        }
         if (this.keyId == null || this.keySecret == null) {
             throw new RuntimeException("KeyId and KeySecret must be set in order to get an authentication token");
         }
