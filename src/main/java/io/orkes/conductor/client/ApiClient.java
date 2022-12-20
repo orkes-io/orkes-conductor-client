@@ -82,8 +82,6 @@ public class ApiClient {
     private String keyId;
     private String keySecret;
 
-    private SecretsManager secretsManager;
-
     private String grpcHost = "localhost";
     private int grpcPort = 8090;
 
@@ -116,12 +114,9 @@ public class ApiClient {
 
     public ApiClient(String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
         this(basePath);
-        this.secretsManager = secretsManager;
-        if (secretsManager != null) {
+        try {
             keyId = secretsManager.getSecret(keyPath);
             keySecret = secretsManager.getSecret(secretPath);
-        }
-        try {
             getToken();
         } catch (Throwable t) {
             LOGGER.error(t.getMessage(), t);
@@ -460,14 +455,6 @@ public class ApiClient {
     public ApiClient setWriteTimeout(int writeTimeout) {
         httpClient.setWriteTimeout(writeTimeout, TimeUnit.MILLISECONDS);
         return this;
-    }
-
-    public SecretsManager getSecretsManager() {
-        return secretsManager;
-    }
-
-    public void setSecretsManager(SecretsManager secretsManager) {
-        this.secretsManager = secretsManager;
     }
 
     /**
@@ -1263,13 +1250,13 @@ public class ApiClient {
 
     public String getToken() {
         try {
-            if(useSecurity()) {
-                return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
+            if (!useSecurity()) {
+                return null;
             }
+            return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
         } catch (ExecutionException e) {
             return null;
         }
-        return null;
     }
 
     private String refreshToken() {
