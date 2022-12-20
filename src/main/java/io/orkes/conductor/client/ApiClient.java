@@ -83,8 +83,6 @@ public class ApiClient {
     private String keySecret;
 
     private SecretsManager secretsManager;
-    private String ssmKeyPath;
-    private String ssmSecretPath;
 
     private String grpcHost = "localhost";
     private int grpcPort = 8090;
@@ -119,8 +117,10 @@ public class ApiClient {
     public ApiClient(String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
         this(basePath);
         this.secretsManager = secretsManager;
-        this.ssmKeyPath = keyPath;
-        this.ssmSecretPath = secretPath;
+        if (secretsManager != null) {
+            keyId = secretsManager.getSecret(keyPath);
+            keySecret = secretsManager.getSecret(secretPath);
+        }
         try {
             getToken();
         } catch (Throwable t) {
@@ -1273,10 +1273,6 @@ public class ApiClient {
     }
 
     private String refreshToken() {
-        if (secretsManager != null) {
-            keyId = secretsManager.getSecret(this.ssmKeyPath);
-            keySecret = secretsManager.getSecret(this.ssmSecretPath);
-        }
         if (this.keyId == null || this.keySecret == null) {
             throw new RuntimeException("KeyId and KeySecret must be set in order to get an authentication token");
         }
