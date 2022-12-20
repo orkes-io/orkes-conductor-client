@@ -1263,10 +1263,13 @@ public class ApiClient {
 
     public String getToken() {
         try {
-            return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
+            if(useSecurity()) {
+                return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
+            }
         } catch (ExecutionException e) {
             return null;
         }
+        return null;
     }
 
     private String refreshToken() {
