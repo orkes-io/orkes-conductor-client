@@ -22,6 +22,11 @@ public class ApiUtil {
     private static final String ENV_KEY_ID = "SDK_INTEGRATION_TESTS_SERVER_KEY_ID";
     private static final String ENV_SECRET = "SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
 
+    private static final String USER1_KEY_ID = "USER1_SDK_INTEGRATION_TESTS_SERVER_KEY_ID";
+    private static final String USER1_SECRET = "USER1_SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
+    private static final String USER2_KEY_ID = "USER2_SDK_INTEGRATION_TESTS_SERVER_KEY_ID";
+    private static final String USER2_SECRET = "USER2_SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
+
     public static OrkesClients getOrkesClient() {
         final ApiClient apiClient = getApiClientWithCredentials();
         return new OrkesClients(apiClient);
@@ -34,6 +39,26 @@ public class ApiUtil {
         assertNotNull(keyId, ENV_KEY_ID + " env not set");
         String keySecret = getKeySecret();
         assertNotNull(keySecret, ENV_SECRET + " env not set");
+        return new ApiClient(basePath, keyId, keySecret);
+    }
+
+    public static ApiClient getUser1Client() {
+        String basePath = getBasePath();
+        assertNotNull(basePath, ENV_ROOT_URI + " env not set");
+        String keyId = getEnv(USER1_KEY_ID);
+        assertNotNull(keyId, USER1_KEY_ID + " env not set");
+        String keySecret = getEnv(USER1_SECRET);
+        assertNotNull(keySecret, USER1_SECRET + " env not set");
+        return new ApiClient(basePath, keyId, keySecret);
+    }
+
+    public static ApiClient getUser2Client() {
+        String basePath = getBasePath();
+        assertNotNull(basePath, ENV_ROOT_URI + " env not set");
+        String keyId = getEnv(USER2_KEY_ID);
+        assertNotNull(keyId, USER2_KEY_ID + " env not set");
+        String keySecret = getEnv(USER2_SECRET);
+        assertNotNull(keySecret, USER2_SECRET + " env not set");
         return new ApiClient(basePath, keyId, keySecret);
     }
 

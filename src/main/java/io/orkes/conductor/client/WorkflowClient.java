@@ -45,4 +45,6 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
     public abstract WorkflowStatus getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables);
 
     public abstract void shutdown();
+
+    public abstract void uploadCompletedWorkflows();
 }
