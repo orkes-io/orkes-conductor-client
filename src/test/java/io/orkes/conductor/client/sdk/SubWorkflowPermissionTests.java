@@ -124,9 +124,11 @@ public class SubWorkflowPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
         // User 2 should be able to query workflow information.
         String finalWorkflowId1 = workflowId;
+        String finalSubWorkflowId = subWorkflowId;
         await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
             try {
                 Assertions.assertNotNull(user2WorkflowClient.getWorkflow(finalWorkflowId1, false));
+                Assertions.assertNotNull(user2WorkflowClient.getWorkflow(finalSubWorkflowId, false));
             }catch(Exception e) {
                 // Server might take time to affect permission changes.
             }
