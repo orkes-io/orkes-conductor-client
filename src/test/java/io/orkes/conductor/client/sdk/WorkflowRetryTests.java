@@ -58,7 +58,7 @@ public class WorkflowRetryTests {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         // Register workflow
-        registerWorkflowDef(workflowName, "simple", metadataClient);
+        registerWorkflowDef(workflowName, "simple", "sample", metadataClient);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -73,6 +73,7 @@ public class WorkflowRetryTests {
         taskResult.setWorkflowInstanceId(workflowId);
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.FAILED);
+        taskResult.setReasonForIncompletion("failed");
         taskClient.updateTask(taskResult);
 
         // Wait for workflow to get failed
@@ -93,7 +94,7 @@ public class WorkflowRetryTests {
 
         taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(taskId);
+        taskResult.setTaskId(workflowClient.getWorkflow(workflowId, true).getTasks().get(2).getTaskId());
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
 
@@ -105,7 +106,7 @@ public class WorkflowRetryTests {
 
         metadataClient.unregisterWorkflowDef(workflowName, 1);
         metadataClient.unregisterTaskDef("simple");
-        metadataClient.unregisterTaskDef("inline");
+        metadataClient.unregisterTaskDef("sample");
     }
 
     @Test
@@ -138,6 +139,7 @@ public class WorkflowRetryTests {
         taskResult.setWorkflowInstanceId(subworkflowId);
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.FAILED);
+        taskResult.setReasonForIncompletion("failed");
         taskClient.updateTask(taskResult);
 
         // Wait for parent workflow to get failed

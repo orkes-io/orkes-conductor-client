@@ -46,7 +46,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class WorkflowSearchTests {
 
     @Test
-    public void testSDK() {
+    public void testWorkflowSearchPermissions() {
 
         ApiClient adminClient = ApiUtil.getApiClientWithCredentials();
         WorkflowClient workflowAdminClient = new OrkesWorkflowClient(adminClient);

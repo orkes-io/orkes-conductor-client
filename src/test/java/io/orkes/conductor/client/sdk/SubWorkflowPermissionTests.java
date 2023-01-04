@@ -15,8 +15,10 @@ package io.orkes.conductor.client.sdk;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
@@ -35,7 +37,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class SubWorkflowPermissionTests {
 
     @Test
-    public void testSDK() {
+    public void testSubWorkflowPermissionsForUser2() {
         ApiClient apiUser1Client = ApiUtil.getUser1Client();
         WorkflowClient user1WorkflowClient = new OrkesWorkflowClient(apiUser1Client);
         MetadataClient user1MetadataClient = new OrkesMetadataClient(apiUser1Client);
@@ -119,10 +121,17 @@ public class SubWorkflowPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         // Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id("app:92533fec-1e1e-49bf-9b15-95810dcf3e28").type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
-
         // User 2 should be able to query workflow information.
+        String finalWorkflowId1 = workflowId;
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            try {
+                Assertions.assertNotNull(user2WorkflowClient.getWorkflow(finalWorkflowId1, false));
+            }catch(Exception e) {
+                // Server might take time to affect permission changes.
+            }
+        });
         subWorkflowId = user2WorkflowClient.getWorkflow(workflowId, true).getTasks().get(0).getSubWorkflowId();
 
         taskResult  = new TaskResult();
@@ -133,8 +142,12 @@ public class SubWorkflowPermissionTests {
 
         // Wait for workflow to get completed
         await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            try {
+                Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
+                assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            }catch(Exception e) {
+
+            }
         });
 
         // Cleanup

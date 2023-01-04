@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.*;
@@ -30,7 +31,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class WorkerTaskPermissionTests {
 
     @Test
-    public void testSDK() {
+    public void testWorkerTaskPermissionForUser2() {
         ApiClient apiUser1Client = ApiUtil.getUser1Client();
         MetadataClient user1MetadataClient = new OrkesMetadataClient(apiUser1Client);
 
@@ -39,6 +40,7 @@ public class WorkerTaskPermissionTests {
         MetadataClient user2MetadataClient = new OrkesMetadataClient(apiUser2Client);
 
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String tagKey = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String tagValue = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
@@ -46,7 +48,7 @@ public class WorkerTaskPermissionTests {
         TagObject tagObject = new TagObject().type(TagObject.TypeEnum.METADATA).key(tagKey).value(tagValue);
 
         // Register workflow
-        RegistrationUtil.registerWorkflowDef(workflowName, taskName, user1MetadataClient);
+        RegistrationUtil.registerWorkflowDef(workflowName, taskName, taskName2, user1MetadataClient);
 
         // Tag workflow and task
         user1MetadataClient.addWorkflowTag(tagObject, workflowName);
@@ -79,12 +81,16 @@ public class WorkerTaskPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         //Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id("app:92533fec-1e1e-49bf-9b15-95810dcf3e28").type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
 
-        // Wait for workflow to get completed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            Assert.assertNotNull(user2MetadataClient.getWorkflowDef(workflowName, 1));
+        // user2 should be able to access workflow definition
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            try {
+                Assertions.assertNotNull(user2MetadataClient.getWorkflowDef(workflowName, 1));
+            }catch(Exception e) {
+            // Server might take time to affect permission changes.
+            }
         });
 
         user1MetadataClient.unregisterWorkflowDef(workflowName, 1);

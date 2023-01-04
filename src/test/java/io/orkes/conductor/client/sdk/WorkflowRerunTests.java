@@ -61,7 +61,7 @@ public class WorkflowRerunTests {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         // Register workflow
-        registerWorkflowDef(workflowName, "simple", metadataClient);
+        registerWorkflowDef(workflowName, "simple", "sample", metadataClient);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -112,7 +112,7 @@ public class WorkflowRerunTests {
 
         metadataClient.unregisterWorkflowDef(workflowName, 1);
         metadataClient.unregisterTaskDef("simple");
-        metadataClient.unregisterTaskDef("inline");
+        metadataClient.unregisterTaskDef("sample");
     }
 
     @Test

@@ -25,25 +25,25 @@ import io.orkes.conductor.client.MetadataClient;
 
 public class RegistrationUtil {
 
-    public static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient1) {
-        TaskDef taskDef = new TaskDef(taskName);
+    public static void registerWorkflowDef(String workflowName, String taskName1, String taskName2, MetadataClient metadataClient1) {
+        TaskDef taskDef = new TaskDef(taskName1);
         taskDef.setOwnerEmail("test@orkes.io");
         taskDef.setRetryCount(0);
-        TaskDef taskDef2 = new TaskDef(taskName);
+        TaskDef taskDef2 = new TaskDef(taskName2);
         taskDef2.setOwnerEmail("test@orkes.io");
         taskDef2.setRetryCount(0);
 
 
         WorkflowTask inline = new WorkflowTask();
-        inline.setTaskReferenceName(taskName);
-        inline.setName(taskName);
+        inline.setTaskReferenceName(taskName1);
+        inline.setName(taskName1);
         inline.setTaskDefinition(taskDef);
         inline.setWorkflowTaskType(TaskType.INLINE);
         inline.setInputParameters(Map.of("evaluatorType", "graaljs", "expression", "true;"));
 
         WorkflowTask simpleTask = new WorkflowTask();
-        simpleTask.setTaskReferenceName(taskName);
-        simpleTask.setName(taskName);
+        simpleTask.setTaskReferenceName(taskName2);
+        simpleTask.setName(taskName2);
         simpleTask.setTaskDefinition(taskDef);
         simpleTask.setWorkflowTaskType(TaskType.SIMPLE);
         simpleTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
