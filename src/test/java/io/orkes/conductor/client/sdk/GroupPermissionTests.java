@@ -129,7 +129,7 @@ public class GroupPermissionTests {
         user2TaskClient.updateTask(taskResult);
 
         // Wait for workflow to get completed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
         });

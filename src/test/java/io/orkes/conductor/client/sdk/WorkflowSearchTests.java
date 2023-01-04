@@ -112,7 +112,7 @@ public class WorkflowSearchTests {
         WorkflowClient workflowClient2 = new OrkesWorkflowClient(apiClient2);
         SearchResult<WorkflowSummary> workflowSummarySearchResult1 = workflowClient2.search("workflowType IN (" + workflowName2 + ")");
         // There should be no workflow in search.
-        Assert.assertTrue(workflowSummarySearchResult1.getResults().size() == 0);
+        assertTrue(workflowSummarySearchResult1.getResults().size() == 0);
 
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "workflow-search-group");
@@ -129,7 +129,10 @@ public class WorkflowSearchTests {
         // Search should give results
         workflowSummarySearchResult1 = workflowClient2.search("workflowType IN (" + workflowName2 + ")");
         // There should be 2 workflow in search.
-        Assert.assertTrue(workflowSummarySearchResult1.getResults().size() == 2);
+        SearchResult<WorkflowSummary> finalWorkflowSummarySearchResult = workflowSummarySearchResult1;
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+                assertTrue(finalWorkflowSummarySearchResult.getResults().size() == 2);
+        });
 
         metadataAdminClient.unregisterWorkflowDef(workflowName1, 1);
         metadataAdminClient.unregisterWorkflowDef(workflowName2, 1);
