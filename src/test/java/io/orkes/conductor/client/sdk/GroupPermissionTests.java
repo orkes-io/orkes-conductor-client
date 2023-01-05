@@ -35,6 +35,7 @@ import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 public class GroupPermissionTests {
@@ -121,6 +122,11 @@ public class GroupPermissionTests {
         //Grant permission to execute the task in user2 application.
         authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
+
+        String finalWorkflowId1 = workflowId;
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertNotNull(user2WorkflowClient.getWorkflow(finalWorkflowId1, true).getTasks().get(0).getTaskId());
+        });
 
         taskResult  = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId);
