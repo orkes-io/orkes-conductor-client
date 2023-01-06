@@ -35,7 +35,6 @@ import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 public class GroupPermissionTests {
