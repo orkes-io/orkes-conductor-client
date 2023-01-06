@@ -126,18 +126,17 @@ public class SubWorkflowPermissionTests {
         String finalWorkflowId1 = workflowId;
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             try {
-                Assertions.assertNotNull(user2WorkflowClient.getWorkflow(finalWorkflowId1, true).getTasks().get(0).getSubWorkflowId());
+                String id = user2WorkflowClient.getWorkflow(finalWorkflowId1, true).getTasks().get(0).getSubWorkflowId();
+
+                TaskResult taskResult1  = new TaskResult();
+                taskResult1.setWorkflowInstanceId(id);
+                taskResult1.setStatus(TaskResult.Status.COMPLETED);
+                taskResult1.setTaskId(user2WorkflowClient.getWorkflow(id, true).getTasks().get(0).getTaskId());
+                user2TaskClient.updateTask(taskResult1);
             }catch(Exception e) {
                 // Server might take time to affect permission changes.
             }
         });
-        subWorkflowId = user2WorkflowClient.getWorkflow(workflowId, true).getTasks().get(0).getSubWorkflowId();
-
-        taskResult  = new TaskResult();
-        taskResult.setWorkflowInstanceId(subWorkflowId);
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setTaskId(user2WorkflowClient.getWorkflow(subWorkflowId, true).getTasks().get(0).getTaskId());
-        user2TaskClient.updateTask(taskResult);
 
         // Wait for workflow to get completed
         await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
