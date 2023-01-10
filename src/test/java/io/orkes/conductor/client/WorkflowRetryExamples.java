@@ -55,7 +55,7 @@ public class WorkflowRetryExamples {
 
     @Test
     @DisplayName("test retry operation")
-    public void startWorkflow() {
+    public void testRetry() {
         registerTask();
         registerWorkflow();
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -64,17 +64,35 @@ public class WorkflowRetryExamples {
         startWorkflowRequest.setInput(new HashMap<>());
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+
         String taskId = workflow.getTasks().get(0).getTaskId();
         // Fail the task
         failTask(workflow.getWorkflowId(), taskId);
+        workflow = workflowClient.getWorkflow(workflowId, true);
+
+        taskId = workflow.getTasks().get(1).getTaskId();
+        failTask(workflow.getWorkflowId(), taskId);
+        workflow = workflowClient.getWorkflow(workflowId, true);
+
+        taskId = workflow.getTasks().get(2).getTaskId();
+        failTask(workflow.getWorkflowId(), taskId);
+        workflow = workflowClient.getWorkflow(workflowId, true);
+
+        taskId = workflow.getTasks().get(3).getTaskId();
+        failTask(workflow.getWorkflowId(), taskId);
+        workflow = workflowClient.getWorkflow(workflowId, true);
+
         // Upload all the workflows to s3
         workflowClient.uploadCompletedWorkflows();
         // Retry the workflow
-        String retriedWorkflowId = workflowClient.retryWorkflow(Arrays.asList(workflowId)).getBulkSuccessfulResults().get(0);
-        assertEquals(workflowId, retriedWorkflowId);
+
+        System.out.println("Going to retry " + workflowId);
+        workflowClient.retryLastFailedTask(workflowId);
         taskId = workflowClient.getWorkflow(workflowId, true).getTasks().get(0).getTaskId();
         completeTask(workflow.getWorkflowId(), taskId);
-        assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowClient.getWorkflow(retriedWorkflowId, false).getStatus());
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowClient.getWorkflow(workflowId, false).getStatus());
+        workflowClient.terminateWorkflow(workflowId, "test completed");
+        assertEquals(Workflow.WorkflowStatus.TERMINATED, workflowClient.getWorkflow(workflowId, false).getStatus());
     }
 
     private void completeTask(String workflowId, String taskId) {
