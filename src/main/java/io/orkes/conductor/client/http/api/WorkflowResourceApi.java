@@ -1326,6 +1326,86 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
+    /**
+     * Lists workflows for the given correlation id list and workflow name list
+     *
+     * @param request  (required)
+     * @param includeClosed  (optional, default to false)
+     * @param includeTasks  (optional, default to false)
+     * @return Map of correlation id to workflow list
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks) throws ApiException {
+        com.squareup.okhttp.Call call = getWorkflowsByNamesAndCorrelationIdsBeforeCall(request, includeClosed, includeTasks, null, null);
+        Type localVarReturnType = new TypeToken<Map<String, List<Workflow>>>(){}.getType();
+        ApiResponse<Map<String, List<Workflow>>> response = apiClient.execute(call, localVarReturnType);
+        return response.getData();
+    }
+
+    private com.squareup.okhttp.Call getWorkflowsByNamesAndCorrelationIdsBeforeCall(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (request == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling getWorkflows1(Async)");
+        }
+        com.squareup.okhttp.Call call = getWorkflowsByNamesAndCorrelationIdsCall(request, includeClosed, includeTasks, progressListener, progressRequestListener);
+        return call;
+    }
+
+    /**
+     * Build call for getWorkflows1
+     * @param body  (required)
+     * @param includeClosed  (optional, default to false)
+     * @param includeTasks  (optional, default to false)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    private com.squareup.okhttp.Call getWorkflowsByNamesAndCorrelationIdsCall(CorrelationIdsSearchRequest body, Boolean includeClosed, Boolean includeTasks, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/workflow/correlated/batch";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        if (includeClosed != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("includeClosed", includeClosed));
+        if (includeTasks != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("includeTasks", includeTasks));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+                "*/*"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+                "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
     @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getWorkflows1ValidateBeforeCall(
             String name,
