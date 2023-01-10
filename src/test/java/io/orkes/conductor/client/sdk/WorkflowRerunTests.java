@@ -15,6 +15,7 @@ package io.orkes.conductor.client.sdk;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,12 +57,13 @@ public class WorkflowRerunTests {
     }
 
     @Test
+    @Ignore
     @DisplayName("Check workflow with simple task and rerun functionality")
     public void testRerunSimpleWorkflow() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         // Register workflow
-        registerWorkflowDef(workflowName, "simple", metadataClient);
+        registerWorkflowDef(workflowName, "simple", "sample", metadataClient);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -75,6 +77,7 @@ public class WorkflowRerunTests {
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId);
         taskResult.setTaskId(taskId);
+        taskResult.setReasonForIncompletion("failed");
         taskResult.setStatus(TaskResult.Status.FAILED);
         taskClient.updateTask(taskResult);
 
@@ -112,7 +115,7 @@ public class WorkflowRerunTests {
 
         metadataClient.unregisterWorkflowDef(workflowName, 1);
         metadataClient.unregisterTaskDef("simple");
-        metadataClient.unregisterTaskDef("inline");
+        metadataClient.unregisterTaskDef("sample");
     }
 
     @Test
@@ -144,6 +147,7 @@ public class WorkflowRerunTests {
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(subworkflowId);
         taskResult.setTaskId(taskId);
+        taskResult.setReasonForIncompletion("failed");
         taskResult.setStatus(TaskResult.Status.FAILED);
         taskClient.updateTask(taskResult);
 

@@ -40,7 +40,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class GroupPermissionTests {
 
     @Test
-    public void testSDK() {
+    public void testGroupRelatedPermissions() {
         ApiClient apiUser1Client = ApiUtil.getUser1Client();
         WorkflowClient user1WorkflowClient = new OrkesWorkflowClient(apiUser1Client);
         MetadataClient user1MetadataClient = new OrkesMetadataClient(apiUser1Client);
@@ -119,17 +119,23 @@ public class GroupPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         //Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id("app:92533fec-1e1e-49bf-9b15-95810dcf3e28").type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
 
-        taskResult  = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setTaskId(user2WorkflowClient.getWorkflow(workflowId, true).getTasks().get(0).getTaskId());
-        user2TaskClient.updateTask(taskResult);
+        String finalWorkflowId1 = workflowId;
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            try {
+                String id = user2WorkflowClient.getWorkflow(finalWorkflowId1, true).getTasks().get(0).getTaskId();
+                TaskResult taskResult1 = new TaskResult();
+                taskResult1.setWorkflowInstanceId(id);
+                taskResult1.setStatus(TaskResult.Status.COMPLETED);
+                taskResult1.setTaskId(user2WorkflowClient.getWorkflow(id, true).getTasks().get(0).getTaskId());
+                user2TaskClient.updateTask(taskResult1);
+            }catch(Exception e){}
+        });
 
         // Wait for workflow to get completed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
         });

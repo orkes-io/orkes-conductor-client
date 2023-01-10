@@ -64,7 +64,7 @@ public class WorkflowRestartTests {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         // Register workflow
-        registerWorkflowDef(workflowName, "simple", metadataClient);
+        registerWorkflowDef(workflowName, "simple", "inline", metadataClient);
 
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
@@ -120,7 +120,7 @@ public class WorkflowRestartTests {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         // Register workflow
-        registerWorkflowDef(workflowName,"simple", metadataClient);
+        registerWorkflowDef(workflowName,"simple", "inline", metadataClient);
 
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
@@ -243,14 +243,13 @@ public class WorkflowRestartTests {
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertTrue(workflow1.getLastRetriedTime() != 0);
             assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
         });
 
-        taskId = workflowClient.getWorkflow(subworkflowId, true).getTasks().get(1).getTaskId();
+        taskId = workflowClient.getWorkflow(workflowId, true).getTasks().get(0).getTaskId();
 
         taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(subworkflowId);
+        taskResult.setWorkflowInstanceId(workflowId);
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);

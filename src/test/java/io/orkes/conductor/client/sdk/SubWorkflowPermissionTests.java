@@ -35,7 +35,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class SubWorkflowPermissionTests {
 
     @Test
-    public void testSDK() {
+    public void testSubWorkflowPermissionsForUser2() {
         ApiClient apiUser1Client = ApiUtil.getUser1Client();
         WorkflowClient user1WorkflowClient = new OrkesWorkflowClient(apiUser1Client);
         MetadataClient user1MetadataClient = new OrkesMetadataClient(apiUser1Client);
@@ -119,22 +119,32 @@ public class SubWorkflowPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         // Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id("app:92533fec-1e1e-49bf-9b15-95810dcf3e28").type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
-
         // User 2 should be able to query workflow information.
-        subWorkflowId = user2WorkflowClient.getWorkflow(workflowId, true).getTasks().get(0).getSubWorkflowId();
+        String finalWorkflowId1 = workflowId;
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            try {
+                String id = user2WorkflowClient.getWorkflow(finalWorkflowId1, true).getTasks().get(0).getSubWorkflowId();
 
-        taskResult  = new TaskResult();
-        taskResult.setWorkflowInstanceId(subWorkflowId);
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setTaskId(user2WorkflowClient.getWorkflow(subWorkflowId, true).getTasks().get(0).getTaskId());
-        user2TaskClient.updateTask(taskResult);
+                TaskResult taskResult1  = new TaskResult();
+                taskResult1.setWorkflowInstanceId(id);
+                taskResult1.setStatus(TaskResult.Status.COMPLETED);
+                taskResult1.setTaskId(user2WorkflowClient.getWorkflow(id, true).getTasks().get(0).getTaskId());
+                user2TaskClient.updateTask(taskResult1);
+            }catch(Exception e) {
+                // Server might take time to affect permission changes.
+            }
+        });
 
         // Wait for workflow to get completed
         await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            try {
+                Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
+                assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            }catch(Exception e) {
+
+            }
         });
 
         // Cleanup

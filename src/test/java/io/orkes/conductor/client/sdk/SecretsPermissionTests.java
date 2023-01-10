@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -33,9 +34,11 @@ import io.orkes.conductor.client.util.ApiUtil;
 public class SecretsPermissionTests {
 
     @Test
-    public void testSDK() {
+    public void testSecretsForUser2() {
         ApiClient apiUser1Client = ApiUtil.getUser1Client();
         SecretClient user1SecretClient = new OrkesSecretClient(apiUser1Client);
+        ApiClient apiUser2Client = ApiUtil.getUser2Client();
+        SecretClient user2SecretClient = new OrkesSecretClient(apiUser2Client);
 
         String secretKey = "secret_key";
         String secretValue = "secret_value";
@@ -58,8 +61,9 @@ public class SecretsPermissionTests {
         String groupName = "worker-test-group";
         try {
             authorizationClient.deleteGroup(groupName);
+            user1SecretClient.deleteSecret(secretValue);
         } catch (Exception e) {
-          // Group does not exist.
+          // Group does not exist or secret does not exist
         }
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
@@ -76,17 +80,17 @@ public class SecretsPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         //Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id("app:cc074478-56ef-4d0f-8a59-f5908818a1c9").type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
 
         // Secret is accessible for user2
-//        Assert.assertNotNull(user2SecretClient.getSecret(secretKey));
+        Assertions.assertNotNull(user2SecretClient.getSecret(secretValue));
 
-        authorizationClient.deleteGroup(groupName);
         authorizationClient.removePermissions(authorizationRequest);
         authorizationRequest.setSubject(new SubjectRef().id(groupName).type(SubjectRef.TypeEnum.GROUP));
         authorizationClient.removePermissions(authorizationRequest);
-        user1SecretClient.deleteSecret(secretKey);
+        authorizationClient.deleteGroup(groupName);
+        user1SecretClient.deleteSecret(secretValue);
     }
 
     UpsertGroupRequest getUpsertGroupRequest() {
