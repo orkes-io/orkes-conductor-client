@@ -57,7 +57,6 @@ public class WorkflowRerunTests {
     }
 
     @Test
-    @Ignore
     @DisplayName("Check workflow with simple task and rerun functionality")
     public void testRerunSimpleWorkflow() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
@@ -163,7 +162,7 @@ public class WorkflowRerunTests {
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertTrue(workflow1.getLastRetriedTime() != 0);
+            assertTrue(workflow1.getLastRetriedTime() != 0L);
             assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
         });
 
