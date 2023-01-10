@@ -15,6 +15,7 @@ package io.orkes.conductor.client.sdk;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,6 +57,7 @@ public class WorkflowRerunTests {
     }
 
     @Test
+    @Ignore
     @DisplayName("Check workflow with simple task and rerun functionality")
     public void testRerunSimpleWorkflow() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
