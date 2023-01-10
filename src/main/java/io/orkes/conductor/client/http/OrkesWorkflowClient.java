@@ -287,4 +287,9 @@ public class OrkesWorkflowClient extends WorkflowClient {
             executorService.shutdown();;
         }
     }
+
+    @Override
+    public void uploadCompletedWorkflows() {
+        httpClient.uploadCompletedWorkflows();
+    }
 }
