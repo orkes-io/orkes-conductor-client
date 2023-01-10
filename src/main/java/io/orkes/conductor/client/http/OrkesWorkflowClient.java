@@ -15,6 +15,7 @@ package io.orkes.conductor.client.http;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
@@ -33,6 +34,7 @@ import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
+import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.common.model.WorkflowRun;
 
@@ -267,6 +269,13 @@ public class OrkesWorkflowClient extends WorkflowClient {
     @Override
     public void uploadCompletedWorkflows() {
         httpClient.uploadCompletedWorkflows();
+    }
+
+    @Override
+    public Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(
+            List<String> correlationIds, List<String> workflowNames, Boolean includeClosed, Boolean includeTasks) {
+        CorrelationIdsSearchRequest request = new CorrelationIdsSearchRequest(correlationIds, workflowNames);
+        return httpClient.getWorkflowsByNamesAndCorrelationIds(request, includeClosed, includeTasks);
     }
 
     @Override

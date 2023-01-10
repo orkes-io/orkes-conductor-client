@@ -12,27 +12,39 @@
  */
 package io.orkes.conductor.client.api;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
+import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
+import com.netflix.conductor.sdk.workflow.def.tasks.Http;
+import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.util.Commons;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.google.common.util.concurrent.Uninterruptibles;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkflowClientTests extends ClientTest {
     private final WorkflowClient workflowClient;
 
+    private final WorkflowExecutor workflowExecutor;
+
     public WorkflowClientTests() {
         this.workflowClient = super.orkesClients.getWorkflowClient();
+        this.workflowExecutor = new WorkflowExecutor(
+                super.orkesClients.getTaskClient(),
+                super.orkesClients.getWorkflowClient(),
+                super.orkesClients.getMetadataClient(),
+                10);
     }
 
     @Test
@@ -40,6 +52,43 @@ public class WorkflowClientTests extends ClientTest {
         String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
         Workflow workflow = workflowClient.getWorkflow(workflowId, false);
         assertTrue(workflow.getWorkflowName().equals(Commons.WORKFLOW_NAME));
+    }
+
+    @Test
+    public void testSearchByCorrelationIds() {
+        List<String> correlationIds = new ArrayList<>();
+        Set<String> workflowNames = new HashSet<>();
+        Map<String, Set<String>> correlationIdToWorkflows = new HashMap<>();
+        for (int i = 0; i < 3; i++) {
+            String correlationId = UUID.randomUUID().toString();
+            correlationIds.add(correlationId);
+            for (int j = 0; j < 5; j++) {
+                ConductorWorkflow<Object> workflow = new ConductorWorkflow<>(workflowExecutor);
+                workflow.add(new Http("http").url("https://orkes-api-tester.orkesconductor.com/get"));
+                workflow.setName("workflow_" + j);
+                workflowNames.add(workflow.getName());
+                StartWorkflowRequest request = new StartWorkflowRequest();
+                request.setName(workflow.getName());
+                request.setWorkflowDef(workflow.toWorkflowDef());
+                request.setCorrelationId(correlationId);
+                String id = workflowClient.startWorkflow(request);
+                System.out.println("started " + id);
+                Set<String> ids = correlationIdToWorkflows.getOrDefault(correlationId, new HashSet<>());
+                ids.add(id);
+                correlationIdToWorkflows.put(correlationId, ids);
+            }
+        }
+        //Let's give couple of seconds for indexing to complete
+        Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
+        Map<String, List<Workflow>> result = workflowClient.getWorkflowsByNamesAndCorrelationIds(correlationIds, workflowNames.stream().collect(Collectors.toList()), true, false);
+        assertNotNull(result);
+        assertEquals(correlationIds.size(), result.size());
+        System.out.println("corrlation id map " + correlationIdToWorkflows);
+        for (String correlationId : correlationIds) {
+            assertEquals(5, result.get(correlationId).size());
+            Set<String> ids = result.get(correlationId).stream().map(wf -> wf.getWorkflowId()).collect(Collectors.toSet());
+            assertEquals(correlationIdToWorkflows.get(correlationId), ids);
+        }
     }
 
     @Test

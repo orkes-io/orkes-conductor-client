@@ -14,12 +14,14 @@ package io.orkes.conductor.client;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.model.BulkResponse;
+import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.WorkflowStatus;
@@ -43,6 +45,17 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
             throws ApiException;
 
     public abstract WorkflowStatus getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables);
+
+    /**
+     * Search workflows based on correlation ids and names
+     * @param correlationIds List of correlation ids to search
+     * @param workflowNames List of workflow names to search
+     * @param includeClosed if set, includes workflows that are terminal.  Otherwise, only returns RUNNING workflows
+     * @param includeTasks if set, returns tasks.
+     * @return Map with a key as correlation id and value as a list of matching workflow executions
+     */
+    public abstract Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(
+            List<String> correlationIds, List<String> workflowNames, Boolean includeClosed, Boolean includeTasks);
 
     public abstract void shutdown();
 
