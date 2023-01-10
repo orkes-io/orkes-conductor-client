@@ -246,7 +246,7 @@ class TaskRunner {
                     task.getTaskId(),
                     task.getTaskDefName(),
                     e);
-            MetricsContainer.incrementTaskExecutionErrorCount(task.getTaskType(), e.getCause());
+            MetricsContainer.incrementTaskExecutionErrorCount(task.getTaskType(), e);
             if (result == null) {
                 task.setStatus(Task.Status.FAILED);
                 result = new TaskResult(task);
