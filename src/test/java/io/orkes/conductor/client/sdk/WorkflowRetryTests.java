@@ -88,7 +88,7 @@ public class WorkflowRetryTests {
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertTrue(workflow1.getLastRetriedTime() != 0);
+            assertTrue(workflow1.getLastRetriedTime() != 0L);
             assertEquals(workflow1.getTasks().get(2).getStatus().name(), Task.Status.SCHEDULED.name());
         });
 
@@ -154,7 +154,7 @@ public class WorkflowRetryTests {
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertTrue(workflow1.getLastRetriedTime() != 0);
+            assertTrue(workflow1.getLastRetriedTime() != 0L);
             assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
         });
 
