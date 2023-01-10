@@ -266,10 +266,6 @@ public class OrkesWorkflowClient extends WorkflowClient {
             String workflowId, Boolean includeOutput, Boolean includeVariables) {
         return httpClient.getWorkflowStatusSummary(workflowId, includeOutput, includeVariables);
     }
-    @Override
-    public void uploadCompletedWorkflows() {
-        httpClient.uploadCompletedWorkflows();
-    }
 
     @Override
     public Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(
