@@ -37,7 +37,7 @@ public class SchedulerManagement {
 
     private static String scheduleName = "sample_schedule";
     public static final long NANO = 1_000_000_000; // nano-seconds.
-    String cron = "0 0 * ? * *";
+    String cron = "0 0 * ? * *"; // Every hour
 
     public static void main(String[] args) {
         OrkesClients orkesClients = ApiUtil.getOrkesClient();
@@ -87,7 +87,7 @@ public class SchedulerManagement {
         schedulerClient.resumeSchedule(scheduleName);
         // Verify the schedule is resumed
         WorkflowSchedule workflowSchedule1 = schedulerClient.getSchedule(scheduleName);
-        System.out.println(workflowSchedule.isPaused() == false);
+        System.out.println(workflowSchedule1.isPaused() == false);
 
         // Example to get schedule, pause, resume, find next schedules, list scheduled executions
 
@@ -96,11 +96,7 @@ public class SchedulerManagement {
                 schedulerClient.getNextFewSchedules(
                         cron, System.nanoTime(), System.nanoTime() + 6 * 60 * 60 * NANO, 5);
         System.out.println(schedules.size() == 5);
-
-        // Pause all schedules
-        schedulerClient.pauseAllSchedules();
-        /// Resume all schedule
-        schedulerClient.resumeAllSchedules();
+        schedulerClient.pauseSchedule(scheduleName);
 
         // Get Scheduled executions
         // TODO

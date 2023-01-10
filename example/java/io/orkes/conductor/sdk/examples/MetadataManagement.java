@@ -32,9 +32,9 @@ import io.orkes.conductor.client.model.TagObject;
  */
 public class MetadataManagement {
 
-    public static String taskName = "test_task";
-    public static String taskName2 = "test_task1";
-    public static String taskName3 = "test_task2";
+    public static String taskName = "test11_task";
+    public static String taskName2 = "test11_task1";
+    public static String taskName3 = "test11_task2";
     private static TaskDef taskDef;
     private static TaskDef taskDef2;
     private static TaskDef taskDef3;
@@ -55,7 +55,7 @@ public class MetadataManagement {
         metadataClient = orkesClients.getMetadataClient();
 
         // Create task definitions
-        taskDef = new TaskDef(taskName, "task to update database", "test@orkes.io", 3, 4, 10);
+        taskDef = new TaskDef(taskName, "task to update database", "test@orkes.io", 3, 4, 3);
 
         taskDef2 = new TaskDef();
         taskDef2.setName(taskName2);
@@ -115,6 +115,7 @@ public class MetadataManagement {
         // Create workflowTask
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setTaskReferenceName(taskName);
+        workflowTask.setName(taskName);
         workflowTask.setTaskReferenceName(taskName);
         workflowTask.setWorkflowTaskType(TaskType.SIMPLE);
         workflowTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
@@ -122,8 +123,9 @@ public class MetadataManagement {
 
         // Create INLINE workflowTask
         WorkflowTask workflowTask2 = new WorkflowTask();
-        workflowTask2.setTaskReferenceName(taskName);
-        workflowTask2.setTaskReferenceName(taskName);
+        workflowTask2.setName(taskName3);
+        workflowTask2.setTaskReferenceName(taskName2);
+        workflowTask2.setTaskReferenceName(taskName2);
         workflowTask2.setWorkflowTaskType(TaskType.INLINE);
         workflowTask2.setInputParameters(
                 Map.of(
@@ -137,7 +139,7 @@ public class MetadataManagement {
         workflowTask2.setTaskDefinition(taskDef2);
 
         workflowDef = new WorkflowDef();
-        workflowDef.setName("test_workflow");
+        workflowDef.setName("test11_workflow");
         workflowDef.setOwnerEmail("test@orkes.io");
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to monitor order state");
@@ -158,8 +160,8 @@ public class MetadataManagement {
 
         TagObject tagObject1 = new TagObject();
         tagObject1.setType(TagObject.TypeEnum.METADATA);
-        tagObject.setKey("customer");
-        tagObject.setValue("xyz");
+        tagObject1.setKey("customer");
+        tagObject1.setValue("xyz");
 
         TagObject tagObject2 = new TagObject();
         tagObject2.setType(TagObject.TypeEnum.METADATA);
