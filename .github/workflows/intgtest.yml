@@ -1,6 +1,6 @@
-name: Tests
+name: Integration Tests
 
-on: pull_request
+on: workflow_dispatch
 
 jobs:
   integration-test:
