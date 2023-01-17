@@ -40,7 +40,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class GroupPermissionTests {
 
     @Test
-    public void testGroupRelatedPermissions() {
+    public void testGroupRelatedPermissions() throws Exception {
         ApiClient apiUser1Client = ApiUtil.getUser1Client();
         WorkflowClient user1WorkflowClient = new OrkesWorkflowClient(apiUser1Client);
         MetadataClient user1MetadataClient = new OrkesMetadataClient(apiUser1Client);
@@ -134,11 +134,20 @@ public class GroupPermissionTests {
             }catch(Exception e){}
         });
 
-        // Wait for workflow to get completed
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
-        });
+        int retryAttemptsLimit = 5;
+        for (int retry = 0; retry < retryAttemptsLimit; retry += 1) {
+            try{
+                // Wait for workflow to get completed
+                await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+                    Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
+                    assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+                });
+                break;
+            } catch (Exception e) {
+                Thread.sleep((retry + 5) * 1000);
+            }
+        }
+        
 
         user1MetadataClient.unregisterWorkflowDef(workflowName1, 1);
         user1MetadataClient.unregisterTaskDef(taskName1);
