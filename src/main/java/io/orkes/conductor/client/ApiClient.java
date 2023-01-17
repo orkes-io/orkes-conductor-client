@@ -1195,7 +1195,6 @@ public class ApiClient {
                                 return null;
                             }
                         };
-                SSLContext sslContext = SSLContext.getInstance("TLS");
                 trustManagers = new TrustManager[] {trustAll};
                 hostnameVerifier =
                         new HostnameVerifier() {

@@ -121,7 +121,6 @@ public class AuthorizationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getPermissionsValidateBeforeCall(
             String type,
             String id,
@@ -245,7 +244,6 @@ public class AuthorizationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call grantPermissionsValidateBeforeCall(
             AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -360,7 +358,6 @@ public class AuthorizationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call removePermissionsValidateBeforeCall(
             AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,

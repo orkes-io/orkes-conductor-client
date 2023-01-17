@@ -45,7 +45,6 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
     private final TaskServiceGrpc.TaskServiceStub taskPollClient;
     private final Worker worker;
     private final String domain;
-    private final Integer taskPollTimeout;
     private ThreadPoolExecutor executor;
     private Integer threadCountForTask;
     private final ArrayBlockingQueue<Holder> latchesForOrder = new ArrayBlockingQueue<>(10000);
@@ -63,7 +62,6 @@ public class PooledPoller implements StreamObserver<TaskPb.Task> {
         this.taskPollClient = TaskServiceGrpc.newStub(channel).withInterceptors(new HeaderClientInterceptor(apiClient));
         this.worker = worker;
         this.domain = domain;
-        this.taskPollTimeout = taskPollTimeout;
         this.executor = executor;
         this.threadCountForTask = threadCountForTask;
         this.taskPollCount = taskPollCount;

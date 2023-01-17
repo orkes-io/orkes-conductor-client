@@ -98,7 +98,6 @@ public class TokenResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private static com.squareup.okhttp.Call generateTokenValidateBeforeCall(
             ApiClient apiClient,
             GenerateTokenRequest generateTokenRequest,
@@ -204,7 +203,6 @@ public class TokenResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private static com.squareup.okhttp.Call getUserInfoValidateBeforeCall(
             ApiClient apiClient,
             final ProgressResponseBody.ProgressListener progressListener,

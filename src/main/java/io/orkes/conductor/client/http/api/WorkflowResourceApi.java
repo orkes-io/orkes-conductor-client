@@ -348,7 +348,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call decideValidateBeforeCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -470,7 +469,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteValidateBeforeCall(
             String workflowId,
             Boolean archiveWorkflow,
@@ -595,7 +593,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getExecutionStatusValidateBeforeCall(
             String workflowId,
             Boolean includeTasks,
@@ -726,7 +723,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getExternalStorageLocationValidateBeforeCall(
             String path,
             String operation,
@@ -878,7 +874,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getRunningWorkflowValidateBeforeCall(
             String name,
             Integer version,
@@ -1025,7 +1020,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getWorkflowStatusSummaryValidateBeforeCall(
             String workflowId,
             Boolean includeOutput,
@@ -1170,7 +1164,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getWorkflowsValidateBeforeCall(
             List<String> body,
             String name,
@@ -1406,7 +1399,6 @@ public class WorkflowResourceApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getWorkflows1ValidateBeforeCall(
             String name,
             String correlationId,
@@ -1553,7 +1545,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call pauseWorkflowValidateBeforeCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1670,7 +1661,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call rerunValidateBeforeCall(
             RerunWorkflowRequest rerunWorkflowRequest,
             String workflowId,
@@ -1805,7 +1795,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call resetWorkflowValidateBeforeCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1927,7 +1916,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call restartValidateBeforeCall(
             String workflowId,
             Boolean useLatestDefinitions,
@@ -2053,7 +2041,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call resumeWorkflowValidateBeforeCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -2175,7 +2162,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call retryValidateBeforeCall(
             String workflowId,
             Boolean resumeSubworkflowTasks,
@@ -2318,7 +2304,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call searchValidateBeforeCall(
             String queryId,
             Integer start,
@@ -2493,7 +2478,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call searchV2ValidateBeforeCall(
             Integer start,
             Integer size,
@@ -2646,7 +2630,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call searchWorkflowsByTasksValidateBeforeCall(
             Integer start,
             Integer size,
@@ -2800,7 +2783,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call searchWorkflowsByTasksV2ValidateBeforeCall(
             Integer start,
             Integer size,
@@ -2955,7 +2937,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call skipTaskFromWorkflowValidateBeforeCall(
             String workflowId,
             String taskReferenceName,
@@ -3093,7 +3074,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call startWorkflowValidateBeforeCall(
             StartWorkflowRequest startWorkflowRequest,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -3226,7 +3206,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call startWorkflow1ValidateBeforeCall(
             Map<String, Object> body,
             String name,
@@ -3390,7 +3369,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call terminate1ValidateBeforeCall(
             String workflowId,
             String reason,
@@ -3505,7 +3483,6 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call uploadCompletedWorkflowsValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)

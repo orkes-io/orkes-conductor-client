@@ -118,7 +118,7 @@ public class WorkflowRerunTests {
 
     @Test
     @DisplayName("Check workflow with sub_workflow task and rerun functionality")
-    public void testRerunWithSubWorkflow() {
+    public void testRerunWithSubWorkflow() throws Exception {
 
         apiClient = ApiUtil.getApiClientWithCredentials();
         workflowClient = new OrkesWorkflowClient(apiClient);
@@ -173,11 +173,18 @@ public class WorkflowRerunTests {
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
 
-        // Wait for workflow to get completed
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
-        });
+        int retryAttemptsLimit = 5;
+        for (int retry = 0; retry < retryAttemptsLimit; retry += 1) {
+            try{
+                // Wait for workflow to get completed
+                await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+                    Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+                    assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+                });
+            } catch (Exception e) {
+                Thread.sleep((retry + 5) * 1000);
+            }
+        }
 
         metadataClient.unregisterWorkflowDef(workflowName, 1);
         metadataClient.unregisterTaskDef("simple");

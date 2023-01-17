@@ -122,7 +122,6 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call addTaskTagValidateBeforeCall(
             TagObject tagObject,
             String taskName,
@@ -249,7 +248,6 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call addWorkflowTagValidateBeforeCall(
             TagObject tagObject,
             String name,
@@ -377,7 +375,6 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteTaskTagValidateBeforeCall(
             TagString tagString,
             String taskName,
@@ -504,7 +501,6 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteWorkflowTagValidateBeforeCall(
             TagObject tagObject,
             String name,
@@ -624,7 +620,6 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTagsValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -734,7 +729,6 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTaskTagsValidateBeforeCall(
             String taskName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -853,7 +847,6 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getWorkflowTagsValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -975,7 +968,6 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call setTaskTagsValidateBeforeCall(
             List<TagObject> tagObjects,
             String taskName,
@@ -1102,7 +1094,6 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call setWorkflowTagsValidateBeforeCall(
             List<TagObject> tagObjects,
             String name,

@@ -128,7 +128,6 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call addUserToGroupValidateBeforeCall(
             String groupId,
             String userId,
@@ -253,7 +252,6 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteGroupValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -369,7 +367,6 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getGrantedPermissions1ValidateBeforeCall(
             String groupId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -488,7 +485,6 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getGroupValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -604,7 +600,6 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getUsersInGroupValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -718,7 +713,6 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call listGroupsValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -834,7 +828,6 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call removeUserFromGroupValidateBeforeCall(
             String groupId,
             String userId,
@@ -959,7 +952,6 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call upsertGroupValidateBeforeCall(
             UpsertGroupRequest upsertGroupRequest,
             String id,

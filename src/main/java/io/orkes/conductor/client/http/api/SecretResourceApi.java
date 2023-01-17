@@ -114,7 +114,6 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteSecretValidateBeforeCall(
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -229,7 +228,6 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getSecretValidateBeforeCall(
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -342,7 +340,6 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call listAllSecretNamesValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -447,7 +444,6 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call listSecretsThatUserCanGrantAccessToValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -559,7 +555,6 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call putSecretValidateBeforeCall(
             String body,
             String key,
@@ -682,7 +677,6 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call secretExistsValidateBeforeCall(
             String key,
             final ProgressResponseBody.ProgressListener progressListener,

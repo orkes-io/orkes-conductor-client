@@ -120,7 +120,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call allValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -224,7 +223,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call allVerboseValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -350,7 +348,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call batchPollValidateBeforeCall(
             String tasktype,
             String workerid,
@@ -488,7 +485,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getAllPollDataValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -604,7 +600,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getExternalStorageLocation1ValidateBeforeCall(
             String path,
             String operation,
@@ -743,7 +738,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getPollDataValidateBeforeCall(
             String taskType,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -863,7 +857,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTaskValidateBeforeCall(
             String taskId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -982,7 +975,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTaskLogsValidateBeforeCall(
             String taskId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1104,7 +1096,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call logValidateBeforeCall(
             String body,
             String taskId,
@@ -1234,7 +1225,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call pollValidateBeforeCall(
             String tasktype,
             String workerid,
@@ -1361,7 +1351,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call requeuePendingTaskValidateBeforeCall(
             String taskType,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1491,7 +1480,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call search1ValidateBeforeCall(
             Integer start,
             Integer size,
@@ -1644,7 +1632,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call searchV21ValidateBeforeCall(
             Integer start,
             Integer size,
@@ -1786,7 +1773,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call sizeValidateBeforeCall(
             List<String> taskType,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1896,7 +1882,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateTaskValidateBeforeCall(
             TaskResult taskResult,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -2026,7 +2011,6 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateTask1ValidateBeforeCall(
             Map<String, Object> body,
             String workflowId,
