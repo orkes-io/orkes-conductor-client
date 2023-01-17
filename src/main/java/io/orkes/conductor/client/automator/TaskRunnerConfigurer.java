@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netflix.conductor.client.config.ConductorClientConfiguration;
-import com.netflix.conductor.client.config.DefaultConductorClientConfiguration;
 import com.netflix.conductor.client.config.PropertyFactory;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.discovery.EurekaClient;
@@ -31,7 +30,6 @@ import io.orkes.conductor.client.grpc.PooledPoller;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 
 import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import static io.orkes.conductor.client.automator.TaskRunner.ALL_WORKERS;
 import static io.orkes.conductor.client.automator.TaskRunner.DOMAIN;
@@ -106,9 +104,6 @@ public class TaskRunnerConfigurer {
 
         private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollCount = new HashMap<>();
 
-        private ConductorClientConfiguration conductorClientConfiguration =
-                new DefaultConductorClientConfiguration();
-
         public Builder(TaskClient taskClient, Iterable<Worker> workers) {
             Preconditions.checkNotNull(taskClient, "TaskClient cannot be null");
             Preconditions.checkNotNull(workers, "Workers cannot be null");
@@ -152,7 +147,6 @@ public class TaskRunnerConfigurer {
          */
         public TaskRunnerConfigurer.Builder withConductorClientConfiguration(
                 ConductorClientConfiguration conductorClientConfiguration) {
-            this.conductorClientConfiguration = conductorClientConfiguration;
             return this;
         }
 
@@ -286,25 +280,6 @@ public class TaskRunnerConfigurer {
         } else {
             workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startWorker(worker)));
         }
-    }
-
-    private ThreadPoolExecutor getExecutor(int threadPoolSize) {
-        return new ThreadPoolExecutor(
-                threadPoolSize,
-                threadPoolSize,
-                0,
-                TimeUnit.SECONDS,
-                new ArrayBlockingQueue<>(threadPoolSize) {
-                    @Override
-                    public boolean offer(Runnable runnable) {
-                        try {
-                            return super.offer(runnable, 200, TimeUnit.MILLISECONDS);
-                        } catch (InterruptedException ie) {
-                            return false;
-                        }
-                    }
-                },
-                new ThreadFactoryBuilder().setNameFormat("task-poll-execute-thread-%d").build());
     }
 
     /**

@@ -116,7 +116,6 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call addEventHandlerValidateBeforeCall(
             EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -238,7 +237,6 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteQueueConfigValidateBeforeCall(
             String queueType,
             String queueName,
@@ -362,7 +360,6 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getEventHandlersValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -476,7 +473,6 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getEventHandlersForEventValidateBeforeCall(
             String event,
             Boolean activeOnly,
@@ -608,7 +604,6 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getQueueConfigValidateBeforeCall(
             String queueType,
             String queueName,
@@ -731,7 +726,6 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getQueueNamesValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -848,7 +842,6 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call putQueueConfigValidateBeforeCall(
             String body,
             String queueType,
@@ -987,7 +980,6 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call removeEventHandlerStatusValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1101,7 +1093,6 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateEventHandlerValidateBeforeCall(
             EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,

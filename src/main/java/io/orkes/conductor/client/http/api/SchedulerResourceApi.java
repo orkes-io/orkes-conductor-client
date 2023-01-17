@@ -121,7 +121,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteScheduleValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -235,7 +234,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getAllSchedulesValidateBeforeCall(
             String workflowName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -361,7 +359,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getNextFewSchedulesValidateBeforeCall(
             String cronExpression,
             Long scheduleStartTime,
@@ -502,7 +499,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getScheduleValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -615,7 +611,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call pauseAllSchedulesValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -726,7 +721,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call pauseScheduleValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -836,7 +830,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call requeueAllExecutionRecordsValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -942,7 +935,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call resumeAllSchedulesValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1053,7 +1045,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call resumeScheduleValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1165,7 +1156,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call saveScheduleValidateBeforeCall(
             SaveScheduleRequest saveScheduleRequest,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1295,7 +1285,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call searchV22ValidateBeforeCall(
             Integer start,
             Integer size,
@@ -1434,7 +1423,6 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call testTimeoutValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)

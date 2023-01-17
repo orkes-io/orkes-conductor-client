@@ -34,7 +34,6 @@ public class ExecuteWorkflowStream {
 
     private final WorkflowServiceStreamGrpc.WorkflowServiceStreamStub stub;
 
-    private final ApiClient apiClient;
     private final HeaderClientInterceptor headerInterceptor;
     private StreamObserver<StartWorkflowRequestPb.StartWorkflowRequest> requests;
 
@@ -43,7 +42,6 @@ public class ExecuteWorkflowStream {
     private int reconnectBackoff = 10;
 
     public ExecuteWorkflowStream(ApiClient apiClient) {
-        this.apiClient = apiClient;
         this.headerInterceptor = new HeaderClientInterceptor(apiClient);
         if (apiClient.useSecurity()) {
             apiClient.getToken();

@@ -121,7 +121,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call createValidateBeforeCall(
             WorkflowDef workflowDef,
             Boolean overwrite,
@@ -249,7 +248,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getValidateBeforeCall(
             String name,
             Integer version,
@@ -382,7 +380,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getAllWorkflowsValidateBeforeCall(
             String access,
             Boolean metadata,
@@ -519,7 +516,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTaskDefValidateBeforeCall(
             String tasktype,
             Boolean metadata,
@@ -651,7 +647,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getTaskDefsValidateBeforeCall(
             String access,
             Boolean metadata,
@@ -780,7 +775,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call registerTaskDefValidateBeforeCall(
             List<TaskDef> taskDefs,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -898,7 +892,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call unregisterTaskDefValidateBeforeCall(
             String tasktype,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1018,7 +1011,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call unregisterWorkflowDefValidateBeforeCall(
             String name,
             Integer version,
@@ -1144,7 +1136,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateValidateBeforeCall(
             List<WorkflowDef> workflowDefs,
             Boolean overwrite,
@@ -1261,7 +1252,6 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateTaskDefValidateBeforeCall(
             TaskDef taskDef,
             final ProgressResponseBody.ProgressListener progressListener,

@@ -95,7 +95,7 @@ public class GrpcWorkflowClient {
             requestBuilder.setWaitUntilTask(waitUntilTask);
         }
         requestBuilder.setRequest(protoMappingHelper.toProto(startWorkflowRequest));
-        CompletableFuture future = executionMonitor.monitorRequest(requestId);
+        CompletableFuture<WorkflowRun> future = executionMonitor.monitorRequest(requestId);
         synchronized (requestStream) {
             requestStream.onNext(requestBuilder.build());
         }
