@@ -72,6 +72,8 @@ public class WorkflowRetryExamples {
 
         // Upload all the workflows to s3
         workflowClient.uploadCompletedWorkflows();
+
+        workflowClient.terminateWorkflow(workflowId, "testing out some stuff");
         // Retry the workflow
 
         System.out.println("Going to retry " + workflowId);
