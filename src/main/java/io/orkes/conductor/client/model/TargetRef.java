@@ -22,21 +22,73 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/** The object over which access is being granted or removed */
+/**
+ * The object over which access is being granted or removed
+ */
 @Schema(description = "The object over which access is being granted or removed")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2023-01-18T16:50:52.109134-03:00[America/Sao_Paulo]")
 public class TargetRef {
+    /**
+     * Gets or Sets id
+     */
+    @JsonAdapter(IdEnum.Adapter.class)
+    public enum IdEnum {
+        IDENTIFIER_OF_THE_TARGET_E_G_NAME_IN_CASE_IT_S_A_WORKFLOW_DEF(
+                "Identifier of the target e.g. `name` in case it's a WORKFLOW_DEF");
+
+        private String value;
+
+        IdEnum(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
+
+        public static IdEnum fromValue(String input) {
+            for (IdEnum b : IdEnum.values()) {
+                if (b.value.equals(input)) {
+                    return b;
+                }
+            }
+            return null;
+        }
+
+        public static class Adapter extends TypeAdapter<IdEnum> {
+            @Override
+            public void write(final JsonWriter jsonWriter, final IdEnum enumeration) throws IOException {
+                jsonWriter.value(String.valueOf(enumeration.getValue()));
+            }
+
+            @Override
+            public IdEnum read(final JsonReader jsonReader) throws IOException {
+                Object value = jsonReader.nextString();
+                return IdEnum.fromValue((String) (value));
+            }
+        }
+    }
 
     @SerializedName("id")
     private String id = null;
 
-    /** Gets or Sets type */
+    /**
+     * Gets or Sets type
+     */
     @JsonAdapter(TypeEnum.Adapter.class)
     public enum TypeEnum {
         WORKFLOW_DEF("WORKFLOW_DEF"),
         TASK_DEF("TASK_DEF"),
         APPLICATION("APPLICATION"),
+        USER("USER"),
+        SECRET("SECRET"),
         TAG("TAG"),
-        USER("USER");
+        DOMAIN("DOMAIN");
 
         private String value;
 
@@ -64,8 +116,7 @@ public class TargetRef {
 
         public static class Adapter extends TypeAdapter<TypeEnum> {
             @Override
-            public void write(final JsonWriter jsonWriter, final TypeEnum enumeration)
-                    throws IOException {
+            public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
                 jsonWriter.value(String.valueOf(enumeration.getValue()));
             }
 
@@ -87,9 +138,9 @@ public class TargetRef {
 
     /**
      * Get id
-     *
+     * 
      * @return id
-     */
+     **/
     @Schema(required = true, description = "")
     public String getId() {
         return id;
@@ -106,9 +157,9 @@ public class TargetRef {
 
     /**
      * Get type
-     *
+     * 
      * @return type
-     */
+     **/
     @Schema(required = true, description = "")
     public TypeEnum getType() {
         return type;
@@ -127,7 +178,8 @@ public class TargetRef {
             return false;
         }
         TargetRef targetRef = (TargetRef) o;
-        return Objects.equals(this.id, targetRef.id) && Objects.equals(this.type, targetRef.type);
+        return Objects.equals(this.id, targetRef.id) &&
+                Objects.equals(this.type, targetRef.type);
     }
 
     @Override
@@ -147,8 +199,8 @@ public class TargetRef {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {
