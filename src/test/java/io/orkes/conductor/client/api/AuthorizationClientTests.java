@@ -148,6 +148,21 @@ public class AuthorizationClientTests extends ClientTest {
     }
 
     @Test
+    void testGrantPermissionsToDomain() {
+        AuthorizationRequest request = new AuthorizationRequest();
+        request.access(Arrays.asList(AuthorizationRequest.AccessEnum.EXECUTE));
+        SubjectRef subject = new SubjectRef();
+        subject.setId("app:89b6d9b8-c56c-41e7-98de-4049f57943c1");
+        subject.setType(SubjectRef.TypeEnum.USER);
+        request.setSubject(subject);
+        TargetRef target = new TargetRef();
+        target.setId("my-domain");
+        target.setType(TargetRef.TypeEnum.DOMAIN);
+        request.setTarget(target);
+        authorizationClient.grantPermissions(request);
+    }
+
+    @Test
     void testGrantPermissionsToTag() {
         authorizationClient.grantPermissions(getAuthorizationRequest());
     }
