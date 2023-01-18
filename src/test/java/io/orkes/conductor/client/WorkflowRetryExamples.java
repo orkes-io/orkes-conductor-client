@@ -70,18 +70,6 @@ public class WorkflowRetryExamples {
         failTask(workflow.getWorkflowId(), taskId);
         workflow = workflowClient.getWorkflow(workflowId, true);
 
-        taskId = workflow.getTasks().get(1).getTaskId();
-        failTask(workflow.getWorkflowId(), taskId);
-        workflow = workflowClient.getWorkflow(workflowId, true);
-
-        taskId = workflow.getTasks().get(2).getTaskId();
-        failTask(workflow.getWorkflowId(), taskId);
-        workflow = workflowClient.getWorkflow(workflowId, true);
-
-        taskId = workflow.getTasks().get(3).getTaskId();
-        failTask(workflow.getWorkflowId(), taskId);
-        workflow = workflowClient.getWorkflow(workflowId, true);
-
         // Upload all the workflows to s3
         workflowClient.uploadCompletedWorkflows();
         // Retry the workflow
