@@ -14,16 +14,10 @@ package io.orkes.conductor.client.sdk;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.tasks.TaskType;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 
 import io.orkes.conductor.client.*;
 import io.orkes.conductor.client.http.*;
@@ -97,25 +91,6 @@ public class SecretsPermissionTests {
         return new UpsertGroupRequest()
                 .description("Group used for SDK testing")
                 .roles(List.of(UpsertGroupRequest.RolesEnum.USER));
-    }
-
-    private void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient1) {
-        TaskDef taskDef = new TaskDef(taskName);
-        taskDef.setOwnerEmail("test@orkes.io");
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.setTaskReferenceName(taskName);
-        workflowTask.setName(taskName);
-        workflowTask.setTaskDefinition(taskDef);
-        workflowTask.setWorkflowTaskType(TaskType.SIMPLE);
-        workflowTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
-        WorkflowDef workflowDef = new WorkflowDef();
-        workflowDef.setName(workflowName);
-        workflowDef.setOwnerEmail("test@orkes.io");
-        workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
-        workflowDef.setDescription("Workflow to monitor order state");
-        workflowDef.setTasks(Arrays.asList(workflowTask));
-        metadataClient1.registerWorkflowDef(workflowDef);
-        metadataClient1.registerTaskDefs(Arrays.asList(taskDef));
     }
 
 }
