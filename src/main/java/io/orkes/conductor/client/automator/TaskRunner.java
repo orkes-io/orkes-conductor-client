@@ -314,12 +314,9 @@ class TaskRunner {
             try {
                 return operation.apply(input);
             } catch (Exception e) {
+                LOGGER.error("Error executing {}", opName, e);
                 index++;
-                try {
-                    Thread.sleep(500L);
-                } catch (InterruptedException ie) {
-                    LOGGER.error("Retry interrupted", ie);
-                }
+                Uninterruptibles.sleepUninterruptibly(500L * (count+1), TimeUnit.MILLISECONDS);
             }
         }
         throw new RuntimeException("Exhausted retries performing " + opName);
