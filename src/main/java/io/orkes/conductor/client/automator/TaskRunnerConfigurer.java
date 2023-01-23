@@ -292,11 +292,12 @@ public class TaskRunnerConfigurer {
     }
 
     private void startWorker(Worker worker) {
-        LOGGER.info("Starting worker: {} with ", worker.getTaskDefName());
         final Integer threadCountForTask =
                 this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
         final Integer taskPollTimeout =
                 this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
+        LOGGER.info("Starting worker: {} with {} threads and {} pollTimeout", worker.getTaskDefName(),threadCountForTask, taskPollTimeout);
+        LOGGER.info("Domain map for tasks = {}", taskToDomain);
         final TaskRunner taskRunner =
                 new TaskRunner(
                         worker,
