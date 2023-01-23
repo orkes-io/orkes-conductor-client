@@ -10,6 +10,7 @@ import com.netflix.conductor.common.config.ObjectMapperProvider;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import com.netflix.conductor.common.metadata.workflow.SubWorkflowParams;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.common.run.Workflow;
@@ -19,7 +20,7 @@ import io.orkes.conductor.client.AuthorizationClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.http.OrkesTaskClient;
-import io.orkes.conductor.client.model.*;
+import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.sdk.examples.ApiUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -109,6 +110,7 @@ public class SubWorkflowTests {
         String workflowId = workflowClient.startWorkflow(request);
         log.info("Started {}", workflowId);
         await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
+
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
             Map<String, String> workflowTaskToDomain = workflow.getTaskToDomain();
@@ -121,7 +123,6 @@ public class SubWorkflowTests {
             }
             workflow.getTasks().stream().filter(t -> t.getTaskType().equals("SUB_WORKFLOW")).forEach(subWorkflowTask -> {
                 String subWorkflowId = subWorkflowTask.getSubWorkflowId();
-                log.info("Checking sub workflow {}", subWorkflowId);
                 Workflow subWorkflow = workflowClient.getWorkflow(subWorkflowId, true);
                 Map<String, String> subWorkflowDomainMap = subWorkflow.getTaskToDomain();
                 assertNotNull(subWorkflowDomainMap);
@@ -131,6 +132,20 @@ public class SubWorkflowTests {
                     String taskName = taskToDomain.getKey();
                     String domain = taskToDomain.getValue();
                     assertEquals(domain, taskToDomainMap.get(taskName));
+                }
+
+
+                SubWorkflowParams subWorkflowParams = subWorkflowTask.getWorkflowTask().getSubWorkflowParam();
+                if(subWorkflowParams.getWorkflowDefinition() == null) {
+                    Integer version = subWorkflowParams.getVersion();
+                    log.info("version is {} for {} / {}", version, workflowId, subWorkflowTask.getReferenceTaskName());
+                    if(version == null) {
+                        assertEquals(3, subWorkflow.getWorkflowVersion());
+                    } else {
+                        assertEquals(version, subWorkflow.getWorkflowVersion());
+                    }
+                } else {
+                    log.info("Sub workflow has inline definition {} - {}", subWorkflowParams.getWorkflowDefinition().getClass().getName(), subWorkflowParams.getWorkflowDefinition());
                 }
             });
         });
@@ -142,6 +157,7 @@ public class SubWorkflowTests {
         request.setName(WORKFLOW_NAME);
         String workflowId = workflowClient.startWorkflow(request);
         log.info("Started {}", workflowId);
+
         await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
@@ -151,11 +167,24 @@ public class SubWorkflowTests {
 
             workflow.getTasks().stream().filter(t -> t.getTaskType().equals("SUB_WORKFLOW")).forEach(subWorkflowTask -> {
                 String subWorkflowId = subWorkflowTask.getSubWorkflowId();
-                log.info("Checking sub workflow {}", subWorkflowId);
                 Workflow subWorkflow = workflowClient.getWorkflow(subWorkflowId, true);
                 Map<String, String> subWorkflowDomainMap = subWorkflow.getTaskToDomain();
                 assertEquals(0, subWorkflowDomainMap.size());
+
+                SubWorkflowParams subWorkflowParams = subWorkflowTask.getWorkflowTask().getSubWorkflowParam();
+                if(subWorkflowParams.getWorkflowDefinition() == null) {
+                    Integer version = subWorkflowParams.getVersion();
+                    log.info("version is {} for {} / {}", version, workflowId, subWorkflowTask.getReferenceTaskName());
+                    if(version == null) {
+                        assertEquals(3, subWorkflow.getWorkflowVersion());
+                    } else {
+                        assertEquals(version, subWorkflow.getWorkflowVersion());
+                    }
+                } else {
+                    log.info("Sub workflow has inline definition {} - {}", subWorkflowParams.getWorkflowDefinition().getClass().getName(), subWorkflowParams.getWorkflowDefinition());
+                }
             });
+
 
         });
     }

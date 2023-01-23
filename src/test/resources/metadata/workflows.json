@@ -100,6 +100,25 @@
       "loopOver": []
     },
     {
+      "name": "sub_flow_v1",
+      "taskReferenceName": "sub_flow_v1",
+      "inputParameters": {},
+      "type": "SUB_WORKFLOW",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "subWorkflowParam": {
+        "name": "PopulationMinMax",
+        "version": 1
+      },
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": []
+    },
+    {
       "name": "dynamic_fork",
       "taskReferenceName": "dynamic_fork",
       "inputParameters": {
@@ -465,6 +484,25 @@
       "defaultExclusiveJoinTask": [],
       "asyncComplete": false,
       "loopOver": []
+    },
+    {
+      "name": "sub_flow_v0",
+      "taskReferenceName": "sub_flow_v0",
+      "inputParameters": {},
+      "type": "SUB_WORKFLOW",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "subWorkflowParam": {
+        "name": "PopulationMinMax",
+        "version": 0
+      },
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": []
     }
   ],
   "inputParameters": [],
@@ -482,12 +520,50 @@
     "createTime": 1670136356629,
     "updateTime": 1670136356636,
     "name": "PopulationMinMax",
-    "description": "Edit or extend this sample workflow. Set the workflow name to get started",
-    "version": 1,
+    "description": "PopulationMinMax v3",
+    "version": 3,
     "tasks": [
       {
         "name": "x_test_worker_4",
         "taskReferenceName": "x_test_worker_4",
+        "inputParameters": {
+          "name": "Orkes"
+        },
+        "type": "SIMPLE",
+        "decisionCases": {},
+        "defaultCase": [],
+        "forkTasks": [],
+        "startDelay": 0,
+        "joinOn": [],
+        "optional": false,
+        "defaultExclusiveJoinTask": [],
+        "asyncComplete": false,
+        "loopOver": []
+      }
+    ],
+    "inputParameters": [],
+    "outputParameters": {
+      "data": "${get_random_fact.output.response.body.fact}"
+    },
+    "schemaVersion": 2,
+    "restartable": true,
+    "workflowStatusListenerEnabled": false,
+    "ownerEmail": "viren@orkes.io",
+    "timeoutPolicy": "ALERT_ONLY",
+    "timeoutSeconds": 0,
+    "variables": {},
+    "inputTemplate": {}
+  },
+  {
+    "createTime": 1670136356629,
+    "updateTime": 1670136356636,
+    "name": "PopulationMinMax",
+    "description": "PopulationMinMax v1",
+    "version": 1,
+    "tasks": [
+      {
+        "name": "x_test_worker_1",
+        "taskReferenceName": "x_test_worker_1",
         "inputParameters": {
           "name": "Orkes"
         },
