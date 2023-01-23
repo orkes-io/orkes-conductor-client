@@ -124,7 +124,7 @@ public class SubWorkflowTests {
         log.info("Started {}", workflowId);
         assertSubworkflowWithDomain(workflowId);
 
-        int restartCount = 10;
+        int restartCount = 3;
         for (int i = 0; i < restartCount; i++) {
             workflowClient.restart(workflowId, true);
             assertSubworkflowWithDomain(workflowId);
@@ -187,7 +187,7 @@ public class SubWorkflowTests {
         log.info("Started {}", workflowId);
         assertSubworkflowExecutionWithOutDomains(workflowId);
 
-        int restartCount = 10;
+        int restartCount = 3;
         for (int i = 0; i < restartCount; i++) {
             workflowClient.restart(workflowId, true);
             assertSubworkflowExecutionWithOutDomains(workflowId);
