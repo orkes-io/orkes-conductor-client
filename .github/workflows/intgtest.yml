@@ -14,10 +14,8 @@ jobs:
         with:
           distribution: "zulu"
           java-version: "11"
-      - name: Linter
-        run: ./gradlew clean check -x build -x test
       - name: Build and run tests
-        run: ./gradlew clean build test
+        run: ./gradlew clean build test -x check
         env:
           SDK_INTEGRATION_TESTS_SERVER_API_URL: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_API_URL }}
           SDK_INTEGRATION_TESTS_SERVER_KEY_ID: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_KEY_ID }}
