@@ -15,7 +15,6 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.AuthorizationClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
@@ -27,11 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.shaded.com.google.common.util.concurrent.Uninterruptibles;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -103,12 +101,23 @@ public class SubWorkflowTests {
     }
 
     @Test
-    public void testSubworkflowExecutionWithDomains() {
+    public void testSubWorkflowWithDomain() {
         StartWorkflowRequest request = new StartWorkflowRequest();
         request.setName(WORKFLOW_NAME);
         request.setTaskToDomain(taskToDomainMap);
         String workflowId = workflowClient.startWorkflow(request);
         log.info("Started {}", workflowId);
+        assertSubworkflowWithDomain(workflowId);
+
+        int restartCount = 10;
+        for (int i = 0; i < restartCount; i++) {
+            workflowClient.restart(workflowId, true);
+            assertSubworkflowWithDomain(workflowId);
+            Uninterruptibles.sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    private void assertSubworkflowWithDomain(String workflowId) {
         await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
 
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
@@ -149,6 +158,7 @@ public class SubWorkflowTests {
                 }
             });
         });
+
     }
 
     @Test
@@ -157,7 +167,19 @@ public class SubWorkflowTests {
         request.setName(WORKFLOW_NAME);
         String workflowId = workflowClient.startWorkflow(request);
         log.info("Started {}", workflowId);
+        assertSubworkflowExecutionWithOutDomains(workflowId);
 
+        int restartCount = 10;
+        for (int i = 0; i < restartCount; i++) {
+            workflowClient.restart(workflowId, true);
+            assertSubworkflowExecutionWithOutDomains(workflowId);
+            Uninterruptibles.sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
+        }
+    }
+
+
+
+    private void assertSubworkflowExecutionWithOutDomains(String workflowId) {
         await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
