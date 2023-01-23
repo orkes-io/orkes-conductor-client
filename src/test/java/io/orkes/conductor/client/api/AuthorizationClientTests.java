@@ -14,6 +14,9 @@ package io.orkes.conductor.client.api;
 
 import java.util.*;
 
+import io.orkes.conductor.client.util.ApiUtil;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,16 +30,29 @@ import io.orkes.conductor.client.util.Commons;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthorizationClientTests extends ClientTest {
-    private final AuthorizationClient authorizationClient;
+    private static AuthorizationClient authorizationClient;
+    private static String applicationId;
 
-    public AuthorizationClientTests() {
-        this.authorizationClient = super.orkesClients.getAuthorizationClient();
+    @BeforeAll
+    public static void setup() {
+        authorizationClient = ApiUtil.getOrkesClient().getAuthorizationClient();
+        CreateOrUpdateApplicationRequest request = new CreateOrUpdateApplicationRequest();
+        request.setName("test-" + UUID.randomUUID().toString());
+        ConductorApplication app = authorizationClient.createApplication(request);
+        applicationId = app.getId();
+    }
+
+    @AfterAll
+    public static void cleanup() {
+        if(applicationId != null) {
+            authorizationClient.deleteApplication(applicationId);
+        }
     }
 
     @Test
     @DisplayName("auto assign group permission on workflow creation by any group member")
     public void autoAssignWorkflowPermissions() {
-        giveApplicationPermissions(Commons.APPLICATION_ID);
+        giveApplicationPermissions(applicationId);
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
         validateGroupPermissions(group.getId());
     }
@@ -200,9 +216,7 @@ public class AuthorizationClientTests extends ClientTest {
         }
         assertTrue(found);
         authorizationClient.getPermissions("abc", Commons.GROUP_ID);
-        assertEquals(
-                authorizationClient.getApplication(Commons.APPLICATION_ID).getId(),
-                Commons.APPLICATION_ID);
+        assertEquals(authorizationClient.getApplication(applicationId).getId(), applicationId);
         assertTrue(
                 authorizationClient
                         .getGrantedPermissionsForGroup(Commons.GROUP_ID)
