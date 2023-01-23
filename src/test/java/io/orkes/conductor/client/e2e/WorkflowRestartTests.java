@@ -10,8 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.sdk;
+package io.orkes.conductor.client.e2e;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -20,15 +21,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import com.netflix.conductor.common.metadata.tasks.TaskType;
+import com.netflix.conductor.common.metadata.workflow.*;
 import com.netflix.conductor.common.run.Workflow;
 
-import io.orkes.conductor.client.*;
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.MetadataClient;
+import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
-import io.orkes.conductor.client.model.*;
+import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.client.util.ApiUtil;
 
 import static io.orkes.conductor.client.util.RegistrationUtil.registerWorkflowDef;
@@ -36,7 +42,7 @@ import static io.orkes.conductor.client.util.RegistrationUtil.registerWorkflowWi
 import static org.junit.jupiter.api.Assertions.*;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
-public class WorkflowRetryTests {
+public class WorkflowRestartTests {
 
     static ApiClient apiClient;
     static WorkflowClient workflowClient;
@@ -53,14 +59,13 @@ public class WorkflowRetryTests {
     }
 
     @Test
-    @DisplayName("Check workflow with simple task and retry functionality")
-    public void testRetrySimpleWorkflow() {
+    @DisplayName("Check workflow with simple task and restart functionality")
+    public void testRestartSimpleWorkflow() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         // Register workflow
-        registerWorkflowDef(workflowName, "simple", "sample", metadataClient);
+        registerWorkflowDef(workflowName, "simple", "inline", metadataClient);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
@@ -73,7 +78,6 @@ public class WorkflowRetryTests {
         taskResult.setWorkflowInstanceId(workflowId);
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.FAILED);
-        taskResult.setReasonForIncompletion("failed");
         taskClient.updateTask(taskResult);
 
         // Wait for workflow to get failed
@@ -82,19 +86,20 @@ public class WorkflowRetryTests {
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
 
-        // Retry the workflow
-        workflowClient.retryLastFailedTask(workflowId);
+        // Restart the workflow
+        workflowClient.restart(workflowId, false);
         // Check the workflow status and few other parameters
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertTrue(workflow1.getLastRetriedTime() != 0L);
-            assertEquals(workflow1.getTasks().get(2).getStatus().name(), Task.Status.SCHEDULED.name());
+            assertEquals(workflow1.getTasks().get(1).getStatus().name(), Task.Status.SCHEDULED.name());
+            assertTrue(workflow1.getTasks().get(0).isExecuted());
+            assertFalse(workflow1.getTasks().get(1).isExecuted());
         });
 
         taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(workflowClient.getWorkflow(workflowId, true).getTasks().get(2).getTaskId());
+        taskResult.setTaskId(workflowClient.getWorkflow(workflowId, true).getTasks().get(1).getTaskId());
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
 
@@ -106,12 +111,97 @@ public class WorkflowRetryTests {
 
         metadataClient.unregisterWorkflowDef(workflowName, 1);
         metadataClient.unregisterTaskDef("simple");
-        metadataClient.unregisterTaskDef("sample");
+        metadataClient.unregisterTaskDef("inline");
     }
 
     @Test
-    @DisplayName("Check workflow with sub_workflow task and retry functionality")
-    public void testRetryWithSubWorkflow() {
+    @DisplayName("Check workflow with simple task and restart functionality by changing workflow definition")
+    public void testRestartSimpleWorkflowChangeDefinition() {
+        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+
+        // Register workflow
+        registerWorkflowDef(workflowName,"simple", "inline", metadataClient);
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        // Fail the simple task
+        String taskId = workflow.getTasks().get(1).getTaskId();
+        TaskResult taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(workflowId);
+        taskResult.setTaskId(taskId);
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskClient.updateTask(taskResult);
+
+        // Wait for workflow to get failed
+        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+        });
+
+        // Change the workflow definition.
+        WorkflowDef workflowDef = metadataClient.getWorkflowDef(workflowName, 1);
+        addTasksInWorkflowDef(workflowDef);
+
+        // Restart the workflow
+        workflowClient.restart(workflowId, true);
+        // Check the workflow status and few other parameters
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
+            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
+            assertEquals(workflow1.getTasks().get(1).getStatus().name(), Task.Status.SCHEDULED.name());
+            assertTrue(workflow1.getTasks().get(0).isExecuted());
+            assertFalse(workflow1.getTasks().get(1).isExecuted());
+        });
+        taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(workflowId);
+        taskResult.setTaskId(workflowClient.getWorkflow(workflowId, true).getTasks().get(1).getTaskId());
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskClient.updateTask(taskResult);
+
+        // Workflow will still be running since new simple task has been added.
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
+        });
+
+        // Complete the newly added simple task.
+        taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(workflowId);
+        taskResult.setTaskId(workflowClient.getWorkflow(workflowId, true).getTasks().get(2).getTaskId());
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskClient.updateTask(taskResult);
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+        });
+
+        metadataClient.unregisterWorkflowDef(workflowName, 1);
+        metadataClient.unregisterTaskDef("simple");
+        metadataClient.unregisterTaskDef("inline");
+    }
+
+    private void addTasksInWorkflowDef(WorkflowDef workflowDef) {
+        WorkflowTask workflowTask = new WorkflowTask();
+        workflowTask.setTaskReferenceName("added");
+        workflowTask.setName("added");
+        workflowTask.setType(TaskType.SIMPLE.name());
+
+        TaskDef task = new TaskDef();
+        task.setName("added");
+        task.setOwnerEmail("test@orkes.io");
+        metadataClient.registerTaskDefs(Arrays.asList(task));
+        workflowDef.getTasks().add(workflowTask);
+        metadataClient.registerWorkflowDef(workflowDef);
+    }
+
+    @Test
+    @DisplayName("Check workflow with sub_workflow task and restart functionality")
+    public void testRestartWithSubWorkflow() {
 
         apiClient = ApiUtil.getApiClientWithCredentials();
         workflowClient = new OrkesWorkflowClient(apiClient);
@@ -139,7 +229,6 @@ public class WorkflowRetryTests {
         taskResult.setWorkflowInstanceId(subworkflowId);
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.FAILED);
-        taskResult.setReasonForIncompletion("failed");
         taskClient.updateTask(taskResult);
 
         // Wait for parent workflow to get failed
@@ -149,19 +238,18 @@ public class WorkflowRetryTests {
         });
 
         // Retry the workflow.
-        workflowClient.retryLastFailedTask(workflowId);
+        workflowClient.restart(workflowId, false);
         // Check the workflow status and few other parameters
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertTrue(workflow1.getLastRetriedTime() != 0L);
             assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
         });
 
-        taskId = workflowClient.getWorkflow(subworkflowId, true).getTasks().get(1).getTaskId();
+        taskId = workflowClient.getWorkflow(workflowId, true).getTasks().get(0).getTaskId();
 
         taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(subworkflowId);
+        taskResult.setWorkflowInstanceId(workflowId);
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);

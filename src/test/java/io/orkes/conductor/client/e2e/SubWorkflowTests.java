@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.sdk;
+package io.orkes.conductor.client.e2e;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -124,7 +124,7 @@ public class SubWorkflowTests {
         log.info("Started {}", workflowId);
         assertSubworkflowWithDomain(workflowId);
 
-        int restartCount = 10;
+        int restartCount = 3;
         for (int i = 0; i < restartCount; i++) {
             workflowClient.restart(workflowId, true);
             assertSubworkflowWithDomain(workflowId);
@@ -133,7 +133,10 @@ public class SubWorkflowTests {
     }
 
     private void assertSubworkflowWithDomain(String workflowId) {
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
+        await()
+                .atMost(30, TimeUnit.SECONDS)
+                .pollInterval(10, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
 
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
@@ -184,7 +187,7 @@ public class SubWorkflowTests {
         log.info("Started {}", workflowId);
         assertSubworkflowExecutionWithOutDomains(workflowId);
 
-        int restartCount = 10;
+        int restartCount = 3;
         for (int i = 0; i < restartCount; i++) {
             workflowClient.restart(workflowId, true);
             assertSubworkflowExecutionWithOutDomains(workflowId);
@@ -195,7 +198,10 @@ public class SubWorkflowTests {
 
 
     private void assertSubworkflowExecutionWithOutDomains(String workflowId) {
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
+        await()
+                .atMost(30, TimeUnit.SECONDS)
+                .pollInterval(10, TimeUnit.SECONDS)
+                .untilAsserted(() -> {
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
 

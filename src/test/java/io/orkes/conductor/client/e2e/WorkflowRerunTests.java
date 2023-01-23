@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.sdk;
+package io.orkes.conductor.client.e2e;
 
 import java.util.concurrent.TimeUnit;
 
@@ -75,7 +75,6 @@ public class WorkflowRerunTests {
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId);
         taskResult.setTaskId(taskId);
-        taskResult.setReasonForIncompletion("failed");
         taskResult.setStatus(TaskResult.Status.FAILED);
         taskClient.updateTask(taskResult);
 
@@ -145,7 +144,6 @@ public class WorkflowRerunTests {
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(subworkflowId);
         taskResult.setTaskId(taskId);
-        taskResult.setReasonForIncompletion("failed");
         taskResult.setStatus(TaskResult.Status.FAILED);
         taskClient.updateTask(taskResult);
 
