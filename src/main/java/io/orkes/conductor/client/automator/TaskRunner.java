@@ -87,7 +87,7 @@ class TaskRunner {
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
         LOGGER.info(
                 "Initialized the TaskPollExecutor for {} with {} threads and threadPrefix {}",
-                threadCount,
+                worker.getTaskDefName(),
                 threadCount,
                 workerNamePrefix);
     }
