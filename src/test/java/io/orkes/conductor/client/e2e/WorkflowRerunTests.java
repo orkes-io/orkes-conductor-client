@@ -75,7 +75,6 @@ public class WorkflowRerunTests {
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId);
         taskResult.setTaskId(taskId);
-        taskResult.setReasonForIncompletion("failed");
         taskResult.setStatus(TaskResult.Status.FAILED);
         taskClient.updateTask(taskResult);
 
@@ -145,7 +144,6 @@ public class WorkflowRerunTests {
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(subworkflowId);
         taskResult.setTaskId(taskId);
-        taskResult.setReasonForIncompletion("failed");
         taskResult.setStatus(TaskResult.Status.FAILED);
         taskClient.updateTask(taskResult);
 
