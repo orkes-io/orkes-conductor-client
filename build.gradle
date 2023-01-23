@@ -208,7 +208,6 @@ spotless {
         licenseHeaderFile("$rootDir/licenseheader.txt")
     }
 }
-build.dependsOn(spotlessApply)
 
 signing {
     def signingKeyId = findProperty('signingKeyId')

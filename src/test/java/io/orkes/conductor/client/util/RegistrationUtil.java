@@ -35,7 +35,7 @@ public class RegistrationUtil {
 
 
         WorkflowTask inline = new WorkflowTask();
-        inline.setTaskReferenceName(taskName1);
+        inline.setTaskReferenceName("inline_" + taskName1);
         inline.setName(taskName1);
         inline.setTaskDefinition(taskDef);
         inline.setWorkflowTaskType(TaskType.INLINE);
@@ -55,7 +55,7 @@ public class RegistrationUtil {
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to monitor order state");
         workflowDef.setTasks(Arrays.asList(inline, simpleTask));
-        metadataClient1.registerWorkflowDef(workflowDef);
+        metadataClient1.updateWorkflowDefs(Arrays.asList(workflowDef));
         metadataClient1.registerTaskDefs(Arrays.asList(taskDef, taskDef2));
     }
 
