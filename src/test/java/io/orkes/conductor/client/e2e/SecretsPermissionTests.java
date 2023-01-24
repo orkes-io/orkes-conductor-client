@@ -14,7 +14,13 @@ package io.orkes.conductor.client.e2e;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import com.google.common.util.concurrent.Uninterruptibles;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,22 +30,26 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 
+import static org.junit.Assert.*;
 
-public class SecretsPermissionTests {
+
+@Slf4j
+public class SecretsPermissionTests extends AbstractMultiUserTests {
 
     @Test
     public void testSecretsForUser2() {
-        ApiClient apiUser1Client = ApiUtil.getUser1Client();
         SecretClient user1SecretClient = new OrkesSecretClient(apiUser1Client);
-        ApiClient apiUser2Client = ApiUtil.getUser2Client();
         SecretClient user2SecretClient = new OrkesSecretClient(apiUser2Client);
+        GrantedAccessResponse user1Permissions = authorizationClient.getGrantedPermissionsForUser(user1.getId());
+        log.info("permissions before : {}", user1Permissions.getGrantedAccess());
 
-        String secretKey = "secret_key";
+        String secretKey = "secret_key" + UUID.randomUUID();
         String secretValue = "secret_value";
-        System.out.println("Secret name " + secretKey);
-        System.out.println("Secret key " + secretValue);
 
-        user1SecretClient.putSecret(secretKey, secretValue);
+        user1SecretClient.putSecret(secretValue, secretKey);
+
+        user1Permissions = authorizationClient.getGrantedPermissionsForUser(user1.getId());
+        log.info("permissions after : {}", user1Permissions.getGrantedAccess());
 
         String tagKey = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String tagValue = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
@@ -47,22 +57,25 @@ public class SecretsPermissionTests {
         TagObject tagObject = new TagObject().type(TagObject.TypeEnum.METADATA).key(tagKey).value(tagValue);
 
         // Tag secret
-        user1SecretClient.putTagForSecret(Arrays.asList(tagObject), secretValue);
-
-        ApiClient adminClient = ApiUtil.getApiClientWithCredentials();
-        AuthorizationClient authorizationClient = new OrkesAuthorizationClient(adminClient);
+        user1SecretClient.putTagForSecret(Arrays.asList(tagObject), secretKey);
 
         String groupName = "worker-test-group";
         try {
             authorizationClient.deleteGroup(groupName);
-            user1SecretClient.deleteSecret(secretValue);
         } catch (Exception e) {
           // Group does not exist or secret does not exist
         }
+
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
-        authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
-        authorizationClient.addUserToGroup(groupName, "conductoruser2@gmail.com");
+        authorizationClient.addUserToGroup(groupName, user1.getId());
+        authorizationClient.addUserToGroup(groupName, user2.getId());
+        List<ConductorUser> usersInGroup = authorizationClient.getUsersInGroup(group.getId());
+        assertNotNull(usersInGroup);
+        assertEquals(2, usersInGroup.size());
+        Set<String> groupUsers = usersInGroup.stream().map(g -> g.getId()).collect(Collectors.toSet());
+        assertTrue(groupUsers.contains(user1.getId()));
+        assertTrue(groupUsers.contains(user2.getId()));
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
@@ -70,21 +83,28 @@ public class SecretsPermissionTests {
         authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ, AuthorizationRequest.AccessEnum.EXECUTE,
                 AuthorizationRequest.AccessEnum.UPDATE,
                 AuthorizationRequest.AccessEnum.DELETE));
-        authorizationRequest.setTarget(new TargetRef().id(tagKey + ":" + tagValue ).type(TargetRef.TypeEnum.TAG));
+        authorizationRequest.setTarget(new TargetRef().id(tagKey + ":" + tagValue).type(TargetRef.TypeEnum.TAG));
         authorizationClient.grantPermissions(authorizationRequest);
 
         //Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
-        authorizationClient.grantPermissions(authorizationRequest);
+        //authorizationRequest.setSubject(new SubjectRef().id(user2Application.getId()).type(SubjectRef.TypeEnum.USER));
+        //authorizationClient.grantPermissions(authorizationRequest);
+
+        Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
 
         // Secret is accessible for user2
-        Assertions.assertNotNull(user2SecretClient.getSecret(secretValue));
+        Assertions.assertNotNull(user2SecretClient.getSecret(secretKey));
 
         authorizationClient.removePermissions(authorizationRequest);
         authorizationRequest.setSubject(new SubjectRef().id(groupName).type(SubjectRef.TypeEnum.GROUP));
         authorizationClient.removePermissions(authorizationRequest);
         authorizationClient.deleteGroup(groupName);
         user1SecretClient.deleteSecret(secretValue);
+    }
+
+    @Test
+    public void testGrantTaskExecutePermissions() {
+
     }
 
     UpsertGroupRequest getUpsertGroupRequest() {

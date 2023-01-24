@@ -24,6 +24,7 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
 
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 
 public class ApplicationResourceApi {
     private ApiClient apiClient;
@@ -298,6 +299,7 @@ public class ApplicationResourceApi {
      */
     public com.squareup.okhttp.Call createApplicationCall(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
+            String userId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -307,6 +309,9 @@ public class ApplicationResourceApi {
         String localVarPath = "/applications";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        if(StringUtils.isNotBlank(userId)) {
+            localVarQueryParams.add(new Pair("userId", userId));
+        }
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
@@ -359,6 +364,7 @@ public class ApplicationResourceApi {
 
     private com.squareup.okhttp.Call createApplicationValidateBeforeCall(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
+            String userId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -371,6 +377,7 @@ public class ApplicationResourceApi {
         com.squareup.okhttp.Call call =
                 createApplicationCall(
                         createOrUpdateApplicationRequest,
+                        userId,
                         progressListener,
                         progressRequestListener);
         return call;
@@ -384,10 +391,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ConductorApplication createApplication(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
-        ApiResponse<ConductorApplication> resp =
-                createApplicationWithHttpInfo(createOrUpdateApplicationRequest);
+    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String userId) throws ApiException {
+        ApiResponse<ConductorApplication> resp = createApplicationWithHttpInfo(createOrUpdateApplicationRequest, userId);
         return resp.getData();
     }
 
@@ -399,10 +404,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
-        com.squareup.okhttp.Call call =
-                createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, null, null);
+    private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String userId) throws ApiException {
+        com.squareup.okhttp.Call call = createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, userId, null, null);
         Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

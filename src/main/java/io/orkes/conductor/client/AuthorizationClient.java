@@ -64,8 +64,9 @@ public interface AuthorizationClient {
 
     void createAccessKey(String id, SecretsManager secretsManager, String secretPath);
 
-    ConductorApplication createApplication(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
+    ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
+
+    ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String targetUserId);
 
     void deleteAccessKey(String applicationId, String keyId);
 
@@ -81,6 +82,5 @@ public interface AuthorizationClient {
 
     AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId);
 
-    ConductorApplication updateApplication(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id);
+    ConductorApplication updateApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id);
 }

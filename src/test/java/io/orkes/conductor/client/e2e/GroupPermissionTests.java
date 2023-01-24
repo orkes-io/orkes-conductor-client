@@ -15,10 +15,14 @@ package io.orkes.conductor.client.e2e;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -34,20 +38,103 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
+@Slf4j
 public class GroupPermissionTests {
+
+    private static AuthorizationClient authorizationClient;
+    private static String applicationId;
+
+    private static MetadataClient metadataClient;
+
+    private static ApiClient apiUser1Client;
+
+    private static ApiClient apiUser2Client;
+
+    private static ApiClient adminClient;
+
+    private static ConductorUser user1;
+
+    private static ConductorUser user2;
+
+    private static ConductorApplication user1Application;
+
+    private static ConductorApplication user2Application;
+
+    private static CreateAccessKeyResponse user1AccessKey;
+
+    private static CreateAccessKeyResponse user2AccessKey;
+
+    @BeforeAll
+    public static void setup() {
+        ApiClient adminClient = ApiUtil.getApiClientWithCredentials();
+        authorizationClient = ApiUtil.getOrkesClient().getAuthorizationClient();
+
+        //Register user 1
+        UpsertUserRequest user1Request = new UpsertUserRequest();
+        user1Request.setName("user1@orkes.io");
+        user1Request.setRoles(List.of(UpsertUserRequest.RolesEnum.USER));
+        user1 = authorizationClient.upsertUser(user1Request, UUID.randomUUID().toString());
+
+
+        //Register user 2
+        UpsertUserRequest user2Request = new UpsertUserRequest();
+        user2Request.setName("user2@orkes.io");
+        user2Request.setRoles(List.of(UpsertUserRequest.RolesEnum.USER));
+        user2 = authorizationClient.upsertUser(user1Request, UUID.randomUUID().toString());
+
+
+        CreateOrUpdateApplicationRequest request = new CreateOrUpdateApplicationRequest();
+        request.setName("test-" + UUID.randomUUID().toString());
+        ConductorApplication app = authorizationClient.createApplication(request);
+        applicationId = app.getId();
+
+        //Create api client for user 1
+        CreateOrUpdateApplicationRequest user1AppRequest = new CreateOrUpdateApplicationRequest();
+        user1AppRequest.setName("user1-" + UUID.randomUUID().toString());
+        user1Application = authorizationClient.createApplication(user1AppRequest, user1.getId());
+        authorizationClient.addRoleToApplicationUser(user1Application.getId(), UpsertUserRequest.RolesEnum.USER.getValue());
+
+        user1AccessKey = authorizationClient.createAccessKey(user1Application.getId());
+        apiUser1Client = new ApiClient(adminClient.getBasePath(), user1AccessKey.getId(), user1AccessKey.getSecret());
+
+
+        //Create api client for user 2
+        CreateOrUpdateApplicationRequest user2AppRequest = new CreateOrUpdateApplicationRequest();
+        user2AppRequest.setName("user2-" + UUID.randomUUID().toString());
+        user2Application = authorizationClient.createApplication(user2AppRequest, user2.getId());
+        authorizationClient.addRoleToApplicationUser(user2Application.getId(), UpsertUserRequest.RolesEnum.USER.getValue());
+
+        user2AccessKey = authorizationClient.createAccessKey(user2Application.getId());
+        apiUser2Client = new ApiClient(adminClient.getBasePath(), user2AccessKey.getId(), user2AccessKey.getSecret());
+
+    }
+
+    @AfterAll
+    public static void cleanup() {
+        if(applicationId != null) {
+            authorizationClient.deleteApplication(applicationId);
+
+            authorizationClient.deleteAccessKey(user1Application.getId(), user1AccessKey.getId());
+            authorizationClient.deleteApplication(user1Application.getId());
+
+            authorizationClient.deleteAccessKey(user2Application.getId(), user2AccessKey.getId());
+            authorizationClient.deleteApplication(user2Application.getId());
+        }
+    }
+
 
     @Test
     public void testGroupRelatedPermissions() throws Exception {
-        ApiClient apiUser1Client = ApiUtil.getUser1Client();
         WorkflowClient user1WorkflowClient = new OrkesWorkflowClient(apiUser1Client);
         MetadataClient user1MetadataClient = new OrkesMetadataClient(apiUser1Client);
         TaskClient user1TaskClient = new OrkesTaskClient(apiUser1Client);
 
         // Create user2 client and check access should not be there workflow1
-        ApiClient apiUser2Client = ApiUtil.getUser2Client();
         WorkflowClient user2WorkflowClient = new OrkesWorkflowClient(apiUser2Client);
         MetadataClient user2MetadataClient = new OrkesMetadataClient(apiUser2Client);
         TaskClient user2TaskClient = new OrkesTaskClient(apiUser2Client);
@@ -95,15 +182,13 @@ public class GroupPermissionTests {
 
         user1MetadataClient.addWorkflowTag(tagObject, workflowName1);
 
-        ApiClient adminClient = ApiUtil.getApiClientWithCredentials();
-        AuthorizationClient authorizationClient = new OrkesAuthorizationClient(adminClient);
-
         String groupName = "worker-test-group";
         try {
             authorizationClient.deleteGroup(groupName);
         } catch (Exception e) {
           // Group does not exist.
         }
+        log.info("groupName: {}", groupName);
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
         authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
@@ -119,7 +204,8 @@ public class GroupPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         //Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
+        //authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id(user2.getId()).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
 
         String finalWorkflowId1 = workflowId;
@@ -181,5 +267,8 @@ public class GroupPermissionTests {
         metadataClient1.registerWorkflowDef(workflowDef);
         metadataClient1.registerTaskDefs(Arrays.asList(taskDef));
     }
+
+
+
 
 }

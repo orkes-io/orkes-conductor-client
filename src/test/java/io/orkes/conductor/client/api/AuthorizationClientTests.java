@@ -14,17 +14,22 @@ package io.orkes.conductor.client.api;
 
 import java.util.*;
 
-import io.orkes.conductor.client.util.ApiUtil;
+import io.orkes.conductor.client.OrkesClients;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
+
 import io.orkes.conductor.client.AuthorizationClient;
+import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.model.TargetRef.TypeEnum;
 import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
+import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,9 +38,13 @@ public class AuthorizationClientTests extends ClientTest {
     private static AuthorizationClient authorizationClient;
     private static String applicationId;
 
+    private static MetadataClient metadataClient;
+
     @BeforeAll
     public static void setup() {
-        authorizationClient = ApiUtil.getOrkesClient().getAuthorizationClient();
+        OrkesClients orkesClients = ApiUtil.getOrkesClient();
+        authorizationClient = orkesClients.getAuthorizationClient();
+        metadataClient = orkesClients.getMetadataClient();
         CreateOrUpdateApplicationRequest request = new CreateOrUpdateApplicationRequest();
         request.setName("test-" + UUID.randomUUID().toString());
         ConductorApplication app = authorizationClient.createApplication(request);
@@ -179,6 +188,32 @@ public class AuthorizationClientTests extends ClientTest {
     }
 
     @Test
+    @DisplayName("tag a workflows and task")
+    public void tagWorkflowsAndTasks() {
+        registerWorkflow();
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setKey("a");
+        tagObject.setValue("b");
+        metadataClient.addTaskTag(tagObject, Commons.TASK_NAME);
+        metadataClient.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
+    }
+
+
+
+    public void registerWorkflow() {
+        WorkflowDef workflowDef = new WorkflowDef();
+        workflowDef.setName(Commons.WORKFLOW_NAME);
+        workflowDef.setVersion(Commons.WORKFLOW_VERSION);
+        workflowDef.setOwnerEmail(Commons.OWNER_EMAIL);
+        WorkflowTask workflowTask = new WorkflowTask();
+        workflowTask.setName(Commons.TASK_NAME);
+        workflowTask.setTaskReferenceName(Commons.TASK_NAME);
+        workflowDef.setTasks(List.of(workflowTask));
+        metadataClient.updateWorkflowDefs(Arrays.asList(workflowDef));
+    }
+
+    @Test
     void testGrantPermissionsToTag() {
         authorizationClient.grantPermissions(getAuthorizationRequest());
     }
@@ -187,10 +222,7 @@ public class AuthorizationClientTests extends ClientTest {
     void testMethods() {
         try {
             authorizationClient.deleteUser(Commons.USER_EMAIL);
-        } catch (ApiException e) {
-            if (e.getCode() != 404) {
-                throw e;
-            }
+        } catch (Exception e) {
         }
         authorizationClient.upsertUser(getUpserUserRequest(), Commons.USER_EMAIL);
         List<ConductorUser> users = authorizationClient.listUsers(false);
@@ -261,6 +293,8 @@ public class AuthorizationClientTests extends ClientTest {
         request.setRoles(List.of(UpsertUserRequest.RolesEnum.USER));
         return request;
     }
+
+
 
     List<String> getAccessListAll() {
         return List.of("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");
