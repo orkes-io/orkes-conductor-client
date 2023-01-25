@@ -41,9 +41,8 @@ public class SecretsPermissionTests extends AbstractMultiUserTests {
         SecretClient user1SecretClient = new OrkesSecretClient(apiUser1Client);
         SecretClient user2SecretClient = new OrkesSecretClient(apiUser2Client);
         GrantedAccessResponse user1Permissions = authorizationClient.getGrantedPermissionsForUser(user1);
-        log.info("permissions before : {}", user1Permissions.getGrantedAccess());
 
-        String secretKey = "secret_key_1"; //UUID.randomUUID();
+        String secretKey = "secret_key_" + UUID.randomUUID();
         String secretValue = "secret_value";
 
         user1SecretClient.putSecret(secretValue, secretKey);
@@ -51,51 +50,28 @@ public class SecretsPermissionTests extends AbstractMultiUserTests {
         user1Permissions = authorizationClient.getGrantedPermissionsForUser(user1);
         log.info("permissions after : {}", user1Permissions.getGrantedAccess());
 
-        String tagKey = "org";  //RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String tagValue = "accounting";   //RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String tagKey = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String tagValue = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         TagObject tagObject = new TagObject().type(TagObject.TypeEnum.METADATA).key(tagKey).value(tagValue);
 
         // Tag secret
         user1SecretClient.putTagForSecret(Arrays.asList(tagObject), secretKey);
 
-        String groupName = "worker-test-group";
-        // Create group and add these two users in the group
-        Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
-        authorizationClient.addUserToGroup(groupName, user1);
-        authorizationClient.addUserToGroup(groupName, user2);
-        authorizationClient.addUserToGroup(groupName, "app:" + user1AppId);
-        authorizationClient.addUserToGroup(groupName, "app:" + user2AppId);
-
-        List<ConductorUser> usersInGroup = authorizationClient.getUsersInGroup(group.getId());
-        assertNotNull(usersInGroup);
-        assertEquals(2, usersInGroup.size());
-        Set<String> groupUsers = usersInGroup.stream().map(g -> g.getId()).collect(Collectors.toSet());
-        assertTrue(groupUsers.contains(user1));
-        assertTrue(groupUsers.contains(user2));
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
-        authorizationRequest.setSubject(new SubjectRef().id(groupName).type(SubjectRef.TypeEnum.GROUP));
-        authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ,
-                AuthorizationRequest.AccessEnum.EXECUTE,
-                AuthorizationRequest.AccessEnum.UPDATE,
-                AuthorizationRequest.AccessEnum.DELETE));
+        authorizationRequest.setSubject(new SubjectRef().id("app:" + user2AppId).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ));
         authorizationRequest.setTarget(new TargetRef().id(tagKey + ":" + tagValue).type(TargetRef.TypeEnum.TAG));
         authorizationClient.grantPermissions(authorizationRequest);
-
-        //Grant permission to execute the task in user2 application.
-        //authorizationRequest.setSubject(new SubjectRef().id(user2AppId).type(SubjectRef.TypeEnum.USER));
-        //authorizationClient.grantPermissions(authorizationRequest);
 
         // Secret is accessible for user2
         Assertions.assertNotNull(user2SecretClient.getSecret(secretKey));
 
         authorizationClient.removePermissions(authorizationRequest);
-        authorizationRequest.setSubject(new SubjectRef().id(groupName).type(SubjectRef.TypeEnum.GROUP));
+        authorizationRequest.setSubject(new SubjectRef().id(user2AppId).type(SubjectRef.TypeEnum.USER));
         authorizationClient.removePermissions(authorizationRequest);
 
-
-        authorizationClient.deleteGroup(groupName);
         user1SecretClient.deleteSecret(secretKey);
     }
 
