@@ -22,9 +22,12 @@ public class ApiUtil {
     private static final String ENV_KEY_ID = "SDK_INTEGRATION_TESTS_SERVER_KEY_ID";
     private static final String ENV_SECRET = "SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
 
-    private static final String USER1_KEY_ID = "USER1_KEY_ID";
+    public static final String USER1_APP_ID = "USER1_APP_ID";
+
+    public static final String USER2_APP_ID = "USER2_APP_ID";
+    public static final String USER1_KEY_ID = "USER1_KEY_ID";
     private static final String USER1_SECRET = "USER1_SECRET";
-    private static final String USER2_KEY_ID = "USER2_KEY_ID";
+    public static final String USER2_KEY_ID = "USER2_KEY_ID";
     private static final String USER2_SECRET = "USER2_SECRET";
 
     public static OrkesClients getOrkesClient() {
@@ -74,7 +77,7 @@ public class ApiUtil {
         return getEnv(ENV_SECRET);
     }
 
-    static String getEnv(String key) {
+    public static String getEnv(String key) {
         return System.getenv(key);
     }
 }

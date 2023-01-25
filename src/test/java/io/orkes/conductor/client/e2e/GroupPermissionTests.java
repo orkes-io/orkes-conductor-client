@@ -81,37 +81,12 @@ public class GroupPermissionTests {
         user1 = authorizationClient.upsertUser(user1Request, UUID.randomUUID().toString());
 
 
-        //Register user 2
-        UpsertUserRequest user2Request = new UpsertUserRequest();
-        user2Request.setName("user2@orkes.io");
-        user2Request.setRoles(List.of(UpsertUserRequest.RolesEnum.USER));
-        user2 = authorizationClient.upsertUser(user1Request, UUID.randomUUID().toString());
 
 
         CreateOrUpdateApplicationRequest request = new CreateOrUpdateApplicationRequest();
         request.setName("test-" + UUID.randomUUID().toString());
         ConductorApplication app = authorizationClient.createApplication(request);
         applicationId = app.getId();
-
-        //Create api client for user 1
-        CreateOrUpdateApplicationRequest user1AppRequest = new CreateOrUpdateApplicationRequest();
-        user1AppRequest.setName("user1-" + UUID.randomUUID().toString());
-        user1Application = authorizationClient.createApplication(user1AppRequest, user1.getId());
-        authorizationClient.addRoleToApplicationUser(user1Application.getId(), UpsertUserRequest.RolesEnum.USER.getValue());
-
-        user1AccessKey = authorizationClient.createAccessKey(user1Application.getId());
-        apiUser1Client = new ApiClient(adminClient.getBasePath(), user1AccessKey.getId(), user1AccessKey.getSecret());
-
-
-        //Create api client for user 2
-        CreateOrUpdateApplicationRequest user2AppRequest = new CreateOrUpdateApplicationRequest();
-        user2AppRequest.setName("user2-" + UUID.randomUUID().toString());
-        user2Application = authorizationClient.createApplication(user2AppRequest, user2.getId());
-        authorizationClient.addRoleToApplicationUser(user2Application.getId(), UpsertUserRequest.RolesEnum.USER.getValue());
-
-        user2AccessKey = authorizationClient.createAccessKey(user2Application.getId());
-        apiUser2Client = new ApiClient(adminClient.getBasePath(), user2AccessKey.getId(), user2AccessKey.getSecret());
-
     }
 
     @AfterAll

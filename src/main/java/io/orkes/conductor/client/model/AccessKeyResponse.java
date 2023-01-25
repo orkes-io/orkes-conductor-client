@@ -12,6 +12,9 @@
  */
 package io.orkes.conductor.client.model;
 
+import lombok.Data;
+
+@Data
 public class AccessKeyResponse {
     private String id;
     private Long createdAt;

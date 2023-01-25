@@ -12,6 +12,8 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netflix.conductor.common.config.ObjectMapperProvider;
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -19,13 +21,14 @@ import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.common.run.Workflow;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import io.orkes.conductor.client.*;
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.OrkesMetadataClient;
-import io.orkes.conductor.client.http.OrkesTaskClient;
-import io.orkes.conductor.client.http.OrkesWorkflowClient;
+import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
@@ -39,6 +42,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static io.orkes.conductor.client.util.ApiUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
@@ -54,75 +58,53 @@ public abstract class AbstractMultiUserTests {
 
     protected static ApiClient apiUser2Client;
 
-    protected static ApiClient adminClient;
+    protected static OkHttpClient client = new OkHttpClient();
 
-    protected static ConductorUser user1;
+    protected static ObjectMapper objectMapper = new ObjectMapperProvider().getObjectMapper();
 
-    protected static ConductorUser user2;
+    protected static String user1, user2;
 
-    protected static ConductorApplication user1Application;
-
-    protected static ConductorApplication user2Application;
-
-    protected static CreateAccessKeyResponse user1AccessKey;
-
-    protected static CreateAccessKeyResponse user2AccessKey;
+    protected static String user1AppId, user2AppId;
 
     @BeforeAll
     public static void setup() {
-        ApiClient adminClient = ApiUtil.getApiClientWithCredentials();
         authorizationClient = ApiUtil.getOrkesClient().getAuthorizationClient();
-
-        //Register user 1
-        UpsertUserRequest user1Request = new UpsertUserRequest();
-        user1Request.setName("user1@orkes.io");
-        user1Request.setRoles(List.of(UpsertUserRequest.RolesEnum.USER));
-        user1 = authorizationClient.upsertUser(user1Request, UUID.randomUUID().toString());
-
-
-        //Register user 2
-        UpsertUserRequest user2Request = new UpsertUserRequest();
-        user2Request.setName("viren@baraiya.com");
-        user2Request.setRoles(List.of(UpsertUserRequest.RolesEnum.USER));
-        user2 = authorizationClient.upsertUser(user2Request, UUID.randomUUID().toString());
-
+        apiUser1Client = ApiUtil.getUser1Client();
+        apiUser2Client = ApiUtil.getUser2Client();
 
         CreateOrUpdateApplicationRequest request = new CreateOrUpdateApplicationRequest();
         request.setName("test-" + UUID.randomUUID().toString());
         ConductorApplication app = authorizationClient.createApplication(request);
         applicationId = app.getId();
 
-        //Create api client for user 1
-        CreateOrUpdateApplicationRequest user1AppRequest = new CreateOrUpdateApplicationRequest();
-        user1AppRequest.setName("user1-" + UUID.randomUUID().toString());
-        user1Application = authorizationClient.createApplication(user1AppRequest, user1.getId());
-        authorizationClient.addRoleToApplicationUser(user1Application.getId(), UpsertUserRequest.RolesEnum.USER.getValue());
+        user1 = getUserId(apiUser1Client.getToken());
+        user2 = getUserId(apiUser2Client.getToken());
+        log.info("user1 {}", user1);
+        log.info("user2 {}", user2);
 
-        user1AccessKey = authorizationClient.createAccessKey(user1Application.getId());
-        apiUser1Client = new ApiClient(adminClient.getBasePath(), user1AccessKey.getId(), user1AccessKey.getSecret());
+        user1AppId = getEnv(USER1_APP_ID);
+        user2AppId = getEnv(USER2_APP_ID);
 
-
-        //Create api client for user 2
-        CreateOrUpdateApplicationRequest user2AppRequest = new CreateOrUpdateApplicationRequest();
-        user2AppRequest.setName("user2-" + UUID.randomUUID().toString());
-        user2Application = authorizationClient.createApplication(user2AppRequest, user2.getId());
-        authorizationClient.addRoleToApplicationUser(user2Application.getId(), UpsertUserRequest.RolesEnum.USER.getValue());
-
-        user2AccessKey = authorizationClient.createAccessKey(user2Application.getId());
-        apiUser2Client = new ApiClient(adminClient.getBasePath(), user2AccessKey.getId(), user2AccessKey.getSecret());
+        log.info("user1AppId {}", user1AppId);
+        log.info("user2AppId {}", user2AppId);
 
     }
-
-    //@AfterAll
+    @AfterAll
     public static void cleanup() {
         if(applicationId != null) {
             authorizationClient.deleteApplication(applicationId);
-
-            authorizationClient.deleteAccessKey(user1Application.getId(), user1AccessKey.getId());
-            authorizationClient.deleteApplication(user1Application.getId());
-
-            authorizationClient.deleteAccessKey(user2Application.getId(), user2AccessKey.getId());
-            authorizationClient.deleteApplication(user2Application.getId());
         }
+    }
+
+    @SneakyThrows
+    protected static String getUserId(String token) {
+        Request request = new Request.Builder().url(ApiUtil.getBasePath() + "/token/userInfo")
+                .addHeader("X-Authorization", token)
+                .addHeader("accept", "application/json")
+                .build();
+        Response response = client.newCall(request).execute();
+        byte[] data = response.body().bytes();
+        Map<String, Object> userInfo = objectMapper.readValue(data, Map.class);
+        return userInfo.get("id").toString();
     }
 }

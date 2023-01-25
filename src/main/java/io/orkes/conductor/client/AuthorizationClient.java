@@ -66,8 +66,6 @@ public interface AuthorizationClient {
 
     ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
 
-    ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String targetUserId);
-
     void deleteAccessKey(String applicationId, String keyId);
 
     void deleteApplication(String id);
