@@ -28,7 +28,7 @@ import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.grpc.GrpcTaskClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 
-public class OrkesTaskClient extends TaskClient {
+public class OrkesTaskClient extends TaskClient implements AutoCloseable{
 
     protected ApiClient apiClient;
 
@@ -40,7 +40,12 @@ public class OrkesTaskClient extends TaskClient {
         this.apiClient = apiClient;
         this.taskResourceApi = new TaskResourceApi(apiClient);
         this.grpcTaskClient = new GrpcTaskClient(apiClient);
+        if(apiClient.isUseGRPC()) {
+
+        }
     }
+
+
 
     public OrkesTaskClient withReadTimeout(int readTimeout) {
         apiClient.setReadTimeout(readTimeout);
@@ -171,5 +176,12 @@ public class OrkesTaskClient extends TaskClient {
     @Override
     public SearchResult<Task> searchV2(Integer start, Integer size, String sort, String freeText, String query) {
         throw new UnsupportedOperationException("search operation on tasks is not supported");
+    }
+
+    @Override
+    public void close() throws Exception {
+        if(this.grpcTaskClient != null) {
+            this.grpcTaskClient.close();
+        }
     }
 }

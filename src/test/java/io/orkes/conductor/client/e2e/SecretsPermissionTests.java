@@ -40,15 +40,11 @@ public class SecretsPermissionTests extends AbstractMultiUserTests {
     public void testSecretsForUser2() {
         SecretClient user1SecretClient = new OrkesSecretClient(apiUser1Client);
         SecretClient user2SecretClient = new OrkesSecretClient(apiUser2Client);
-        GrantedAccessResponse user1Permissions = authorizationClient.getGrantedPermissionsForUser(user1);
 
         String secretKey = "secret_key_" + UUID.randomUUID();
         String secretValue = "secret_value";
 
         user1SecretClient.putSecret(secretValue, secretKey);
-
-        user1Permissions = authorizationClient.getGrantedPermissionsForUser(user1);
-        log.info("permissions after : {}", user1Permissions.getGrantedAccess());
 
         String tagKey = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String tagValue = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
