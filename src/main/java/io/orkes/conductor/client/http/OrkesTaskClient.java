@@ -44,8 +44,6 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable{
         }
     }
 
-
-
     public OrkesTaskClient withReadTimeout(int readTimeout) {
         apiClient.setReadTimeout(readTimeout);
         return this;
