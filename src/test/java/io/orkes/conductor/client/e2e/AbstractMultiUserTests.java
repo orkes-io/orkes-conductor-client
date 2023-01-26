@@ -71,6 +71,8 @@ public abstract class AbstractMultiUserTests {
         authorizationClient = ApiUtil.getOrkesClient().getAuthorizationClient();
         apiUser1Client = ApiUtil.getUser1Client();
         apiUser2Client = ApiUtil.getUser2Client();
+        apiUser1Client.setReadTimeout(10_000);
+        apiUser2Client.setReadTimeout(10_000);
 
         CreateOrUpdateApplicationRequest request = new CreateOrUpdateApplicationRequest();
         request.setName("test-" + UUID.randomUUID().toString());

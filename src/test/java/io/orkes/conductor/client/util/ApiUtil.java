@@ -32,6 +32,7 @@ public class ApiUtil {
 
     public static OrkesClients getOrkesClient() {
         final ApiClient apiClient = getApiClientWithCredentials();
+        apiClient.setReadTimeout(10_000);
         return new OrkesClients(apiClient);
     }
 
