@@ -39,9 +39,8 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable{
     public OrkesTaskClient(ApiClient apiClient) {
         this.apiClient = apiClient;
         this.taskResourceApi = new TaskResourceApi(apiClient);
-        this.grpcTaskClient = new GrpcTaskClient(apiClient);
         if(apiClient.isUseGRPC()) {
-
+            this.grpcTaskClient = new GrpcTaskClient(apiClient);
         }
     }
 
