@@ -24,7 +24,7 @@ public class ApiUtil {
 
     public static final String USER1_APP_ID = "USER1_APPLICATION_ID";
 
-    public static final String USER2_APP_ID = "USER1_APPLICATION_ID";
+    public static final String USER2_APP_ID = "USER2_APPLICATION_ID";
     public static final String USER1_KEY_ID = "USER1_KEY_ID";
     private static final String USER1_SECRET = "USER1_SECRET";
     public static final String USER2_KEY_ID = "USER2_KEY_ID";
