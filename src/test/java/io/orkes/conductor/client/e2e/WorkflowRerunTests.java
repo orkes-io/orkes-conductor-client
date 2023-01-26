@@ -160,7 +160,7 @@ public class WorkflowRerunTests {
         // Check the workflow status and few other parameters
         await().atMost(35, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
+            assertEquals(WorkflowStatus.StatusEnum.RUNNING.name(), workflow1.getStatus().name());
             assertTrue(workflow1.getLastRetriedTime() != 0L);
             assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
         });

@@ -109,8 +109,6 @@ public class GroupPermissionTests extends AbstractMultiUserTests {
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
         authorizationClient.addUserToGroup(groupName, "user1@orkes.io");
         authorizationClient.addUserToGroup(groupName, "user2@orkes.io");
-//        authorizationClient.addUserToGroup(groupName, "app:" + user1AppId);
-//        authorizationClient.addUserToGroup(groupName, "app:" + user2AppId);
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();

@@ -15,7 +15,7 @@ jobs:
           distribution: "zulu"
           java-version: "11"
       - name: Build and run tests
-        run: ./gradlew clean test -x check --info
+        run: ./gradlew clean test -x check
         env:
           SDK_INTEGRATION_TESTS_SERVER_API_URL: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_API_URL }}
           SDK_INTEGRATION_TESTS_SERVER_KEY_ID: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_KEY_ID }}
