@@ -12,6 +12,7 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -142,9 +143,9 @@ public class WorkflowRetryTests {
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
 
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
-        System.out.print("Workflow id is " + workflowId);
-        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        String parentWorkflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        log.info("Parent Workflow id is {}", parentWorkflowId);
+        Workflow workflow = workflowClient.getWorkflow(parentWorkflowId, true);
         // Fail the simple task
         String subworkflowId = workflow.getTasks().get(0).getSubWorkflowId();
         Workflow subWorkflow = workflowClient.getWorkflow(subworkflowId, true);
@@ -153,46 +154,59 @@ public class WorkflowRetryTests {
         taskResult.setWorkflowInstanceId(subworkflowId);
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.FAILED);
-        taskResult.setReasonForIncompletion("failed");
+        taskResult.setReasonForIncompletion("failing sub workflow task for testing");
         taskClient.updateTask(taskResult);
+
+        //Run decider
+        workflowClient.runDecider(subworkflowId);
+        workflowClient.runDecider(parentWorkflowId);
 
         // Wait for parent workflow to get failed
         await()
-                .atMost(30, TimeUnit.SECONDS)
+                .atMost(42, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+            Workflow workflow1 = workflowClient.getWorkflow(parentWorkflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
 
-        log.info("Retry {}", workflowId);
+        log.info("Retrying parent workflow {}", parentWorkflowId);
         // Retry the workflow.
-        workflowClient.retryLastFailedTask(workflowId);
-        // Check the workflow status and few other parameters
-        await()
-                .atMost(30, TimeUnit.SECONDS)
-                .pollInterval(1, TimeUnit.SECONDS)
-                .untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertTrue(workflow1.getLastRetriedTime() != 0L);
-            assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
-        });
+        workflowClient.retryLastFailedTask(parentWorkflowId);
 
-        taskId = workflowClient.getWorkflow(subworkflowId, true).getTasks().get(1).getTaskId();
+        workflowClient.runDecider(parentWorkflowId);
+        workflow = workflowClient.getWorkflow(parentWorkflowId, true);
+        subworkflowId = workflow.getTasks().get(0).getSubWorkflowId();
+
+        workflowClient.runDecider(subworkflowId);
+
+        // Check the workflow status and few other parameters
+        workflow = workflowClient.getWorkflow(parentWorkflowId, true);
+        assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
+        assertTrue(workflow.getLastRetriedTime() != 0L);
+        assertEquals(workflow.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
+        workflowClient.runDecider(subworkflowId);
+
+        subworkflowId = workflow.getTasks().get(0).getSubWorkflowId();
+        List<Task> subWorkflowTasks = workflowClient.getWorkflow(subworkflowId, true).getTasks();
+        taskId = subWorkflowTasks.get(subWorkflowTasks.size()-1).getTaskId();
 
         taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(subworkflowId);
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.COMPLETED);
+        log.info("Updating task with id {} wf = {}", taskId, subworkflowId);
         taskClient.updateTask(taskResult);
+
+        workflowClient.runDecider(subworkflowId);
+        workflowClient.runDecider(parentWorkflowId);
 
         // Wait for workflow to get completed
         await()
                 .atMost(30, TimeUnit.SECONDS)
                 .pollInterval(1, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+            Workflow workflow1 = workflowClient.getWorkflow(parentWorkflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
         });
 

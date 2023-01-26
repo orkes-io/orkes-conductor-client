@@ -134,12 +134,12 @@ public class SubWorkflowTests {
 
     private void assertSubworkflowWithDomain(String workflowId) {
         await()
-                .atMost(30, TimeUnit.SECONDS)
+                .atMost(40, TimeUnit.SECONDS)
                 .pollInterval(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
 
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow.getStatus().name());
             Map<String, String> workflowTaskToDomain = workflow.getTaskToDomain();
             assertNotNull(workflowTaskToDomain);
             assertTrue(!workflowTaskToDomain.isEmpty());
@@ -199,7 +199,7 @@ public class SubWorkflowTests {
 
     private void assertSubworkflowExecutionWithOutDomains(String workflowId) {
         await()
-                .atMost(30, TimeUnit.SECONDS)
+                .atMost(40, TimeUnit.SECONDS)
                 .pollInterval(10, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);

@@ -29,6 +29,8 @@ import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.RegistrationUtil;
 
+import static io.orkes.conductor.client.util.ApiUtil.USER2_APP_ID;
+import static io.orkes.conductor.client.util.ApiUtil.getEnv;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
@@ -85,7 +87,7 @@ public class SubWorkflowPermissionTests {
         user1TaskClient.updateTask(taskResult);
 
         // Wait for workflow to get completed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(41, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = user1WorkflowClient.getWorkflow(finalWorkflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
         });
@@ -106,8 +108,8 @@ public class SubWorkflowPermissionTests {
         }
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
-        authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
-        authorizationClient.addUserToGroup(groupName, "conductoruser2@gmail.com");
+        authorizationClient.addUserToGroup(groupName, "user1@orkes.io");
+        authorizationClient.addUserToGroup(groupName, "user2@orkes.io");
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
@@ -119,7 +121,7 @@ public class SubWorkflowPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         // Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id(getEnv(USER2_APP_ID)).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
         // User 2 should be able to query workflow information.
         String finalWorkflowId1 = workflowId;

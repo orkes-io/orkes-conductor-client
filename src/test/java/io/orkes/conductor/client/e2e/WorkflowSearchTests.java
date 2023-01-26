@@ -118,8 +118,8 @@ public class WorkflowSearchTests {
 
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "workflow-search-group");
-        authorizationClient.addUserToGroup("workflow-search-group", "conductoruser1@gmail.com");
-        authorizationClient.addUserToGroup("workflow-search-group", "conductoruser2@gmail.com");
+        authorizationClient.addUserToGroup("workflow-search-group", "user1@orkes.io");
+        authorizationClient.addUserToGroup("workflow-search-group", "user2@orkes.io");
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
