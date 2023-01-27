@@ -19,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.junit.After;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.client.http.MetadataClient;
@@ -37,13 +38,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class JavaSDKTests {
 
+    private WorkflowExecutor executor;
+
     @Test
     public void testSDK() throws ExecutionException, InterruptedException, TimeoutException {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
         WorkflowClient workflowClient = new OrkesClients(apiClient).getWorkflowClient();
         MetadataClient metadataClient = new OrkesClients(apiClient).getMetadataClient();
-        WorkflowExecutor executor = new WorkflowExecutor(taskClient, workflowClient, metadataClient, 1000);
+        executor = new WorkflowExecutor(taskClient, workflowClient, metadataClient, 1000);
         executor.initWorkers("io.orkes.conductor.client.e2e");
 
         ConductorWorkflow<Map<String, Object>> workflow = new ConductorWorkflow<>(executor);
@@ -58,6 +61,13 @@ public class JavaSDKTests {
         assertEquals(Workflow.WorkflowStatus.COMPLETED, run.getStatus());
         assertEquals(1, run.getTasks().size());
         assertEquals("Hello, orkes", run.getTasks().get(0).getOutputData().get("greetings"));
+    }
+
+    @After
+    public void cleanup() {
+        if(executor != null) {
+            executor.shutdown();
+        }
     }
 
 }
