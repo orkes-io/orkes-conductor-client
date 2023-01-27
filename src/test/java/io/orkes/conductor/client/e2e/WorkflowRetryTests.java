@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -156,10 +157,9 @@ public class WorkflowRetryTests {
         taskResult.setStatus(TaskResult.Status.FAILED);
         taskResult.setReasonForIncompletion("failing sub workflow task for testing");
         taskClient.updateTask(taskResult);
-
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
         //Run decider
         workflowClient.runDecider(subworkflowId);
-        workflowClient.runDecider(parentWorkflowId);
 
         // Wait for parent workflow to get failed
         await()
