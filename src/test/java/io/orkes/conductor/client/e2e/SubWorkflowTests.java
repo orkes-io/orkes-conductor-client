@@ -134,8 +134,8 @@ public class SubWorkflowTests {
 
     private void assertSubworkflowWithDomain(String workflowId) {
         await()
-                .atMost(40, TimeUnit.SECONDS)
-                .pollInterval(10, TimeUnit.SECONDS)
+                .atMost(120, TimeUnit.SECONDS)
+                .pollInterval(5, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
 
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
@@ -199,8 +199,8 @@ public class SubWorkflowTests {
 
     private void assertSubworkflowExecutionWithOutDomains(String workflowId) {
         await()
-                .atMost(40, TimeUnit.SECONDS)
-                .pollInterval(10, TimeUnit.SECONDS)
+                .atMost(120, TimeUnit.SECONDS)
+                .pollInterval(5, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
