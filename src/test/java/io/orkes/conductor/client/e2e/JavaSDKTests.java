@@ -43,7 +43,7 @@ public class JavaSDKTests {
         TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
         WorkflowClient workflowClient = new OrkesClients(apiClient).getWorkflowClient();
         MetadataClient metadataClient = new OrkesClients(apiClient).getMetadataClient();
-        WorkflowExecutor executor = new WorkflowExecutor(taskClient, workflowClient, metadataClient, 10);
+        WorkflowExecutor executor = new WorkflowExecutor(taskClient, workflowClient, metadataClient, 1000);
         executor.initWorkers("io.orkes.conductor.client.e2e");
 
         ConductorWorkflow<Map<String, Object>> workflow = new ConductorWorkflow<>(executor);
