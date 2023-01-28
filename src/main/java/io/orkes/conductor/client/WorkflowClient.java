@@ -25,6 +25,7 @@ import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.WorkflowStatus;
+import io.orkes.conductor.client.model.WorkflowTestRequest;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 public abstract class WorkflowClient extends com.netflix.conductor.client.http.WorkflowClient {
@@ -60,4 +61,11 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
     public abstract void shutdown();
 
     public abstract void uploadCompletedWorkflows();
+
+    /**
+     * Integration test your workflow using mock data
+     * @param testRequest Workflow Start Request with test data
+     * @return Workflow
+     */
+    public abstract Workflow testWorkflow(WorkflowTestRequest testRequest);
 }

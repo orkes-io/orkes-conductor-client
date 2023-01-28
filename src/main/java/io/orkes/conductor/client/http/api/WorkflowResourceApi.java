@@ -3074,6 +3074,68 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
+
+    public com.squareup.okhttp.Call testWorkflowCall(
+            WorkflowTestRequest testRequest,
+            final ProgressResponseBody.ProgressListener progressListener,
+            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            throws ApiException {
+        Object localVarPostBody = testRequest;
+
+        // create path and map variables
+        String localVarPath = "/workflow/test";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {"text/plain"};
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {"application/json"};
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if (progressListener != null) {
+            apiClient
+                    .getHttpClient()
+                    .networkInterceptors()
+                    .add(
+                            new com.squareup.okhttp.Interceptor() {
+                                @Override
+                                public com.squareup.okhttp.Response intercept(
+                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                        throws IOException {
+                                    com.squareup.okhttp.Response originalResponse =
+                                            chain.proceed(chain.request());
+                                    return originalResponse
+                                            .newBuilder()
+                                            .body(
+                                                    new ProgressResponseBody(
+                                                            originalResponse.body(),
+                                                            progressListener))
+                                            .build();
+                                }
+                            });
+        }
+
+        String[] localVarAuthNames = new String[] {"api_key"};
+        return apiClient.buildCall(
+                localVarPath,
+                "POST",
+                localVarQueryParams,
+                localVarCollectionQueryParams,
+                localVarPostBody,
+                localVarHeaderParams,
+                localVarFormParams,
+                localVarAuthNames,
+                progressRequestListener);
+    }
+
     private com.squareup.okhttp.Call startWorkflowValidateBeforeCall(
             StartWorkflowRequest startWorkflowRequest,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -3088,6 +3150,33 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 startWorkflowCall(startWorkflowRequest, progressListener, progressRequestListener);
         return call;
+    }
+
+    private com.squareup.okhttp.Call testWorkflowValidateBeforeCall(
+            WorkflowTestRequest testRequest,
+            final ProgressResponseBody.ProgressListener progressListener,
+            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            throws ApiException {
+        // verify the required parameter 'body' is set
+        if (testRequest == null) {
+            throw new ApiException("Missing the required parameter 'testRequest' when calling testWorkflow");
+        }
+
+        com.squareup.okhttp.Call call = testWorkflowCall(testRequest, progressListener, progressRequestListener);
+        return call;
+    }
+
+    /**
+     * Test a workflow execution using mock data
+     *
+     * @param testRequest (required)
+     * @return Workflow
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
+     *     response body
+     */
+    public Workflow testWorkflow(WorkflowTestRequest testRequest) throws ApiException {
+        ApiResponse<Workflow> resp = testWorkflowWithHttpInfo(testRequest);
+        return resp.getData();
     }
 
     /**
@@ -3116,6 +3205,13 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 startWorkflowValidateBeforeCall(startWorkflowRequest, null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    private ApiResponse<Workflow> testWorkflowWithHttpInfo(WorkflowTestRequest testRequest) throws ApiException {
+        com.squareup.okhttp.Call call =
+                testWorkflowValidateBeforeCall(testRequest, null, null);
+        Type localVarReturnType = new TypeToken<Workflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
