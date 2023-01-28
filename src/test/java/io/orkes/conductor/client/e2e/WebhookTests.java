@@ -2,9 +2,11 @@ package io.orkes.conductor.client.e2e;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.common.config.ObjectMapperProvider;
+import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.common.run.SearchResult;
+import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowSummary;
 import com.squareup.okhttp.*;
 import io.orkes.conductor.client.ApiClient;
@@ -55,11 +57,10 @@ public class WebhookTests {
 
     @SneakyThrows
     @Test
-    public void testWebHookCreation() {
+    public void testWebHook() {
         String key = UUID.randomUUID().toString();
         WorkflowClient workflowClient = new OrkesWorkflowClient(client);
 
-        OkHttpClient httpClient = new OkHttpClient();
         Map<String, Object> input = new HashMap<>();
         input.put("key", key);
 
@@ -81,12 +82,26 @@ public class WebhookTests {
         sendWebhook(input, receiveWebhookUrl);
 
         await().pollInterval(1, TimeUnit.SECONDS).atMost(30, TimeUnit.SECONDS).untilAsserted(() ->{
-            SearchResult<WorkflowSummary> workflows = workflowClient.search(0, 10, "", key, "status = 'COMPLETED'");
-            assertNotNull(workflows);
-            assertNotNull(workflows.getResults());
-            assertEquals(1, workflows.getResults().size());
-            log.info("Found {}", workflows.getResults().get(0).getStatus());
+            Workflow workflow = workflowClient.getWorkflow(wfId, true);
+            assertNotNull(workflow);
+            assertEquals(2, workflow.getTasks().size());
+            assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(0).getStatus());
+            assertEquals(Task.Status.IN_PROGRESS, workflow.getTasks().get(1).getStatus());
         });
+
+        input.clear();
+        input.put("key", 12);
+        sendWebhook(input, receiveWebhookUrl + "?id=" + key);
+
+        await().pollInterval(1, TimeUnit.SECONDS).atMost(30, TimeUnit.SECONDS).untilAsserted(() ->{
+            Workflow workflow = workflowClient.getWorkflow(wfId, true);
+            assertNotNull(workflow);
+            assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
+            assertEquals(2, workflow.getTasks().size());
+            assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(0).getStatus());
+            assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(1).getStatus());
+        });
+
     }
 
     @SneakyThrows
@@ -130,7 +145,16 @@ public class WebhookTests {
         workflowTask.setName("wait_for_webhook");
         workflowTask.setTaskReferenceName("wait_for_webhook");
         workflowTask.getInputParameters().put("matches", Map.of("$['event']['id']", "${workflow.input.key}"));
+
+        WorkflowTask workflowTask2 = new WorkflowTask();
+        workflowTask2.setType("WAIT_FOR_WEBHOOK");
+        workflowTask2.setName("wait_for_webhook2");
+        workflowTask2.setTaskReferenceName("wait_for_webhook2");
+        workflowTask2.getInputParameters().put("matches", Map.of("$['id']", "${workflow.input.key}"));
+
         def.getTasks().add(workflowTask);
+        def.getTasks().add(workflowTask2);
+
         metadataClient.updateWorkflowDefs(List.of(def));
 
         startWorkflowWebhookId = registerWebHook(config);
