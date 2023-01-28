@@ -25,6 +25,14 @@ public class WorkflowTestRequest extends StartWorkflowRequest {
     public static class TaskMock {
         private TaskResult.Status status = TaskResult.Status.COMPLETED;
         Map<String, Object> output;
+        //Time in millis for the execution of the task.
+        //Set this value to view the execution timeline view and also trigger any timeouts associated with the tasks
+        long executionTime;
+
+        public TaskMock(TaskResult.Status status, Map<String, Object> output) {
+            this.status = status;
+            this.output = output;
+        }
     }
 
 }
