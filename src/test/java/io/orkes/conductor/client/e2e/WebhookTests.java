@@ -21,12 +21,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -55,57 +53,83 @@ public class WebhookTests {
 
     private static final OkHttpClient httpClient = new OkHttpClient();
 
+    private String correlationId = UUID.randomUUID().toString();
+
     @SneakyThrows
     @Test
     public void testWebHook() {
-        String key = UUID.randomUUID().toString();
         WorkflowClient workflowClient = new OrkesWorkflowClient(client);
+        int count = 64;
+        String[] keys = new String[count];
+        for (int i = 0; i < count; i++) {
+            String key = UUID.randomUUID().toString();
+            keys[i] = key;
+        }
 
-        Map<String, Object> input = new HashMap<>();
-        input.put("key", key);
-
-        sendWebhook(input, webhookUrl);
-        AtomicReference<String> workflowId = new AtomicReference<>(null);
-        await().pollInterval(1, TimeUnit.SECONDS).atMost(30, TimeUnit.SECONDS).untilAsserted(() ->{
-            SearchResult<WorkflowSummary> workflows = workflowClient.search(0, 10, "", key, "status = 'RUNNING'");
+        sendWebhook(keys, webhookUrl);
+        List<String> workflowIds = new ArrayList<>();
+        await().pollInterval(1, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
+            SearchResult<WorkflowSummary> workflows = workflowClient.search(0, count, "", correlationId, "status = 'RUNNING'");
             assertNotNull(workflows);
             assertNotNull(workflows.getResults());
-            assertEquals(1, workflows.getResults().size());
-            String wfId = workflows.getResults().get(0).getWorkflowId();
-            log.info("Found {}", wfId);
-            workflowId.set(wfId);
+            assertEquals(count, workflows.getResults().size());
+            workflowIds.addAll(workflows.getResults().stream().map(result -> result.getWorkflowId()).collect(Collectors.toList()));
+            log.info("Found {}", workflowIds);
         });
+        assertNotNull(workflowIds);
+        assertEquals(count, workflowIds.size());
 
-        String wfId = workflowId.get();
-        assertNotNull(wfId);
-        input.put("event", Map.of("id", key));
-        sendWebhook(input, receiveWebhookUrl);
+        for (int i = 0; i < count; i++) {
+            String key = keys[i];
+            Map<String, Object> input = new HashMap<>();
+            input.put("event", Map.of("id", key));
+            sendWebhook(input, receiveWebhookUrl);
+        }
 
         await().pollInterval(1, TimeUnit.SECONDS).atMost(30, TimeUnit.SECONDS).untilAsserted(() ->{
-            Workflow workflow = workflowClient.getWorkflow(wfId, true);
-            assertNotNull(workflow);
-            assertEquals(2, workflow.getTasks().size());
-            assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(0).getStatus());
-            assertEquals(Task.Status.IN_PROGRESS, workflow.getTasks().get(1).getStatus());
+            for (String wfId : workflowIds) {
+                Workflow workflow = workflowClient.getWorkflow(wfId, true);
+                assertNotNull(workflow);
+                assertEquals(2, workflow.getTasks().size());
+                assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(0).getStatus());
+                assertEquals(Task.Status.IN_PROGRESS, workflow.getTasks().get(1).getStatus());
+                Map<String,Object> event = (Map<String, Object>) workflow.getTasks().get(0).getOutputData().get("event");
+                assertEquals(workflow.getInput().get("key"), event.get("id"));
+            }
         });
 
-        input.clear();
-        input.put("key", 12);
-        sendWebhook(input, receiveWebhookUrl + "?id=" + key);
+        for (int i = 0; i < count; i++) {
+            String key = keys[i];
+            Map<String, Object> input = new HashMap<>();
+            input.put("key", 12);
+            sendWebhook(input, receiveWebhookUrl + "?id=" + key);
+        }
 
         await().pollInterval(1, TimeUnit.SECONDS).atMost(30, TimeUnit.SECONDS).untilAsserted(() ->{
-            Workflow workflow = workflowClient.getWorkflow(wfId, true);
-            assertNotNull(workflow);
-            assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
-            assertEquals(2, workflow.getTasks().size());
-            assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(0).getStatus());
-            assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(1).getStatus());
+            for (String wfId : workflowIds) {
+                Workflow workflow = workflowClient.getWorkflow(wfId, true);
+                assertNotNull(workflow);
+                assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
+                assertEquals(2, workflow.getTasks().size());
+                assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(0).getStatus());
+                assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(1).getStatus());
+                assertEquals(workflow.getInput().get("key"), workflow.getTasks().get(1).getOutputData().get("id"));
+            }
         });
 
     }
 
+    private void sendWebhook(String[] keys, String url) {
+        for (int i = 0; i < keys.length; i++) {
+            Map<String, Object> input = new HashMap<>();
+            input.put("key", keys[i]);
+            input.put("correlationId", correlationId);
+            sendWebhook(input, url);
+        }
+    }
+
     @SneakyThrows
-    private void sendWebhook( Map<String, Object> input, String url) {
+    private void sendWebhook(Map<String, Object> input, String url) {
         String json = om.writeValueAsString(input);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), json);
