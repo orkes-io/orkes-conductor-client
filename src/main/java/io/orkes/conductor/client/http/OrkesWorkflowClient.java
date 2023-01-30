@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
+import io.orkes.conductor.client.model.WorkflowTestRequest;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -276,6 +277,11 @@ public class OrkesWorkflowClient extends WorkflowClient {
             List<String> correlationIds, List<String> workflowNames, Boolean includeClosed, Boolean includeTasks) {
         CorrelationIdsSearchRequest request = new CorrelationIdsSearchRequest(correlationIds, workflowNames);
         return httpClient.getWorkflowsByNamesAndCorrelationIds(request, includeClosed, includeTasks);
+    }
+
+    @Override
+    public Workflow testWorkflow(WorkflowTestRequest testRequest) {
+        return httpClient.testWorkflow(testRequest);
     }
 
     @Override
