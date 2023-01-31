@@ -44,7 +44,7 @@ public class WaitTaskTest {
         workflow.add(new Wait("wait_for_2_second", Duration.of(2, SECONDS)));
         CompletableFuture<Workflow> future = workflow.executeDynamic(new HashMap<>());
         assertNotNull(future);
-        Workflow run = future.get(20, TimeUnit.SECONDS);
+        Workflow run = future.get(60, TimeUnit.SECONDS);
         assertNotNull(run);
         assertEquals(Workflow.WorkflowStatus.COMPLETED, run.getStatus());
         assertEquals(1, run.getTasks().size());

@@ -12,10 +12,15 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,22 +52,37 @@ public class WorkflowRerunTests {
     static TaskClient taskClient;
     static MetadataClient metadataClient;
 
+    List<String> workflowNames = new ArrayList<>();
+
     @BeforeAll
     public static void init() {
         apiClient = ApiUtil.getApiClientWithCredentials();
         workflowClient = new OrkesWorkflowClient(apiClient);
         metadataClient  =new OrkesMetadataClient(apiClient);
         taskClient = new OrkesTaskClient(apiClient);
+    }
 
+    @Before
+    public void initTest() {
+        workflowNames = new ArrayList<>();
+    }
+    @After
+    public void cleanUp() {
+        try {
+            for (String workflowName : workflowNames) {
+                metadataClient.unregisterWorkflowDef(workflowName, 1);
+            }
+        } catch (Exception e) {}
     }
 
     @Test
     @DisplayName("Check workflow with simple task and rerun functionality")
     public void testRerunSimpleWorkflow() {
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
+        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         // Register workflow
         registerWorkflowDef(workflowName, "simple", "sample", metadataClient);
+        workflowNames.add(workflowName);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -126,6 +146,8 @@ public class WorkflowRerunTests {
         taskClient = new OrkesTaskClient(apiClient);
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
+        workflowNames.add(subWorkflowName);
 
         // Register workflow
         registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, "simple", metadataClient);
