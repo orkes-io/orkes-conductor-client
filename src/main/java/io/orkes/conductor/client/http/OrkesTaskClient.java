@@ -181,4 +181,8 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable{
             this.grpcTaskClient.close();
         }
     }
+
+    public Map<String, Long> getQueueAll() {
+        return taskResourceApi.all();
+    }
 }
