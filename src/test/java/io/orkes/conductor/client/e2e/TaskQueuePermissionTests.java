@@ -23,8 +23,13 @@ import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.api.ClientTest;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.OrkesTaskClient;
+import io.orkes.conductor.client.model.AuthorizationRequest;
 import io.orkes.conductor.client.model.ConductorApplication;
 import io.orkes.conductor.client.model.CreateOrUpdateApplicationRequest;
+import io.orkes.conductor.client.model.SubjectRef;
+import io.orkes.conductor.client.model.TargetRef;
+import io.orkes.conductor.client.model.AuthorizationRequest.AccessEnum;
+import io.orkes.conductor.client.model.TargetRef.TypeEnum;
 import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.RegistrationUtil;
@@ -62,7 +67,7 @@ public class TaskQueuePermissionTests extends ClientTest {
 
     @Test
     public void testTaskQueuePermissionForUserWithPreAuthorizedRole() {
-        var application = generateApplication(RolesEnum.USER);
+        var application = generateApplication(RolesEnum.ADMIN);
         var workflowName = generateRandomStringWithPrefix("random_workflow_name_");
         var taskName = generateRandomStringWithPrefix("random_task_name_");
         var workflowId = startRandomWorkflow(workflowName, taskName);
@@ -72,26 +77,29 @@ public class TaskQueuePermissionTests extends ClientTest {
         waitUntilTaskIsPresentAtTaskQueue(taskClient, taskName, false);
     }
 
-    private static void waitUntilTaskIsPresentAtTaskQueue(TaskClient taskClient, String taskName,
-            boolean isTaskRequired) {
-        Map<String, Long> queueSizeMap = null;
-        for (int retryCounter = 1; retryCounter <= RETRY_LIMIT; retryCounter += 1) {
-            queueSizeMap = ((OrkesTaskClient) taskClient).getQueueAll();
-            if (queueSizeMap != null && queueSizeMap.containsKey(taskName) == isTaskRequired) {
-                break;
-            }
-            var sleepFor = 1 << retryCounter;
-            System.out.println("sleeping for " + sleepFor + " seconds");
-            try {
-                Thread.sleep(sleepFor * 1000);
-            } catch (InterruptedException e) {
-            }
-        }
-        assertNotNull(queueSizeMap);
-        assertEquals(queueSizeMap.containsKey(taskName), isTaskRequired);
-        if (isTaskRequired) {
-            assertEquals(queueSizeMap.get(taskName), 1);
-        }
+    @Test
+    public void testTaskQueuePermissionForUserWithoutPermission() {
+        var application = generateApplication(RolesEnum.USER);
+        var workflowName = generateRandomStringWithPrefix("random_workflow_name_");
+        var taskName = generateRandomStringWithPrefix("random_task_name_");
+        var workflowId = startRandomWorkflow(workflowName, taskName);
+        var taskClient = getOrkesClients(application).getTaskClient();
+        waitUntilTaskIsPresentAtTaskQueue(taskClient, taskName, false);
+        workflowClient.deleteWorkflow(workflowId, false);
+        waitUntilTaskIsPresentAtTaskQueue(taskClient, taskName, false);
+    }
+
+    @Test
+    public void testTaskQueuePermissionForUserWithGrantedPermission() {
+        var application = generateApplication(RolesEnum.USER);
+        authorizationClient.grantPermissions(createAuthorizationRequest());
+        var workflowName = generateRandomStringWithPrefix("random_workflow_name_");
+        var taskName = generateRandomStringWithPrefix("random_task_name_");
+        var workflowId = startRandomWorkflow(workflowName, taskName);
+        var taskClient = getOrkesClients(application).getTaskClient();
+        waitUntilTaskIsPresentAtTaskQueue(taskClient, taskName, false);
+        workflowClient.deleteWorkflow(workflowId, false);
+        waitUntilTaskIsPresentAtTaskQueue(taskClient, taskName, false);
     }
 
     private String startRandomWorkflow(String workflowName, String taskName) {
@@ -127,7 +135,54 @@ public class TaskQueuePermissionTests extends ClientTest {
         return new OrkesClients(apiClient);
     }
 
-    private String generateRandomStringWithPrefix(String prefix) {
+    private static void waitUntilTaskIsPresentAtTaskQueue(TaskClient taskClient, String taskName,
+            boolean isTaskRequired) {
+        Map<String, Long> queueSizeMap = null;
+        for (int retryCounter = 1; retryCounter <= RETRY_LIMIT; retryCounter += 1) {
+            queueSizeMap = ((OrkesTaskClient) taskClient).getQueueAll();
+            if (queueSizeMap != null && queueSizeMap.containsKey(taskName) == isTaskRequired) {
+                break;
+            }
+            var sleepFor = 1 << retryCounter;
+            System.out.println("sleeping for " + sleepFor + " seconds");
+            try {
+                Thread.sleep(sleepFor * 1000);
+            } catch (InterruptedException e) {
+            }
+        }
+        assertNotNull(queueSizeMap);
+        assertEquals(queueSizeMap.containsKey(taskName), isTaskRequired);
+        if (isTaskRequired) {
+            assertEquals(queueSizeMap.get(taskName), 1);
+        }
+    }
+
+    private static String generateRandomStringWithPrefix(String prefix) {
         return prefix + UUID.randomUUID().toString();
+    }
+
+    private static AuthorizationRequest createAuthorizationRequest() {
+        return new AuthorizationRequest()
+                .access(createAccess())
+                .subject(createSubjectRef())
+                .target(createTargetRef());
+    }
+
+    private static SubjectRef createSubjectRef() {
+        var subject = new SubjectRef();
+        subject.setId("app:");
+        subject.setType(SubjectRef.TypeEnum.USER);
+        return subject;
+    }
+
+    private static List<AccessEnum> createAccess() {
+        return List.of(AccessEnum.EXECUTE);
+    }
+
+    private static TargetRef createTargetRef() {
+        var target = new TargetRef();
+        target.setId("targetId");
+        target.setType(TypeEnum.TASK_DEF);
+        return target;
     }
 }
