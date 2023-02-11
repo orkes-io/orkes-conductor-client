@@ -130,6 +130,15 @@ public class WorkflowClientTests extends ClientTest {
     }
 
     @Test
+    public void testWorkflowTerminate() {
+        String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
+        workflowClient.terminateWorkflowWithFailure(
+                workflowId, "testing out some stuff", true);
+        var workflow = workflowClient.getWorkflow(workflowId, false);
+        assertEquals(Workflow.WorkflowStatus.TERMINATED, workflow.getStatus());
+    }
+
+    @Test
     void testUnsupportedMethods() {
         assertThrows(
                 UnsupportedOperationException.class,
