@@ -3399,6 +3399,7 @@ public class WorkflowResourceApi {
     public com.squareup.okhttp.Call terminate1Call(
             String workflowId,
             String reason,
+            boolean triggerFailureWorkflow,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -3414,6 +3415,7 @@ public class WorkflowResourceApi {
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
         if (reason != null) localVarQueryParams.addAll(apiClient.parameterToPair("reason", reason));
+        localVarQueryParams.addAll(apiClient.parameterToPair("triggerFailureWorkflow", triggerFailureWorkflow));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -3468,6 +3470,7 @@ public class WorkflowResourceApi {
     private com.squareup.okhttp.Call terminate1ValidateBeforeCall(
             String workflowId,
             String reason,
+            boolean triggerFailureWorkflow,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -3478,7 +3481,7 @@ public class WorkflowResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                terminate1Call(workflowId, reason, progressListener, progressRequestListener);
+                terminate1Call(workflowId, reason, triggerFailureWorkflow, progressListener, progressRequestListener);
         return call;
     }
 
@@ -3487,11 +3490,12 @@ public class WorkflowResourceApi {
      *
      * @param workflowId (required)
      * @param reason (optional)
+     * @param triggerFailureWorkflow (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public void terminateWithAReason(String workflowId, String reason) throws ApiException {
-        terminate1WithHttpInfo(workflowId, reason);
+    public void terminateWithAReason(String workflowId, String reason, boolean triggerFailureWorkflow) throws ApiException {
+        terminate1WithHttpInfo(workflowId, reason, triggerFailureWorkflow);
     }
 
     /**
@@ -3503,10 +3507,10 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Void> terminate1WithHttpInfo(String workflowId, String reason)
+    private ApiResponse<Void> terminate1WithHttpInfo(String workflowId, String reason, boolean triggerFailureWorkflow)
             throws ApiException {
         com.squareup.okhttp.Call call =
-                terminate1ValidateBeforeCall(workflowId, reason, null, null);
+                terminate1ValidateBeforeCall(workflowId, reason, triggerFailureWorkflow, null, null);
         return apiClient.execute(call);
     }
 
