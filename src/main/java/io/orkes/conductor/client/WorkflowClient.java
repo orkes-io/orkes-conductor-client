@@ -45,6 +45,12 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
     public abstract BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
             throws ApiException;
 
+    public abstract void terminateWorkflowWithFailure(String workflowId, String reason, boolean triggerWorkflowFailure)
+            throws ApiException;
+
+    public abstract BulkResponse terminateWorkflowsWithFailure(List<String> workflowIds, String reason, boolean triggerWorkflowFailure)
+            throws ApiException;
+
     public abstract WorkflowStatus getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables);
 
     /**
