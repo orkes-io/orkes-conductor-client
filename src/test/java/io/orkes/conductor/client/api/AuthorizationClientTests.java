@@ -172,7 +172,7 @@ public class AuthorizationClientTests extends ClientTest {
         try {
             authorizationClient.deleteUser(Commons.USER_EMAIL);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }
@@ -184,7 +184,7 @@ public class AuthorizationClientTests extends ClientTest {
         try {
             authorizationClient.deleteGroup(Commons.GROUP_ID);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }

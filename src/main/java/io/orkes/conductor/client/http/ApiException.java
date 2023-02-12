@@ -27,7 +27,7 @@ public class ApiException extends OrkesClientException {
     public ApiException() {}
 
     public ApiException(Throwable throwable) {
-        super(throwable);
+        super(throwable.getMessage(), throwable);
     }
 
     public ApiException(String message) {
@@ -41,6 +41,7 @@ public class ApiException extends OrkesClientException {
             Map<String, List<String>> responseHeaders,
             String responseBody) {
         super(message, throwable);
+        super.setCode(String.valueOf(code));
         this.code = code;
         this.responseHeaders = responseHeaders;
         this.responseBody = responseBody;
@@ -52,6 +53,7 @@ public class ApiException extends OrkesClientException {
             Map<String, List<String>> responseHeaders,
             String responseBody) {
         this(message, (Throwable) null, code, responseHeaders, responseBody);
+        super.setCode(String.valueOf(code));
     }
 
     public ApiException(
@@ -60,15 +62,18 @@ public class ApiException extends OrkesClientException {
             int code,
             Map<String, List<String>> responseHeaders) {
         this(message, throwable, code, responseHeaders, null);
+        super.setCode(String.valueOf(code));
     }
 
     public ApiException(int code, Map<String, List<String>> responseHeaders, String responseBody) {
         this((String) null, (Throwable) null, code, responseHeaders, responseBody);
+        super.setCode(String.valueOf(code));
     }
 
     public ApiException(int code, String message) {
         super(message);
         this.code = code;
+        super.setCode(String.valueOf(code));
     }
 
     public ApiException(
@@ -87,11 +92,10 @@ public class ApiException extends OrkesClientException {
     }
 
     /**
-     * Get the HTTP status code.
      *
      * @return HTTP status code
      */
-    public int getCode() {
+    public int getStatusCode() {
         return code;
     }
 
@@ -115,7 +119,7 @@ public class ApiException extends OrkesClientException {
 
     @Override
     public String getMessage() {
-        return getCode()
+        return getStatusCode()
                 + ":"
                 + (StringUtils.isBlank(responseBody) ? super.getMessage() : responseBody);
     }

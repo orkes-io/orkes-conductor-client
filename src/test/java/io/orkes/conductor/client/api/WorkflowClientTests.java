@@ -118,7 +118,7 @@ public class WorkflowClientTests extends ClientTest {
         try {
             workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME);
         } catch (ApiException e) {
-            if (e.getCode() != 500) {
+            if (e.getStatusCode() != 500) {
                 throw e;
             }
         }

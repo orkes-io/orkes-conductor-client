@@ -35,7 +35,7 @@ public class SecretClientTests extends ClientTest {
         try {
             secretClient.deleteSecret(SECRET_KEY);
         } catch (ApiException e) {
-            if (e.getCode() != 500) {
+            if (e.getStatusCode() != 500) {
                 throw e;
             }
         }
