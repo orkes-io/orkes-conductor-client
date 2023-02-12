@@ -12,7 +12,9 @@
  */
 package io.orkes.conductor.client;
 
-public abstract class OrkesClientException extends RuntimeException {
+import com.netflix.conductor.client.exception.ConductorClientException;
+
+public abstract class OrkesClientException extends ConductorClientException {
 
     public OrkesClientException() {}
 
@@ -24,19 +26,9 @@ public abstract class OrkesClientException extends RuntimeException {
         super(message, cause);
     }
 
-    public OrkesClientException(Throwable cause) {
-        super(cause);
+    public OrkesClientException(int status, String message) {
+        super(status, message);
     }
 
-    /**
-     * @return true if the API call failed due to client errors e.g. validation failures etc.
-     *     Equivalent to 4xx
-     */
     public abstract boolean isClientError();
-
-    /**
-     * @return Status code. Maps to the status code of the underlying transport used for clients
-     *     (HTTP by default)
-     */
-    public abstract int getCode();
 }

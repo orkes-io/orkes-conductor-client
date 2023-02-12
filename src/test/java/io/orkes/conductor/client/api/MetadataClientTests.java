@@ -40,7 +40,7 @@ public class MetadataClientTests extends ClientTest {
         try {
             metadataClient.unregisterTaskDef(Commons.TASK_NAME);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }
@@ -56,7 +56,7 @@ public class MetadataClientTests extends ClientTest {
         try {
             metadataClient.unregisterWorkflowDef(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }
@@ -80,7 +80,7 @@ public class MetadataClientTests extends ClientTest {
         try {
             metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }
@@ -100,7 +100,7 @@ public class MetadataClientTests extends ClientTest {
         try {
             metadataClient.deleteWorkflowTag(Commons.getTagObject(), Commons.WORKFLOW_NAME);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }
