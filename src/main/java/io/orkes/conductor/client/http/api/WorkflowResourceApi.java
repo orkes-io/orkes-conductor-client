@@ -3391,6 +3391,7 @@ public class WorkflowResourceApi {
      *
      * @param workflowId (required)
      * @param reason (optional)
+     * @param triggerFailureWorkflow failure workflow is triggered if set
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute

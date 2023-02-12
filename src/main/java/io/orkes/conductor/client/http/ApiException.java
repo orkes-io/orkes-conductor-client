@@ -42,6 +42,7 @@ public class ApiException extends OrkesClientException {
             String responseBody) {
         super(message, throwable);
         super.setCode(String.valueOf(code));
+        super.setStatus(code);
         this.code = code;
         this.responseHeaders = responseHeaders;
         this.responseBody = responseBody;
@@ -54,6 +55,7 @@ public class ApiException extends OrkesClientException {
             String responseBody) {
         this(message, (Throwable) null, code, responseHeaders, responseBody);
         super.setCode(String.valueOf(code));
+        super.setStatus(code);
     }
 
     public ApiException(
@@ -63,17 +65,20 @@ public class ApiException extends OrkesClientException {
             Map<String, List<String>> responseHeaders) {
         this(message, throwable, code, responseHeaders, null);
         super.setCode(String.valueOf(code));
+        super.setStatus(code);
     }
 
     public ApiException(int code, Map<String, List<String>> responseHeaders, String responseBody) {
         this((String) null, (Throwable) null, code, responseHeaders, responseBody);
         super.setCode(String.valueOf(code));
+        super.setStatus(code);
     }
 
     public ApiException(int code, String message) {
         super(message);
         this.code = code;
         super.setCode(String.valueOf(code));
+        super.setStatus(code);
     }
 
     public ApiException(
@@ -84,6 +89,8 @@ public class ApiException extends OrkesClientException {
         this(code, message);
         this.responseHeaders = responseHeaders;
         this.responseBody = responseBody;
+        super.setCode(String.valueOf(code));
+        super.setStatus(code);
     }
 
     @Override
