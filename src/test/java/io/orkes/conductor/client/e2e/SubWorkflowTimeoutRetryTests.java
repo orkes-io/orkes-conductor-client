@@ -128,7 +128,7 @@ public class SubWorkflowTimeoutRetryTests {
             assertEquals(TaskType.SUB_WORKFLOW.name(), workflow1.getTasks().get(1).getTaskType());
             assertEquals(Task.Status.IN_PROGRESS, workflow1.getTasks().get(1).getStatus());
         });
-
+        workflow = workflowClient.getWorkflow(workflowInstanceId, true);
         String subWorkflowId = workflow.getTasks().get(1).getSubWorkflowId();
         log.info("Sub workflow Id {} ", subWorkflowId);
 
