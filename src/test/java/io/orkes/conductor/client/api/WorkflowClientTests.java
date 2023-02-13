@@ -118,7 +118,7 @@ public class WorkflowClientTests extends ClientTest {
         try {
             workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME);
         } catch (ApiException e) {
-            if (e.getCode() != 500) {
+            if (e.getStatusCode() != 500) {
                 throw e;
             }
         }
@@ -127,6 +127,15 @@ public class WorkflowClientTests extends ClientTest {
         workflowClient.deleteWorkflow(workflowId, false);
         workflowClient.search(Commons.WORKFLOW_NAME);
         workflowClient.runDecider(workflowId);
+    }
+
+    @Test
+    public void testWorkflowTerminate() {
+        String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
+        workflowClient.terminateWorkflowWithFailure(
+                workflowId, "testing out some stuff", true);
+        var workflow = workflowClient.getWorkflow(workflowId, false);
+        assertEquals(Workflow.WorkflowStatus.TERMINATED, workflow.getStatus());
     }
 
     @Test

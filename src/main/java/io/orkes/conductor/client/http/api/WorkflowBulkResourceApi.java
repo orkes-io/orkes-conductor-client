@@ -519,6 +519,7 @@ public class WorkflowBulkResourceApi {
      *
      * @param workflowIds (required)
      * @param reason (optional)
+     * @param triggerFailureWorkflow failure workflow is triggered if set
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
@@ -527,6 +528,7 @@ public class WorkflowBulkResourceApi {
     public com.squareup.okhttp.Call terminateCall(
             List<String> workflowIds,
             String reason,
+            boolean triggerFailureWorkflow,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -538,6 +540,7 @@ public class WorkflowBulkResourceApi {
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
         if (reason != null) localVarQueryParams.addAll(apiClient.parameterToPair("reason", reason));
+        localVarQueryParams.addAll(apiClient.parameterToPair("triggerFailureWorkflow", triggerFailureWorkflow));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -590,6 +593,7 @@ public class WorkflowBulkResourceApi {
     private com.squareup.okhttp.Call terminateValidateBeforeCall(
             List<String> workflowIds,
             String reason,
+            boolean triggerFailureWorkflow,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -600,7 +604,7 @@ public class WorkflowBulkResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                terminateCall(workflowIds, reason, progressListener, progressRequestListener);
+                terminateCall(workflowIds, reason, triggerFailureWorkflow, progressListener, progressRequestListener);
         return call;
     }
 
@@ -609,12 +613,13 @@ public class WorkflowBulkResourceApi {
      *
      * @param workflowIds (required)
      * @param reason (optional)
+     * @param triggerFailureWorkflow (required)
      * @return BulkResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public BulkResponse terminate(List<String> workflowIds, String reason) throws ApiException {
-        ApiResponse<BulkResponse> resp = terminateWithHttpInfo(workflowIds, reason);
+    public BulkResponse terminate(List<String> workflowIds, String reason, boolean triggerFailureWorkflow) throws ApiException {
+        ApiResponse<BulkResponse> resp = terminateWithHttpInfo(workflowIds, reason, triggerFailureWorkflow);
         return resp.getData();
     }
 
@@ -627,10 +632,10 @@ public class WorkflowBulkResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<BulkResponse> terminateWithHttpInfo(List<String> workflowIds, String reason)
+    private ApiResponse<BulkResponse> terminateWithHttpInfo(List<String> workflowIds, String reason, boolean triggerFailureWorkflow)
             throws ApiException {
         com.squareup.okhttp.Call call =
-                terminateValidateBeforeCall(workflowIds, reason, null, null);
+                terminateValidateBeforeCall(workflowIds, reason, triggerFailureWorkflow, null, null);
         Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

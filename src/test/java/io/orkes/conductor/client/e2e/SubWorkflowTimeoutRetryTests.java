@@ -26,7 +26,6 @@ import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 import io.orkes.conductor.client.AuthorizationClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
@@ -59,8 +58,6 @@ public class SubWorkflowTimeoutRetryTests {
 
     private static MetadataClient metadataClient;
 
-    private static WorkflowExecutor workflowExecutor;
-
     private static ObjectMapper objectMapper = new ObjectMapperProvider().getObjectMapper();
 
     private static TypeReference<List<WorkflowDef>> WORKFLOW_DEF_LIST = new TypeReference<List<WorkflowDef>>(){};
@@ -81,7 +78,6 @@ public class SubWorkflowTimeoutRetryTests {
         workflowClient = orkesClients.getWorkflowClient();
         taskClient = orkesClients.getTaskClient();
         metadataClient = orkesClients.getMetadataClient();
-        workflowExecutor = new WorkflowExecutor(taskClient, workflowClient, metadataClient, 1);
         InputStream resource = SubWorkflowTimeoutRetryTests.class.getResourceAsStream("/metadata/sub_workflow_tests.json");
         List<WorkflowDef> workflowDefs = objectMapper.readValue(new InputStreamReader(resource), WORKFLOW_DEF_LIST);
         metadataClient.updateWorkflowDefs(workflowDefs);
@@ -124,12 +120,15 @@ public class SubWorkflowTimeoutRetryTests {
         log.info("Started {} ", workflowInstanceId);
         pollAndCompleteTask(workflowInstanceId, "integration_task_1", Map.of());
         Workflow workflow = workflowClient.getWorkflow(workflowInstanceId, true);
-        assertNotNull(workflow);
-        assertEquals(2, workflow.getTasks().size());
-        assertEquals(Task.Status.COMPLETED, workflow.getTasks().get(0).getStatus());
-        assertEquals(TaskType.SUB_WORKFLOW.name(), workflow.getTasks().get(1).getTaskType());
-        assertEquals(Task.Status.IN_PROGRESS, workflow.getTasks().get(1).getStatus());
-
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowInstanceId, true);
+            assertNotNull(workflow1);
+            assertEquals(2, workflow1.getTasks().size());
+            assertEquals(Task.Status.COMPLETED, workflow1.getTasks().get(0).getStatus());
+            assertEquals(TaskType.SUB_WORKFLOW.name(), workflow1.getTasks().get(1).getTaskType());
+            assertEquals(Task.Status.IN_PROGRESS, workflow1.getTasks().get(1).getStatus());
+        });
+        workflow = workflowClient.getWorkflow(workflowInstanceId, true);
         String subWorkflowId = workflow.getTasks().get(1).getSubWorkflowId();
         log.info("Sub workflow Id {} ", subWorkflowId);
 

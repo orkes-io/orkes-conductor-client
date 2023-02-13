@@ -222,7 +222,10 @@ public class AuthorizationClientTests extends ClientTest {
     void testMethods() {
         try {
             authorizationClient.deleteUser(Commons.USER_EMAIL);
-        } catch (Exception e) {
+        } catch (ApiException e) {
+            if (e.getStatusCode() != 404) {
+                throw e;
+            }
         }
         authorizationClient.upsertUser(getUpserUserRequest(), Commons.USER_EMAIL);
         List<ConductorUser> users = authorizationClient.listUsers(false);
@@ -232,7 +235,7 @@ public class AuthorizationClientTests extends ClientTest {
         try {
             authorizationClient.deleteGroup(Commons.GROUP_ID);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }
