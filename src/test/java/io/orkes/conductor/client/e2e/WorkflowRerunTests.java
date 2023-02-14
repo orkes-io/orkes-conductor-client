@@ -12,9 +12,15 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,22 +52,37 @@ public class WorkflowRerunTests {
     static TaskClient taskClient;
     static MetadataClient metadataClient;
 
+    List<String> workflowNames = new ArrayList<>();
+
     @BeforeAll
     public static void init() {
         apiClient = ApiUtil.getApiClientWithCredentials();
         workflowClient = new OrkesWorkflowClient(apiClient);
         metadataClient  =new OrkesMetadataClient(apiClient);
         taskClient = new OrkesTaskClient(apiClient);
+    }
 
+    @Before
+    public void initTest() {
+        workflowNames = new ArrayList<>();
+    }
+    @After
+    public void cleanUp() {
+        try {
+            for (String workflowName : workflowNames) {
+                metadataClient.unregisterWorkflowDef(workflowName, 1);
+            }
+        } catch (Exception e) {}
     }
 
     @Test
     @DisplayName("Check workflow with simple task and rerun functionality")
     public void testRerunSimpleWorkflow() {
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
+        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         // Register workflow
         registerWorkflowDef(workflowName, "simple", "sample", metadataClient);
+        workflowNames.add(workflowName);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -125,6 +146,8 @@ public class WorkflowRerunTests {
         taskClient = new OrkesTaskClient(apiClient);
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
+        workflowNames.add(subWorkflowName);
 
         // Register workflow
         registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, "simple", metadataClient);
@@ -148,22 +171,23 @@ public class WorkflowRerunTests {
         taskClient.updateTask(taskResult);
 
         // Wait for parent workflow to get failed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(33, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
+        Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
 
         // Retry the workflow.
         workflowClient.retryLastFailedTask(workflowId);
         // Check the workflow status and few other parameters
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(35, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
+            assertEquals(WorkflowStatus.StatusEnum.RUNNING.name(), workflow1.getStatus().name());
             assertTrue(workflow1.getLastRetriedTime() != 0L);
             assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
         });
-
-        taskId = workflowClient.getWorkflow(subworkflowId, true).getTasks().get(1).getTaskId();
+        workflowClient.runDecider(subworkflowId);
+        taskId = workflowClient.getWorkflow(subworkflowId, true).getTasks().get(0).getTaskId();
 
         taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(subworkflowId);

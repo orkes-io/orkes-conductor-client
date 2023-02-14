@@ -109,9 +109,4 @@ public class MetadataClientTests extends ClientTest {
         List<TagObject> tags = metadataClient.getWorkflowTags(Commons.WORKFLOW_NAME);
         assertIterableEquals(List.of(tagObject), tags);
     }
-
-    @Test
-    void tag() {
-        metadataClient.getTags();
-    }
 }

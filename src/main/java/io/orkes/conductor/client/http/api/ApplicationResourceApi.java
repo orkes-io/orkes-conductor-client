@@ -24,6 +24,7 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
 
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
 
 public class ApplicationResourceApi {
     private ApiClient apiClient;
@@ -384,10 +385,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ConductorApplication createApplication(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
-        ApiResponse<ConductorApplication> resp =
-                createApplicationWithHttpInfo(createOrUpdateApplicationRequest);
+    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
+        ApiResponse<ConductorApplication> resp = createApplicationWithHttpInfo(createOrUpdateApplicationRequest);
         return resp.getData();
     }
 
@@ -399,10 +398,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
-        com.squareup.okhttp.Call call =
-                createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, null, null);
+    private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
+        com.squareup.okhttp.Call call = createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, null, null);
         Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

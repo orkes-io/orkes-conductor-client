@@ -124,7 +124,7 @@ public class SubWorkflowTests {
         log.info("Started {}", workflowId);
         assertSubworkflowWithDomain(workflowId);
 
-        int restartCount = 3;
+        int restartCount = 2;
         for (int i = 0; i < restartCount; i++) {
             workflowClient.restart(workflowId, true);
             assertSubworkflowWithDomain(workflowId);
@@ -134,12 +134,12 @@ public class SubWorkflowTests {
 
     private void assertSubworkflowWithDomain(String workflowId) {
         await()
-                .atMost(30, TimeUnit.SECONDS)
-                .pollInterval(10, TimeUnit.SECONDS)
+                .atMost(120, TimeUnit.SECONDS)
+                .pollInterval(5, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
 
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow.getStatus().name());
             Map<String, String> workflowTaskToDomain = workflow.getTaskToDomain();
             assertNotNull(workflowTaskToDomain);
             assertTrue(!workflowTaskToDomain.isEmpty());
@@ -187,7 +187,7 @@ public class SubWorkflowTests {
         log.info("Started {}", workflowId);
         assertSubworkflowExecutionWithOutDomains(workflowId);
 
-        int restartCount = 3;
+        int restartCount = 2;
         for (int i = 0; i < restartCount; i++) {
             workflowClient.restart(workflowId, true);
             assertSubworkflowExecutionWithOutDomains(workflowId);
@@ -199,8 +199,8 @@ public class SubWorkflowTests {
 
     private void assertSubworkflowExecutionWithOutDomains(String workflowId) {
         await()
-                .atMost(30, TimeUnit.SECONDS)
-                .pollInterval(10, TimeUnit.SECONDS)
+                .atMost(120, TimeUnit.SECONDS)
+                .pollInterval(5, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());

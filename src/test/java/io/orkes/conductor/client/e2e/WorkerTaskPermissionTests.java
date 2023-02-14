@@ -26,6 +26,8 @@ import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.RegistrationUtil;
 
+import static io.orkes.conductor.client.util.ApiUtil.USER1_APP_ID;
+import static io.orkes.conductor.client.util.ApiUtil.getEnv;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 public class WorkerTaskPermissionTests {
@@ -68,8 +70,8 @@ public class WorkerTaskPermissionTests {
         }
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
-        authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
-        authorizationClient.addUserToGroup(groupName, "conductoruser2@gmail.com");
+        authorizationClient.addUserToGroup(groupName, "user1@orkes.io");
+        authorizationClient.addUserToGroup(groupName, "user2@orkes.io");
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
@@ -81,7 +83,7 @@ public class WorkerTaskPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         //Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id(getEnv(USER1_APP_ID)).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
 
         // user2 should be able to access workflow definition

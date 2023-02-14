@@ -39,7 +39,7 @@ public class TargetRef {
         TASK_DEF("TASK_DEF"),
         APPLICATION("APPLICATION"),
         USER("USER"),
-        SECRET("SECRET"),
+        SECRET("SECRET_NAME"),
         TAG("TAG"),
         DOMAIN("DOMAIN");
 

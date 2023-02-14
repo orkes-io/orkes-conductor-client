@@ -15,10 +15,14 @@ package io.orkes.conductor.client.e2e;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -34,20 +38,23 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
-public class GroupPermissionTests {
+@Slf4j
+public class GroupPermissionTests extends AbstractMultiUserTests {
+
+    private static MetadataClient metadataClient;
 
     @Test
     public void testGroupRelatedPermissions() throws Exception {
-        ApiClient apiUser1Client = ApiUtil.getUser1Client();
         WorkflowClient user1WorkflowClient = new OrkesWorkflowClient(apiUser1Client);
         MetadataClient user1MetadataClient = new OrkesMetadataClient(apiUser1Client);
         TaskClient user1TaskClient = new OrkesTaskClient(apiUser1Client);
 
         // Create user2 client and check access should not be there workflow1
-        ApiClient apiUser2Client = ApiUtil.getUser2Client();
         WorkflowClient user2WorkflowClient = new OrkesWorkflowClient(apiUser2Client);
         MetadataClient user2MetadataClient = new OrkesMetadataClient(apiUser2Client);
         TaskClient user2TaskClient = new OrkesTaskClient(apiUser2Client);
@@ -60,7 +67,9 @@ public class GroupPermissionTests {
         TagObject tagObject = new TagObject().type(TagObject.TypeEnum.METADATA).key(tagKey).value(tagValue);
 
         // Register workflow
-        registerWorkflowDef(workflowName1, taskName1, user1MetadataClient);
+        WorkflowDef workflowDef = generateWorkflowDef(workflowName1, taskName1);
+        user1MetadataClient.registerWorkflowDef(workflowDef);
+        user1MetadataClient.registerTaskDefs(Arrays.asList(new TaskDef(taskName1)));
 
         // Tag workflow and task
         user1MetadataClient.addWorkflowTag(tagObject, workflowName1);
@@ -95,19 +104,11 @@ public class GroupPermissionTests {
 
         user1MetadataClient.addWorkflowTag(tagObject, workflowName1);
 
-        ApiClient adminClient = ApiUtil.getApiClientWithCredentials();
-        AuthorizationClient authorizationClient = new OrkesAuthorizationClient(adminClient);
-
         String groupName = "worker-test-group";
-        try {
-            authorizationClient.deleteGroup(groupName);
-        } catch (Exception e) {
-          // Group does not exist.
-        }
-        // Create group and add these two users in the group
+        // Create/Update group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
-        authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
-        authorizationClient.addUserToGroup(groupName, "conductoruser2@gmail.com");
+        authorizationClient.addUserToGroup(groupName, "user1@orkes.io");
+        authorizationClient.addUserToGroup(groupName, "user2@orkes.io");
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
@@ -119,11 +120,11 @@ public class GroupPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         //Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id("app:" + user2AppId).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
 
         String finalWorkflowId1 = workflowId;
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             try {
                 String id = user2WorkflowClient.getWorkflow(finalWorkflowId1, true).getTasks().get(0).getTaskId();
                 TaskResult taskResult1 = new TaskResult();
@@ -133,6 +134,8 @@ public class GroupPermissionTests {
                 user2TaskClient.updateTask(taskResult1);
             }catch(Exception e){}
         });
+
+
 
         int retryAttemptsLimit = 5;
         for (int retry = 0; retry < retryAttemptsLimit; retry += 1) {
@@ -163,9 +166,9 @@ public class GroupPermissionTests {
                 .roles(List.of(UpsertGroupRequest.RolesEnum.USER));
     }
 
-    private void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient1) {
+    private WorkflowDef generateWorkflowDef(String workflowName, String taskName) {
         TaskDef taskDef = new TaskDef(taskName);
-        taskDef.setOwnerEmail("test@orkes.io");
+        taskDef.setTimeoutSeconds(10);
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setTaskReferenceName(taskName);
         workflowTask.setName(taskName);
@@ -174,12 +177,13 @@ public class GroupPermissionTests {
         workflowTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName(workflowName);
-        workflowDef.setOwnerEmail("test@orkes.io");
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to monitor order state");
         workflowDef.setTasks(Arrays.asList(workflowTask));
-        metadataClient1.registerWorkflowDef(workflowDef);
-        metadataClient1.registerTaskDefs(Arrays.asList(taskDef));
+        return workflowDef;
     }
+
+
+
 
 }

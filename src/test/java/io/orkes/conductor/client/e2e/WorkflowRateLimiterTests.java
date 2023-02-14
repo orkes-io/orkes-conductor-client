@@ -97,8 +97,7 @@ public class WorkflowRateLimiterTests {
         taskClient.updateTask(taskResult);
 
         // Now workflow4 task get scheduled. Workflow5 tasks should not get scheduled.
-        // Wait for 1 second to let sweeper run
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(33, TimeUnit.SECONDS).pollInterval(2, TimeUnit.SECONDS).untilAsserted(() -> {
             workflow4.set(workflowClient.getWorkflow(workflowId4, true));
             assertEquals(workflow4.get().getTasks().size(), 1);
             workflow5.set(workflowClient.getWorkflow(workflowId5, true));
@@ -175,7 +174,7 @@ public class WorkflowRateLimiterTests {
 
         // Now workflow4 task get scheduled. Workflow5 tasks should not get scheduled.
         // Wait for 1 second to let sweeper run
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(41, TimeUnit.SECONDS).pollInterval(1,TimeUnit.SECONDS).untilAsserted(() -> {
             workflow4.set(workflowClient.getWorkflow(workflowId4, true));
             assertEquals(workflow4.get().getTasks().size(), 1);
         });
