@@ -181,6 +181,12 @@ public class WorkflowRetryTests {
         workflowClient.runDecider(subworkflowId);
 
         // Check the workflow status and few other parameters
+        await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(parentWorkflowId, true);
+            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
+            assertTrue(workflow1.getLastRetriedTime() != 0L);
+            assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
+        });
         workflow = workflowClient.getWorkflow(parentWorkflowId, true);
         assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
         assertTrue(workflow.getLastRetriedTime() != 0L);
