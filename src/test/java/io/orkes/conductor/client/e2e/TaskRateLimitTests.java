@@ -54,7 +54,7 @@ public class TaskRateLimitTests {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         // Register workflow
-        registerWorkflowDef(workflowName, taskName, metadataClient);
+        registerWorkflowDef(workflowName, taskName, metadataClient, false);
 
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
@@ -111,6 +111,69 @@ public class TaskRateLimitTests {
     }
 
     @Test
+    @DisplayName("Check workflow with simple rate limit by name")
+    public void testConcurrentExeclimit() {
+        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
+        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
+        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
+        TaskClient taskClient = new OrkesTaskClient(apiClient);
+        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        // Register workflow
+        registerWorkflowDef(workflowName, taskName, metadataClient, true);
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        //Start two workflows. Only first workflow task should be in_progress
+        String workflowId1 = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId2 = workflowClient.startWorkflow(startWorkflowRequest);
+
+        Workflow workflow1 = workflowClient.getWorkflow(workflowId1, true);
+        Workflow workflow2 = workflowClient.getWorkflow(workflowId1, true);
+
+        // Assertions
+        Assertions.assertEquals(workflow1.getStatus(), Workflow.WorkflowStatus.RUNNING);
+        Assertions.assertEquals(workflow1.getTasks().size(), 1);
+        Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
+        Assertions.assertEquals(workflow2.getTasks().size(), 1);
+
+        Task task1 = taskClient.pollTask(taskName, "test", null);
+        Task task2 = taskClient.pollTask(taskName, "test", null);
+
+        // Task2 should be null.
+        Task finalTask = task2;
+        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertNull(finalTask);
+            assertNotNull(task1);
+        });
+
+        TaskResult taskResult = new TaskResult();
+        taskResult.setTaskId(task1.getTaskId());
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskResult.setWorkflowInstanceId(task1.getWorkflowInstanceId());
+        taskClient.updateTask(taskResult);
+
+        // Task2 should not be pollable still. It should be available only after 10 seconds.
+        await().atMost(70, TimeUnit.SECONDS).untilAsserted(() -> {
+            Task task3 = taskClient.pollTask(taskName, "test", null);
+            assertNotNull(task3);
+            TaskResult taskResult1 = new TaskResult();
+            taskResult1.setTaskId(task3.getTaskId());
+            taskResult1.setStatus(TaskResult.Status.COMPLETED);
+            taskResult1.setWorkflowInstanceId(task3.getWorkflowInstanceId());
+            taskClient.updateTask(taskResult1);
+        });
+
+        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            // Assert both workflows completed
+            assertEquals(workflowClient.getWorkflow(workflowId1, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);
+            assertEquals(workflowClient.getWorkflow(workflowId2, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);
+        });
+        metadataClient.unregisterWorkflowDef(workflowName, 1);
+        metadataClient.unregisterTaskDef(taskName);
+    }
+
+    @Test
     @DisplayName("Check workflow with simple rate limit by correlationId")
     public void testRateLimitByWorkflowCorrelationId() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
@@ -120,7 +183,7 @@ public class TaskRateLimitTests {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         // Register workflow
-        registerWorkflowDef(workflowName, taskName, metadataClient);
+        registerWorkflowDef(workflowName, taskName, metadataClient, false);
         TagObject tagObject = new TagObject();
         tagObject.setType(TagObject.TypeEnum.RATE_LIMIT);
         tagObject.setKey("${workflow.correlationId}");
@@ -173,12 +236,16 @@ public class TaskRateLimitTests {
         metadataClient.unregisterTaskDef(taskName);
     }
 
-    private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient) {
+    private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient, boolean isExecLimit) {
         TaskDef taskDef = new TaskDef(taskName);
         taskDef.setOwnerEmail("test@orkes.io");
         taskDef.setRetryCount(0);
-        taskDef.setRateLimitPerFrequency(1);
-        taskDef.setRateLimitFrequencyInSeconds(10);
+        if (isExecLimit) {
+            taskDef.setConcurrentExecLimit(1);
+        } else {
+            taskDef.setRateLimitPerFrequency(1);
+            taskDef.setRateLimitFrequencyInSeconds(10);
+        }
 
         WorkflowTask simpleTask = new WorkflowTask();
         simpleTask.setTaskReferenceName(taskName);
