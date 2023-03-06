@@ -24,7 +24,6 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
 
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
 
 public class ApplicationResourceApi {
     private ApiClient apiClient;

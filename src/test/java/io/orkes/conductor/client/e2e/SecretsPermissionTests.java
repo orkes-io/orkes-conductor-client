@@ -14,13 +14,8 @@ package io.orkes.conductor.client.e2e;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
-import com.google.common.util.concurrent.Uninterruptibles;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,7 +23,8 @@ import org.junit.jupiter.api.Test;
 import io.orkes.conductor.client.*;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
-import io.orkes.conductor.client.util.ApiUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 import static org.junit.Assert.*;
 
