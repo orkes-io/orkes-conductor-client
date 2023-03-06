@@ -21,7 +21,6 @@ import com.netflix.conductor.grpc.TaskServiceGrpc;
 import com.netflix.conductor.grpc.TaskServicePb;
 import com.netflix.conductor.proto.TaskPb;
 
-import com.netflix.discovery.converters.Auto;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.proto.ProtoMappingHelper;
 

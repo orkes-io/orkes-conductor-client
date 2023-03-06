@@ -15,14 +15,10 @@ package io.orkes.conductor.client.e2e;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -36,7 +32,6 @@ import com.netflix.conductor.common.run.Workflow;
 import io.orkes.conductor.client.*;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
-import io.orkes.conductor.client.util.ApiUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
