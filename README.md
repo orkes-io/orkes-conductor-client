@@ -3,6 +3,19 @@
 This repository provides a Java client for Orkes Conductor Server. With this client you can manage
 metadata (Workflows and tasks), run workflows, create workers and more. 
 
+## Add `orkes-conductor-client` dependency to your project
+### Gradle
+```
+implementation 'io.orkes.conductor:orkes-conductor-client:1.1.14'
+```
+### Maven
+```
+<dependency>
+  <groupId>io.orkes.conductor</groupId>
+  <artifactId>orkes-conductor-client</artifactId>
+  <version>1.1.14</version>
+</dependency>
+```
 ## Examples
 
 Check out [the examples in this project](https://github.com/conductor-sdk/java-sdk-examples).
