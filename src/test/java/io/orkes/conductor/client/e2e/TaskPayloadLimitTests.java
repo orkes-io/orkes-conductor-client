@@ -20,6 +20,7 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
@@ -92,15 +93,10 @@ public class TaskPayloadLimitTests {
         char[] chars = new char[1024*1024];
         Arrays.fill(chars, 'f');
         taskResult.getOutputData().put("payload", chars);
-        taskResult.setStatus(TaskResult.Status.FAILED);
-        taskClient.updateTask(taskResult);
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
 
-        // Wait for workflow to get failed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
-            assertEquals(workflow1.getTasks().get(1).getStatus(), Task.Status.FAILED_WITH_TERMINAL_ERROR);
-        });
+        // Server does not allow more than 1 MB payload.
+        assertThrows(ApiException.class, ()->taskClient.updateTask(taskResult));
 
         metadataClient.unregisterWorkflowDef(workflowName, 1);
         metadataClient.unregisterTaskDef("simple");
