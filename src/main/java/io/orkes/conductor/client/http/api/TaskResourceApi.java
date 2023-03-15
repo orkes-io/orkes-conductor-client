@@ -12,12 +12,16 @@
  */
 package io.orkes.conductor.client.http.api;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.amazonaws.util.EC2MetadataUtils;
 
 import com.netflix.conductor.common.metadata.tasks.PollData;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -1932,6 +1936,7 @@ public class TaskResourceApi {
      * @param workflowId (required)
      * @param taskRefName (required)
      * @param status (required)
+     * @param workerId (optional)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
@@ -1942,6 +1947,7 @@ public class TaskResourceApi {
             String workflowId,
             String taskRefName,
             String status,
+            String workerId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -1962,6 +1968,11 @@ public class TaskResourceApi {
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        if (workerId == null) {
+                workerId = getIdentity();
+        }
+        localVarQueryParams.addAll(apiClient.parameterToPair("workerid", workerId));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -2046,6 +2057,7 @@ public class TaskResourceApi {
                         workflowId,
                         taskRefName,
                         status,
+                        null,
                         progressListener,
                         progressRequestListener);
         return call;
@@ -2087,5 +2099,21 @@ public class TaskResourceApi {
                 updateTask1ValidateBeforeCall(body, workflowId, taskRefName, status, null, null);
         Type localVarReturnType = new TypeToken<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
+    }
+
+    private String getIdentity() {
+        String serverId;
+        try {
+            serverId = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            serverId = System.getenv("HOSTNAME");
+        }
+        if (serverId == null) {
+            serverId =
+                    (EC2MetadataUtils.getInstanceId() == null)
+                            ? System.getProperty("user.name")
+                            : EC2MetadataUtils.getInstanceId();
+        }
+        return serverId;
     }
 }
