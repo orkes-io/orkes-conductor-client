@@ -12,16 +12,14 @@
  */
 package io.orkes.conductor.client.http.api;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.amazonaws.util.EC2MetadataUtils;
 
 import com.netflix.conductor.common.metadata.tasks.PollData;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -34,6 +32,7 @@ import io.orkes.conductor.client.model.ExternalStorageLocation;
 import io.orkes.conductor.client.model.SearchResultTask;
 import io.orkes.conductor.client.model.SearchResultTaskSummary;
 
+import com.amazonaws.util.EC2MetadataUtils;
 import com.google.gson.reflect.TypeToken;
 
 public class TaskResourceApi {

@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -39,6 +38,8 @@ import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
+
+import com.google.common.util.concurrent.Uninterruptibles;
 
 import static io.orkes.conductor.client.util.ApiUtil.getEnv;
 import static org.junit.jupiter.api.Assertions.*;
