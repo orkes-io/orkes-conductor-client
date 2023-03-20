@@ -21,6 +21,8 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.api.MetadataResourceApi;
 import io.orkes.conductor.client.http.api.TagsApi;
+import io.orkes.conductor.client.model.BusinessStateSchema;
+import io.orkes.conductor.client.model.ExtendedWorkflowDef;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
@@ -81,7 +83,7 @@ public class OrkesMetadataClient extends MetadataClient  {
         return metadataResourceApi.get(name, version, false);
     }
 
-    public WorkflowDef getWorkflowDefWithMetadata(String name, Integer version) {
+    public ExtendedWorkflowDef getWorkflowDefWithMetadata(String name, Integer version) {
         return metadataResourceApi.get(name, version, true);
     }
 
@@ -153,5 +155,25 @@ public class OrkesMetadataClient extends MetadataClient  {
     @Override
     public void setWorkflowTags(List<TagObject> tagObjects, String name) {
         tagsApi.setWorkflowTags(tagObjects, name);
+    }
+
+    @Override
+    public void addBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema) {
+        metadataResourceApi.addWorkflowBusinessState(workflowName, businessStateSchema);
+    }
+
+    @Override
+    public void updateBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema) {
+        metadataResourceApi.updateWorkflowBusinessState(businessStateSchema, workflowName);
+    }
+
+    @Override
+    public BusinessStateSchema getBusinessStateSchema(String workflowName) {
+        return metadataResourceApi.getWorkflowBusinessState(workflowName);
+    }
+
+    @Override
+    public void deleteBusinessStateSchema(String workflowName) {
+        metadataResourceApi.deleteWorkflowBusinessState(workflowName);
     }
 }

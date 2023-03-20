@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
+import io.orkes.conductor.client.model.BusinessStateSchema;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
@@ -42,4 +43,14 @@ public abstract class MetadataClient extends com.netflix.conductor.client.http.M
     public abstract void setTaskTags(List<TagObject> tagObjects, String taskName);
 
     public abstract void setWorkflowTags(List<TagObject> tagObjects, String name);
+
+    public abstract void addBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema);
+
+    public abstract void updateBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema);
+
+    public abstract BusinessStateSchema getBusinessStateSchema(String workflowName);
+
+    public abstract void deleteBusinessStateSchema(String workflowName);
+
+
 }

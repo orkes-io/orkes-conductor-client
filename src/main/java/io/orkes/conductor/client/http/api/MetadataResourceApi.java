@@ -26,6 +26,8 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 
 import com.google.gson.reflect.TypeToken;
+import io.orkes.conductor.client.model.BusinessStateSchema;
+import io.orkes.conductor.client.model.ExtendedWorkflowDef;
 
 public class MetadataResourceApi {
     private ApiClient apiClient;
@@ -275,8 +277,8 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public WorkflowDef get(String name, Integer version, Boolean metadata) throws ApiException {
-        ApiResponse<WorkflowDef> resp = getWithHttpInfo(name, version, metadata);
+    public ExtendedWorkflowDef get(String name, Integer version, Boolean metadata) throws ApiException {
+        ApiResponse<ExtendedWorkflowDef> resp = getWithHttpInfo(name, version, metadata);
         return resp.getData();
     }
 
@@ -290,10 +292,10 @@ public class MetadataResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<WorkflowDef> getWithHttpInfo(String name, Integer version, Boolean metadata)
+    private ApiResponse<ExtendedWorkflowDef> getWithHttpInfo(String name, Integer version, Boolean metadata)
             throws ApiException {
         com.squareup.okhttp.Call call = getValidateBeforeCall(name, version, metadata, null, null);
-        Type localVarReturnType = new TypeToken<WorkflowDef>() {}.getType();
+        Type localVarReturnType = new TypeToken<ExtendedWorkflowDef>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1291,4 +1293,369 @@ public class MetadataResourceApi {
         com.squareup.okhttp.Call call = updateTaskDefValidateBeforeCall(taskDef, null, null);
         return apiClient.execute(call);
     }
+
+    /**
+     * Build call for addWorkflowBusinessState
+     * @param body  (required)
+     * @param name  (required)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call addWorkflowBusinessStateCall(BusinessStateSchema body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/metadata/workflow/{name}/businessStateSchema"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+                "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call addWorkflowBusinessStateValidateBeforeCall(BusinessStateSchema body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling addWorkflowBusinessState(Async)");
+        }
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException("Missing the required parameter 'name' when calling addWorkflowBusinessState(Async)");
+        }
+
+        com.squareup.okhttp.Call call = addWorkflowBusinessStateCall(body, name, progressListener, progressRequestListener);
+        return call;
+
+
+
+
+
+    }
+
+    /**
+     * Adds the business state schema to the workflow
+     *
+     * @param body  (required)
+     * @param name  (required)
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public void addWorkflowBusinessState(String name, BusinessStateSchema body) throws ApiException {
+        addWorkflowBusinessStateWithHttpInfo(body, name);
+    }
+
+    /**
+     * Adds the business state schema to the workflow
+     *
+     * @param body  (required)
+     * @param name  (required)
+     * @return ApiResponse&lt;Void&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<Void> addWorkflowBusinessStateWithHttpInfo(BusinessStateSchema body, String name) throws ApiException {
+        com.squareup.okhttp.Call call = addWorkflowBusinessStateValidateBeforeCall(body, name, null, null);
+        return apiClient.execute(call);
+    }
+
+    /**
+     * Build call for deleteWorkflowBusinessState
+     * @param name  (required)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call deleteWorkflowBusinessStateCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = null;
+
+        // create path and map variables
+        String localVarPath = "/metadata/workflow/{name}/businessStateSchema"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call deleteWorkflowBusinessStateValidateBeforeCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException("Missing the required parameter 'name' when calling deleteWorkflowBusinessState(Async)");
+        }
+
+        com.squareup.okhttp.Call call = deleteWorkflowBusinessStateCall(name, progressListener, progressRequestListener);
+        return call;
+
+
+
+
+
+    }
+
+    /**
+     * Removes the business state schema associated with the workflow
+     *
+     * @param name  (required)
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public void deleteWorkflowBusinessState(String name) throws ApiException {
+        deleteWorkflowBusinessStateWithHttpInfo(name);
+    }
+
+    /**
+     * Removes the business state schema associated with the workflow
+     *
+     * @param name  (required)
+     * @return ApiResponse&lt;Void&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<Void> deleteWorkflowBusinessStateWithHttpInfo(String name) throws ApiException {
+        com.squareup.okhttp.Call call = deleteWorkflowBusinessStateValidateBeforeCall(name, null, null);
+        return apiClient.execute(call);
+    }
+
+    /**
+     * Build call for updateWorkflowBusinessState
+     * @param body  (required)
+     * @param name  (required)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call updateWorkflowBusinessStateCall(BusinessStateSchema body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/metadata/workflow/{name}/businessStateSchema"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+                "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call updateWorkflowBusinessStateValidateBeforeCall(BusinessStateSchema body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling updateWorkflowBusinessState(Async)");
+        }
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException("Missing the required parameter 'name' when calling updateWorkflowBusinessState(Async)");
+        }
+
+        com.squareup.okhttp.Call call = updateWorkflowBusinessStateCall(body, name, progressListener, progressRequestListener);
+        return call;
+
+
+
+
+
+    }
+
+    /**
+     * Update the business state schema associated with the workflow
+     *
+     * @param body  (required)
+     * @param name  (required)
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public void updateWorkflowBusinessState(BusinessStateSchema body, String name) throws ApiException {
+        updateWorkflowBusinessStateWithHttpInfo(body, name);
+    }
+
+    /**
+     * Update the business state schema associated with the workflow
+     *
+     * @param body  (required)
+     * @param name  (required)
+     * @return ApiResponse&lt;Void&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<Void> updateWorkflowBusinessStateWithHttpInfo(BusinessStateSchema body, String name) throws ApiException {
+        com.squareup.okhttp.Call call = updateWorkflowBusinessStateValidateBeforeCall(body, name, null, null);
+        return apiClient.execute(call);
+    }
+
+    /**
+     * Build call for getWorkflowBusinessState
+     * @param name  (required)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call getWorkflowBusinessStateCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = null;
+
+        // create path and map variables
+        String localVarPath = "/metadata/workflow/{name}/businessStateSchema"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+                "*/*"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call getWorkflowBusinessStateValidateBeforeCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException("Missing the required parameter 'name' when calling getWorkflowBusinessState(Async)");
+        }
+
+        com.squareup.okhttp.Call call = getWorkflowBusinessStateCall(name, progressListener, progressRequestListener);
+        return call;
+    }
+
+    /**
+     * Get the business state schema associated with the the workflow
+     *
+     * @param name  (required)
+     * @return BusinessStateSchema
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public BusinessStateSchema getWorkflowBusinessState(String name) throws ApiException {
+        ApiResponse<BusinessStateSchema> resp = getWorkflowBusinessStateWithHttpInfo(name);
+        return resp.getData();
+    }
+
+    /**
+     * Get the business state schema associated with the the workflow
+     *
+     * @param name  (required)
+     * @return ApiResponse&lt;BusinessStateSchema&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<BusinessStateSchema> getWorkflowBusinessStateWithHttpInfo(String name) throws ApiException {
+        com.squareup.okhttp.Call call = getWorkflowBusinessStateValidateBeforeCall(name, null, null);
+        Type localVarReturnType = new TypeToken<BusinessStateSchema>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
 }
