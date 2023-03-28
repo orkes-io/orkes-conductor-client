@@ -185,6 +185,11 @@ publishing {
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport // report is always generated after tests run
+    testLogging {
+        events = ["SKIPPED", "FAILED"]
+        exceptionFormat = "full"
+        showStandardStreams = true
+    }
 }
 
 jacocoTestReport {
