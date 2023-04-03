@@ -101,7 +101,7 @@ public class PoolWorker {
         TaskServicePb.UpdateTaskRequest request = TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build();
         ListenableFuture<TaskServicePb.UpdateTaskResponse> future = taskServiceStub.updateTask(request);
         try {
-            future.get(1_000,  TimeUnit.MILLISECONDS);
+            future.get(30_000,  TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
