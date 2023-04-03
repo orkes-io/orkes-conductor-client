@@ -46,6 +46,7 @@ public class GraaljsTests {
     static io.orkes.conductor.client.MetadataClient metadataClient;
 
     List<String> workflowNames = new ArrayList<>();
+    List<String> taskNames = new ArrayList<>();
 
     @BeforeAll
     public static void init() {
@@ -58,12 +59,16 @@ public class GraaljsTests {
     @Test
     public void testInfiniteExecution() throws ExecutionException, InterruptedException, TimeoutException {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         // Register workflow
-        registerWorkflowDef(workflowName, "simple", "sample", metadataClient);
+        registerWorkflowDef(workflowName, taskName1, taskName2, metadataClient);
         WorkflowDef workflowDef = metadataClient.getWorkflowDef(workflowName, 1);
         workflowDef.getTasks().get(0).setInputParameters(Map.of("evaluatorType", "graaljs", "expression", "function e() { while(true){} }; e();"));
         metadataClient.registerWorkflowDef(workflowDef, true);
         workflowNames.add(workflowName);
+        taskNames.add(taskName1);
+        taskNames.add(taskName2);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -81,11 +86,16 @@ public class GraaljsTests {
 
     @After
     public void cleanUp() {
-        try {
-            for (String workflowName : workflowNames) {
+        for (String workflowName : workflowNames) {
+            try {
                 metadataClient.unregisterWorkflowDef(workflowName, 1);
-            }
-        } catch (Exception e) {}
+                } catch (Exception e) {}
+        }
+        for (String taskName : taskNames) {
+            try {
+                metadataClient.unregisterTaskDef(taskName);
+            } catch (Exception e) {}
+        }
     }
 
 
