@@ -166,7 +166,7 @@ class TaskRunner {
         try {
 
             String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null)).orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
-            LOGGER.trace("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
+            LOGGER.info("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
             Stopwatch stopwatch = Stopwatch.createStarted();
             int tasksToPoll = pollCount;
             tasks = MetricsContainer.getPollTimer(taskType).record(() -> pollTask(domain, tasksToPoll));

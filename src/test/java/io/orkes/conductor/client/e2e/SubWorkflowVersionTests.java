@@ -333,6 +333,8 @@ public class SubWorkflowVersionTests {
         subworkflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         subworkflowDef.setDescription("Sub Workflow to test retry");
         subworkflowDef.setTasks(Arrays.asList(inline));
+        subworkflowDef.setTimeoutSeconds(600);
+        subworkflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
 
         metadataClient.registerWorkflowDef(subworkflowDef);
     }
