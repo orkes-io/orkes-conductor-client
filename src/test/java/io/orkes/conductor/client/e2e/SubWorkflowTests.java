@@ -93,7 +93,7 @@ public class SubWorkflowTests {
         metadataClient.updateWorkflowDefs(workflowDefs);
         Set<String> tasks = new HashSet<>();
         List<String> internalTasks = List.of("HTTP", "BUSINESS_RULE", "AWS_LAMBDA", "JDBC", "WAIT_FOR_EVENT", "PUBLISH_BUSINESS_STATE",
-                "WAIT", "WAIT_FOR_WEBHOOK");
+                "WAIT", "WAIT_FOR_WEBHOOK", "DECISION", "SWITCH", "DYNAMIC", "JOIN", "DO_WHILE", "FORK_JOIN_DYNAMIC", "FORK_JOIN", "JSON_JQ_TRANSFORM", "FORK");
         for (WorkflowDef workflowDef : workflowDefs) {
             List<WorkflowTask> allTasks = workflowDef.collectTasks();
             tasks.addAll(allTasks.stream()
