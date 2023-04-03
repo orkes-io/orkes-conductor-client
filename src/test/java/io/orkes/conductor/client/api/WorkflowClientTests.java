@@ -83,7 +83,6 @@ public class WorkflowClientTests extends ClientTest {
         Map<String, List<Workflow>> result = workflowClient.getWorkflowsByNamesAndCorrelationIds(correlationIds, workflowNames.stream().collect(Collectors.toList()), true, false);
         assertNotNull(result);
         assertEquals(correlationIds.size(), result.size());
-        System.out.println("corrlation id map " + correlationIdToWorkflows);
         for (String correlationId : correlationIds) {
             assertEquals(5, result.get(correlationId).size());
             Set<String> ids = result.get(correlationId).stream().map(wf -> wf.getWorkflowId()).collect(Collectors.toSet());

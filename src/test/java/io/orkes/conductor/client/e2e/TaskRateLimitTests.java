@@ -155,9 +155,10 @@ public class TaskRateLimitTests {
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskResult.setWorkflowInstanceId(task1.getWorkflowInstanceId());
         taskClient.updateTask(taskResult);
+        Uninterruptibles.sleepUninterruptibly(60, TimeUnit.SECONDS);
 
         // Task2 should not be pollable still. It should be available only after 10 seconds.
-        await().atMost(70, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             Task task3 = taskClient.pollTask(taskName, "test", null);
             assertNotNull(task3);
             TaskResult taskResult1 = new TaskResult();
