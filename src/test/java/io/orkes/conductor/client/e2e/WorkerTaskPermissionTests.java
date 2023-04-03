@@ -70,8 +70,8 @@ public class WorkerTaskPermissionTests {
         }
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
-        authorizationClient.addUserToGroup(groupName, "user1@orkes.io");
-        authorizationClient.addUserToGroup(groupName, "user2@orkes.io");
+        authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
+        authorizationClient.addUserToGroup(groupName, "conductoruser2@gmail.com");
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
