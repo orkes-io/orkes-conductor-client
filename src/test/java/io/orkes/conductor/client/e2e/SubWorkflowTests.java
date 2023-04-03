@@ -92,14 +92,16 @@ public class SubWorkflowTests {
         List<WorkflowDef> workflowDefs = objectMapper.readValue(new InputStreamReader(resource), WORKFLOW_DEF_LIST);
         metadataClient.updateWorkflowDefs(workflowDefs);
         Set<String> tasks = new HashSet<>();
+        List<String> internalTasks = List.of("HTTP", "BUSINESS_RULE", "AWS_LAMBDA", "JDBC", "WAIT_FOR_EVENT", "PUBLISH_BUSINESS_STATE",
+                "WAIT", "WAIT_FOR_WEBHOOK");
         for (WorkflowDef workflowDef : workflowDefs) {
             List<WorkflowTask> allTasks = workflowDef.collectTasks();
             tasks.addAll(allTasks.stream()
-                    .filter(tt -> !tt.getType().equals("SIMPLE"))
+                    .filter(tt -> !tt.getType().equals("SIMPLE") && !internalTasks.contains(tt.getType()))
                     .map(t -> t.getType()).collect(Collectors.toSet()));
 
             tasks.addAll(allTasks.stream()
-                    .filter(tt -> tt.getType().equals("SIMPLE"))
+                    .filter(tt -> tt.getType().equals("SIMPLE") && !internalTasks.contains(tt.getType()))
                     .map(t -> t.getName()).collect(Collectors.toSet()));
 
         }
