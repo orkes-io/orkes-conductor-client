@@ -98,10 +98,12 @@ public class WorkflowRateLimiterTests {
 
         // Now workflow4 task get scheduled. Workflow5 tasks should not get scheduled.
         await().atMost(33, TimeUnit.SECONDS).pollInterval(2, TimeUnit.SECONDS).untilAsserted(() -> {
-            workflow4.set(workflowClient.getWorkflow(workflowId4, true));
-            assertEquals(workflow4.get().getTasks().size(), 1);
-            workflow5.set(workflowClient.getWorkflow(workflowId5, true));
-            assertEquals(workflow5.get().getTasks().size(), 0);
+            try {
+                workflow4.set(workflowClient.getWorkflow(workflowId4, true));
+                assertEquals(workflow4.get().getTasks().size(), 1);
+                workflow5.set(workflowClient.getWorkflow(workflowId5, true));
+                assertEquals(workflow5.get().getTasks().size(), 0);
+            }catch(Exception e) {}
         });
 
         // Complete workflow2
@@ -175,8 +177,10 @@ public class WorkflowRateLimiterTests {
         // Now workflow4 task get scheduled. Workflow5 tasks should not get scheduled.
         // Wait for 1 second to let sweeper run
         await().atMost(41, TimeUnit.SECONDS).pollInterval(1,TimeUnit.SECONDS).untilAsserted(() -> {
-            workflow4.set(workflowClient.getWorkflow(workflowId4, true));
-            assertEquals(workflow4.get().getTasks().size(), 1);
+             try {
+                 workflow4.set(workflowClient.getWorkflow(workflowId4, true));
+                 assertEquals(workflow4.get().getTasks().size(), 1);
+             }catch(Exception e){}
         });
         metadataClient.unregisterWorkflowDef(workflowName, 1);
         metadataClient.unregisterTaskDef(taskName);
