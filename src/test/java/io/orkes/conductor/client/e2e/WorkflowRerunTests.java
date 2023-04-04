@@ -80,8 +80,10 @@ public class WorkflowRerunTests {
     public void testRerunSimpleWorkflow() {
 
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         // Register workflow
-        registerWorkflowDef(workflowName, "simple", "sample", metadataClient);
+        registerWorkflowDef(workflowName, taskName1, taskName2, metadataClient);
         workflowNames.add(workflowName);
 
         // Trigger two workflows
@@ -131,9 +133,11 @@ public class WorkflowRerunTests {
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
         });
 
-        metadataClient.unregisterWorkflowDef(workflowName, 1);
-        metadataClient.unregisterTaskDef("simple");
-        metadataClient.unregisterTaskDef("sample");
+        try {
+            metadataClient.unregisterWorkflowDef(workflowName, 1);
+            metadataClient.unregisterTaskDef(taskName2);
+            metadataClient.unregisterTaskDef(taskName2);
+        }catch (Exception e){}
     }
 
     @Test
@@ -145,12 +149,13 @@ public class WorkflowRerunTests {
         metadataClient = new OrkesMetadataClient(apiClient);
         taskClient = new OrkesTaskClient(apiClient);
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         workflowNames.add(workflowName);
         workflowNames.add(subWorkflowName);
 
         // Register workflow
-        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, "simple", metadataClient);
+        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, taskName, metadataClient);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -208,7 +213,9 @@ public class WorkflowRerunTests {
             }
         }
 
-        metadataClient.unregisterWorkflowDef(workflowName, 1);
-        metadataClient.unregisterTaskDef("simple");
+        try {
+            metadataClient.unregisterWorkflowDef(workflowName, 1);
+            metadataClient.unregisterTaskDef(taskName);
+        } catch (Exception e){}
     }
 }
