@@ -141,6 +141,8 @@ public class MetadataManagement {
         workflowDef = new WorkflowDef();
         workflowDef.setName("test11_workflow");
         workflowDef.setOwnerEmail("test@orkes.io");
+        workflowDef.setTimeoutSeconds(600);
+        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to monitor order state");
         workflowDef.setTasks(Arrays.asList(workflowTask, workflowTask2));

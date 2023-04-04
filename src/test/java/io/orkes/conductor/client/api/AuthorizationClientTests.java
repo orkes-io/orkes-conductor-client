@@ -257,7 +257,8 @@ public class AuthorizationClientTests extends ClientTest {
                         .getGrantedPermissionsForGroup(Commons.GROUP_ID)
                         .getGrantedAccess()
                         .isEmpty());
-        assertFalse(
+        // The user is added just now so it should not have any access.
+        assertTrue(
                 authorizationClient
                         .getGrantedPermissionsForUser(Commons.USER_EMAIL)
                         .getGrantedAccess()

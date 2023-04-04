@@ -230,7 +230,7 @@ signing {
     }
 }
 tasks.withType(Test)  {
-    maxParallelForks = 1
+    maxParallelForks = 10
 }
 sourceSets.main.java.srcDirs += ['example/java', 'example/resources']
 

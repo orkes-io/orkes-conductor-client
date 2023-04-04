@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -93,7 +94,7 @@ public class TaskRateLimitTests {
         task2 = taskClient.pollTask(taskName, "test", null);
         assertNull(task2);
 
-        Thread.sleep(11000);
+        Uninterruptibles.sleepUninterruptibly(11, TimeUnit.SECONDS);
         // Task2 should be available to poll
         task2 = taskClient.pollTask(taskName, "test", null);
         assertNotNull(task2);
@@ -154,9 +155,10 @@ public class TaskRateLimitTests {
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskResult.setWorkflowInstanceId(task1.getWorkflowInstanceId());
         taskClient.updateTask(taskResult);
+        Uninterruptibles.sleepUninterruptibly(60, TimeUnit.SECONDS);
 
         // Task2 should not be pollable still. It should be available only after 10 seconds.
-        await().atMost(70, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             Task task3 = taskClient.pollTask(taskName, "test", null);
             assertNotNull(task3);
             TaskResult taskResult1 = new TaskResult();
@@ -259,6 +261,8 @@ public class TaskRateLimitTests {
 
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName(workflowName);
+        workflowDef.setTimeoutSeconds(600);
+        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         workflowDef.setOwnerEmail("test@orkes.io");
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to monitor order state");
