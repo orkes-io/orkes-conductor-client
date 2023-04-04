@@ -94,7 +94,7 @@ public class TaskRateLimitTests {
         task2 = taskClient.pollTask(taskName, "test", null);
         assertNull(task2);
 
-        Uninterruptibles.sleepUninterruptibly(11, TimeUnit.SECONDS);
+        Uninterruptibles.sleepUninterruptibly(13, TimeUnit.SECONDS);
         // Task2 should be available to poll
         task2 = taskClient.pollTask(taskName, "test", null);
         assertNotNull(task2);

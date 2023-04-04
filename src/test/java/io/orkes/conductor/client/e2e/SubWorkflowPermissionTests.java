@@ -150,13 +150,15 @@ public class SubWorkflowPermissionTests {
         });
 
         // Cleanup
-        user1MetadataClient.unregisterWorkflowDef(parentWorkflowName, 1);
-        user1MetadataClient.unregisterWorkflowDef(subWorkflowName, 1);
-        user1MetadataClient.unregisterTaskDef(taskName);
-        authorizationClient.deleteGroup(groupName);
-        authorizationClient.removePermissions(authorizationRequest);
-        authorizationRequest.setSubject(new SubjectRef().id(groupName).type(SubjectRef.TypeEnum.GROUP));
-        authorizationClient.removePermissions(authorizationRequest);
+        try {
+            user1MetadataClient.unregisterWorkflowDef(parentWorkflowName, 1);
+            user1MetadataClient.unregisterWorkflowDef(subWorkflowName, 1);
+            user1MetadataClient.unregisterTaskDef(taskName);
+            authorizationClient.deleteGroup(groupName);
+            authorizationClient.removePermissions(authorizationRequest);
+            authorizationRequest.setSubject(new SubjectRef().id(groupName).type(SubjectRef.TypeEnum.GROUP));
+            authorizationClient.removePermissions(authorizationRequest);
+        } catch (Exception e){}
     }
 
     UpsertGroupRequest getUpsertGroupRequest() {

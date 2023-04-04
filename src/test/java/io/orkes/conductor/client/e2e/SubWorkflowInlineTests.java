@@ -126,6 +126,8 @@ public class SubWorkflowInlineTests {
         inlineWorkflowDef.setName("inline_test_sub_workflow");
         inlineWorkflowDef.setVersion(1);
         inlineWorkflowDef.setTasks(Arrays.asList(inline));
+        inlineWorkflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+        inlineWorkflowDef.setTimeoutSeconds(600);
         SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
         subWorkflowParams.setName("inline_test_sub_workflow");
         subWorkflowParams.setVersion(1);
