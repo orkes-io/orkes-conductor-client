@@ -62,8 +62,12 @@ public class TaskRateLimitTests {
 
         //clean up first
         SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
-        workflowClient.terminateWorkflow(found.getResults().stream().map(s ->s.getWorkflowId()).collect(Collectors.toList()), "terminate");
         System.out.println("Going to terminate " + found.getResults().size() + " workflows");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+            } catch(Exception e){}
+        });
 
         // Register workflow
         registerWorkflowDef(workflowName, taskName, metadataClient, false);
@@ -104,6 +108,9 @@ public class TaskRateLimitTests {
         assertNull(task2);
 
         Uninterruptibles.sleepUninterruptibly(13, TimeUnit.SECONDS);
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertEquals(taskClient.getQueueSizeForTask(taskName), 1);
+        });
         // Task2 should be available to poll
         task2 = taskClient.pollTask(taskName, "test", null);
         assertNotNull(task2);
@@ -132,8 +139,12 @@ public class TaskRateLimitTests {
 
         //clean up first
         SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
-        workflowClient.terminateWorkflow(found.getResults().stream().map(s ->s.getWorkflowId()).collect(Collectors.toList()), "terminate");
         System.out.println("Going to terminate " + found.getResults().size() + " workflows of type: " + workflowName);
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+            } catch(Exception e){}
+        });
         // Register workflow
         registerWorkflowDef(workflowName, taskName, metadataClient, true);
 
@@ -168,7 +179,9 @@ public class TaskRateLimitTests {
         taskClient.updateTask(taskResult);
         workflowClient.runDecider(task1.getWorkflowInstanceId());
         Uninterruptibles.sleepUninterruptibly(66, TimeUnit.SECONDS);
-
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertEquals(taskClient.getQueueSizeForTask(taskName), 1);
+        });
         // Task2 should not be pollable still. It should be available only after 10 seconds.
         await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             Task task3 = taskClient.pollTask(taskName, "test", null);
