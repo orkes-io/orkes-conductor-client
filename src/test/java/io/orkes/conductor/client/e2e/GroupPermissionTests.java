@@ -15,6 +15,7 @@ package io.orkes.conductor.client.e2e;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -99,7 +100,7 @@ public class GroupPermissionTests extends AbstractMultiUserTests {
 
         user1MetadataClient.addWorkflowTag(tagObject, workflowName1);
 
-        String groupName = "worker-test-group";
+        String groupName = "worker-test-group" + UUID.randomUUID();
         // Create/Update group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
         authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");

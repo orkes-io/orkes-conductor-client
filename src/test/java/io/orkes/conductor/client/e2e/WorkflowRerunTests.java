@@ -79,9 +79,9 @@ public class WorkflowRerunTests {
     @DisplayName("Check workflow with simple task and rerun functionality")
     public void testRerunSimpleWorkflow() {
 
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String taskName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String taskName2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String workflowName = "re-run-workflow";
+        String taskName1 = "re-run-task1";
+        String taskName2 = "re-run-task2";
         // Register workflow
         registerWorkflowDef(workflowName, taskName1, taskName2, metadataClient);
         workflowNames.add(workflowName);
@@ -148,9 +148,9 @@ public class WorkflowRerunTests {
         workflowClient = new OrkesWorkflowClient(apiClient);
         metadataClient = new OrkesMetadataClient(apiClient);
         taskClient = new OrkesTaskClient(apiClient);
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String workflowName = "workflow-re-run-with-sub-workflow";
+        String taskName = "re-run-with-sub-task";
+        String subWorkflowName = "workflow-re-run-sub-workflow";
         workflowNames.add(workflowName);
         workflowNames.add(subWorkflowName);
 

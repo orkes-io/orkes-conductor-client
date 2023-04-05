@@ -105,6 +105,7 @@ public class WorkflowClientTests extends ClientTest {
         workflowClient.search(2, 5, "", "", Commons.WORKFLOW_NAME);
         workflowClient.terminateWorkflows(List.of(workflowId), "reason");
         Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        System.out.println("Restarting " + workflowId);
         workflowClient.restart(workflowId, true);
         Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
         workflowClient.terminateWorkflow(List.of(workflowId), "reason");
