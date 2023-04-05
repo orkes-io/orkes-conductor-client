@@ -131,7 +131,6 @@ public class TaskRateLimitTests {
 
         //clean up first
         SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
-        System.out.println("Going to terminate " + found.getResults().size() + " workflows of type: " + workflowName);
         found.getResults().forEach(workflowSummary -> {
             try {
                 workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
