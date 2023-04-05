@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
@@ -26,7 +25,6 @@ import com.netflix.conductor.sdk.workflow.def.tasks.Http;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import io.orkes.conductor.client.WorkflowClient;
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.util.Commons;
 
 import com.google.common.util.concurrent.Uninterruptibles;
