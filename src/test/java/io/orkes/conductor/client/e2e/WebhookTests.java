@@ -40,8 +40,7 @@ import com.squareup.okhttp.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 @Slf4j

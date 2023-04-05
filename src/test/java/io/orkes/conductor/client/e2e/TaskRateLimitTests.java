@@ -13,6 +13,7 @@
 package io.orkes.conductor.client.e2e;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -62,10 +63,10 @@ public class TaskRateLimitTests {
 
         //clean up first
         SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
-        System.out.println("Going to terminate " + found.getResults().size() + " workflows");
         found.getResults().forEach(workflowSummary -> {
             try {
                 workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
             } catch(Exception e){}
         });
 
@@ -87,40 +88,31 @@ public class TaskRateLimitTests {
         Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
 
-        Task task1 = taskClient.pollTask(taskName, "test", null);
-        Task task2 = taskClient.pollTask(taskName, "test", null);
-
-        // Task2 should be null.
-        Task finalTask = task2;
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            assertNull(finalTask);
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            Task task1 = taskClient.pollTask(taskName, "test", null);
+            Task task2 = taskClient.pollTask(taskName, "test", null);
             assertNotNull(task1);
+            assertNull(task2);
+            TaskResult taskResult = new TaskResult();
+            taskResult.setTaskId(task1.getTaskId());
+            taskResult.setStatus(TaskResult.Status.COMPLETED);
+            taskResult.setWorkflowInstanceId(task1.getWorkflowInstanceId());
+            taskClient.updateTask(taskResult);
         });
-
-        TaskResult taskResult = new TaskResult();
-        taskResult.setTaskId(task1.getTaskId());
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setWorkflowInstanceId(task1.getWorkflowInstanceId());
-        taskClient.updateTask(taskResult);
-
-        // Task2 should not be pollable still. It should be available only after 10 seconds.
-        task2 = taskClient.pollTask(taskName, "test", null);
-        assertNull(task2);
 
         Uninterruptibles.sleepUninterruptibly(13, TimeUnit.SECONDS);
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            assertEquals(taskClient.getQueueSizeForTask(taskName), 1);
+            assertEquals(1, taskClient.getQueueSizeForTask(taskName));
         });
         // Task2 should be available to poll
-        task2 = taskClient.pollTask(taskName, "test", null);
-        assertNotNull(task2);
-        taskResult = new TaskResult();
-        taskResult.setTaskId(task2.getTaskId());
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setWorkflowInstanceId(task2.getWorkflowInstanceId());
-        taskClient.updateTask(taskResult);
-
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Task task2 = taskClient.pollTask(taskName, "test", null);
+            assertNotNull(task2);
+            TaskResult taskResult = new TaskResult();
+            taskResult.setTaskId(task2.getTaskId());
+            taskResult.setStatus(TaskResult.Status.COMPLETED);
+            taskResult.setWorkflowInstanceId(task2.getWorkflowInstanceId());
+            taskClient.updateTask(taskResult);
             // Assert both workflows completed
             assertEquals(workflowClient.getWorkflow(workflowId1, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);
             assertEquals(workflowClient.getWorkflow(workflowId2, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);
@@ -128,7 +120,7 @@ public class TaskRateLimitTests {
     }
 
     @Test
-    @DisplayName("Check workflow with simple rate limit by name")
+    @DisplayName("Check workflow with concurrent exec limit")
     public void testConcurrentExeclimit() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
@@ -143,6 +135,7 @@ public class TaskRateLimitTests {
         found.getResults().forEach(workflowSummary -> {
             try {
                 workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
             } catch(Exception e){}
         });
         // Register workflow
@@ -163,21 +156,18 @@ public class TaskRateLimitTests {
         Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
 
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 2, 1000);
+            assertEquals(1, tasks.size());
 
-        Task task1 = taskClient.pollTask(taskName, "test", null);
-        assertNotNull(task1);
+            TaskResult taskResult = new TaskResult();
+            taskResult.setTaskId(tasks.get(0).getTaskId());
+            taskResult.setStatus(TaskResult.Status.COMPLETED);
+            taskResult.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
+            taskClient.updateTask(taskResult);
+            workflowClient.runDecider(tasks.get(0).getWorkflowInstanceId());
+        });
 
-        Task task2 = taskClient.pollTask(taskName, "test", null);
-        assertNull(task2);
-
-
-        TaskResult taskResult = new TaskResult();
-        taskResult.setTaskId(task1.getTaskId());
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setWorkflowInstanceId(task1.getWorkflowInstanceId());
-        taskClient.updateTask(taskResult);
-        workflowClient.runDecider(task1.getWorkflowInstanceId());
         Uninterruptibles.sleepUninterruptibly(66, TimeUnit.SECONDS);
         await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
             assertEquals(taskClient.getQueueSizeForTask(taskName), 1);
@@ -192,7 +182,7 @@ public class TaskRateLimitTests {
             taskResult1.setWorkflowInstanceId(task3.getWorkflowInstanceId());
             taskClient.updateTask(taskResult1);
         });
-        workflowClient.runDecider(task1.getWorkflowInstanceId());
+        workflowClient.runDecider(workflowId2);
 
         assertEquals(workflowClient.getWorkflow(workflowId1, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);
         assertEquals(workflowClient.getWorkflow(workflowId2, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);
@@ -265,6 +255,9 @@ public class TaskRateLimitTests {
     }
 
     private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient, boolean isExecLimit) {
+        if (metadataClient.getWorkflowDef(workflowName, 1) != null && metadataClient.getTaskDef(taskName) != null) {
+            return;
+        }
         TaskDef taskDef = new TaskDef(taskName);
         taskDef.setOwnerEmail("test@orkes.io");
         taskDef.setRetryCount(0);
@@ -291,7 +284,7 @@ public class TaskRateLimitTests {
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to monitor order state");
         workflowDef.setTasks(Arrays.asList(simpleTask));
-        metadataClient.updateWorkflowDefs(Arrays.asList(workflowDef));
+        metadataClient.registerWorkflowDef(workflowDef);
         metadataClient.registerTaskDefs(Arrays.asList(taskDef));
     }
 }

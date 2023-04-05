@@ -56,7 +56,7 @@ public class RegistrationUtil {
         workflowDef.setTimeoutSeconds(600);
         workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         workflowDef.setTasks(Arrays.asList(inline, simpleTask));
-        metadataClient1.updateWorkflowDefs(Arrays.asList(workflowDef));
+        metadataClient1.registerWorkflowDef(workflowDef);
         metadataClient1.registerTaskDefs(Arrays.asList(taskDef, taskDef2));
     }
 

@@ -46,7 +46,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class WorkflowRateLimiterTests {
 
     @Test
-    @DisplayName("Check workflow with simple rate limit by name")
+    @DisplayName("Check workflow with simple rate limit by workflow name")
     public void testRateLimitByWorkflowName() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
