@@ -126,6 +126,7 @@ public class WorkflowRerunTests {
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
+        workflowClient.runDecider(workflowId);
 
         // Wait for workflow to get completed
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
