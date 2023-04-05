@@ -38,8 +38,6 @@ import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.client.util.ApiUtil;
 
-import com.google.common.util.concurrent.Uninterruptibles;
-
 import static io.orkes.conductor.client.util.RegistrationUtil.registerWorkflowDef;
 import static io.orkes.conductor.client.util.RegistrationUtil.registerWorkflowWithSubWorkflowDef;
 import static org.junit.jupiter.api.Assertions.*;
