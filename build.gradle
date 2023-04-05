@@ -187,7 +187,7 @@ test {
     finalizedBy jacocoTestReport // report is always generated after tests run
     testLogging {
         events = ["SKIPPED", "FAILED"]
-        exceptionFormat = "full"
+        exceptionFormat = "short"
         showStandardStreams = true
     }
 }
