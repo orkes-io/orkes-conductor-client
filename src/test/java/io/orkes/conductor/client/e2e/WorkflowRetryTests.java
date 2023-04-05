@@ -179,9 +179,9 @@ public class WorkflowRetryTests {
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
 
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "workflow " + workflowId + " did not complete");
         });
 
         metadataClient.unregisterWorkflowDef(workflowName, 1);

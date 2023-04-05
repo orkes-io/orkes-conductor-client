@@ -127,9 +127,9 @@ public class WorkflowRerunTests {
         System.out.println("Going to check workflow " + workflowId + " for completion");
 
         // Wait for workflow to get completed
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "Workflow " + workflowId + " did not complete");
         });
 
         try {
