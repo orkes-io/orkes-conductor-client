@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
   integration-test:
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ubuntu-latest
     name: Integration Tests
     steps:
       - name: Checkout
