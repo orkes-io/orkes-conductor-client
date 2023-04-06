@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
-import com.azure.core.http.policy.TimeoutPolicy;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
