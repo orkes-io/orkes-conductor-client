@@ -47,6 +47,7 @@ group = 'io.orkes.conductor'
 dependencies {
 
     api ("io.orkes.conductor:conductor-client:${versions.conductor}")
+    api ("io.orkes.conductor:conductor-client-spring:${versions.conductor}")
     api ("io.orkes.conductor:conductor-common:${versions.conductor}")
     api ("io.orkes.conductor:conductor-grpc:${versions.conductor}")
     api ("io.orkes.conductor:conductor-java-sdk:${versions.conductor}")

@@ -12,6 +12,7 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.BeforeAll;
