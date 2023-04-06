@@ -1,5 +1,6 @@
 buildscript {
     dependencies {
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:6.+'
         classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
     }
 }
@@ -10,6 +11,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'java-library'
+    id "com.diffplug.spotless" version "5.0.0"
     id 'jacoco'
     id 'idea'
 }
@@ -31,9 +33,9 @@ ext {
             wiremock        : '2.33.2',
             ioGRPC          : '1.49.0',
             ioGRPC          : '1.49.0',
-            protoBuf     : '3.19.4',
+            protoBuf        : '3.19.4',
             lombok          : '1.18.24',
-            revJAXRS : '2.1.1',
+            revJAXRS        : '2.1.1',
             revJerseyCommon : '2.22.2',
             netty           : '4.1.77.Final'
 
@@ -204,13 +206,13 @@ configurations.implementation {
 }
 
 
-//spotless {
-//    java {
-//        removeUnusedImports()
-//        importOrder('java', 'javax', 'org', 'com.netflix', 'io.orkes','', '\\#com.netflix', '\\#')
-//        licenseHeaderFile("$rootDir/licenseheader.txt")
-//    }
-//}
+spotless {
+    java {
+        removeUnusedImports()
+        importOrder('java', 'javax', 'org', 'com.netflix', 'io.orkes','', '\\#com.netflix', '\\#')
+        licenseHeaderFile("$rootDir/licenseheader.txt")
+    }
+}
 
 signing {
     def signingKeyId = findProperty('signingKeyId')
@@ -228,7 +230,7 @@ signing {
     }
 }
 tasks.withType(Test)  {
-    maxParallelForks = 1
+    maxParallelForks = 100
 }
 sourceSets.main.java.srcDirs += ['example/java', 'example/resources']
 
