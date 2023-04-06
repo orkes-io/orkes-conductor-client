@@ -39,6 +39,7 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
+import com.azure.core.http.policy.TimeoutPolicy;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,6 +108,10 @@ public class ApiClient {
         this.basePath = basePath;
         httpClient = new OkHttpClient();
         httpClient.setRetryOnConnectionFailure(true);
+        httpClient.setConnectTimeout(30, TimeUnit.SECONDS);
+        httpClient.setReadTimeout(30, TimeUnit.SECONDS);
+        httpClient.setWriteTimeout(30, TimeUnit.SECONDS);
+        
         verifyingSsl = true;
         json = new JSON();
         authentications = new HashMap<>();
