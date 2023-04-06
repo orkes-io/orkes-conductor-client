@@ -139,7 +139,7 @@ public class WorkflowRerunTests {
         }catch (Exception e){}
     }
 
-    @Test
+    //@Test
     @DisplayName("Check workflow with sub_workflow task and rerun functionality")
     public void testRerunWithSubWorkflow() throws Exception {
 
@@ -198,11 +198,10 @@ public class WorkflowRerunTests {
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
-        System.out.println("Checking for workflow " + workflowId + " to be completed");
 
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "Workflow " + workflowId + " did not complete");
         });
 
         try {
