@@ -287,8 +287,12 @@ public class TaskRunnerConfigurer {
      * shutdown of your worker, during process termination.
      */
     public void shutdown() {
-        this.taskRunners.forEach(taskRunner -> taskRunner.shutdown(shutdownGracePeriodSeconds));
-        this.scheduledExecutorService.shutdown();
+        if(this.taskRunners != null) {
+            this.taskRunners.forEach(taskRunner -> taskRunner.shutdown(shutdownGracePeriodSeconds));
+        }
+        if(this.scheduledExecutorService != null) {
+            this.scheduledExecutorService.shutdown();
+        }
     }
 
     private void startWorker(Worker worker) {

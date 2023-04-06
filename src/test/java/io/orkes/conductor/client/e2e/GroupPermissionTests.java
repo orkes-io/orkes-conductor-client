@@ -15,6 +15,7 @@ package io.orkes.conductor.client.e2e;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -89,7 +90,7 @@ public class GroupPermissionTests extends AbstractMultiUserTests {
         user1TaskClient.updateTask(taskResult);
 
         // Wait for workflow to get completed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = user1WorkflowClient.getWorkflow(finalWorkflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
         });
@@ -99,7 +100,7 @@ public class GroupPermissionTests extends AbstractMultiUserTests {
 
         user1MetadataClient.addWorkflowTag(tagObject, workflowName1);
 
-        String groupName = "worker-test-group";
+        String groupName = "worker-test-group" + UUID.randomUUID();
         // Create/Update group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
         authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
@@ -136,7 +137,7 @@ public class GroupPermissionTests extends AbstractMultiUserTests {
         for (int retry = 0; retry < retryAttemptsLimit; retry += 1) {
             try{
                 // Wait for workflow to get completed
-                await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+                await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
                     Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
                     assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
                 });

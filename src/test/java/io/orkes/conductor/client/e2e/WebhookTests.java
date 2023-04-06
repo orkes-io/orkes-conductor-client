@@ -40,8 +40,7 @@ import com.squareup.okhttp.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 @Slf4j
@@ -88,7 +87,6 @@ public class WebhookTests {
             assertNotNull(workflows.getResults());
             assertEquals(count, workflows.getResults().size());
             workflowIds.addAll(workflows.getResults().stream().map(result -> result.getWorkflowId()).collect(Collectors.toList()));
-            log.info("Found {}", workflowIds);
         });
         assertNotNull(workflowIds);
         assertEquals(count, workflowIds.size());
@@ -200,7 +198,6 @@ public class WebhookTests {
 
         receiveWebhookId = registerWebHook(config2);
         receiveWebhookUrl = client.getBasePath().replaceFirst("api","webhook") + "/" + receiveWebhookId;
-
 
         log.info("webhookUrl URL {}", webhookUrl);
         log.info("receiveWebhookUrl URL {}", receiveWebhookUrl);

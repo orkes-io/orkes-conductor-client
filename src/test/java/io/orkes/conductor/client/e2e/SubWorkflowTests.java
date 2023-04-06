@@ -173,8 +173,6 @@ public class SubWorkflowTests {
                     } else {
                         assertEquals(version, subWorkflow.getWorkflowVersion());
                     }
-                } else {
-                    log.info("Sub workflow has inline definition {} - {}", subWorkflowParams.getWorkflowDefinition().getClass().getName(), subWorkflowParams.getWorkflowDefinition());
                 }
             });
         });
@@ -225,8 +223,6 @@ public class SubWorkflowTests {
                     } else {
                         assertEquals(version, subWorkflow.getWorkflowVersion());
                     }
-                } else {
-                    log.info("Sub workflow has inline definition {} - {}", subWorkflowParams.getWorkflowDefinition().getClass().getName(), subWorkflowParams.getWorkflowDefinition());
                 }
             });
 
