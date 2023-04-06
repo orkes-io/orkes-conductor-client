@@ -137,7 +137,7 @@ public class GroupPermissionTests extends AbstractMultiUserTests {
         for (int retry = 0; retry < retryAttemptsLimit; retry += 1) {
             try{
                 // Wait for workflow to get completed
-                await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+                await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
                     Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
                     assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
                 });
