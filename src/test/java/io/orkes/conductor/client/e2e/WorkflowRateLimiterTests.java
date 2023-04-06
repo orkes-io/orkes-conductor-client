@@ -46,7 +46,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 public class WorkflowRateLimiterTests {
 
     @Test
-    @DisplayName("Check workflow with simple rate limit by name")
+    @DisplayName("Check workflow with simple rate limit by workflow name")
     public void testRateLimitByWorkflowName() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
@@ -112,7 +112,7 @@ public class WorkflowRateLimiterTests {
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
 
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
             workflow5.set(workflowClient.getWorkflow(workflowId5, true));
             assertEquals(workflow4.get().getTasks().size(), 1);
         });

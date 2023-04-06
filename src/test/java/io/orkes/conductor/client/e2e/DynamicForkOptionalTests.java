@@ -148,7 +148,7 @@ public class DynamicForkOptionalTests {
         WorkflowClient workflowAdminClient = new OrkesWorkflowClient(adminClient);
         MetadataClient metadataAdminClient  =new OrkesMetadataClient(adminClient);
         TaskClient taskClient = new OrkesTaskClient(adminClient);
-        String workflowName1 = "DynamicFanInOutTest";
+        String workflowName1 = "DynamicFanInOutTest1";
 
         // Register workflow
         registerWorkflowDef(workflowName1, metadataAdminClient);
@@ -230,7 +230,7 @@ public class DynamicForkOptionalTests {
         taskClient.updateTask(taskResult);
 
         // Workflow should be completed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowAdminClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
             assertTrue(workflow1.getTasks().size() >= 6);

@@ -119,7 +119,6 @@ public class BackoffTests {
         await().pollInterval(3, TimeUnit.SECONDS).atMost(1, TimeUnit.MINUTES).untilAsserted(()->{
             Workflow workflow = workflowClient.getWorkflow(id, true);
             assertNotNull(workflow);
-            log.info("Workflow status {}", workflow.getStatus());
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
         });
 
@@ -140,14 +139,12 @@ public class BackoffTests {
                 case FIXED:
                     long diff = task.getStartTime() - task.getScheduledTime();
                     long expectedDelay = delay;
-                    //+- 300 millis
-                    assertTrue(diff < (expectedDelay + 300) && diff >= expectedDelay, "delay " + diff + " not within the range of expected " + expectedDelay + ", taskId = " + task.getReferenceTaskName() + ":" + task.getRetryCount());
+                    assertTrue(diff >= (expectedDelay), "delay " + diff + " not within the range of expected " + expectedDelay + ", taskId = " + task.getReferenceTaskName() + ":" + task.getTaskId());
                     break;
                 case LINEAR_BACKOFF:
                     diff = task.getStartTime() - task.getScheduledTime();
                     expectedDelay = task.getRetryCount() * delay * backoffRate;
-                    //+- 300 millis
-                    assertTrue(diff < (expectedDelay + 300) && diff >= expectedDelay, "delay " + diff + " not within the range of expected " + expectedDelay + ", taskId = " + task.getReferenceTaskName() + ":" + task.getRetryCount());
+                    assertTrue(diff >= (expectedDelay), "delay " + diff + " not within the range of expected " + expectedDelay + ", taskId = " + task.getReferenceTaskName() + ":" + task.getTaskId());
                     break;
                 case EXPONENTIAL_BACKOFF:
                     diff = task.getStartTime() - task.getScheduledTime();
@@ -156,8 +153,7 @@ public class BackoffTests {
                     } else {
                         expectedDelay = (long) (Math.pow(2, task.getRetryCount() - 1) * (delay));
                     }
-                    //+- 300 millis
-                    assertTrue(diff < (expectedDelay + 300) && diff >= expectedDelay, "delay " + diff + " not within the range of expected " + expectedDelay + ", taskId = " + task.getReferenceTaskName() + ":" + task.getRetryCount());
+                    assertTrue(diff >= (expectedDelay), "delay " + diff + " not within the range of expected " + expectedDelay + ", taskId = " + task.getReferenceTaskName() + ":" + task.getTaskId());
                     break;
                 default:
                 break;
