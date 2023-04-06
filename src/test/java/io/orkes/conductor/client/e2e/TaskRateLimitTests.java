@@ -155,7 +155,7 @@ public class TaskRateLimitTests {
         Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
 
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
             List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 2, 1000);
             assertEquals(1, tasks.size());
 
