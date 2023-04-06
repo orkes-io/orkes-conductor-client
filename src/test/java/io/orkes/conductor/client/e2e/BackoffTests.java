@@ -119,7 +119,6 @@ public class BackoffTests {
         await().pollInterval(3, TimeUnit.SECONDS).atMost(1, TimeUnit.MINUTES).untilAsserted(()->{
             Workflow workflow = workflowClient.getWorkflow(id, true);
             assertNotNull(workflow);
-            log.info("Workflow status {}", workflow.getStatus());
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
         });
 
