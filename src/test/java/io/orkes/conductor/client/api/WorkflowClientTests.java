@@ -70,7 +70,6 @@ public class WorkflowClientTests extends ClientTest {
                 request.setWorkflowDef(workflow.toWorkflowDef());
                 request.setCorrelationId(correlationId);
                 String id = workflowClient.startWorkflow(request);
-                System.out.println("started " + id);
                 Set<String> ids = correlationIdToWorkflows.getOrDefault(correlationId, new HashSet<>());
                 ids.add(id);
                 correlationIdToWorkflows.put(correlationId, ids);
