@@ -113,7 +113,7 @@ dependencies {
     testImplementation 'org.testcontainers:localstack:1.17.1'
     testImplementation 'org.testcontainers:testcontainers:1.17.1'
     testImplementation 'com.amazonaws:aws-java-sdk-core:1.12.138'
-    testCompileOnly "org.projectlombok:lombok:${versions.lombok}"
+    testImplementation "org.projectlombok:lombok:${versions.lombok}"
 }
 
 repositories {
