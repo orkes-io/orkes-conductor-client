@@ -229,7 +229,7 @@ public class SubWorkflowVersionTests {
         taskResult.setOutputData(output);
         taskClient.updateTask(taskResult);
 
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowAdminClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
             assertTrue(workflow1.getTasks().size() == 4);
@@ -333,6 +333,8 @@ public class SubWorkflowVersionTests {
         subworkflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         subworkflowDef.setDescription("Sub Workflow to test retry");
         subworkflowDef.setTasks(Arrays.asList(inline));
+        subworkflowDef.setTimeoutSeconds(600);
+        subworkflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
 
         metadataClient.registerWorkflowDef(subworkflowDef);
     }

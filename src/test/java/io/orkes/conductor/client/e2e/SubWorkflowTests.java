@@ -92,14 +92,16 @@ public class SubWorkflowTests {
         List<WorkflowDef> workflowDefs = objectMapper.readValue(new InputStreamReader(resource), WORKFLOW_DEF_LIST);
         metadataClient.updateWorkflowDefs(workflowDefs);
         Set<String> tasks = new HashSet<>();
+        List<String> internalTasks = List.of("HTTP", "BUSINESS_RULE", "AWS_LAMBDA", "JDBC", "WAIT_FOR_EVENT", "PUBLISH_BUSINESS_STATE",
+                "WAIT", "WAIT_FOR_WEBHOOK", "DECISION", "SWITCH", "DYNAMIC", "JOIN", "DO_WHILE", "FORK_JOIN_DYNAMIC", "FORK_JOIN", "JSON_JQ_TRANSFORM", "FORK");
         for (WorkflowDef workflowDef : workflowDefs) {
             List<WorkflowTask> allTasks = workflowDef.collectTasks();
             tasks.addAll(allTasks.stream()
-                    .filter(tt -> !tt.getType().equals("SIMPLE"))
+                    .filter(tt -> !tt.getType().equals("SIMPLE") && !internalTasks.contains(tt.getType()))
                     .map(t -> t.getType()).collect(Collectors.toSet()));
 
             tasks.addAll(allTasks.stream()
-                    .filter(tt -> tt.getType().equals("SIMPLE"))
+                    .filter(tt -> tt.getType().equals("SIMPLE") && !internalTasks.contains(tt.getType()))
                     .map(t -> t.getName()).collect(Collectors.toSet()));
 
         }
@@ -171,8 +173,6 @@ public class SubWorkflowTests {
                     } else {
                         assertEquals(version, subWorkflow.getWorkflowVersion());
                     }
-                } else {
-                    log.info("Sub workflow has inline definition {} - {}", subWorkflowParams.getWorkflowDefinition().getClass().getName(), subWorkflowParams.getWorkflowDefinition());
                 }
             });
         });
@@ -223,8 +223,6 @@ public class SubWorkflowTests {
                     } else {
                         assertEquals(version, subWorkflow.getWorkflowVersion());
                     }
-                } else {
-                    log.info("Sub workflow has inline definition {} - {}", subWorkflowParams.getWorkflowDefinition().getClass().getName(), subWorkflowParams.getWorkflowDefinition());
                 }
             });
 

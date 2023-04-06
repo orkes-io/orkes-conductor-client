@@ -125,6 +125,8 @@ public class DoWhileWithDomainTests {
         WorkflowDef inlineWorkflowDef = new WorkflowDef();
         inlineWorkflowDef.setName("inline_test_sub_workflow");
         inlineWorkflowDef.setVersion(1);
+        inlineWorkflowDef.setTimeoutSeconds(600);
+        inlineWorkflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         inlineWorkflowDef.setTasks(Arrays.asList(inline));
         SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
         subWorkflowParams.setName("inline_test_sub_workflow");
@@ -136,6 +138,8 @@ public class DoWhileWithDomainTests {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName(workflowName);
         workflowDef.setOwnerEmail("test@orkes.io");
+        workflowDef.setTimeoutSeconds(600);
+        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to test inline sub_workflow definition");
         workflowDef.setTasks(Arrays.asList( workflowTask, inlineSubworkflow));

@@ -108,8 +108,8 @@ public class SubWorkflowPermissionTests {
         }
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
-        authorizationClient.addUserToGroup(groupName, "user1@orkes.io");
-        authorizationClient.addUserToGroup(groupName, "user2@orkes.io");
+        authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
+        authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
@@ -150,13 +150,15 @@ public class SubWorkflowPermissionTests {
         });
 
         // Cleanup
-        user1MetadataClient.unregisterWorkflowDef(parentWorkflowName, 1);
-        user1MetadataClient.unregisterWorkflowDef(subWorkflowName, 1);
-        user1MetadataClient.unregisterTaskDef(taskName);
-        authorizationClient.deleteGroup(groupName);
-        authorizationClient.removePermissions(authorizationRequest);
-        authorizationRequest.setSubject(new SubjectRef().id(groupName).type(SubjectRef.TypeEnum.GROUP));
-        authorizationClient.removePermissions(authorizationRequest);
+        try {
+            user1MetadataClient.unregisterWorkflowDef(parentWorkflowName, 1);
+            user1MetadataClient.unregisterWorkflowDef(subWorkflowName, 1);
+            user1MetadataClient.unregisterTaskDef(taskName);
+            authorizationClient.deleteGroup(groupName);
+            authorizationClient.removePermissions(authorizationRequest);
+            authorizationRequest.setSubject(new SubjectRef().id(groupName).type(SubjectRef.TypeEnum.GROUP));
+            authorizationClient.removePermissions(authorizationRequest);
+        } catch (Exception e){}
     }
 
     UpsertGroupRequest getUpsertGroupRequest() {

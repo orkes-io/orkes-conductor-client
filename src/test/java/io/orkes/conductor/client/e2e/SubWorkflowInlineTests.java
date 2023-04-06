@@ -126,6 +126,8 @@ public class SubWorkflowInlineTests {
         inlineWorkflowDef.setName("inline_test_sub_workflow");
         inlineWorkflowDef.setVersion(1);
         inlineWorkflowDef.setTasks(Arrays.asList(inline));
+        inlineWorkflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+        inlineWorkflowDef.setTimeoutSeconds(600);
         SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
         subWorkflowParams.setName("inline_test_sub_workflow");
         subWorkflowParams.setVersion(1);
@@ -135,6 +137,8 @@ public class SubWorkflowInlineTests {
 
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName(workflowName);
+        workflowDef.setTimeoutSeconds(600);
+        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         workflowDef.setOwnerEmail("test@orkes.io");
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to test inline sub_workflow definition");

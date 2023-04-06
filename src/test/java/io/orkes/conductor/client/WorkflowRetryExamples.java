@@ -27,8 +27,11 @@ import com.netflix.conductor.common.run.Workflow;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 
+import lombok.extern.slf4j.Slf4j;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 public class WorkflowRetryExamples {
     private final MetadataClient metadataClient;
     private final WorkflowClient workflowClient;
@@ -76,7 +79,7 @@ public class WorkflowRetryExamples {
         workflowClient.terminateWorkflow(workflowId, "testing out some stuff");
         // Retry the workflow
 
-        System.out.println("Going to retry " + workflowId);
+        log.debug("Going to retry " + workflowId);
         workflowClient.retryLastFailedTask(workflowId);
         taskId = workflowClient.getWorkflow(workflowId, true).getTasks().get(0).getTaskId();
         completeTask(workflow.getWorkflowId(), taskId);
@@ -105,6 +108,7 @@ public class WorkflowRetryExamples {
     void registerTask() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName(taskName);
+        taskDef.setOwnerEmail("test@orkes.com");
         List<TaskDef> taskDefs = new ArrayList<>();
         taskDefs.add(taskDef);
         this.metadataClient.registerTaskDefs(taskDefs);
@@ -120,6 +124,8 @@ public class WorkflowRetryExamples {
         workflowDef.setName(workflowName);
         workflowDef.setVersion(1);
         workflowDef.setOwnerEmail(Commons.OWNER_EMAIL);
+        workflowDef.setTimeoutSeconds(600);
+        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName(taskName);
         workflowTask.setTaskReferenceName(taskName);
