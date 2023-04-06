@@ -158,22 +158,22 @@ public class OrkesMetadataClient extends MetadataClient  {
     }
 
     @Override
-    public void addBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema) {
-        metadataResourceApi.addWorkflowBusinessState(workflowName, businessStateSchema);
+    public void addWorkflowBusinessState(String workflowName, BusinessStateSchema businessStateSchema) {
+        metadataResourceApi.addWorkflowBusinessState(businessStateSchema, workflowName);
     }
 
     @Override
-    public void updateBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema) {
-        metadataResourceApi.updateWorkflowBusinessState(businessStateSchema, workflowName);
+    public void updateWorkflowBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema) {
+        metadataResourceApi.updateWorkflowBusinessState(businessStateSchema,  workflowName);
     }
 
     @Override
-    public BusinessStateSchema getBusinessStateSchema(String workflowName) {
+    public BusinessStateSchema getWorkflowBusinessStateSchema(String workflowName) {
         return metadataResourceApi.getWorkflowBusinessState(workflowName);
     }
 
     @Override
-    public void deleteBusinessStateSchema(String workflowName) {
-        metadataResourceApi.deleteWorkflowBusinessState(workflowName);
+    public void deleteWorkflowBusinessStateSchema(String workflowName, String type) {
+        metadataResourceApi.deleteWorkflowBusinessStateForType(type, workflowName);
     }
 }

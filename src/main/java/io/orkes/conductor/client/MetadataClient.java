@@ -44,13 +44,11 @@ public abstract class MetadataClient extends com.netflix.conductor.client.http.M
 
     public abstract void setWorkflowTags(List<TagObject> tagObjects, String name);
 
-    public abstract void addBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema);
+    public abstract void addWorkflowBusinessState(String workflowName, BusinessStateSchema businessStateSchema);
 
-    public abstract void updateBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema);
+    public abstract void updateWorkflowBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema);
 
-    public abstract BusinessStateSchema getBusinessStateSchema(String workflowName);
+    public abstract BusinessStateSchema getWorkflowBusinessStateSchema(String workflowName);
 
-    public abstract void deleteBusinessStateSchema(String workflowName);
-
-
+    public abstract void deleteWorkflowBusinessStateSchema(String workflowName, String type);
 }

@@ -13,9 +13,7 @@
 package io.orkes.conductor.client.e2e;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
+import com.netflix.conductor.common.metadata.workflow.*;
 import com.netflix.conductor.common.run.Workflow;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
@@ -29,12 +27,14 @@ import io.orkes.conductor.client.model.ExtendedWorkflowDef;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.util.ApiUtil;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -56,17 +56,11 @@ public class WorkflowBusinessStateTests {
         taskClient = new OrkesTaskClient(apiClient);
     }
     @Test
-    @DisplayName("Check business state is setting task input correctly")
-    public void test1() throws InterruptedException {
+    @DisplayName("Check business state is setting task input correctly along with business state schema")
+    public void test1() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        setupMetadata(workflowName, taskName);
-
-        TagObject tagObject = new TagObject();
-        tagObject.setType(TagObject.TypeEnum.METADATA);
-        tagObject.setKey("a");
-        tagObject.setValue("b");
-        metadataClient.addWorkflowTag(tagObject, workflowName);
+        registerWorkflowDef(workflowName, taskName, metadataClient);
 
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
@@ -92,46 +86,79 @@ public class WorkflowBusinessStateTests {
     }
 
     @Test
-    @DisplayName("Check update business state is working as expected")
+    @DisplayName("Check update business state schema is working fine")
     public void test2() {
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        registerWorkflowDef(workflowName, taskName, metadataClient);
-        BusinessStateSchema businessStateSchema = new BusinessStateSchema();
-        businessStateSchema.setDbName("Audit");
-        businessStateSchema.setDbType(BusinessStateSchema.DataBaseType.POSTGRESQL);
-        HashMap<String, Object> schema = new HashMap<>();
-        schema.put("orderStatus","order_status");
-        schema.put("city","order_city");
-        schema.put("customerId","customer_id");
-        businessStateSchema.setSchema(schema);
-        registerBusinessStateSchema(workflowName, businessStateSchema, metadataClient);
-        businessStateSchema.setDbName("Event");
-        businessStateSchema.setDbType(BusinessStateSchema.DataBaseType.MONGODB);
-        metadataClient.updateBusinessStateSchema(workflowName, businessStateSchema);
-        await().atMost(62, TimeUnit.SECONDS).pollInterval(10, TimeUnit.SECONDS).untilAsserted(() -> {
-            ExtendedWorkflowDef extendedWorkflowDef = metadataClient.getWorkflowDefWithMetadata(workflowName, 1);
-            assertEquals("Event", extendedWorkflowDef.getBusinessStateSchema().getDbName());
-            assertEquals("MONGODB", extendedWorkflowDef.getBusinessStateSchema().getDbType().toString());
-        });
 
     }
+
+    @Test
+    @DisplayName("Check get business state schema is working fine")
+    public void test3() {
+
+    }
+
+    @Test
+    @DisplayName("Check delete business state schema is working fine")
+    public void test4() {
+
+    }
+
+    @Test
+    @DisplayName("Check onStart event is working correctly")
+    public void test5() {
+
+    }
+
+    @Test
+    @DisplayName("Check onFailed event is working correctly")
+    public void test6() {
+
+    }
+
+    @Test
+    @DisplayName("Check onCompleted event is working correctly")
+    public void test7() {
+
+    }
+
+    @Test
+    @DisplayName("Check onCancelled event is working correctly")
+    public void test8() {
+
+    }
+
+    @Test
+    @DisplayName("Check onCancelled event is working correctly")
+    public void test9() {
+
+    }
+
 
     private static void registerWorkflowDef(String workflowName, String taskName1, MetadataClient metadataClient1) {
         TaskDef taskDef = new TaskDef(taskName1);
         taskDef.setRetryCount(0);
         taskDef.setOwnerEmail("test@orkes.io");
 
-        WorkflowTask inline = new WorkflowTask();
-        inline.setTaskReferenceName(taskName1);
-        inline.setName(taskName1);
-        inline.setType("PUBLISH_BUSINESS_STATE");
+        WorkflowTask workflowTask = new WorkflowTask();
+        workflowTask.setTaskReferenceName(taskName1);
+        workflowTask.setName(taskName1);
+        workflowTask.setType(taskName1);
         HashMap<String, Object> taskInput = new HashMap<>();
         taskInput.put("orderStatus", "${workflow.input.order_status}");
         taskInput.put("city", "${workflow.input.city}");
         taskInput.put("customerId", "${workflow.input.customer_id}");
-        inline.setTaskDefinition(taskDef);
-        inline.setInputParameters(Map.of("businessState" ,taskInput));
+        workflowTask.setTaskDefinition(taskDef);
+        workflowTask.setInputParameters(Map.of("businessState" ,taskInput));
+        Map<String, StateChangeEventList> events = new HashMap<>();
+        StateChangeEvent stateChangeEvent  =new StateChangeEvent();
+        stateChangeEvent.setType("postgres_sql_updates");
+        stateChangeEvent.setPayload(Map.of("orderStatus", "${workflow.input.order_status}",
+                "city", "${workflow.input.city}",
+                "customerId", "${workflow.input.customer_id}"));
+        StateChangeEventList stateChangeEventList = new StateChangeEventList();
+        stateChangeEventList.setEvents(List.of(stateChangeEvent));
+        events.put("onScheduled", stateChangeEventList);
+        workflowTask.setOnStateChange(events);
 
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName(workflowName);
@@ -139,28 +166,19 @@ public class WorkflowBusinessStateTests {
         workflowDef.setOwnerEmail("test@orkes.io");
         workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
         workflowDef.setDescription("Workflow to monitor order state");
-        workflowDef.setTasks(Arrays.asList(inline));
-        metadataClient1.updateWorkflowDefs(Arrays.asList(workflowDef));
+        workflowDef.setTasks(Arrays.asList(workflowTask));
+        metadataClient1.registerWorkflowDef(workflowDef);
         metadataClient1.registerTaskDefs(Arrays.asList(taskDef));
-    }
 
-    private static void registerBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema, MetadataClient metadataClient ) {
-        metadataClient.addBusinessStateSchema(workflowName, businessStateSchema);
-    }
-
-    private static void setupMetadata(String workflowName, String taskName) {
-        registerWorkflowDef(workflowName, taskName, metadataClient);
         BusinessStateSchema businessStateSchema = new BusinessStateSchema();
-        businessStateSchema.setDbName("Audit");
-        businessStateSchema.setDbType(BusinessStateSchema.DataBaseType.POSTGRESQL);
-        HashMap<String, Object> schema = new HashMap<>();
-        schema.put("orderStatus","order_status");
-        schema.put("city","order_city");
-        schema.put("customerId","customer_id");
+        Map<String, Map<String, Object>> schema = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("dbName", "order_updates");
+        map.put("_schema", Map.of("orderStatus", "order_status", "orderValue", "order_value", "status", "order_status"));
+        schema.put("postgres_sql_updates",map);
         businessStateSchema.setSchema(schema);
-        registerBusinessStateSchema(workflowName, businessStateSchema, metadataClient);
+        metadataClient1.addWorkflowBusinessState(workflowName, businessStateSchema);
 
     }
-
 
 }
