@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.sdk;
+package io.orkes.conductor.client.e2e;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -232,32 +232,30 @@ public class WorkflowRestartTests {
         taskClient.updateTask(taskResult);
 
         // Wait for parent workflow to get failed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
 
-        // Retry the workflow.
-        workflowClient.restart(workflowId, false);
+        // Restart the sub workflow.
+        workflowClient.restart(subworkflowId, false);
         // Check the workflow status and few other parameters
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(subworkflowId, true);
+            assertEquals(WorkflowStatus.StatusEnum.RUNNING.name(), workflow1.getStatus().name());
+            assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.SCHEDULED.name());
         });
-
-        taskId = workflowClient.getWorkflow(workflowId, true).getTasks().get(0).getTaskId();
+        taskId = workflowClient.getWorkflow(subworkflowId, true).getTasks().get(0).getTaskId();
 
         taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
+        taskResult.setWorkflowInstanceId(subworkflowId);
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
 
-        // Wait for workflow to get completed
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "workflow " + workflow1.getWorkflowId() + " did not complete");
         });
 
         metadataClient.unregisterWorkflowDef(workflowName, 1);

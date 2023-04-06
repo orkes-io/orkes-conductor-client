@@ -22,21 +22,26 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/** The object over which access is being granted or removed */
+/**
+ * The object over which access is being granted or removed
+ */
 @Schema(description = "The object over which access is being granted or removed")
 public class TargetRef {
-
     @SerializedName("id")
     private String id = null;
 
-    /** Gets or Sets type */
+    /**
+     * Gets or Sets type
+     */
     @JsonAdapter(TypeEnum.Adapter.class)
     public enum TypeEnum {
         WORKFLOW_DEF("WORKFLOW_DEF"),
         TASK_DEF("TASK_DEF"),
         APPLICATION("APPLICATION"),
+        USER("USER"),
+        SECRET("SECRET_NAME"),
         TAG("TAG"),
-        USER("USER");
+        DOMAIN("DOMAIN");
 
         private String value;
 
@@ -64,8 +69,7 @@ public class TargetRef {
 
         public static class Adapter extends TypeAdapter<TypeEnum> {
             @Override
-            public void write(final JsonWriter jsonWriter, final TypeEnum enumeration)
-                    throws IOException {
+            public void write(final JsonWriter jsonWriter, final TypeEnum enumeration) throws IOException {
                 jsonWriter.value(String.valueOf(enumeration.getValue()));
             }
 
@@ -87,9 +91,9 @@ public class TargetRef {
 
     /**
      * Get id
-     *
+     * 
      * @return id
-     */
+     **/
     @Schema(required = true, description = "")
     public String getId() {
         return id;
@@ -106,9 +110,9 @@ public class TargetRef {
 
     /**
      * Get type
-     *
+     * 
      * @return type
-     */
+     **/
     @Schema(required = true, description = "")
     public TypeEnum getType() {
         return type;
@@ -127,7 +131,8 @@ public class TargetRef {
             return false;
         }
         TargetRef targetRef = (TargetRef) o;
-        return Objects.equals(this.id, targetRef.id) && Objects.equals(this.type, targetRef.type);
+        return Objects.equals(this.id, targetRef.id) &&
+                Objects.equals(this.type, targetRef.type);
     }
 
     @Override
@@ -147,8 +152,8 @@ public class TargetRef {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {

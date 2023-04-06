@@ -34,7 +34,11 @@ public class ApiUtil {
         Preconditions.checkNotNull(keyId, ENV_KEY_ID + " env not set");
         String keySecret = getEnv(ENV_SECRET);
         Preconditions.checkNotNull(keyId, ENV_SECRET + " env not set");
-        return new ApiClient(basePath, keyId, keySecret);
+        ApiClient apiClient = new ApiClient(basePath, keyId, keySecret);
+        apiClient.setWriteTimeout(30_000);
+        apiClient.setReadTimeout(30_000);
+        apiClient.setConnectTimeout(30_000);
+        return apiClient;
     }
 
     static String getEnv(String key) {

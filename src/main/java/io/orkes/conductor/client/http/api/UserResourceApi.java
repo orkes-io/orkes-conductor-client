@@ -120,7 +120,6 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteUserValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -237,7 +236,6 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getGrantedPermissionsValidateBeforeCall(
             String userId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -355,7 +353,6 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getUserValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -470,7 +467,6 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call listUsersValidateBeforeCall(
             Boolean apps,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -584,7 +580,6 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call sendInviteEmailValidateBeforeCall(
             String id,
             ConductorUser conductorUser,
@@ -705,7 +700,6 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call upsertUserValidateBeforeCall(
             UpsertUserRequest upsertUserRequest,
             String id,

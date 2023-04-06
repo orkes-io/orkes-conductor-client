@@ -107,6 +107,10 @@ public class ApiClient {
         this.basePath = basePath;
         httpClient = new OkHttpClient();
         httpClient.setRetryOnConnectionFailure(true);
+        httpClient.setConnectTimeout(30, TimeUnit.SECONDS);
+        httpClient.setReadTimeout(30, TimeUnit.SECONDS);
+        httpClient.setWriteTimeout(30, TimeUnit.SECONDS);
+        
         verifyingSsl = true;
         json = new JSON();
         authentications = new HashMap<>();
@@ -664,8 +668,13 @@ public class ApiClient {
 
         String respBody;
         try {
-            if (response.body() != null) respBody = response.body().string();
-            else respBody = null;
+            if (response.body() != null) {
+                ResponseBody body = response.body();
+                respBody = body.string();
+                body.close();
+            } else {
+                respBody = null;
+            }
         } catch (IOException e) {
             throw new ApiException(e);
         }
@@ -849,7 +858,9 @@ public class ApiClient {
             String respBody = null;
             if (response.body() != null) {
                 try {
-                    respBody = response.body().string();
+                    ResponseBody body = response.body();
+                    respBody = body.string();
+                    body.close();
                 } catch (IOException e) {
                     throw new ApiException(
                             response.message(),
@@ -1195,7 +1206,6 @@ public class ApiClient {
                                 return null;
                             }
                         };
-                SSLContext sslContext = SSLContext.getInstance("TLS");
                 trustManagers = new TrustManager[] {trustAll};
                 hostnameVerifier =
                         new HostnameVerifier() {

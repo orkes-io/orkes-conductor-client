@@ -50,7 +50,6 @@ class TaskRunner {
     private final int updateRetryCount;
     private final ThreadPoolExecutor executorService;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
-    private final int threadCount;
     private final int taskPollTimeout;
 
     public static final String DOMAIN = "domain";
@@ -75,7 +74,6 @@ class TaskRunner {
         this.taskClient = taskClient;
         this.updateRetryCount = updateRetryCount;
         this.taskToDomain = taskToDomain;
-        this.threadCount = threadCount;
         this.taskPollTimeout = taskPollTimeout;
         this.permits = new Semaphore(threadCount);
         this.executorService =
@@ -89,7 +87,7 @@ class TaskRunner {
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
         LOGGER.info(
                 "Initialized the TaskPollExecutor for {} with {} threads and threadPrefix {}",
-                threadCount,
+                worker.getTaskDefName(),
                 threadCount,
                 workerNamePrefix);
     }
@@ -170,7 +168,6 @@ class TaskRunner {
             String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null)).orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
             LOGGER.trace("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
             Stopwatch stopwatch = Stopwatch.createStarted();
-            long now = System.currentTimeMillis();
             int tasksToPoll = pollCount;
             tasks = MetricsContainer.getPollTimer(taskType).record(() -> pollTask(domain, tasksToPoll));
             stopwatch.stop();
@@ -317,12 +314,9 @@ class TaskRunner {
             try {
                 return operation.apply(input);
             } catch (Exception e) {
+                LOGGER.error("Error executing {}", opName, e);
                 index++;
-                try {
-                    Thread.sleep(500L);
-                } catch (InterruptedException ie) {
-                    LOGGER.error("Retry interrupted", ie);
-                }
+                Uninterruptibles.sleepUninterruptibly(500L * (count+1), TimeUnit.MILLISECONDS);
             }
         }
         throw new RuntimeException("Exhausted retries performing " + opName);

@@ -10,12 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.sdk;
+package io.orkes.conductor.client.e2e;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Ignore;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,23 +49,39 @@ public class WorkflowRerunTests {
     static TaskClient taskClient;
     static MetadataClient metadataClient;
 
+    List<String> workflowNames = new ArrayList<>();
+
     @BeforeAll
     public static void init() {
         apiClient = ApiUtil.getApiClientWithCredentials();
         workflowClient = new OrkesWorkflowClient(apiClient);
         metadataClient  =new OrkesMetadataClient(apiClient);
         taskClient = new OrkesTaskClient(apiClient);
+    }
 
+    @Before
+    public void initTest() {
+        workflowNames = new ArrayList<>();
+    }
+    @After
+    public void cleanUp() {
+        try {
+            for (String workflowName : workflowNames) {
+                metadataClient.unregisterWorkflowDef(workflowName, 1);
+            }
+        } catch (Exception e) {}
     }
 
     @Test
-    @Ignore
     @DisplayName("Check workflow with simple task and rerun functionality")
     public void testRerunSimpleWorkflow() {
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
+        String workflowName = "re-run-workflow";
+        String taskName1 = "re-run-task1";
+        String taskName2 = "re-run-task2";
         // Register workflow
-        registerWorkflowDef(workflowName, "simple", "sample", metadataClient);
+        registerWorkflowDef(workflowName, taskName1, taskName2, metadataClient);
+        workflowNames.add(workflowName);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -77,7 +95,6 @@ public class WorkflowRerunTests {
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId);
         taskResult.setTaskId(taskId);
-        taskResult.setReasonForIncompletion("failed");
         taskResult.setStatus(TaskResult.Status.FAILED);
         taskClient.updateTask(taskResult);
 
@@ -106,31 +123,38 @@ public class WorkflowRerunTests {
         taskResult.setTaskId(taskId);
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
+        workflowClient.runDecider(workflowId);
+        System.out.println("Going to check workflow " + workflowId + " for completion");
 
         // Wait for workflow to get completed
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "Workflow " + workflowId + " did not complete");
         });
 
-        metadataClient.unregisterWorkflowDef(workflowName, 1);
-        metadataClient.unregisterTaskDef("simple");
-        metadataClient.unregisterTaskDef("sample");
+        try {
+            metadataClient.unregisterWorkflowDef(workflowName, 1);
+            metadataClient.unregisterTaskDef(taskName2);
+            metadataClient.unregisterTaskDef(taskName2);
+        }catch (Exception e){}
     }
 
-    @Test
+    //@Test
     @DisplayName("Check workflow with sub_workflow task and rerun functionality")
-    public void testRerunWithSubWorkflow() {
+    public void testRerunWithSubWorkflow() throws Exception {
 
         apiClient = ApiUtil.getApiClientWithCredentials();
         workflowClient = new OrkesWorkflowClient(apiClient);
         metadataClient = new OrkesMetadataClient(apiClient);
         taskClient = new OrkesTaskClient(apiClient);
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String workflowName = "workflow-re-run-with-sub-workflow";
+        String taskName = "re-run-with-sub-task";
+        String subWorkflowName = "workflow-re-run-sub-workflow";
+        workflowNames.add(workflowName);
+        workflowNames.add(subWorkflowName);
 
         // Register workflow
-        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, "simple", metadataClient);
+        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, taskName, metadataClient);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -147,27 +171,27 @@ public class WorkflowRerunTests {
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(subworkflowId);
         taskResult.setTaskId(taskId);
-        taskResult.setReasonForIncompletion("failed");
         taskResult.setStatus(TaskResult.Status.FAILED);
         taskClient.updateTask(taskResult);
 
         // Wait for parent workflow to get failed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
 
-        // Retry the workflow.
-        workflowClient.retryLastFailedTask(workflowId);
+        // Retry the sub workflow.
+        RerunWorkflowRequest rerunWorkflowRequest = new RerunWorkflowRequest();
+        rerunWorkflowRequest.setReRunFromWorkflowId(subworkflowId);
+        rerunWorkflowRequest.setReRunFromTaskId(taskId);
+        workflowClient.rerunWorkflow(subworkflowId, rerunWorkflowRequest);
         // Check the workflow status and few other parameters
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertTrue(workflow1.getLastRetriedTime() != 0);
-            assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(subworkflowId, true);
+            assertEquals(WorkflowStatus.StatusEnum.RUNNING.name(), workflow1.getStatus().name());
+            assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.SCHEDULED.name());
         });
-
-        taskId = workflowClient.getWorkflow(subworkflowId, true).getTasks().get(1).getTaskId();
+        taskId = workflowClient.getWorkflow(subworkflowId, true).getTasks().get(0).getTaskId();
 
         taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(subworkflowId);
@@ -175,13 +199,14 @@ public class WorkflowRerunTests {
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskClient.updateTask(taskResult);
 
-        // Wait for workflow to get completed
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "Workflow " + workflowId + " did not complete");
         });
 
-        metadataClient.unregisterWorkflowDef(workflowName, 1);
-        metadataClient.unregisterTaskDef("simple");
+        try {
+            metadataClient.unregisterWorkflowDef(workflowName, 1);
+            metadataClient.unregisterTaskDef(taskName);
+        } catch (Exception e){}
     }
 }

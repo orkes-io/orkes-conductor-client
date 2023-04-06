@@ -30,7 +30,7 @@ import io.grpc.ManagedChannel;
 
 import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 
-public class GrpcTaskClient {
+public class GrpcTaskClient implements AutoCloseable {
     private final ManagedChannel channel;
 
     private final TaskServiceGrpc.TaskServiceBlockingStub stub;
@@ -62,5 +62,14 @@ public class GrpcTaskClient {
 
     public void updateTask(TaskResult taskResult) {
         stub.updateTask(TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build());
+    }
+
+    @Override
+    public void close() throws Exception {
+        if(this.channel != null) {
+            try {
+                this.channel.shutdown();
+            }catch (Throwable t) {}
+        }
     }
 }

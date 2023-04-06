@@ -123,7 +123,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call addRoleToApplicationUserValidateBeforeCall(
             String applicationId,
             String role,
@@ -245,7 +244,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call createAccessKeyValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -359,7 +357,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call createApplicationValidateBeforeCall(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -387,10 +384,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public ConductorApplication createApplication(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
-        ApiResponse<ConductorApplication> resp =
-                createApplicationWithHttpInfo(createOrUpdateApplicationRequest);
+    public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
+        ApiResponse<ConductorApplication> resp = createApplicationWithHttpInfo(createOrUpdateApplicationRequest);
         return resp.getData();
     }
 
@@ -402,10 +397,8 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
-        com.squareup.okhttp.Call call =
-                createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, null, null);
+    private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
+        com.squareup.okhttp.Call call = createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, null, null);
         Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -489,7 +482,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteAccessKeyValidateBeforeCall(
             String applicationId,
             String keyId,
@@ -615,7 +607,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call deleteApplicationValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -730,7 +721,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getAccessKeysValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -848,7 +838,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call getApplicationValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -962,7 +951,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call listApplicationsValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1078,7 +1066,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call removeRoleFromApplicationUserValidateBeforeCall(
             String applicationId,
             String role,
@@ -1207,7 +1194,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call toggleAccessKeyStatusValidateBeforeCall(
             String applicationId,
             String keyId,
@@ -1338,7 +1324,6 @@ public class ApplicationResourceApi {
                 progressRequestListener);
     }
 
-    @SuppressWarnings("rawtypes")
     private com.squareup.okhttp.Call updateApplicationValidateBeforeCall(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
             String id,

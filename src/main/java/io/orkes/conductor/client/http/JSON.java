@@ -19,7 +19,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Date;
-import java.util.Map;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.OffsetDateTime;
@@ -42,26 +41,6 @@ public class JSON {
     public static GsonBuilder createGson() {
         GsonFireBuilder fireBuilder = new GsonFireBuilder();
         return fireBuilder.createGsonBuilder();
-    }
-
-    private static String getDiscriminatorValue(
-            JsonElement readElement, String discriminatorField) {
-        JsonElement element = readElement.getAsJsonObject().get(discriminatorField);
-        if (null == element) {
-            throw new IllegalArgumentException(
-                    "missing discriminator field: <" + discriminatorField + ">");
-        }
-        return element.getAsString();
-    }
-
-    private static <T> Class<? extends T> getClassByDiscriminator(
-            Map<String, Class<? extends T>> classByDiscriminatorValue, String discriminatorValue) {
-        Class<? extends T> clazz = classByDiscriminatorValue.get(discriminatorValue.toUpperCase());
-        if (null == clazz) {
-            throw new IllegalArgumentException(
-                    "cannot determine model class of name: <" + discriminatorValue + ">");
-        }
-        return clazz;
     }
 
     public JSON() {

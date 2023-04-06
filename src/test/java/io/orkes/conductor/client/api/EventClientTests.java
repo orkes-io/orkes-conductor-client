@@ -54,7 +54,7 @@ public class EventClientTests extends ClientTest {
         try {
             eventClient.unregisterEventHandler(EVENT_NAME);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }

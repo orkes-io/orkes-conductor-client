@@ -20,7 +20,7 @@ ext {
     versions = [
             awaitility      : '4.2.0',
             commonsLang     : '3.12.0',
-            conductor       : '3.9.0-orkes-g',
+            conductor       : '3.9.0-orkes-o',
             jackson         : '2.11.4!!',
             jersey          : '1.19.4',
             junit           : '5.9.0',
@@ -33,9 +33,9 @@ ext {
             wiremock        : '2.33.2',
             ioGRPC          : '1.49.0',
             ioGRPC          : '1.49.0',
-            protoBuf     : '3.19.4',
+            protoBuf        : '3.19.4',
             lombok          : '1.18.24',
-            revJAXRS : '2.1.1',
+            revJAXRS        : '2.1.1',
             revJerseyCommon : '2.22.2',
             netty           : '4.1.77.Final'
 
@@ -47,6 +47,7 @@ group = 'io.orkes.conductor'
 dependencies {
 
     api ("io.orkes.conductor:conductor-client:${versions.conductor}")
+    api ("io.orkes.conductor:conductor-client-spring:${versions.conductor}")
     api ("io.orkes.conductor:conductor-common:${versions.conductor}")
     api ("io.orkes.conductor:conductor-grpc:${versions.conductor}")
     api ("io.orkes.conductor:conductor-java-sdk:${versions.conductor}")
@@ -85,7 +86,7 @@ dependencies {
         exclude group: "javax.servlet", module: "servlet-api"
     }
 
-    implementation 'com.squareup.okhttp:okhttp:2.7.5'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'com.squareup.okhttp:logging-interceptor:2.7.5'
 
     implementation 'com.google.code.gson:gson:2.9.0'
@@ -185,6 +186,11 @@ publishing {
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport // report is always generated after tests run
+    testLogging {
+        events = ["SKIPPED", "FAILED"]
+        exceptionFormat = "short"
+        showStandardStreams = true
+    }
 }
 
 jacocoTestReport {
@@ -208,7 +214,6 @@ spotless {
         licenseHeaderFile("$rootDir/licenseheader.txt")
     }
 }
-build.dependsOn(spotlessApply)
 
 signing {
     def signingKeyId = findProperty('signingKeyId')
@@ -224,6 +229,9 @@ signing {
             sign publishing.publications
         }
     }
+}
+tasks.withType(Test)  {
+    maxParallelForks = 1
 }
 sourceSets.main.java.srcDirs += ['example/java', 'example/resources']
 

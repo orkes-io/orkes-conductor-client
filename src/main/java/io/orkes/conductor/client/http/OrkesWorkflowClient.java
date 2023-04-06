@@ -36,6 +36,7 @@ import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
 import io.orkes.conductor.client.model.WorkflowStatus;
+import io.orkes.conductor.client.model.WorkflowTestRequest;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 import com.google.common.base.Preconditions;
@@ -148,7 +149,7 @@ public class OrkesWorkflowClient extends WorkflowClient {
     @Override
     public BulkResponse terminateWorkflows(List<String> workflowIds, String reason) {
         Preconditions.checkArgument(!workflowIds.isEmpty(), "workflow id cannot be blank");
-        return bulkResourceApi.terminate(workflowIds, reason);
+        return bulkResourceApi.terminate(workflowIds, reason, false);
     }
 
     @Override
@@ -209,7 +210,12 @@ public class OrkesWorkflowClient extends WorkflowClient {
 
     @Override
     public void terminateWorkflow(String workflowId, String reason) {
-        httpClient.terminateWithAReason(workflowId, reason);
+        httpClient.terminateWithAReason(workflowId, reason, false);
+    }
+
+    @Override
+    public void terminateWorkflowWithFailure(String workflowId, String reason, boolean triggerFailureWorkflow) {
+        httpClient.terminateWithAReason(workflowId, reason, triggerFailureWorkflow);
     }
 
     @Override
@@ -258,7 +264,13 @@ public class OrkesWorkflowClient extends WorkflowClient {
     @Override
     public BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
             throws ApiException {
-        return bulkResourceApi.terminate(workflowIds, reason);
+        return bulkResourceApi.terminate(workflowIds, reason, false);
+    }
+
+    @Override
+    public BulkResponse terminateWorkflowsWithFailure(List<String> workflowIds, String reason, boolean triggerFailureWorkflow)
+            throws ApiException {
+        return bulkResourceApi.terminate(workflowIds, reason, triggerFailureWorkflow);
     }
 
     @Override
@@ -279,6 +291,11 @@ public class OrkesWorkflowClient extends WorkflowClient {
     }
 
     @Override
+    public Workflow testWorkflow(WorkflowTestRequest testRequest) {
+        return httpClient.testWorkflow(testRequest);
+    }
+
+    @Override
     public void shutdown() {
         if(apiClient.isUseGRPC()) {
             grpcWorkflowClient.shutdown();
@@ -286,10 +303,5 @@ public class OrkesWorkflowClient extends WorkflowClient {
         if(executorService != null) {
             executorService.shutdown();;
         }
-    }
-
-    @Override
-    public void uploadCompletedWorkflows() {
-        httpClient.uploadCompletedWorkflows();
     }
 }

@@ -14,29 +14,54 @@ package io.orkes.conductor.client.api;
 
 import java.util.*;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
+
 import io.orkes.conductor.client.AuthorizationClient;
+import io.orkes.conductor.client.MetadataClient;
+import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.model.TargetRef.TypeEnum;
 import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
+import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthorizationClientTests extends ClientTest {
-    private final AuthorizationClient authorizationClient;
+    private static AuthorizationClient authorizationClient;
+    private static String applicationId;
 
-    public AuthorizationClientTests() {
-        this.authorizationClient = super.orkesClients.getAuthorizationClient();
+    private static MetadataClient metadataClient;
+
+    @BeforeAll
+    public static void setup() {
+        OrkesClients orkesClients = ApiUtil.getOrkesClient();
+        authorizationClient = orkesClients.getAuthorizationClient();
+        metadataClient = orkesClients.getMetadataClient();
+        CreateOrUpdateApplicationRequest request = new CreateOrUpdateApplicationRequest();
+        request.setName("test-" + UUID.randomUUID().toString());
+        ConductorApplication app = authorizationClient.createApplication(request);
+        applicationId = app.getId();
+    }
+
+    @AfterAll
+    public static void cleanup() {
+        if(applicationId != null) {
+            authorizationClient.deleteApplication(applicationId);
+        }
     }
 
     @Test
     @DisplayName("auto assign group permission on workflow creation by any group member")
     public void autoAssignWorkflowPermissions() {
-        giveApplicationPermissions(Commons.APPLICATION_ID);
+        giveApplicationPermissions(applicationId);
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "sdk-test-group");
         validateGroupPermissions(group.getId());
     }
@@ -148,6 +173,47 @@ public class AuthorizationClientTests extends ClientTest {
     }
 
     @Test
+    void testGrantPermissionsToDomain() {
+        AuthorizationRequest request = new AuthorizationRequest();
+        request.access(Arrays.asList(AuthorizationRequest.AccessEnum.EXECUTE));
+        SubjectRef subject = new SubjectRef();
+        subject.setId("app:89b6d9b8-c56c-41e7-98de-4049f57943c1");
+        subject.setType(SubjectRef.TypeEnum.USER);
+        request.setSubject(subject);
+        TargetRef target = new TargetRef();
+        target.setId("my-domain");
+        target.setType(TargetRef.TypeEnum.DOMAIN);
+        request.setTarget(target);
+        authorizationClient.grantPermissions(request);
+    }
+
+    @Test
+    @DisplayName("tag a workflows and task")
+    public void tagWorkflowsAndTasks() {
+        registerWorkflow();
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setKey("a");
+        tagObject.setValue("b");
+        metadataClient.addTaskTag(tagObject, Commons.TASK_NAME);
+        metadataClient.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
+    }
+
+
+
+    public void registerWorkflow() {
+        WorkflowDef workflowDef = new WorkflowDef();
+        workflowDef.setName(Commons.WORKFLOW_NAME);
+        workflowDef.setVersion(Commons.WORKFLOW_VERSION);
+        workflowDef.setOwnerEmail(Commons.OWNER_EMAIL);
+        WorkflowTask workflowTask = new WorkflowTask();
+        workflowTask.setName(Commons.TASK_NAME);
+        workflowTask.setTaskReferenceName(Commons.TASK_NAME);
+        workflowDef.setTasks(List.of(workflowTask));
+        metadataClient.updateWorkflowDefs(Arrays.asList(workflowDef));
+    }
+
+    @Test
     void testGrantPermissionsToTag() {
         authorizationClient.grantPermissions(getAuthorizationRequest());
     }
@@ -157,7 +223,7 @@ public class AuthorizationClientTests extends ClientTest {
         try {
             authorizationClient.deleteUser(Commons.USER_EMAIL);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }
@@ -169,7 +235,7 @@ public class AuthorizationClientTests extends ClientTest {
         try {
             authorizationClient.deleteGroup(Commons.GROUP_ID);
         } catch (ApiException e) {
-            if (e.getCode() != 404) {
+            if (e.getStatusCode() != 404) {
                 throw e;
             }
         }
@@ -185,15 +251,14 @@ public class AuthorizationClientTests extends ClientTest {
         }
         assertTrue(found);
         authorizationClient.getPermissions("abc", Commons.GROUP_ID);
-        assertEquals(
-                authorizationClient.getApplication(Commons.APPLICATION_ID).getId(),
-                Commons.APPLICATION_ID);
+        assertEquals(authorizationClient.getApplication(applicationId).getId(), applicationId);
         assertTrue(
                 authorizationClient
                         .getGrantedPermissionsForGroup(Commons.GROUP_ID)
                         .getGrantedAccess()
                         .isEmpty());
-        assertFalse(
+        // The user is added just now so it should not have any access.
+        assertTrue(
                 authorizationClient
                         .getGrantedPermissionsForUser(Commons.USER_EMAIL)
                         .getGrantedAccess()
@@ -232,6 +297,8 @@ public class AuthorizationClientTests extends ClientTest {
         request.setRoles(List.of(UpsertUserRequest.RolesEnum.USER));
         return request;
     }
+
+
 
     List<String> getAccessListAll() {
         return List.of("CREATE", "READ", "UPDATE", "EXECUTE", "DELETE");

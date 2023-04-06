@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.sdk;
+package io.orkes.conductor.client.e2e;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +39,9 @@ import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 
+import com.google.common.util.concurrent.Uninterruptibles;
+
+import static io.orkes.conductor.client.util.ApiUtil.getEnv;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
@@ -103,6 +106,8 @@ public class WorkflowSearchTests {
         String department = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         TagObject tagObject = new TagObject().type(TagObject.TypeEnum.METADATA).key("department").value(department);
         metadataAdminClient.addWorkflowTag(tagObject, workflowName1);
+        tagObject = new TagObject().type(TagObject.TypeEnum.METADATA).key("department2").value(department);
+        metadataAdminClient.addWorkflowTag(tagObject, workflowName1);
 
         AuthorizationClient authorizationClient = new OrkesAuthorizationClient(adminClient);
         ApiClient apiClient2 = ApiUtil.getUser2Client();
@@ -118,8 +123,8 @@ public class WorkflowSearchTests {
 
         // Create group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), "workflow-search-group");
-        authorizationClient.addUserToGroup("workflow-search-group", "conductoruser1@gmail.com");
-        authorizationClient.addUserToGroup("workflow-search-group", "conductoruser2@gmail.com");
+        authorizationClient.addUserToGroup("workflow-search-group", "app:"+ getEnv(ApiUtil.USER1_APP_ID));
+        authorizationClient.addUserToGroup("workflow-search-group", "app:"+ getEnv(ApiUtil.USER2_APP_ID));
 
         // Give permissions to tag in the group
         AuthorizationRequest authorizationRequest = new AuthorizationRequest();
@@ -128,12 +133,41 @@ public class WorkflowSearchTests {
         authorizationRequest.setTarget(new TargetRef().id("department:" + department).type(TargetRef.TypeEnum.TAG));
         authorizationClient.grantPermissions(authorizationRequest);
 
-//        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-//            // Search should give results
-//            SearchResult<WorkflowSummary> finalWorkflowSummarySearchResult = workflowClient2.search("workflowType IN (" + workflowName1 + ")");
-//            // There should be 2 workflow in search.
-//            assertTrue(finalWorkflowSummarySearchResult.getResults().size() == 2);
-//        });
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.MINUTES);
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            // Search should give results
+            SearchResult<WorkflowSummary> finalWorkflowSummarySearchResult = workflowClient2.search("workflowType IN (" + workflowName1 + ")");
+            // There should be 2 workflow in search.
+            assertTrue(finalWorkflowSummarySearchResult.getResults().size() == 2);
+        });
+
+        authorizationRequest = new AuthorizationRequest();
+        authorizationRequest.setSubject(new SubjectRef().id(getEnv(ApiUtil.USER2_APP_ID)).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ));
+        authorizationRequest.setTarget(new TargetRef().id("department:" + department).type(TargetRef.TypeEnum.TAG));
+        authorizationClient.grantPermissions(authorizationRequest);
+        authorizationRequest = new AuthorizationRequest();
+        authorizationRequest.setSubject(new SubjectRef().id(getEnv(ApiUtil.USER2_APP_ID)).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ));
+        authorizationRequest.setTarget(new TargetRef().id("department2:" + department).type(TargetRef.TypeEnum.TAG));
+        authorizationClient.grantPermissions(authorizationRequest);
+        authorizationRequest = new AuthorizationRequest();
+        authorizationRequest.setSubject(new SubjectRef().id("workflow-search-group").type(SubjectRef.TypeEnum.GROUP));
+        authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ));
+        authorizationRequest.setTarget(new TargetRef().id("department2:" + department).type(TargetRef.TypeEnum.TAG));
+        authorizationClient.grantPermissions(authorizationRequest);
+        authorizationRequest.setSubject(new SubjectRef().id("workflow-search-group").type(SubjectRef.TypeEnum.GROUP));
+        authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ));
+        authorizationRequest.setTarget(new TargetRef().id(workflowName1).type(TargetRef.TypeEnum.WORKFLOW_DEF));
+        authorizationClient.grantPermissions(authorizationRequest);
+
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            // Search should give results
+            SearchResult<WorkflowSummary> finalWorkflowSummarySearchResult = workflowClient2.search("workflowType IN (" + workflowName1 + ")");
+            // There should be 2 workflow in search. This will fail without distinct fix
+            assertTrue(finalWorkflowSummarySearchResult.getResults().size() == 2);
+        });
 
         metadataAdminClient.unregisterWorkflowDef(workflowName1, 1);
         metadataAdminClient.unregisterWorkflowDef(workflowName2, 1);

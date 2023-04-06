@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.sdk;
+package io.orkes.conductor.client.e2e;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +26,8 @@ import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.RegistrationUtil;
 
+import static io.orkes.conductor.client.util.ApiUtil.USER1_APP_ID;
+import static io.orkes.conductor.client.util.ApiUtil.getEnv;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 public class WorkerTaskPermissionTests {
@@ -81,7 +83,7 @@ public class WorkerTaskPermissionTests {
         authorizationClient.grantPermissions(authorizationRequest);
 
         //Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id(getEnv(USER1_APP_ID)).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
 
         // user2 should be able to access workflow definition

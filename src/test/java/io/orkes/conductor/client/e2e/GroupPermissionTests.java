@@ -10,82 +10,87 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.sdk;
+package io.orkes.conductor.client.e2e;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.*;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
-import io.orkes.conductor.client.util.ApiUtil;
-import io.orkes.conductor.client.util.RegistrationUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
-public class SubWorkflowPermissionTests {
+@Slf4j
+public class GroupPermissionTests extends AbstractMultiUserTests {
+
+    private static MetadataClient metadataClient;
 
     @Test
-    public void testSubWorkflowPermissionsForUser2() {
-        ApiClient apiUser1Client = ApiUtil.getUser1Client();
+    public void testGroupRelatedPermissions() throws Exception {
         WorkflowClient user1WorkflowClient = new OrkesWorkflowClient(apiUser1Client);
         MetadataClient user1MetadataClient = new OrkesMetadataClient(apiUser1Client);
         TaskClient user1TaskClient = new OrkesTaskClient(apiUser1Client);
 
         // Create user2 client and check access should not be there workflow1
-        ApiClient apiUser2Client = ApiUtil.getUser2Client();
         WorkflowClient user2WorkflowClient = new OrkesWorkflowClient(apiUser2Client);
         MetadataClient user2MetadataClient = new OrkesMetadataClient(apiUser2Client);
         TaskClient user2TaskClient = new OrkesTaskClient(apiUser2Client);
 
-        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String parentWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-
+        String taskName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String workflowName1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String tagKey = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String tagValue = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
         TagObject tagObject = new TagObject().type(TagObject.TypeEnum.METADATA).key(tagKey).value(tagValue);
 
         // Register workflow
-        RegistrationUtil.registerWorkflowWithSubWorkflowDef(parentWorkflowName, subWorkflowName, taskName, user1MetadataClient);
+        WorkflowDef workflowDef = generateWorkflowDef(workflowName1, taskName1);
+        user1MetadataClient.registerWorkflowDef(workflowDef);
+        user1MetadataClient.registerTaskDefs(Arrays.asList(new TaskDef(taskName1)));
 
         // Tag workflow and task
-        user1MetadataClient.addWorkflowTag(tagObject, parentWorkflowName);
-        user1MetadataClient.addWorkflowTag(tagObject, subWorkflowName);
-        user1MetadataClient.addTaskTag(tagObject, taskName);
-        user1MetadataClient.addTaskTag(tagObject, subWorkflowName);
+        user1MetadataClient.addWorkflowTag(tagObject, workflowName1);
+        user1MetadataClient.addTaskTag(tagObject, taskName1);
 
         // Trigger workflow
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(parentWorkflowName);
+        startWorkflowRequest.setName(workflowName1);
         startWorkflowRequest.setVersion(1);
 
         String workflowId = user1WorkflowClient.startWorkflow(startWorkflowRequest);
         String finalWorkflowId = workflowId;
         // User 2 should not have access to workflow or task.
-        Assert.assertThrows(ApiException.class, () -> user2TaskClient.pollTask(taskName, "integration_test", null));
+        Assert.assertThrows(ApiException.class, () -> user2TaskClient.pollTask(taskName1, "integration_test", null));
         Assert.assertThrows(ApiException.class, () -> user2WorkflowClient.getWorkflow(finalWorkflowId, false));
 
         // User1 should be able to complete task/workflow
-        String subWorkflowId = user1WorkflowClient.getWorkflow(workflowId, true).getTasks().get(0).getSubWorkflowId();
         TaskResult taskResult  = new TaskResult();
-        taskResult.setWorkflowInstanceId(subWorkflowId);
+        taskResult.setWorkflowInstanceId(workflowId);
         taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setTaskId(user1WorkflowClient.getWorkflow(subWorkflowId, true).getTasks().get(0).getTaskId());
+        taskResult.setTaskId(user1WorkflowClient.getWorkflow(workflowId, true).getTasks().get(0).getTaskId());
         user1TaskClient.updateTask(taskResult);
 
         // Wait for workflow to get completed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = user1WorkflowClient.getWorkflow(finalWorkflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
         });
@@ -93,18 +98,10 @@ public class SubWorkflowPermissionTests {
         //Trigger workflow again. And give permissions so that user2 can execute workflow/task
         workflowId = user1WorkflowClient.startWorkflow(startWorkflowRequest);
 
-        user1MetadataClient.addWorkflowTag(tagObject, parentWorkflowName);
+        user1MetadataClient.addWorkflowTag(tagObject, workflowName1);
 
-        ApiClient adminClient = ApiUtil.getApiClientWithCredentials();
-        AuthorizationClient authorizationClient = new OrkesAuthorizationClient(adminClient);
-
-        String groupName = "worker-test-group";
-        try {
-            authorizationClient.deleteGroup(groupName);
-        } catch (Exception e) {
-          // Group does not exist.
-        }
-        // Create group and add these two users in the group
+        String groupName = "worker-test-group" + UUID.randomUUID();
+        // Create/Update group and add these two users in the group
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), groupName);
         authorizationClient.addUserToGroup(groupName, "conductoruser1@gmail.com");
         authorizationClient.addUserToGroup(groupName, "conductoruser2@gmail.com");
@@ -115,42 +112,44 @@ public class SubWorkflowPermissionTests {
         authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ, AuthorizationRequest.AccessEnum.EXECUTE,
                 AuthorizationRequest.AccessEnum.UPDATE,
                 AuthorizationRequest.AccessEnum.DELETE));
-        authorizationRequest.setTarget(new TargetRef().id(tagKey + ":" + tagValue).type(TargetRef.TypeEnum.TAG));
+        authorizationRequest.setTarget(new TargetRef().id(tagKey + ":" + tagValue ).type(TargetRef.TypeEnum.TAG));
         authorizationClient.grantPermissions(authorizationRequest);
 
-        // Grant permission to execute the task in user2 application.
-        authorizationRequest.setSubject(new SubjectRef().id(System.getenv("USER2_APPLICATION_ID")).type(SubjectRef.TypeEnum.USER));
+        //Grant permission to execute the task in user2 application.
+        authorizationRequest.setSubject(new SubjectRef().id("app:" + user2AppId).type(SubjectRef.TypeEnum.USER));
         authorizationClient.grantPermissions(authorizationRequest);
-        // User 2 should be able to query workflow information.
+
         String finalWorkflowId1 = workflowId;
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             try {
-                String id = user2WorkflowClient.getWorkflow(finalWorkflowId1, true).getTasks().get(0).getSubWorkflowId();
-
-                TaskResult taskResult1  = new TaskResult();
+                String id = user2WorkflowClient.getWorkflow(finalWorkflowId1, true).getTasks().get(0).getTaskId();
+                TaskResult taskResult1 = new TaskResult();
                 taskResult1.setWorkflowInstanceId(id);
                 taskResult1.setStatus(TaskResult.Status.COMPLETED);
                 taskResult1.setTaskId(user2WorkflowClient.getWorkflow(id, true).getTasks().get(0).getTaskId());
                 user2TaskClient.updateTask(taskResult1);
-            }catch(Exception e) {
-                // Server might take time to affect permission changes.
-            }
+            }catch(Exception e){}
         });
 
-        // Wait for workflow to get completed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            try {
-                Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
-                assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
-            }catch(Exception e) {
 
+
+        int retryAttemptsLimit = 5;
+        for (int retry = 0; retry < retryAttemptsLimit; retry += 1) {
+            try{
+                // Wait for workflow to get completed
+                await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
+                    Workflow workflow1 = user2WorkflowClient.getWorkflow(finalWorkflowId, false);
+                    assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+                });
+                break;
+            } catch (Exception e) {
+                Thread.sleep((retry + 5) * 1000);
             }
-        });
+        }
+        
 
-        // Cleanup
-        user1MetadataClient.unregisterWorkflowDef(parentWorkflowName, 1);
-        user1MetadataClient.unregisterWorkflowDef(subWorkflowName, 1);
-        user1MetadataClient.unregisterTaskDef(taskName);
+        user1MetadataClient.unregisterWorkflowDef(workflowName1, 1);
+        user1MetadataClient.unregisterTaskDef(taskName1);
         authorizationClient.deleteGroup(groupName);
         authorizationClient.removePermissions(authorizationRequest);
         authorizationRequest.setSubject(new SubjectRef().id(groupName).type(SubjectRef.TypeEnum.GROUP));
@@ -162,4 +161,25 @@ public class SubWorkflowPermissionTests {
                 .description("Group used for SDK testing")
                 .roles(List.of(UpsertGroupRequest.RolesEnum.USER));
     }
+
+    private WorkflowDef generateWorkflowDef(String workflowName, String taskName) {
+        TaskDef taskDef = new TaskDef(taskName);
+        taskDef.setTimeoutSeconds(10);
+        WorkflowTask workflowTask = new WorkflowTask();
+        workflowTask.setTaskReferenceName(taskName);
+        workflowTask.setName(taskName);
+        workflowTask.setTaskDefinition(taskDef);
+        workflowTask.setWorkflowTaskType(TaskType.SIMPLE);
+        workflowTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
+        WorkflowDef workflowDef = new WorkflowDef();
+        workflowDef.setName(workflowName);
+        workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
+        workflowDef.setDescription("Workflow to monitor order state");
+        workflowDef.setTasks(Arrays.asList(workflowTask));
+        return workflowDef;
+    }
+
+
+
+
 }

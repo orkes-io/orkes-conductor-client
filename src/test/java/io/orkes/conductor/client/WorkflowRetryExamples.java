@@ -27,8 +27,11 @@ import com.netflix.conductor.common.run.Workflow;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 
+import lombok.extern.slf4j.Slf4j;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 public class WorkflowRetryExamples {
     private final MetadataClient metadataClient;
     private final WorkflowClient workflowClient;
@@ -55,7 +58,7 @@ public class WorkflowRetryExamples {
 
     @Test
     @DisplayName("test retry operation")
-    public void startWorkflow() {
+    public void testRetry() {
         registerTask();
         registerWorkflow();
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
@@ -64,17 +67,25 @@ public class WorkflowRetryExamples {
         startWorkflowRequest.setInput(new HashMap<>());
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+
         String taskId = workflow.getTasks().get(0).getTaskId();
         // Fail the task
         failTask(workflow.getWorkflowId(), taskId);
+        workflow = workflowClient.getWorkflow(workflowId, true);
+
         // Upload all the workflows to s3
         workflowClient.uploadCompletedWorkflows();
+
+        workflowClient.terminateWorkflow(workflowId, "testing out some stuff");
         // Retry the workflow
-        String retriedWorkflowId = workflowClient.retryWorkflow(Arrays.asList(workflowId)).getBulkSuccessfulResults().get(0);
-        assertEquals(workflowId, retriedWorkflowId);
+
+        log.debug("Going to retry " + workflowId);
+        workflowClient.retryLastFailedTask(workflowId);
         taskId = workflowClient.getWorkflow(workflowId, true).getTasks().get(0).getTaskId();
         completeTask(workflow.getWorkflowId(), taskId);
-        assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowClient.getWorkflow(retriedWorkflowId, false).getStatus());
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowClient.getWorkflow(workflowId, false).getStatus());
+        workflowClient.terminateWorkflow(workflowId, "test completed");
+        assertEquals(Workflow.WorkflowStatus.TERMINATED, workflowClient.getWorkflow(workflowId, false).getStatus());
     }
 
     private void completeTask(String workflowId, String taskId) {
@@ -97,6 +108,7 @@ public class WorkflowRetryExamples {
     void registerTask() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName(taskName);
+        taskDef.setOwnerEmail("test@orkes.com");
         List<TaskDef> taskDefs = new ArrayList<>();
         taskDefs.add(taskDef);
         this.metadataClient.registerTaskDefs(taskDefs);
@@ -112,6 +124,8 @@ public class WorkflowRetryExamples {
         workflowDef.setName(workflowName);
         workflowDef.setVersion(1);
         workflowDef.setOwnerEmail(Commons.OWNER_EMAIL);
+        workflowDef.setTimeoutSeconds(600);
+        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName(taskName);
         workflowTask.setTaskReferenceName(taskName);

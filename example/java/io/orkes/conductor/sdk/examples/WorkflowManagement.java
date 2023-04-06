@@ -15,7 +15,6 @@ package io.orkes.conductor.sdk.examples;
 import java.util.Arrays;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.WorkflowClient;
@@ -56,7 +55,7 @@ public class WorkflowManagement {
         // Start the workflow
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
         // Get the workflow execution status
-        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        workflowClient.getWorkflow(workflowId, true);
         // Pause the workflow
         workflowClient.pauseWorkflow(workflowId);
         // Resume the workflow
