@@ -669,8 +669,13 @@ public class ApiClient {
 
         String respBody;
         try {
-            if (response.body() != null) respBody = response.body().string();
-            else respBody = null;
+            if (response.body() != null) {
+                ResponseBody body = response.body();
+                respBody = body.string();
+                body.close();
+            } else {
+                respBody = null;
+            }
         } catch (IOException e) {
             throw new ApiException(e);
         }
@@ -854,7 +859,9 @@ public class ApiClient {
             String respBody = null;
             if (response.body() != null) {
                 try {
-                    respBody = response.body().string();
+                    ResponseBody body = response.body();
+                    respBody = body.string();
+                    body.close();
                 } catch (IOException e) {
                     throw new ApiException(
                             response.message(),
