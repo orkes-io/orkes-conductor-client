@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -84,7 +84,7 @@ public class GraaljsTests {
         });
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         for (String workflowName : workflowNames) {
             try {

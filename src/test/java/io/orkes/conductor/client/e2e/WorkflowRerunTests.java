@@ -16,11 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
@@ -59,11 +55,11 @@ public class WorkflowRerunTests {
         taskClient = new OrkesTaskClient(apiClient);
     }
 
-    @Before
+    @BeforeEach
     public void initTest() {
         workflowNames = new ArrayList<>();
     }
-    @After
+    @AfterEach
     public void cleanUp() {
         try {
             for (String workflowName : workflowNames) {

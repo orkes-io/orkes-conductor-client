@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.client.http.MetadataClient;
@@ -67,7 +67,7 @@ public class WaitTaskTest {
         assertTrue(timeToExecute < 2500, "Wait task did not complete in time, took " + timeToExecute + " millis");
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         if(executor != null) {
             executor.shutdown();

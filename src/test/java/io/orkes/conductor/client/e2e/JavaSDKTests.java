@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.client.http.MetadataClient;
@@ -81,7 +81,7 @@ public class JavaSDKTests {
         assertEquals("Hello, orkes", run.getTasks().get(0).getOutputData().get("greetings"));
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         if(executor != null) {
             executor.shutdown();
