@@ -30,15 +30,14 @@ import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.util.ApiUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.checkerframework.checker.units.qual.A;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.shaded.com.google.common.util.concurrent.Uninterruptibles;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -52,6 +51,21 @@ public class WorkflowBusinessStateTests {
     static TaskClient taskClient;
     static OrkesMetadataClient metadataClient;
 
+    List<String> workflowNames = new ArrayList<>();
+
+    @Before
+    public void initTest() {
+        workflowNames = new ArrayList<>();
+    }
+    @After
+    public void cleanUp() {
+        try {
+            for (String workflowName : workflowNames) {
+                metadataClient.unregisterWorkflowDef(workflowName, 1);
+            }
+        } catch (Exception e) {}
+    }
+
     @BeforeAll
     public static void init() {
         apiClient = ApiUtil.getApiClientWithCredentials();
@@ -63,6 +77,7 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check business state is setting task input correctly along with business state schema")
     public void test1() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onScheduled");
 
@@ -80,6 +95,7 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check update business state schema is working fine")
     public void test2() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onScheduled");
 
@@ -104,6 +120,7 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check delete business state schema is working fine")
     public void test3() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onScheduled");
         metadataClient.deleteWorkflowBusinessStateSchema(workflowName, "postgres_sql_updates");
@@ -119,6 +136,7 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check onStart event is working correctly")
     public void test4() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onStart");
 
@@ -139,6 +157,7 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check onFailed event is working correctly")
     public void test5() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onFailed");
 
@@ -165,6 +184,7 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check onCompleted event is working correctly")
     public void test6() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onSuccess");
 
@@ -189,6 +209,7 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check onCancelled event is working correctly")
     public void test7() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onCancelled");
 
@@ -206,9 +227,11 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check onTimedout event is working correctly")
     public void test9() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onFailed");
-        TaskDef taskDef = metadataClient.getTaskDef(taskName);
+        TaskDef taskDef = new TaskDef();
+        taskDef.setName(taskName);
         taskDef.setResponseTimeoutSeconds(1);
         taskDef.setPollTimeoutSeconds(1);
         taskDef.setTimeoutSeconds(3);
@@ -232,6 +255,7 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check update on event task is working fine.")
     public void test10() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onScheduled");
 
@@ -254,6 +278,7 @@ public class WorkflowBusinessStateTests {
     @DisplayName("Check values are substituted properly")
     public void test11() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        workflowNames.add(workflowName);
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String eventType = "onStart";
         registerWorkflowDef(workflowName, taskName, metadataClient, eventType);
