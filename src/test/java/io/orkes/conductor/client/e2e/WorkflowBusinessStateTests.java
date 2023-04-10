@@ -66,14 +66,7 @@ public class WorkflowBusinessStateTests {
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onScheduled");
 
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName);
-        HashMap<String, Object> workflowInput = new HashMap<>();
-        workflowInput.put("order_status", "PENDING");
-        workflowInput.put("city", "Ahmedabad");
-        workflowInput.put("customer_id", "1234");
-        startWorkflowRequest.setInput(workflowInput);
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId = getWorkflowId(workflowName);
 
         // Assert on the task input.
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
@@ -109,7 +102,7 @@ public class WorkflowBusinessStateTests {
 
     @Test
     @DisplayName("Check delete business state schema is working fine")
-    public void test4() {
+    public void test3() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onScheduled");
@@ -124,19 +117,13 @@ public class WorkflowBusinessStateTests {
 
     @Test
     @DisplayName("Check onStart event is working correctly")
-    public void test5() {
+    public void test4() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onStart");
 
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName);
-        HashMap<String, Object> workflowInput = new HashMap<>();
-        workflowInput.put("order_status", "PENDING");
-        workflowInput.put("city", "Ahmedabad");
-        workflowInput.put("customer_id", "1234");
-        startWorkflowRequest.setInput(workflowInput);
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId = getWorkflowId(workflowName);
+
         Task task = taskClient.pollTask(taskName, "test_worker", null);
         assertNotNull(task);
 
@@ -150,31 +137,20 @@ public class WorkflowBusinessStateTests {
 
     @Test
     @DisplayName("Check onFailed event is working correctly")
-    public void test6() {
+    public void test5() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onFailed");
 
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName);
-        HashMap<String, Object> workflowInput = new HashMap<>();
-        workflowInput.put("order_status", "PENDING");
-        workflowInput.put("city", "Ahmedabad");
-        workflowInput.put("customer_id", "1234");
-        startWorkflowRequest.setInput(workflowInput);
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId = getWorkflowId(workflowName);
 
         // Assert on the task input.
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(1, workflow.getTasks().size());
 
         //Fail the first task
-        Task task = workflow.getTasks().get(0);
-        TaskResult taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(task.getWorkflowInstanceId());
-        taskResult.setStatus(TaskResult.Status.FAILED);
-        taskResult.setTaskId(task.getTaskId());
-        taskClient.updateTask(taskResult);
+        taskClient.updateTask(getTaskResult(workflow.getTasks().get(0), TaskResult.Status.FAILED));
+
 
         Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
 
@@ -187,31 +163,19 @@ public class WorkflowBusinessStateTests {
 
     @Test
     @DisplayName("Check onCompleted event is working correctly")
-    public void test7() {
+    public void test6() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onSuccess");
 
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName);
-        HashMap<String, Object> workflowInput = new HashMap<>();
-        workflowInput.put("order_status", "PENDING");
-        workflowInput.put("city", "Ahmedabad");
-        workflowInput.put("customer_id", "1234");
-        startWorkflowRequest.setInput(workflowInput);
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId = getWorkflowId(workflowName);
 
         // Assert on the task input.
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(1, workflow.getTasks().size());
 
         //Fail the first task
-        Task task = workflow.getTasks().get(0);
-        TaskResult taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(task.getWorkflowInstanceId());
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setTaskId(task.getTaskId());
-        taskClient.updateTask(taskResult);
+        taskClient.updateTask(getTaskResult(workflow.getTasks().get(0), TaskResult.Status.COMPLETED));
 
         Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
 
@@ -223,21 +187,14 @@ public class WorkflowBusinessStateTests {
 
     @Test
     @DisplayName("Check onCancelled event is working correctly")
-    public void test8() {
+    public void test7() {
         String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         registerWorkflowDef(workflowName, taskName, metadataClient, "onCancelled");
 
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName);
-        HashMap<String, Object> workflowInput = new HashMap<>();
-        workflowInput.put("order_status", "PENDING");
-        workflowInput.put("city", "Ahmedabad");
-        workflowInput.put("customer_id", "1234");
-        startWorkflowRequest.setInput(workflowInput);
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
-        workflowClient.terminateWorkflow(workflowId, "Terminated");
+        String workflowId = getWorkflowId(workflowName);
 
+        workflowClient.terminateWorkflow(workflowId, "Terminated");
 
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(2, workflow.getTasks().size());
@@ -260,14 +217,7 @@ public class WorkflowBusinessStateTests {
         workflowDef.getTasks().get(0).setTaskDefinition(taskDef);
         metadataClient.updateWorkflowDefs(List.of(workflowDef));
 
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName);
-        HashMap<String, Object> workflowInput = new HashMap<>();
-        workflowInput.put("order_status", "PENDING");
-        workflowInput.put("city", "Ahmedabad");
-        workflowInput.put("customer_id", "1234");
-        startWorkflowRequest.setInput(workflowInput);
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId = getWorkflowId(workflowName);
         Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
         workflowClient.runDecider(workflowId);
 
@@ -276,6 +226,58 @@ public class WorkflowBusinessStateTests {
 
         assertCommonAttributes(workflow.getTasks().get(1));
 
+    }
+
+    @Test
+    @DisplayName("Check update on event task is working fine.")
+    public void test10() {
+        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        registerWorkflowDef(workflowName, taskName, metadataClient, "onScheduled");
+
+        String workflowId = getWorkflowId(workflowName);
+
+        // Assert on the task input.
+        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(2, workflow.getTasks().size());
+        Task task = workflow.getTasks().stream().filter(task1 -> "postgres_sql_updates".equals(task1.getTaskType())).collect(Collectors.toList()).get(0);
+        assertCommonAttributes(task);
+
+        taskClient.updateTask(getTaskResult(workflow.getTasks().get(0), TaskResult.Status.COMPLETED));
+        taskClient.updateTask(getTaskResult(workflow.getTasks().get(1), TaskResult.Status.COMPLETED));
+
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertTrue(workflow.getTasks().stream().allMatch(task1 -> Task.Status.COMPLETED.equals(task1.getStatus())));
+    }
+
+    @Test
+    @DisplayName("Check values are substituted properly")
+    public void test11() {
+        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String eventType = "onStart";
+        registerWorkflowDef(workflowName, taskName, metadataClient, eventType);
+
+        WorkflowDef workflowDef = metadataClient.getWorkflowDef(workflowName, 1);
+        StateChangeEvent stateChangeEvent = workflowDef.getTasks().get(0).getOnStateChange().get(eventType).get(0);
+        Map<String, Object> newPayload = Map.of("orderStatus", "${workflow.input.order_status}",
+                "task", "${" + taskName + "}",
+                "workflow", "${" + "workflow" + "}");
+        stateChangeEvent.setPayload(newPayload);
+        workflowDef.getTasks().get(0).setOnStateChange(Map.of(eventType, List.of(stateChangeEvent)));
+        metadataClient.updateWorkflowDefs(List.of(workflowDef));
+
+        String workflowId = getWorkflowId(workflowName);
+
+        Task task = taskClient.pollTask(taskName, "test_worker", null);
+        assertNotNull(task);
+
+        // Assert on the task input.
+        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(2, workflow.getTasks().size());
+        task = workflow.getTasks().stream().filter(task1 -> "postgres_sql_updates".equals(task1.getTaskType())).collect(Collectors.toList()).get(0);
+        assertNotNull(task.getInputData().get("task"));
+        assertNotNull(task.getInputData().get("workflow"));
     }
 
     private void assertCommonAttributes(Task task) {
@@ -290,6 +292,17 @@ public class WorkflowBusinessStateTests {
         assertEquals(map.get("dbName"), "order_updates");
         Map<String, String> schema = (Map<String, String>) map.get("_schema");
         assertEquals(schema, Map.of("orderStatus", "order_status", "orderValue", "order_value", "status", "order_status"));
+    }
+
+    private String getWorkflowId(String workflowName) {
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        HashMap<String, Object> workflowInput = new HashMap<>();
+        workflowInput.put("order_status", "PENDING");
+        workflowInput.put("city", "Ahmedabad");
+        workflowInput.put("customer_id", "1234");
+        startWorkflowRequest.setInput(workflowInput);
+        return workflowClient.startWorkflow(startWorkflowRequest);
     }
 
 
@@ -315,6 +328,12 @@ public class WorkflowBusinessStateTests {
                 "customerId", "${workflow.input.customer_id}"));
         workflowTask.setOnStateChange(Map.of(eventType, List.of(stateChangeEvent)));
 
+        registerWorkflowDef(workflowTask, workflowName, metadataClient1);
+        registerBusinessStateSchema(workflowName, metadataClient1);
+
+    }
+
+    private static void registerWorkflowDef(WorkflowTask workflowTask, String workflowName, MetadataClient metadataClient) {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName(workflowName);
         workflowDef.setVersion(1);
@@ -324,9 +343,10 @@ public class WorkflowBusinessStateTests {
         workflowDef.setTasks(Arrays.asList(workflowTask));
         workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         workflowDef.setTimeoutSeconds(100L);
-        metadataClient1.registerWorkflowDef(workflowDef);
-        metadataClient1.registerTaskDefs(Arrays.asList(taskDef));
+        metadataClient.registerWorkflowDef(workflowDef);
+    }
 
+    private static void registerBusinessStateSchema(String workflowName, MetadataClient metadataClient) {
         BusinessStateSchema businessStateSchema = new BusinessStateSchema();
         Map<String, Map<String, Object>> schema = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
@@ -334,8 +354,15 @@ public class WorkflowBusinessStateTests {
         map.put("_schema", Map.of("orderStatus", "order_status", "orderValue", "order_value", "status", "order_status"));
         schema.put("postgres_sql_updates",map);
         businessStateSchema.setSchema(schema);
-        metadataClient1.addWorkflowBusinessState(workflowName, businessStateSchema);
+        metadataClient.addWorkflowBusinessState(workflowName, businessStateSchema);
+    }
 
+    private static TaskResult getTaskResult(Task task, TaskResult.Status status) {
+        TaskResult taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(task.getWorkflowInstanceId());
+        taskResult.setStatus(status);
+        taskResult.setTaskId(task.getTaskId());
+        return taskResult;
     }
 
 }
