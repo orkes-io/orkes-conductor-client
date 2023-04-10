@@ -1387,41 +1387,6 @@ public class MetadataResourceApi {
         com.squareup.okhttp.Call call = addWorkflowBusinessStateValidateBeforeCall(body, name, null, null);
         return apiClient.execute(call);
     }
-
-    /**
-     * Adds the business state schema to the workflow (asynchronously)
-     *
-     * @param body  (required)
-     * @param name  (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     */
-    public com.squareup.okhttp.Call addWorkflowBusinessStateAsync(BusinessStateSchema body, String name, final ApiCallback<Void> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener = new ProgressResponseBody.ProgressListener() {
-                @Override
-                public void update(long bytesRead, long contentLength, boolean done) {
-                    callback.onDownloadProgress(bytesRead, contentLength, done);
-                }
-            };
-
-            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
-                @Override
-                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
-                    callback.onUploadProgress(bytesWritten, contentLength, done);
-                }
-            };
-        }
-
-        com.squareup.okhttp.Call call = addWorkflowBusinessStateValidateBeforeCall(body, name, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
     /**
      * Build call for updateWorkflowBusinessState
      * @param body  (required)
@@ -1518,40 +1483,6 @@ public class MetadataResourceApi {
     }
 
     /**
-     * Update the business state schema associated with the workflow (asynchronously)
-     *
-     * @param body  (required)
-     * @param name  (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     */
-    public com.squareup.okhttp.Call updateWorkflowBusinessStateAsync(BusinessStateSchema body, String name, final ApiCallback<Void> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener = new ProgressResponseBody.ProgressListener() {
-                @Override
-                public void update(long bytesRead, long contentLength, boolean done) {
-                    callback.onDownloadProgress(bytesRead, contentLength, done);
-                }
-            };
-
-            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
-                @Override
-                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
-                    callback.onUploadProgress(bytesWritten, contentLength, done);
-                }
-            };
-        }
-
-        com.squareup.okhttp.Call call = updateWorkflowBusinessStateValidateBeforeCall(body, name, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
-    /**
      * Build call for getWorkflowBusinessState
      * @param name  (required)
      * @param progressListener Progress listener
@@ -1563,7 +1494,7 @@ public class MetadataResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/metadata/workflow/{name}/businessStateSchema"
+        String localVarPath = "/api/metadata/workflow/{name}/businessStateSchema"
                 .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
@@ -1621,11 +1552,11 @@ public class MetadataResourceApi {
      * Get the business state schema associated with the the workflow
      *
      * @param name  (required)
-     * @return BusinessStateSchema
+     * @return Map&lt;String, Map&lt;String, Object&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public BusinessStateSchema getWorkflowBusinessState(String name) throws ApiException {
-        ApiResponse<BusinessStateSchema> resp = getWorkflowBusinessStateWithHttpInfo(name);
+    public Map<String, Map<String, Object>> getWorkflowBusinessState(String name) throws ApiException {
+        ApiResponse<Map<String, Map<String, Object>>> resp = getWorkflowBusinessStateWithHttpInfo(name);
         return resp.getData();
     }
 
@@ -1633,49 +1564,15 @@ public class MetadataResourceApi {
      * Get the business state schema associated with the the workflow
      *
      * @param name  (required)
-     * @return ApiResponse&lt;BusinessStateSchema&gt;
+     * @return ApiResponse&lt;Map&lt;String, Map&lt;String, Object&gt;&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<BusinessStateSchema> getWorkflowBusinessStateWithHttpInfo(String name) throws ApiException {
+    public ApiResponse<Map<String, Map<String, Object>>> getWorkflowBusinessStateWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = getWorkflowBusinessStateValidateBeforeCall(name, null, null);
-        Type localVarReturnType = new TypeToken<BusinessStateSchema>(){}.getType();
+        Type localVarReturnType = new TypeToken<Map<String, Map<String, Object>>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Get the business state schema associated with the the workflow (asynchronously)
-     *
-     * @param name  (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     */
-    public com.squareup.okhttp.Call getWorkflowBusinessStateAsync(String name, final ApiCallback<BusinessStateSchema> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener = new ProgressResponseBody.ProgressListener() {
-                @Override
-                public void update(long bytesRead, long contentLength, boolean done) {
-                    callback.onDownloadProgress(bytesRead, contentLength, done);
-                }
-            };
-
-            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
-                @Override
-                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
-                    callback.onUploadProgress(bytesWritten, contentLength, done);
-                }
-            };
-        }
-
-        com.squareup.okhttp.Call call = getWorkflowBusinessStateValidateBeforeCall(name, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<BusinessStateSchema>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
     /**
      * Build call for deleteWorkflowBusinessStateForType
      * @param body  (required)
@@ -1740,11 +1637,6 @@ public class MetadataResourceApi {
 
         com.squareup.okhttp.Call call = deleteWorkflowBusinessStateForTypeCall(body, name, progressListener, progressRequestListener);
         return call;
-
-
-
-
-
     }
 
     /**
@@ -1770,40 +1662,4 @@ public class MetadataResourceApi {
         com.squareup.okhttp.Call call = deleteWorkflowBusinessStateForTypeValidateBeforeCall(body, name, null, null);
         return apiClient.execute(call);
     }
-
-    /**
-     * Removes the business state schema associated with the workflow (asynchronously)
-     *
-     * @param body  (required)
-     * @param name  (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     */
-    public com.squareup.okhttp.Call deleteWorkflowBusinessStateForTypeAsync(String body, String name, final ApiCallback<Void> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener = new ProgressResponseBody.ProgressListener() {
-                @Override
-                public void update(long bytesRead, long contentLength, boolean done) {
-                    callback.onDownloadProgress(bytesRead, contentLength, done);
-                }
-            };
-
-            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
-                @Override
-                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
-                    callback.onUploadProgress(bytesWritten, contentLength, done);
-                }
-            };
-        }
-
-        com.squareup.okhttp.Call call = deleteWorkflowBusinessStateForTypeValidateBeforeCall(body, name, progressListener, progressRequestListener);
-        apiClient.executeAsync(call, callback);
-        return call;
-    }
-
 }

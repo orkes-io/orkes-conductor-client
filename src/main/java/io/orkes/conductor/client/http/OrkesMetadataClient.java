@@ -13,6 +13,7 @@
 package io.orkes.conductor.client.http;
 
 import java.util.List;
+import java.util.Map;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -22,7 +23,6 @@ import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.api.MetadataResourceApi;
 import io.orkes.conductor.client.http.api.TagsApi;
 import io.orkes.conductor.client.model.BusinessStateSchema;
-import io.orkes.conductor.client.model.ExtendedWorkflowDef;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
@@ -83,7 +83,7 @@ public class OrkesMetadataClient extends MetadataClient  {
         return metadataResourceApi.get(name, version, false);
     }
 
-    public ExtendedWorkflowDef getWorkflowDefWithMetadata(String name, Integer version) {
+    public WorkflowDef getWorkflowDefWithMetadata(String name, Integer version) {
         return metadataResourceApi.get(name, version, true);
     }
 
@@ -168,7 +168,7 @@ public class OrkesMetadataClient extends MetadataClient  {
     }
 
     @Override
-    public BusinessStateSchema getWorkflowBusinessStateSchema(String workflowName) {
+    public Map<String, Map<String, Object>> getWorkflowBusinessStateSchema(String workflowName) {
         return metadataResourceApi.getWorkflowBusinessState(workflowName);
     }
 

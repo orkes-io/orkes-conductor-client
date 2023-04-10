@@ -13,6 +13,7 @@
 package io.orkes.conductor.client;
 
 import java.util.List;
+import java.util.Map;
 
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 
@@ -48,7 +49,7 @@ public abstract class MetadataClient extends com.netflix.conductor.client.http.M
 
     public abstract void updateWorkflowBusinessStateSchema(String workflowName, BusinessStateSchema businessStateSchema);
 
-    public abstract BusinessStateSchema getWorkflowBusinessStateSchema(String workflowName);
+    public abstract Map<String, Map<String, Object>> getWorkflowBusinessStateSchema(String workflowName);
 
     public abstract void deleteWorkflowBusinessStateSchema(String workflowName, String type);
 }
