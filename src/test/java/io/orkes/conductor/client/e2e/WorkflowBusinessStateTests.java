@@ -296,6 +296,7 @@ public class WorkflowBusinessStateTests {
         task = workflow.getTasks().stream().filter(task1 -> "postgres_sql_updates".equals(task1.getTaskType())).collect(Collectors.toList()).get(0);
         assertNotNull(task.getInputData().get("task"));
         assertNotNull(task.getInputData().get("workflow"));
+        workflowClient.terminateWorkflow(workflowId, "Terminated");
     }
 
     private void assertCommonAttributes(Task task) {
