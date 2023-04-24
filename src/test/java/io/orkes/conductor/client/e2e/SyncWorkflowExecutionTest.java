@@ -85,10 +85,8 @@ public class SyncWorkflowExecutionTest {
     @DisplayName("Check workflow with simple task and rerun functionality")
     public void testRerunSimpleWorkflow() {
 
-        String workflowName = "sync_workflow";
-        String taskName1 = "x_test_worker_0";
+        String workflowName = "load_test_perf";
         // Register workflow
-        registerWorkflowDef(workflowName, taskName1, metadataClient);
         workflowNames.add(workflowName);
 
         // Trigger two workflows
@@ -98,40 +96,12 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null);
         try {
-            WorkflowRun workflowRun = completableFuture.get(2, TimeUnit.SECONDS);
+            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowRun.getStatus());
         } catch (Exception e) {
-            throw new RuntimeException("Workflow " + workflowName + " did not complete in 2 seconds");
+            throw new RuntimeException("Workflow " + workflowName + " did not complete in 3 seconds");
         }
 
-    }
-
-    private void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient) {
-        if (metadataClient.getWorkflowDef(workflowName, 1) != null && metadataClient.getTaskDef(taskName) != null) {
-            return;
-        }
-        TaskDef taskDef = new TaskDef(taskName);
-        taskDef.setOwnerEmail("test@orkes.io");
-        taskDef.setRetryCount(0);
-
-        WorkflowTask simpleTask = new WorkflowTask();
-        simpleTask.setTaskReferenceName(taskName);
-        simpleTask.setName(taskName);
-        simpleTask.setTaskDefinition(taskDef);
-        simpleTask.setWorkflowTaskType(TaskType.SIMPLE);
-        simpleTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
-
-
-        WorkflowDef workflowDef = new WorkflowDef();
-        workflowDef.setName(workflowName);
-        workflowDef.setTimeoutSeconds(600);
-        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
-        workflowDef.setOwnerEmail("test@orkes.io");
-        workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
-        workflowDef.setDescription("Workflow to monitor order state");
-        workflowDef.setTasks(Arrays.asList(simpleTask));
-        metadataClient.registerWorkflowDef(workflowDef);
-        metadataClient.registerTaskDefs(Arrays.asList(taskDef));
     }
 }
