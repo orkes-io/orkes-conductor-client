@@ -40,7 +40,7 @@ public class SyncWorkflowExecutionTest {
     }
 
     @Test
-    @DisplayName("Check sync workflow is exe ute within 2 seconds")
+    @DisplayName("Check sync workflow is execute within 2 seconds")
     public void testSyncWorkflowExecution() {
 
         String workflowName = "load_test_perf";
@@ -58,6 +58,137 @@ public class SyncWorkflowExecutionTest {
         } catch (Exception e) {
             throw new RuntimeException("Workflow " + workflowName + " did not complete in 5 seconds");
         }
+    }
 
+    @Test
+    @DisplayName("Check sync workflow end with simple task.")
+    public void testSyncWorkflowExecution2() {
+
+        String workflowName = "sync_workflow_end_with_simple_task";
+
+        // Trigger two workflows
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "simple_task_rka0w_ref");
+        try {
+            WorkflowRun workflowRun = completableFuture.get(2, TimeUnit.SECONDS);
+            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
+        } catch (Exception e) {
+            throw new RuntimeException("Sync workflow api did not returned in 2 second");
+        }
+    }
+
+    @Test
+    @DisplayName("Check sync workflow end with set variable task.")
+    public void testSyncWorkflowExecution3() {
+
+        String workflowName = "sync_workflow_end_with_set_variable_task";
+
+        // Trigger two workflows
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "set_variable_task_1fi09_ref");
+        try {
+            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
+        } catch (Exception e) {
+            throw new RuntimeException("Sync workflow api did not returned in 3 second");
+        }
+    }
+
+    @Test
+    @DisplayName("Check sync workflow end with set variable task.")
+    public void testSyncWorkflowExecution4() {
+
+        String workflowName = "sync_workflow_end_with_jq_task";
+
+        // Trigger two workflows
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "json_transform_task_jjowa_ref");
+        try {
+            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
+        } catch (Exception e) {
+            throw new RuntimeException("Sync workflow api did not returned in 3 second");
+        }
+    }
+
+    @Test
+    @DisplayName("Check sync workflow end with sub workflow task.")
+    public void testSyncWorkflowExecution5() {
+
+        String workflowName = "sync_workflow_end_with_subworkflow_task";
+
+        // Trigger two workflows
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "http_sync");
+        try {
+            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
+        } catch (Exception e) {
+            throw new RuntimeException("Sync workflow api did not returned in 3 second");
+        }
+    }
+
+    @Test
+    @DisplayName("Check sync workflow end with failed case")
+    public void testSyncWorkflowExecution6() {
+
+        String workflowName = "sync_workflow_failed_case";
+
+        // Trigger two workflows
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
+        try {
+            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
+        } catch (Exception e) {
+            throw new RuntimeException("Sync workflow api did not returned in 3 second");
+        }
+    }
+
+    @Test
+    @DisplayName("Check sync workflow end with no poller")
+    public void testSyncWorkflowExecution7() {
+
+        String workflowName = "sync_workflow_no_poller";
+
+        // Trigger two workflows
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
+        try {
+            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
+        } catch (Exception e) {
+            throw new RuntimeException("Sync workflow api did not returned in 3 second");
+        }
     }
 }
