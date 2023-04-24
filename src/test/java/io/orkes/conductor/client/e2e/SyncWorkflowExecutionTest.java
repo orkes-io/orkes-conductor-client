@@ -15,22 +15,14 @@ package io.orkes.conductor.client.e2e;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
 import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.MetadataClient;
-import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
-import io.orkes.conductor.client.http.OrkesMetadataClient;
-import io.orkes.conductor.client.http.OrkesTaskClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.common.model.WorkflowRun;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -40,39 +32,18 @@ public class SyncWorkflowExecutionTest {
 
     static ApiClient apiClient;
     static WorkflowClient workflowClient;
-    static TaskClient taskClient;
-    static MetadataClient metadataClient;
-
-    List<String> workflowNames = new ArrayList<>();
 
     @BeforeAll
     public static void init() {
         apiClient = ApiUtil.getApiClientWithCredentials();
         workflowClient = new OrkesWorkflowClient(apiClient);
-        metadataClient  =new OrkesMetadataClient(apiClient);
-        taskClient = new OrkesTaskClient(apiClient);
-    }
-
-    @Before
-    public void initTest() {
-        workflowNames = new ArrayList<>();
-    }
-    @After
-    public void cleanUp() {
-        try {
-            for (String workflowName : workflowNames) {
-                metadataClient.unregisterWorkflowDef(workflowName, 1);
-            }
-        } catch (Exception e) {}
     }
 
     @Test
-    @DisplayName("Check workflow with simple task and rerun functionality")
-    public void testRerunSimpleWorkflow() {
+    @DisplayName("Check sync workflow is exe ute within 2 seconds")
+    public void testSyncWorkflowExecution() {
 
         String workflowName = "load_test_perf";
-        // Register workflow
-        workflowNames.add(workflowName);
 
         // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
