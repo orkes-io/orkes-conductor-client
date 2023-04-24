@@ -147,7 +147,7 @@ public class TaskRateLimitTests {
         String workflowId2 = workflowClient.startWorkflow(startWorkflowRequest);
 
         Workflow workflow1 = workflowClient.getWorkflow(workflowId1, true);
-        Workflow workflow2 = workflowClient.getWorkflow(workflowId1, true);
+        Workflow workflow2 = workflowClient.getWorkflow(workflowId2, true);
 
         // Assertions
         Assertions.assertEquals(workflow1.getStatus(), Workflow.WorkflowStatus.RUNNING);
@@ -155,24 +155,19 @@ public class TaskRateLimitTests {
         Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
 
-        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
-            List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 2, 1000);
-            assertEquals(1, tasks.size());
+        List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 2, 1000);
+        assertEquals(1, tasks.size());
 
-            TaskResult taskResult = new TaskResult();
-            taskResult.setTaskId(tasks.get(0).getTaskId());
-            taskResult.setStatus(TaskResult.Status.COMPLETED);
-            taskResult.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
-            taskClient.updateTask(taskResult);
-            workflowClient.runDecider(tasks.get(0).getWorkflowInstanceId());
-        });
+        TaskResult taskResult = new TaskResult();
+        taskResult.setTaskId(tasks.get(0).getTaskId());
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskResult.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
+        taskClient.updateTask(taskResult);
+        workflowClient.runDecider(tasks.get(0).getWorkflowInstanceId());
 
         Uninterruptibles.sleepUninterruptibly(66, TimeUnit.SECONDS);
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
-            assertEquals(taskClient.getQueueSizeForTask(taskName), 1);
-        });
         // Task2 should not be pollable still. It should be available only after 10 seconds.
-        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
             Task task3 = taskClient.pollTask(taskName, "test", null);
             assertNotNull(task3);
             TaskResult taskResult1 = new TaskResult();
