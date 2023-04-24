@@ -56,7 +56,7 @@ public class SyncWorkflowExecutionTest {
             WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end-start;
-            assertTrue(timeTaken < 3000000, "Time taken was " + timeTaken);
+            assertTrue(timeTaken < 3000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowRun.getStatus());
         } catch (Exception e) {
