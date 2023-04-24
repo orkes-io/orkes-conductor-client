@@ -66,7 +66,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = body;
 
         // create path and map variables
-        String localVarPath = "/api/workflow/execute/{name}/{version}"
+        String localVarPath = "/workflow/execute/{name}/{version}"
                 .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()))
                 .replaceAll("\\{" + "version" + "\\}", apiClient.escapeString(version.toString()));
 
