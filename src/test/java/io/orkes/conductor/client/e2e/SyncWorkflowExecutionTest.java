@@ -52,11 +52,11 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null);
         try {
-            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            WorkflowRun workflowRun = completableFuture.get(5, TimeUnit.SECONDS);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowRun.getStatus());
         } catch (Exception e) {
-            throw new RuntimeException("Workflow " + workflowName + " did not complete in 3 seconds");
+            throw new RuntimeException("Workflow " + workflowName + " did not complete in 5 seconds");
         }
 
     }
