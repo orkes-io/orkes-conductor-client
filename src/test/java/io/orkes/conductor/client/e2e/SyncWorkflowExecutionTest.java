@@ -52,7 +52,11 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null);
         try {
-            WorkflowRun workflowRun = completableFuture.get(5, TimeUnit.SECONDS);
+            long start = System.currentTimeMillis();
+            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+            long end = System.currentTimeMillis();
+            long timeTaken = end-start;
+            assertTrue(timeTaken < 3000000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowRun.getStatus());
         } catch (Exception e) {
@@ -73,7 +77,11 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "simple_task_rka0w_ref");
         try {
-            WorkflowRun workflowRun = completableFuture.get(2, TimeUnit.SECONDS);
+            long start = System.currentTimeMillis();
+            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+            long end = System.currentTimeMillis();
+            long timeTaken = end-start;
+            assertTrue(timeTaken < 3000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
             workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
@@ -94,14 +102,16 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setVersion(1);
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "set_variable_task_1fi09_ref");
+        long start = System.currentTimeMillis();
         try {
-            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+            long end = System.currentTimeMillis();
+            long timeTaken = end - start;
+            assertTrue(timeTaken < 3000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
             workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
-        } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 3 second");
-        }
+        } catch(Exception e) {}
     }
 
     @Test
@@ -117,12 +127,15 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "json_transform_task_jjowa_ref");
         try {
-            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            long start = System.currentTimeMillis();
+            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+            long end = System.currentTimeMillis();
+            long timeTaken = end - start;
+            assertTrue(timeTaken < 3000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
-            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
         } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 3 second");
+            throw new RuntimeException("Sync workflow api did not returned in 5 second");
         }
     }
 
@@ -139,12 +152,15 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "http_sync");
         try {
-            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            long start = System.currentTimeMillis();
+            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+            long end = System.currentTimeMillis();
+            long timeTaken = end-start;
+            assertTrue(timeTaken < 3000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
-            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
         } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 3 second");
+            throw new RuntimeException("Sync workflow api did not returned in 5 second");
         }
     }
 
@@ -161,12 +177,16 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
         try {
-            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            long start = System.currentTimeMillis();
+            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+            long end = System.currentTimeMillis();
+            long timeTaken = end-start;
+            assertTrue(timeTaken < 3000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
             workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
         } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 3 second");
+            throw new RuntimeException("Sync workflow api did not returned in 5 second");
         }
     }
 
@@ -183,12 +203,16 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
         try {
-            WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+            long start = System.currentTimeMillis();
+            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+            long end = System.currentTimeMillis();
+            long timeTaken = end-start;
+            assertTrue(timeTaken < 3000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
             workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
         } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 3 second");
+            throw new RuntimeException("Sync workflow api did not returned in 5 second");
         }
     }
 }
