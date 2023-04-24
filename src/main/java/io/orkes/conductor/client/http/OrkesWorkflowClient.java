@@ -116,10 +116,10 @@ public class OrkesWorkflowClient extends WorkflowClient {
                         WorkflowRun response =
                                 httpClient.executeWorkflow(
                                         startWorkflowRequest,
-                                        requestId,
                                         startWorkflowRequest.getName(),
                                         startWorkflowRequest.getVersion(),
-                                        waitUntilTask);
+                                        waitUntilTask,
+                                        requestId);
                         future.complete(response);
                     } catch (Throwable t) {
                         future.completeExceptionally(t);
