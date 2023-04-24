@@ -56,6 +56,7 @@ public class SyncWorkflowExecutionTest {
             WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end-start;
+            System.out.println("Time taken is " + timeTaken);
             assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowRun.getStatus());
@@ -81,6 +82,8 @@ public class SyncWorkflowExecutionTest {
             WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end-start;
+            System.out.println("Time taken is " + timeTaken);            System.out.println("Time taken is " + timeTaken);
+
             assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
@@ -107,6 +110,7 @@ public class SyncWorkflowExecutionTest {
             WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end - start;
+            System.out.println("Time taken is " + timeTaken);
             assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
@@ -131,6 +135,7 @@ public class SyncWorkflowExecutionTest {
             WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end - start;
+            System.out.println("Time taken is " + timeTaken);
             assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
@@ -156,6 +161,7 @@ public class SyncWorkflowExecutionTest {
             WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end-start;
+            System.out.println("Time taken is " + timeTaken);
             assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
@@ -181,6 +187,7 @@ public class SyncWorkflowExecutionTest {
             WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end-start;
+            System.out.println("Time taken is " + timeTaken);
             assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
@@ -207,6 +214,7 @@ public class SyncWorkflowExecutionTest {
             WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end-start;
+            System.out.println("Time taken is " + timeTaken);
             assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
             System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
