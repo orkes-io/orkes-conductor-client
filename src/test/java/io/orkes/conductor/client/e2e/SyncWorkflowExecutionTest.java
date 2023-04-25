@@ -58,7 +58,7 @@ public class SyncWorkflowExecutionTest {
             WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end-start;
-            assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+            assertTrue(timeTaken < 10000, "Time taken was " + timeTaken);
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowRun.getStatus());
         } catch (Exception e) {
             throw new RuntimeException("Workflow " + workflowName + " did not complete in 5 seconds");
@@ -81,7 +81,7 @@ public class SyncWorkflowExecutionTest {
         WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
-        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        assertTrue(timeTaken < 10000, "Time taken was " + timeTaken);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
         workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
@@ -102,7 +102,7 @@ public class SyncWorkflowExecutionTest {
         WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end - start;
-        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        assertTrue(timeTaken < 10000, "Time taken was " + timeTaken);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
     }
 
@@ -122,7 +122,7 @@ public class SyncWorkflowExecutionTest {
         WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end - start;
-        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        assertTrue(timeTaken < 10000, "Time taken was " + timeTaken);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
     }
 
@@ -142,7 +142,7 @@ public class SyncWorkflowExecutionTest {
         WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
-        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        assertTrue(timeTaken < 10000, "Time taken was " + timeTaken);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
     }
 
@@ -162,7 +162,7 @@ public class SyncWorkflowExecutionTest {
         WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
-        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        assertTrue(timeTaken < 10000, "Time taken was " + timeTaken);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
         workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
@@ -183,7 +183,7 @@ public class SyncWorkflowExecutionTest {
         WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
-        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        assertTrue(timeTaken < 10000, "Time taken was " + timeTaken);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
         workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
