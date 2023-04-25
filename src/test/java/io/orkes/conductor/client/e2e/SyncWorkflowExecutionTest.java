@@ -88,7 +88,7 @@ public class SyncWorkflowExecutionTest {
 
     @Test
     @DisplayName("Check sync workflow end with set variable task.")
-    public void testSyncWorkflowExecution3() {
+    public void testSyncWorkflowExecution3() throws ExecutionException, InterruptedException, TimeoutException {
 
         String workflowName = "sync_workflow_end_with_set_variable_task";
 
@@ -108,7 +108,7 @@ public class SyncWorkflowExecutionTest {
 
     @Test
     @DisplayName("Check sync workflow end with set variable task.")
-    public void testSyncWorkflowExecution4() {
+    public void testSyncWorkflowExecution4() throws ExecutionException, InterruptedException, TimeoutException {
 
         String workflowName = "sync_workflow_end_with_jq_task";
 
@@ -128,7 +128,7 @@ public class SyncWorkflowExecutionTest {
 
     @Test
     @DisplayName("Check sync workflow end with sub workflow task.")
-    public void testSyncWorkflowExecution5() {
+    public void testSyncWorkflowExecution5() throws ExecutionException, InterruptedException, TimeoutException {
 
         String workflowName = "sync_workflow_end_with_subworkflow_task";
 
@@ -148,7 +148,7 @@ public class SyncWorkflowExecutionTest {
 
     @Test
     @DisplayName("Check sync workflow end with failed case")
-    public void testSyncWorkflowExecution6() {
+    public void testSyncWorkflowExecution6() throws ExecutionException, InterruptedException, TimeoutException {
 
         String workflowName = "sync_workflow_failed_case";
 
@@ -169,7 +169,7 @@ public class SyncWorkflowExecutionTest {
 
     @Test
     @DisplayName("Check sync workflow end with no poller")
-    public void testSyncWorkflowExecution7() {
+    public void testSyncWorkflowExecution7() throws ExecutionException, InterruptedException, TimeoutException {
 
         String workflowName = "sync_workflow_no_poller";
 
