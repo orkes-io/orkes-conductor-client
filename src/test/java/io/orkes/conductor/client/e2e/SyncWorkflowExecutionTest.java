@@ -55,7 +55,7 @@ public class SyncWorkflowExecutionTest {
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null);
         try {
             long start = System.currentTimeMillis();
-            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+            WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
             long end = System.currentTimeMillis();
             long timeTaken = end-start;
             assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
@@ -78,7 +78,7 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "simple_task_rka0w_ref");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
         assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
@@ -99,7 +99,7 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "set_variable_task_1fi09_ref");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end - start;
         assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
@@ -119,7 +119,7 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "json_transform_task_jjowa_ref");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end - start;
         assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
@@ -139,7 +139,7 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "http_sync");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
         assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
@@ -159,7 +159,7 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
         assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
@@ -180,7 +180,7 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
         assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
