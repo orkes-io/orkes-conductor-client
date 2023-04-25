@@ -19,6 +19,7 @@ import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.common.model.WorkflowRun;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,6 +66,7 @@ public class SyncWorkflowExecutionTest {
         }
     }
 
+    @SneakyThrows
     @Test
     @DisplayName("Check sync workflow end with simple task.")
     public void testSyncWorkflowExecution2() {
@@ -77,22 +79,19 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setVersion(1);
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "simple_task_rka0w_ref");
-        try {
-            long start = System.currentTimeMillis();
-            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
-            long end = System.currentTimeMillis();
-            long timeTaken = end-start;
-            System.out.println("Time taken is " + timeTaken);            System.out.println("Time taken is " + timeTaken);
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        long timeTaken = end-start;
+        System.out.println("Time taken is " + timeTaken);            System.out.println("Time taken is " + timeTaken);
 
-            assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
-            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
-            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
-            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
-        } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 2 second");
-        }
+        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+        workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
 
+    @SneakyThrows
     @Test
     @DisplayName("Check sync workflow end with set variable task.")
     public void testSyncWorkflowExecution3() {
@@ -106,18 +105,16 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "set_variable_task_1fi09_ref");
         long start = System.currentTimeMillis();
-        try {
-            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
-            long end = System.currentTimeMillis();
-            long timeTaken = end - start;
-            System.out.println("Time taken is " + timeTaken);
-            assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
-            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
-            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
-            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
-        } catch(Exception e) {}
+        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        long timeTaken = end - start;
+        System.out.println("Time taken is " + timeTaken);
+        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
     }
 
+    @SneakyThrows
     @Test
     @DisplayName("Check sync workflow end with set variable task.")
     public void testSyncWorkflowExecution4() {
@@ -130,20 +127,17 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setVersion(1);
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "json_transform_task_jjowa_ref");
-        try {
-            long start = System.currentTimeMillis();
-            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
-            long end = System.currentTimeMillis();
-            long timeTaken = end - start;
-            System.out.println("Time taken is " + timeTaken);
-            assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
-            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
-            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
-        } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 5 second");
-        }
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        long timeTaken = end - start;
+        System.out.println("Time taken is " + timeTaken);
+        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
     }
 
+    @SneakyThrows
     @Test
     @DisplayName("Check sync workflow end with sub workflow task.")
     public void testSyncWorkflowExecution5() {
@@ -156,20 +150,17 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setVersion(1);
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "http_sync");
-        try {
-            long start = System.currentTimeMillis();
-            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
-            long end = System.currentTimeMillis();
-            long timeTaken = end-start;
-            System.out.println("Time taken is " + timeTaken);
-            assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
-            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
-            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
-        } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 5 second");
-        }
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        long timeTaken = end-start;
+        System.out.println("Time taken is " + timeTaken);
+        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
     }
 
+    @SneakyThrows
     @Test
     @DisplayName("Check sync workflow end with failed case")
     public void testSyncWorkflowExecution6() {
@@ -182,21 +173,18 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setVersion(1);
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
-        try {
-            long start = System.currentTimeMillis();
-            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
-            long end = System.currentTimeMillis();
-            long timeTaken = end-start;
-            System.out.println("Time taken is " + timeTaken);
-            assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
-            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
-            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
-            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
-        } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 5 second");
-        }
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        long timeTaken = end-start;
+        System.out.println("Time taken is " + timeTaken);
+        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+        workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
 
+    @SneakyThrows
     @Test
     @DisplayName("Check sync workflow end with no poller")
     public void testSyncWorkflowExecution7() {
@@ -209,18 +197,14 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setVersion(1);
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
-        try {
-            long start = System.currentTimeMillis();
-            WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
-            long end = System.currentTimeMillis();
-            long timeTaken = end-start;
-            System.out.println("Time taken is " + timeTaken);
-            assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
-            System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
-            assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
-            workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
-        } catch (Exception e) {
-            throw new RuntimeException("Sync workflow api did not returned in 5 second");
-        }
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(30, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        long timeTaken = end-start;
+        System.out.println("Time taken is " + timeTaken);
+        assertTrue(timeTaken < 4000, "Time taken was " + timeTaken);
+        System.out.println("WorkflowId is " + workflowRun.getWorkflowId());
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+        workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
 }
