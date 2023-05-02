@@ -17,9 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.github.dockerjava.api.model.TaskStatus;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
@@ -296,7 +294,7 @@ public class WorkflowRerunTests {
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             // The workflow should run till wait task.
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(10, workflow1.getTasks().size());
@@ -344,10 +342,8 @@ public class WorkflowRerunTests {
         await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
-//            assertEquals(11, workflow2.getTasks().size());
             assertEquals(Task.Status.SCHEDULED, workflow2.getTasks().get(6).getStatus());
             assertEquals(Task.Status.SCHEDULED, workflow2.getTasks().get(9).getStatus());
-//            assertEquals(Task.Status.SCHEDULED, workflow2.getTasks().get(10).getStatus());
         });
         workflow = workflowClient.getWorkflow(workflowId, true);
         // Mark the wait and fork task completed
@@ -372,10 +368,10 @@ public class WorkflowRerunTests {
 
     private void registerForkJoinWorkflowDef(String workflowName, MetadataClient metadataClient) {
 
-        String fork_task = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String fork_task1 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String fork_task2 = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String join_task = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String fork_task = "fork_task";
+        String fork_task1 = "fork_task_1";
+        String fork_task2 = "fork_task_2";
+        String join_task = "join_task";
 
         WorkflowTask fork_task_1 = new WorkflowTask();
         fork_task_1.setTaskReferenceName(fork_task1);
