@@ -143,12 +143,12 @@ public class WorkflowSearchTests {
         });
 
         authorizationRequest = new AuthorizationRequest();
-        authorizationRequest.setSubject(new SubjectRef().id(getEnv(ApiUtil.USER2_APP_ID)).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id("app:"+ getEnv(ApiUtil.USER2_APP_ID)).type(SubjectRef.TypeEnum.USER));
         authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ));
         authorizationRequest.setTarget(new TargetRef().id("department:" + department).type(TargetRef.TypeEnum.TAG));
         authorizationClient.grantPermissions(authorizationRequest);
         authorizationRequest = new AuthorizationRequest();
-        authorizationRequest.setSubject(new SubjectRef().id(getEnv(ApiUtil.USER2_APP_ID)).type(SubjectRef.TypeEnum.USER));
+        authorizationRequest.setSubject(new SubjectRef().id("app:"+ getEnv(ApiUtil.USER2_APP_ID)).type(SubjectRef.TypeEnum.USER));
         authorizationRequest.setAccess(List.of(AuthorizationRequest.AccessEnum.READ));
         authorizationRequest.setTarget(new TargetRef().id("department2:" + department).type(TargetRef.TypeEnum.TAG));
         authorizationClient.grantPermissions(authorizationRequest);
