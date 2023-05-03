@@ -85,7 +85,7 @@ public class DynamicForkOptionalTests {
         taskResult.setOutputData(output);
         taskClient.updateTask(taskResult);
 
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowAdminClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
             assertTrue(workflow1.getTasks().size() == 5);

@@ -15,6 +15,7 @@ package io.orkes.conductor.client.e2e;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +42,7 @@ import io.orkes.conductor.client.util.ApiUtil;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
+@Slf4j
 public class DoWhileWithDomainTests {
 
     @Test
@@ -61,6 +63,8 @@ public class DoWhileWithDomainTests {
         startWorkflowRequest.setVersion(1);
 
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        log.info("workflowId: {}", workflowId);
+        System.out.println("workflowId : " + workflowId);
 
         // User1 should be able to complete task/workflow
         String taskId = workflowClient.getWorkflow(workflowId, true).getTasks().get(0).getTaskId();

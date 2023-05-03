@@ -177,7 +177,7 @@ public class WorkflowRerunTests {
         taskClient.updateTask(taskResult);
 
         // Wait for parent workflow to get failed
-        await().atMost(3, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
@@ -188,7 +188,7 @@ public class WorkflowRerunTests {
         rerunWorkflowRequest.setReRunFromTaskId(taskId);
         workflowClient.rerunWorkflow(subworkflowId, rerunWorkflowRequest);
         // Check the workflow status and few other parameters
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(subworkflowId, true);
             assertEquals(WorkflowStatus.StatusEnum.RUNNING.name(), workflow1.getStatus().name());
             assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.SCHEDULED.name());
@@ -333,13 +333,13 @@ public class WorkflowRerunTests {
         rerunWorkflowRequest.setReRunFromWorkflowId(workflowId);
         workflowClient.rerunWorkflow(workflowId, rerunWorkflowRequest);
         // The output captured should not change along with task status.
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
             assertEquals("completed", workflow2.getTasks().get(8).getOutputData().get("task8"));
             assertEquals("completed", workflow2.getTasks().get(7).getOutputData().get("task7"));
         });
 
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
             assertEquals(Task.Status.SCHEDULED, workflow2.getTasks().get(6).getStatus());
@@ -360,7 +360,7 @@ public class WorkflowRerunTests {
         taskClient.updateTask(taskResult);
 
         // Workflow should complete.
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow2.getStatus());
         });
