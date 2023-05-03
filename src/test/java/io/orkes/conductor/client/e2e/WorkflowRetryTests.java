@@ -66,7 +66,6 @@ public class WorkflowRetryTests {
         // Register workflow
         registerWorkflowDef(workflowName, taskDefName, taskDefName, metadataClient);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
@@ -135,7 +134,6 @@ public class WorkflowRetryTests {
         // Register workflow
         registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, taskName, metadataClient);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);

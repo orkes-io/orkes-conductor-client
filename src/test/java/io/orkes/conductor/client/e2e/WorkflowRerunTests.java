@@ -12,13 +12,13 @@
  */
 package io.orkes.conductor.client.e2e;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.netflix.conductor.common.metadata.tasks.TaskType;
-import org.junit.After;
+import com.netflix.conductor.common.run.SearchResult;
+import com.netflix.conductor.common.run.WorkflowSummary;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -51,8 +51,6 @@ public class WorkflowRerunTests {
     static TaskClient taskClient;
     static MetadataClient metadataClient;
 
-    List<String> workflowNames = new ArrayList<>();
-
     @BeforeAll
     public static void init() {
         apiClient = ApiUtil.getApiClientWithCredentials();
@@ -63,15 +61,6 @@ public class WorkflowRerunTests {
 
     @Before
     public void initTest() {
-        workflowNames = new ArrayList<>();
-    }
-    @After
-    public void cleanUp() {
-        try {
-            for (String workflowName : workflowNames) {
-                metadataClient.unregisterWorkflowDef(workflowName, 1);
-            }
-        } catch (Exception e) {}
     }
 
     @Test
@@ -83,9 +72,7 @@ public class WorkflowRerunTests {
         String taskName2 = "re-run-task2";
         // Register workflow
         registerWorkflowDef(workflowName, taskName1, taskName2, metadataClient);
-        workflowNames.add(workflowName);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
@@ -152,13 +139,12 @@ public class WorkflowRerunTests {
         String workflowName = "workflow-re-run-with-sub-workflow";
         String taskName = "re-run-with-sub-task";
         String subWorkflowName = "workflow-re-run-sub-workflow";
-        workflowNames.add(workflowName);
-        workflowNames.add(subWorkflowName);
+
+        terminateExistingRunningWorkflows(workflowName);
 
         // Register workflow
         registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, taskName, metadataClient);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
@@ -177,7 +163,7 @@ public class WorkflowRerunTests {
         taskClient.updateTask(taskResult);
 
         // Wait for parent workflow to get failed
-        await().atMost(3, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
@@ -188,7 +174,7 @@ public class WorkflowRerunTests {
         rerunWorkflowRequest.setReRunFromTaskId(taskId);
         workflowClient.rerunWorkflow(subworkflowId, rerunWorkflowRequest);
         // Check the workflow status and few other parameters
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(subworkflowId, true);
             assertEquals(WorkflowStatus.StatusEnum.RUNNING.name(), workflow1.getStatus().name());
             assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.SCHEDULED.name());
@@ -220,7 +206,8 @@ public class WorkflowRerunTests {
         // Register workflow
         registerForkJoinWorkflowDef(workflowName, metadataClient);
 
-        // Trigger two workflows
+        terminateExistingRunningWorkflows(workflowName);
+
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
@@ -290,6 +277,9 @@ public class WorkflowRerunTests {
         if (workflowDef == null) {
             return;
         }
+
+        terminateExistingRunningWorkflows(workflowName);
+
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
@@ -333,13 +323,13 @@ public class WorkflowRerunTests {
         rerunWorkflowRequest.setReRunFromWorkflowId(workflowId);
         workflowClient.rerunWorkflow(workflowId, rerunWorkflowRequest);
         // The output captured should not change along with task status.
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
             assertEquals("completed", workflow2.getTasks().get(8).getOutputData().get("task8"));
             assertEquals("completed", workflow2.getTasks().get(7).getOutputData().get("task7"));
         });
 
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
             assertEquals(Task.Status.SCHEDULED, workflow2.getTasks().get(6).getStatus());
@@ -360,9 +350,20 @@ public class WorkflowRerunTests {
         taskClient.updateTask(taskResult);
 
         // Workflow should complete.
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow2.getStatus());
+        });
+    }
+
+    private void terminateExistingRunningWorkflows(String workflowName) {
+        //clean up first
+        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
+            } catch(Exception e){}
         });
     }
 

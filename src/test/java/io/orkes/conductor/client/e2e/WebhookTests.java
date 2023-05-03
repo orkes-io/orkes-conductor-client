@@ -176,6 +176,8 @@ public class WebhookTests {
         WorkflowDef def = new WorkflowDef();
         def.setName(WORKFLOW_NAME);
         def.setVersion(1);
+        def.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+        def.setTimeoutSeconds(120);
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setType("WAIT_FOR_WEBHOOK");
         workflowTask.setName("wait_for_webhook");

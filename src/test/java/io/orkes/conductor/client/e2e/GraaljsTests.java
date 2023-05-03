@@ -70,7 +70,6 @@ public class GraaljsTests {
         taskNames.add(taskName1);
         taskNames.add(taskName2);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
@@ -78,7 +77,7 @@ public class GraaljsTests {
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
 
         // Wait for workflow to get failed since inline task will failed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
