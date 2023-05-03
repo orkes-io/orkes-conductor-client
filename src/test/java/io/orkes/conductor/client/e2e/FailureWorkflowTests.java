@@ -62,6 +62,7 @@ public class FailureWorkflowTests {
         String workflowName = "failure-workflow-test";
         String taskDefName = "simple-task1";
         String taskDefName2 = "simple-task2";
+        Map<String, String> domainMap = Map.of("task_1", "account", "task_2", "billing");
 
         // Register workflow
         registerWorkflowDefWithFailureWorkflow(workflowName, taskDefName, taskDefName2, metadataClient);
@@ -69,6 +70,8 @@ public class FailureWorkflowTests {
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
+
+        startWorkflowRequest.setTaskToDomain(domainMap);
 
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
@@ -112,6 +115,10 @@ public class FailureWorkflowTests {
         assertEquals("FAILED", workflow.getInput().get("failureStatus").toString());
         assertEquals(reason, workflow.getInput().get("reason").toString());
         Map<String, Object> input = (Map<String, Object>) workflow.getInput().get("failedWorkflow");
+
+        assertNotNull(input.get("taskToDomain"));
+        Map<String, String> domain = (Map<String, String>) input.get("taskToDomain");
+        assertEquals(domain, domainMap);
 
         assertNotNull(input.get("tasks"));
         List<Map<String, Object>> tasks = (List<Map<String, Object>>) input.get("tasks");
