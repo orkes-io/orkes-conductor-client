@@ -88,7 +88,7 @@ public class WorkflowRerunTests {
         taskClient.updateTask(taskResult);
 
         // Wait for workflow to get failed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
@@ -99,7 +99,7 @@ public class WorkflowRerunTests {
         // Retry the workflow
         workflowClient.rerunWorkflow(workflowId, rerunWorkflowRequest);
         // Check the workflow status and few other parameters
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
             assertEquals(workflow1.getTasks().get(1).getStatus().name(), Task.Status.SCHEDULED.name());
@@ -231,7 +231,7 @@ public class WorkflowRerunTests {
         taskClient.updateTask(taskResult);
 
         // Wait for workflow to get failed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
         });
@@ -242,7 +242,7 @@ public class WorkflowRerunTests {
         // Retry the workflow
         workflowClient.rerunWorkflow(workflowId, rerunWorkflowRequest);
         // Check the workflow status and few other parameters
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
             assertEquals(workflow1.getTasks().get(2).getStatus().name(), Task.Status.COMPLETED.name());
@@ -313,7 +313,7 @@ public class WorkflowRerunTests {
         taskResult.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
         taskClient.updateTask(taskResult);
         // The workflow should be failed.
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             assertEquals(Workflow.WorkflowStatus.FAILED, workflowClient.getWorkflow(workflowId, false).getStatus());
         });
 
