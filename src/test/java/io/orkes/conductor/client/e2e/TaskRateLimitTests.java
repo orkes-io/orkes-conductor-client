@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +42,6 @@ import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.model.TagObject;
-import io.orkes.conductor.sdk.examples.ApiUtil;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 
@@ -50,25 +49,26 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 public class TaskRateLimitTests {
+    static ApiClient apiClient;
+    static WorkflowClient workflowClient;
+    static TaskClient taskClient;
+    static MetadataClient metadataClient;
 
+    @BeforeAll
+    public static void init() {
+        apiClient = io.orkes.conductor.client.util.ApiUtil.getApiClientWithCredentials();
+        workflowClient = new OrkesWorkflowClient(apiClient);
+        metadataClient  =new OrkesMetadataClient(apiClient);
+        taskClient = new OrkesTaskClient(apiClient);
+
+    }
     @Test
     @DisplayName("Check workflow with simple rate limit by name")
     public void testRateLimitByPerFrequency() throws InterruptedException {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
-        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
-        TaskClient taskClient = new OrkesTaskClient(apiClient);
         String workflowName = "task-rate-limit-test";
         String taskName = "rate-limited-task";
 
-        //clean up first
-        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
-        found.getResults().forEach(workflowSummary -> {
-            try {
-                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
-                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
-            } catch(Exception e){}
-        });
+        terminateExistingRunningWorkflows(workflowName);
 
         // Register workflow
         registerWorkflowDef(workflowName, taskName, metadataClient, false);
@@ -122,10 +122,6 @@ public class TaskRateLimitTests {
     @Test
     @DisplayName("Check workflow with concurrent exec limit")
     public void testConcurrentExeclimit() {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
-        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
-        TaskClient taskClient = new OrkesTaskClient(apiClient);
         String workflowName = "concurrency-limit-test";
         String taskName = "task-concurrency-limit-test";
 
@@ -185,16 +181,10 @@ public class TaskRateLimitTests {
     @Test
     @DisplayName("Check workflow with simple rate limit by correlationId")
     public void testRateLimitByWorkflowCorrelationId() {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
-        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
-        TaskClient taskClient = new OrkesTaskClient(apiClient);
         String workflowName = "rate-limit-by-correlationId";
         String taskName = "rate-limit-task-by-correlationId";
 
-        //clean up first
-        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
-        workflowClient.terminateWorkflow(found.getResults().stream().map(s ->s.getWorkflowId()).collect(Collectors.toList()), "terminate");
+        terminateExistingRunningWorkflows(workflowName);
 
         // Register workflow
         registerWorkflowDef(workflowName, taskName, metadataClient, false);
@@ -280,5 +270,16 @@ public class TaskRateLimitTests {
         workflowDef.setTasks(Arrays.asList(simpleTask));
         metadataClient.registerWorkflowDef(workflowDef);
         metadataClient.registerTaskDefs(Arrays.asList(taskDef));
+    }
+
+    private void terminateExistingRunningWorkflows(String workflowName) {
+        //clean up first
+        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
+            } catch(Exception e){}
+        });
     }
 }
