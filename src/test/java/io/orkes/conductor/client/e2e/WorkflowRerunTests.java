@@ -213,6 +213,7 @@ public class WorkflowRerunTests {
         startWorkflowRequest.setVersion(1);
 
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        System.out.println("WorkflowId is " + workflowId );
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(4, workflow.getTasks().size());
         // Fail the simple task
@@ -284,6 +285,7 @@ public class WorkflowRerunTests {
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        System.out.println("WorkflowId is " + workflowId );
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             // The workflow should run till wait task.
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
