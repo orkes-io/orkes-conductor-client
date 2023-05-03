@@ -213,7 +213,6 @@ public class WorkflowRestartTests {
         // Register workflow
         registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, "simple", metadataClient);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);

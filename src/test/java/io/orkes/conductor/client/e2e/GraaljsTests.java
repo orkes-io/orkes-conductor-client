@@ -70,7 +70,6 @@ public class GraaljsTests {
         taskNames.add(taskName1);
         taskNames.add(taskName2);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);

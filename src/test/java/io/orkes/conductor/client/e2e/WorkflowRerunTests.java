@@ -73,7 +73,6 @@ public class WorkflowRerunTests {
         // Register workflow
         registerWorkflowDef(workflowName, taskName1, taskName2, metadataClient);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
@@ -146,7 +145,6 @@ public class WorkflowRerunTests {
         // Register workflow
         registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, taskName, metadataClient);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
@@ -210,7 +208,6 @@ public class WorkflowRerunTests {
 
         terminateExistingRunningWorkflows(workflowName);
 
-        // Trigger two workflows
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
