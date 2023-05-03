@@ -12,9 +12,7 @@
  */
 package io.orkes.conductor.client.e2e;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -51,6 +49,64 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 public class TaskRateLimitTests {
 
+    private void cleanup(WorkflowClient workflowClient, String workflowName) {
+        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+                workflowClient.deleteWorkflow(workflowSummary.getWorkflowId(), false);
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
+            } catch (Exception e) {
+            }
+        });
+    }
+
+    @Test
+    @DisplayName("Check task rate limit by 20 tasks per 10 secs window")
+    public void testRateLimitByFrequency20Per10Seconds() {
+        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
+        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
+        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
+        TaskClient taskClient = new OrkesTaskClient(apiClient);
+        final String workflowName = "terminate_workflow_878";
+        final String taskName = workflowName + "_task_test";
+
+        //clean up first
+        cleanup(workflowClient, workflowName);
+
+        // Register workflow
+        registerWorkflowDef(workflowName, taskName, metadataClient, false, 2, 60);
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+
+        // start 100 workflows
+        final int N = 10;
+
+        List<String> workflowIds = new ArrayList<>(N);
+        List<Workflow> workflows = new ArrayList<>(N);
+
+        for (int i = 0; i < N; ++i) {
+            String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+            workflowIds.add(workflowId);
+        }
+
+        for (int i = 0; i < N; ++i) {
+            Workflow workflow = workflowClient.getWorkflow(workflowIds.get(i), true);
+            workflows.add(workflow);
+        }
+
+        for (int i = 0; i < N; ++i) {
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflows.get(i).getStatus());
+            assertEquals(1, workflows.get(i).getTasks().size());
+        }
+
+        List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 10, 1000);
+        assertEquals(2, tasks.size());
+
+        cleanup(workflowClient, workflowName);
+    }
+
     @Test
     @DisplayName("Check workflow with simple rate limit by name")
     public void testRateLimitByPerFrequency() throws InterruptedException {
@@ -67,7 +123,8 @@ public class TaskRateLimitTests {
             try {
                 workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
                 System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
-            } catch(Exception e){}
+            } catch (Exception e) {
+            }
         });
 
         // Register workflow
@@ -135,7 +192,8 @@ public class TaskRateLimitTests {
             try {
                 workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
                 System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
-            } catch(Exception e){}
+            } catch (Exception e) {
+            }
         });
         // Register workflow
         registerWorkflowDef(workflowName, taskName, metadataClient, true);
@@ -194,7 +252,7 @@ public class TaskRateLimitTests {
 
         //clean up first
         SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
-        workflowClient.terminateWorkflow(found.getResults().stream().map(s ->s.getWorkflowId()).collect(Collectors.toList()), "terminate");
+        workflowClient.terminateWorkflow(found.getResults().stream().map(s -> s.getWorkflowId()).collect(Collectors.toList()), "terminate");
 
         // Register workflow
         registerWorkflowDef(workflowName, taskName, metadataClient, false);
@@ -231,8 +289,8 @@ public class TaskRateLimitTests {
         Assertions.assertEquals(workflow1.getTasks().size(), 1);
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
         Assertions.assertEquals(workflow3.getTasks().size(), 1);
-        Assertions.assertEquals(workflow4.get().getTasks().size(), 0);
-        Assertions.assertEquals(0, workflow5.get().getTasks().size());
+        Assertions.assertEquals(0, workflow4.get().getTasks().size());
+        Assertions.assertEquals(1, workflow5.get().getTasks().size());
 
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId1);
@@ -246,39 +304,89 @@ public class TaskRateLimitTests {
             workflow4.set(workflowClient.getWorkflow(workflowId4, true));
             assertEquals(workflow4.get().getTasks().size(), 1);
         });
+
+        //clean up first
+        SearchResult<WorkflowSummary> found1 = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        found1.getResults().forEach(workflowSummary -> {
+            try {
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
+            } catch (Exception e) {
+            }
+        });
     }
 
     private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient, boolean isExecLimit) {
-        if (metadataClient.getWorkflowDef(workflowName, 1) != null && metadataClient.getTaskDef(taskName) != null) {
-            return;
+        try {
+            if (metadataClient.getWorkflowDef(workflowName, 1) != null && metadataClient.getTaskDef(taskName) != null) {
+                return;
+            }
+        } catch (Exception e) {
+            TaskDef taskDef = new TaskDef(taskName);
+            taskDef.setOwnerEmail("test@orkes.io");
+            taskDef.setRetryCount(0);
+            if (isExecLimit) {
+                taskDef.setConcurrentExecLimit(1);
+            } else {
+                taskDef.setRateLimitPerFrequency(1);
+                taskDef.setRateLimitFrequencyInSeconds(10);
+            }
+
+            WorkflowTask simpleTask = new WorkflowTask();
+            simpleTask.setTaskReferenceName(taskName);
+            simpleTask.setName(taskName);
+            simpleTask.setTaskDefinition(taskDef);
+            simpleTask.setWorkflowTaskType(TaskType.SIMPLE);
+            simpleTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
+
+
+            WorkflowDef workflowDef = new WorkflowDef();
+            workflowDef.setName(workflowName);
+            workflowDef.setTimeoutSeconds(60000);
+            workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+            workflowDef.setOwnerEmail("test@orkes.io");
+            workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
+            workflowDef.setDescription("Workflow to monitor order state");
+            workflowDef.setTasks(Arrays.asList(simpleTask));
+            metadataClient.registerWorkflowDef(workflowDef);
+            metadataClient.registerTaskDefs(Arrays.asList(taskDef));
         }
-        TaskDef taskDef = new TaskDef(taskName);
-        taskDef.setOwnerEmail("test@orkes.io");
-        taskDef.setRetryCount(0);
-        if (isExecLimit) {
-            taskDef.setConcurrentExecLimit(1);
-        } else {
-            taskDef.setRateLimitPerFrequency(1);
-            taskDef.setRateLimitFrequencyInSeconds(10);
+    }
+
+    private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient, boolean isExecLimit, int limitPerFrequency, int frequencyInSeconds) {
+        try {
+            if (metadataClient.getWorkflowDef(workflowName, 1) != null && metadataClient.getTaskDef(taskName) != null) {
+                return;
+            }
+        } catch (Exception e) {
+            TaskDef taskDef = new TaskDef(taskName);
+            taskDef.setOwnerEmail("test@orkes.io");
+            taskDef.setRetryCount(0);
+            if (isExecLimit) {
+                taskDef.setConcurrentExecLimit(limitPerFrequency);
+            } else {
+                taskDef.setRateLimitPerFrequency(limitPerFrequency);
+                taskDef.setRateLimitFrequencyInSeconds(frequencyInSeconds);
+            }
+            metadataClient.registerTaskDefs(Arrays.asList(taskDef));
+
+            WorkflowTask simpleTask = new WorkflowTask();
+            simpleTask.setTaskReferenceName(taskName);
+            simpleTask.setName(taskName);
+            simpleTask.setTaskDefinition(taskDef);
+            simpleTask.setWorkflowTaskType(TaskType.SIMPLE);
+            simpleTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
+
+
+            WorkflowDef workflowDef = new WorkflowDef();
+            workflowDef.setName(workflowName);
+            workflowDef.setTimeoutSeconds(60000);
+            workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+            workflowDef.setOwnerEmail("test@orkes.io");
+            workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
+            workflowDef.setDescription("Workflow to monitor order state");
+            workflowDef.setTasks(Arrays.asList(simpleTask));
+            metadataClient.registerWorkflowDef(workflowDef);
         }
-
-        WorkflowTask simpleTask = new WorkflowTask();
-        simpleTask.setTaskReferenceName(taskName);
-        simpleTask.setName(taskName);
-        simpleTask.setTaskDefinition(taskDef);
-        simpleTask.setWorkflowTaskType(TaskType.SIMPLE);
-        simpleTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
-
-
-        WorkflowDef workflowDef = new WorkflowDef();
-        workflowDef.setName(workflowName);
-        workflowDef.setTimeoutSeconds(600);
-        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
-        workflowDef.setOwnerEmail("test@orkes.io");
-        workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
-        workflowDef.setDescription("Workflow to monitor order state");
-        workflowDef.setTasks(Arrays.asList(simpleTask));
-        metadataClient.registerWorkflowDef(workflowDef);
-        metadataClient.registerTaskDefs(Arrays.asList(taskDef));
     }
 }
