@@ -107,9 +107,9 @@ public class ApiClient {
         this.basePath = basePath;
         httpClient = new OkHttpClient();
         httpClient.setRetryOnConnectionFailure(true);
-        httpClient.setConnectTimeout(10, TimeUnit.SECONDS);
-        httpClient.setReadTimeout(30, TimeUnit.SECONDS);
-        httpClient.setWriteTimeout(30, TimeUnit.SECONDS);
+        httpClient.setConnectTimeout(1, TimeUnit.SECONDS);
+        httpClient.setReadTimeout(1, TimeUnit.SECONDS);
+        httpClient.setWriteTimeout(1, TimeUnit.SECONDS);
         ConnectionPool connectionPool = new ConnectionPool(10, 10000);
         httpClient.setConnectionPool(connectionPool);
         
