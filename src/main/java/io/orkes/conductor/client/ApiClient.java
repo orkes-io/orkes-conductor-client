@@ -110,6 +110,8 @@ public class ApiClient {
         httpClient.setConnectTimeout(30, TimeUnit.SECONDS);
         httpClient.setReadTimeout(30, TimeUnit.SECONDS);
         httpClient.setWriteTimeout(30, TimeUnit.SECONDS);
+        ConnectionPool connectionPool = new ConnectionPool(10, 10000);
+        httpClient.setConnectionPool(connectionPool);
         
         verifyingSsl = true;
         json = new JSON();
