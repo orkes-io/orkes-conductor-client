@@ -236,6 +236,8 @@ public class TaskRateLimitTests {
             workflow4.set(workflowClient.getWorkflow(workflowId4, true));
             assertEquals(workflow4.get().getTasks().size(), 1);
         });
+
+        terminateExistingRunningWorkflows(workflowName);
     }
 
     private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient, boolean isExecLimit) {
