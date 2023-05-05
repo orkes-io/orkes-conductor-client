@@ -29,10 +29,12 @@ import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.util.ApiUtil;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -41,44 +43,52 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 public class SkipTaskTests {
 
-    @Test
-    public void testWorkflowSearchPermissions() {
+    static ApiClient apiClient;
+    static WorkflowClient workflowClient;
+    static TaskClient taskClient;
+    static MetadataClient metadataClient;
 
-        ApiClient adminClient = ApiUtil.getApiClientWithCredentials();
-        WorkflowClient workflowAdminClient = new OrkesWorkflowClient(adminClient);
-        MetadataClient metadataAdminClient = new OrkesMetadataClient(adminClient);
-        TaskClient taskClient = new OrkesTaskClient(adminClient);
-        String workflowName = "skip_test_test_workflow";
-        SearchResult<WorkflowSummary> searchResult = workflowAdminClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+    @BeforeAll
+    public static void init() {
+        apiClient = ApiUtil.getApiClientWithCredentials();
+        workflowClient = new OrkesWorkflowClient(apiClient);
+        taskClient = new OrkesTaskClient(apiClient);
+        metadataClient = new OrkesMetadataClient(apiClient);
+    }
+    @Test
+    public void testSkipTaskForForkTasks() {
+
+        String workflowName = "skip_fork_test_workflow";
+        SearchResult<WorkflowSummary> searchResult = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
 
         // Terminate all the workflows
-        searchResult.getResults().forEach(workflowSummary -> workflowAdminClient.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
+        searchResult.getResults().forEach(workflowSummary -> workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
 
-        registerForkJoinWorkflowDef(workflowName, metadataAdminClient);
+        registerForkJoinWorkflowDef(workflowName, metadataClient);
 
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
-        String workflowId = workflowAdminClient.startWorkflow(startWorkflowRequest);
+        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
 
         // Assert that  first task is scheduled.
         await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow2 = workflowAdminClient.getWorkflow(workflowId, true);
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
             assertEquals(1, workflow2.getTasks().size());
         });
 
         // Skip fork tasks.
-        workflowAdminClient.skipTaskFromWorkflow(workflowId, "fork_task");
+        workflowClient.skipTaskFromWorkflow(workflowId, "fork_task");
 
         // Assert that fork tasks are skipped along with join
         await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow2 = workflowAdminClient.getWorkflow(workflowId, true);
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
             assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
             assertEquals(5, workflow2.getTasks().size());
         });
 
         // Marking first task complete should complete the workflow.
-        Workflow workflow = workflowAdminClient.getWorkflow(workflowId, true);
+        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
         Task task = workflow.getTasks().stream().filter(task1 -> "simple_task_1".equals(task1.getTaskType())).collect(Collectors.toList()).get(0);
         TaskResult taskResult = new TaskResult();
         taskResult.setTaskId(task.getTaskId());
@@ -88,11 +98,107 @@ public class SkipTaskTests {
         taskClient.updateTask(taskResult);
         // Assert that fork tasks are skipped along with join
         await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow2 = workflowAdminClient.getWorkflow(workflowId, false);
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId, false);
             assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow2.getStatus());
         });
 
     }
+
+    @Test
+    public void testSkipTaskForDoWhileTasks() {
+        String workflowName = "skip_dowhile_test_workflow";
+        SearchResult<WorkflowSummary> searchResult = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+
+        // Terminate all the workflows
+        searchResult.getResults().forEach(workflowSummary -> workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
+
+        registerDoWhileWorkflowDef(workflowName, metadataClient);
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+
+        // Assert that  first task is scheduled.
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
+            assertEquals(1, workflow2.getTasks().size());
+        });
+
+        // Skip fork tasks.
+        workflowClient.skipTaskFromWorkflow(workflowId, "do_while");
+
+        // Assert that fork tasks are skipped along with join
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
+            assertEquals(3, workflow2.getTasks().size());
+        });
+
+        // Marking first task complete should complete the workflow.
+        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        Task task = workflow.getTasks().stream().filter(task1 -> "simple_task_1".equals(task1.getTaskType())).collect(Collectors.toList()).get(0);
+        TaskResult taskResult = new TaskResult();
+        taskResult.setTaskId(task.getTaskId());
+        taskResult.setWorkflowInstanceId(workflowId);
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+
+        taskClient.updateTask(taskResult);
+        // Assert that fork tasks are skipped along with join
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId, false);
+            assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow2.getStatus());
+        });
+    }
+
+    @Test
+    public void testSkipTaskForDecisionTasks() {
+        String workflowName = "skip_decision_test_workflow";
+        SearchResult<WorkflowSummary> searchResult = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+
+        // Terminate all the workflows
+        searchResult.getResults().forEach(workflowSummary -> workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "test"));
+
+        registerDoWhileWorkflowDef(workflowName, metadataClient);
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+
+        // Assert that  first task is scheduled.
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
+            assertEquals(1, workflow2.getTasks().size());
+        });
+
+        // Skip fork tasks.
+        workflowClient.skipTaskFromWorkflow(workflowId, "do_while");
+
+        // Assert that fork tasks are skipped along with join
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
+            assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
+            assertEquals(3, workflow2.getTasks().size());
+        });
+
+        // Marking first task complete should complete the workflow.
+        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        Task task = workflow.getTasks().stream().filter(task1 -> "simple_task_1".equals(task1.getTaskType())).collect(Collectors.toList()).get(0);
+        TaskResult taskResult = new TaskResult();
+        taskResult.setTaskId(task.getTaskId());
+        taskResult.setWorkflowInstanceId(workflowId);
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+
+        taskClient.updateTask(taskResult);
+        // Assert that fork tasks are skipped along with join
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId, false);
+            assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow2.getStatus());
+        });
+    }
+
+
     private void registerForkJoinWorkflowDef(String workflowName, MetadataClient metadataClient) {
 
         String fork_task = "fork_task";
@@ -137,6 +243,73 @@ public class SkipTaskTests {
         workflowDef.setTimeoutSeconds(600);
         workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         workflowDef.setTasks(Arrays.asList(simple_task, fork_workflow_task, join));
+        workflowDef.setOwnerEmail("test@orkes.io");
+        metadataClient.registerWorkflowDef(workflowDef);
+    }
+
+    private void registerDoWhileWorkflowDef(String workflowName, MetadataClient metadataClient) {
+
+        String do_while_task = "do_while";
+        String simple_task_1 = "simple_task_1";
+        String loop_task_1 = "loop_task";
+
+        WorkflowTask simple_task = new WorkflowTask();
+        simple_task.setTaskReferenceName(simple_task_1);
+        simple_task.setName(simple_task_1);
+        simple_task.setWorkflowTaskType(TaskType.SIMPLE);
+
+        WorkflowTask loop_task = new WorkflowTask();
+        loop_task.setTaskReferenceName(loop_task_1);
+        loop_task.setName(loop_task_1);
+        loop_task.setWorkflowTaskType(TaskType.SIMPLE);
+
+        WorkflowTask do_while = new WorkflowTask();
+        do_while.setTaskReferenceName(do_while_task);
+        do_while.setName(do_while_task);
+        do_while.setWorkflowTaskType(TaskType.DO_WHILE);
+        do_while.setLoopCondition("true;");
+        do_while.setLoopOver(List.of(loop_task));
+
+        WorkflowDef workflowDef = new WorkflowDef();
+        workflowDef.setName(workflowName);
+        workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
+        workflowDef.setDescription("Workflow to test retry");
+        workflowDef.setTimeoutSeconds(600);
+        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+        workflowDef.setTasks(Arrays.asList(simple_task, do_while));
+        workflowDef.setOwnerEmail("test@orkes.io");
+        metadataClient.registerWorkflowDef(workflowDef);
+    }
+
+    private void registerDecisionWorkflowDef(String workflowName, MetadataClient metadataClient) {
+
+        String decision_task = "decision_while";
+        String simple_task_1 = "simple_task_1";
+        String loop_task_1 = "loop_task";
+
+        WorkflowTask simple_task = new WorkflowTask();
+        simple_task.setTaskReferenceName(simple_task_1);
+        simple_task.setName(simple_task_1);
+        simple_task.setWorkflowTaskType(TaskType.SIMPLE);
+
+        WorkflowTask case_task = new WorkflowTask();
+        case_task.setTaskReferenceName(loop_task_1);
+        case_task.setName(loop_task_1);
+        case_task.setWorkflowTaskType(TaskType.SIMPLE);
+
+        WorkflowTask do_while = new WorkflowTask();
+        do_while.setTaskReferenceName(decision_task);
+        do_while.setName(decision_task);
+        do_while.setWorkflowTaskType(TaskType.DECISION);
+        do_while.setDecisionCases(Map.of("1", List.of(case_task)));
+
+        WorkflowDef workflowDef = new WorkflowDef();
+        workflowDef.setName(workflowName);
+        workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
+        workflowDef.setDescription("Workflow to test retry");
+        workflowDef.setTimeoutSeconds(600);
+        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+        workflowDef.setTasks(Arrays.asList(simple_task, do_while));
         workflowDef.setOwnerEmail("test@orkes.io");
         metadataClient.registerWorkflowDef(workflowDef);
     }
