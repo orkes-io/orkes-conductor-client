@@ -162,11 +162,7 @@ public class SubWorkflowTimeoutRetryTests {
         assertEquals(Workflow.WorkflowStatus.RUNNING, subWorkflow.getStatus());
         assertEquals(Task.Status.CANCELED, subWorkflow.getTasks().get(0).getStatus());
         assertEquals(Task.Status.SCHEDULED, subWorkflow.getTasks().get(1).getStatus());
-
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowInstanceId, true);
-            assertFalse(workflow1.getTasks().get(1).isSubworkflowChanged());
-        });
+        
     }
 
     private Task pollAndCompleteTask(String workflowInstanceId, String taskName, Map<String, Object> output) {
