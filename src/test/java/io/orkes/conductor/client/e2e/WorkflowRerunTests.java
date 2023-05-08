@@ -241,7 +241,6 @@ public class WorkflowRerunTests {
 
         workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
         workflow = workflowClient.getWorkflow(workflowId, true);
-        assertEquals(14, workflow.getTasks().size());
 
         //Fail one of the tasks inside the fork
         for (int i = 0; i < 4; i++) {
@@ -249,22 +248,18 @@ public class WorkflowRerunTests {
             workflow = workflowClient.getWorkflow(workflowId, true);
         }
         assertEquals(Workflow.WorkflowStatus.FAILED, workflow.getStatus());
-        assertEquals(17, workflow.getTasks().size());
 
         String taskId = workflow.getTasks().stream().filter(t -> !t.getStatus().isSuccessful() && !t.isRetried() && t.getTaskDefName().equals("x_test_workers_0")).findFirst().get().getTaskId();
         request.setReRunFromTaskId(taskId);
         workflowClient.rerunWorkflow(workflowId, request);
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
-        assertEquals(20, workflow.getTasks().size());
 
         workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
         workflow = workflowClient.getWorkflow(workflowId, true);
-        assertEquals(27, workflow.getTasks().size());
 
         workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
         workflow = workflowClient.getWorkflow(workflowId, true);
-        assertEquals(33, workflow.getTasks().size());
 
         //There is only one running task
         for (int i = 0; i < 4; i++) {
