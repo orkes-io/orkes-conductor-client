@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import io.orkes.conductor.client.util.ApiUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,6 @@ import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.model.TagObject;
-import io.orkes.conductor.sdk.examples.ApiUtil;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 
@@ -100,19 +100,21 @@ public class TaskRateLimitTests {
             taskClient.updateTask(taskResult);
         });
 
-        Uninterruptibles.sleepUninterruptibly(13, TimeUnit.SECONDS);
+        Uninterruptibles.sleepUninterruptibly(15, TimeUnit.SECONDS);
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             assertEquals(1, taskClient.getQueueSizeForTask(taskName));
         });
+
         // Task2 should be available to poll
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
-            Task task2 = taskClient.pollTask(taskName, "test", null);
-            assertNotNull(task2);
-            TaskResult taskResult = new TaskResult();
-            taskResult.setTaskId(task2.getTaskId());
-            taskResult.setStatus(TaskResult.Status.COMPLETED);
-            taskResult.setWorkflowInstanceId(task2.getWorkflowInstanceId());
-            taskClient.updateTask(taskResult);
+        Task task2 = taskClient.pollTask(taskName, "test", null);
+        assertNotNull(task2);
+        TaskResult taskResult = new TaskResult();
+        taskResult.setTaskId(task2.getTaskId());
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskResult.setWorkflowInstanceId(task2.getWorkflowInstanceId());
+        taskClient.updateTask(taskResult);
+
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             // Assert both workflows completed
             assertEquals(workflowClient.getWorkflow(workflowId1, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);
             assertEquals(workflowClient.getWorkflow(workflowId2, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);

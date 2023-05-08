@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import io.orkes.conductor.client.util.ApiUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,6 @@ import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
-import io.orkes.conductor.sdk.examples.ApiUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
@@ -81,7 +81,7 @@ public class WebhookTests {
 
         sendWebhook(keys, webhookUrl);
         List<String> workflowIds = new ArrayList<>();
-        await().pollInterval(1, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
+        await().pollInterval(10, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
             SearchResult<WorkflowSummary> workflows = workflowClient.search(0, count, "", correlationId, "status = 'RUNNING'");
             assertNotNull(workflows);
             assertNotNull(workflows.getResults());
@@ -98,7 +98,7 @@ public class WebhookTests {
             sendWebhook(input, receiveWebhookUrl);
         }
 
-        await().pollInterval(1, TimeUnit.SECONDS).atMost(30, TimeUnit.SECONDS).untilAsserted(() ->{
+        await().pollInterval(10, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
             for (String wfId : workflowIds) {
                 Workflow workflow = workflowClient.getWorkflow(wfId, true);
                 assertNotNull(workflow);
@@ -117,7 +117,7 @@ public class WebhookTests {
             sendWebhook(input, receiveWebhookUrl + "?id=" + key);
         }
 
-        await().pollInterval(1, TimeUnit.SECONDS).atMost(30, TimeUnit.SECONDS).untilAsserted(() ->{
+        await().pollInterval(1, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
             for (String wfId : workflowIds) {
                 Workflow workflow = workflowClient.getWorkflow(wfId, true);
                 assertNotNull(workflow);

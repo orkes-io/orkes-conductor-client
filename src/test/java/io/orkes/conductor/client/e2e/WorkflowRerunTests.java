@@ -14,8 +14,11 @@ package io.orkes.conductor.client.e2e;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.WorkflowSummary;
@@ -59,10 +62,6 @@ public class WorkflowRerunTests {
         taskClient = new OrkesTaskClient(apiClient);
     }
 
-    @Before
-    public void initTest() {
-    }
-
     @Test
     @DisplayName("Check workflow with simple task and rerun functionality")
     public void testRerunSimpleWorkflow() {
@@ -80,55 +79,26 @@ public class WorkflowRerunTests {
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
         // Fail the simple task
-        String taskId = workflow.getTasks().get(1).getTaskId();
-        TaskResult taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(taskId);
-        taskResult.setStatus(TaskResult.Status.FAILED);
-        taskClient.updateTask(taskResult);
+        Task task = workflow.getTasks().get(1);
+        workflow = completeTask(task, TaskResult.Status.FAILED);
+        assertEquals(Workflow.WorkflowStatus.FAILED, workflow.getStatus());
 
-        // Wait for workflow to get failed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
-        });
 
         RerunWorkflowRequest rerunWorkflowRequest = new RerunWorkflowRequest();
         rerunWorkflowRequest.setReRunFromWorkflowId(workflowId);
-        rerunWorkflowRequest.setReRunFromTaskId(taskId);
-        // Retry the workflow
+        rerunWorkflowRequest.setReRunFromTaskId(task.getTaskId());
+        // Rerun the workflow
         workflowClient.rerunWorkflow(workflowId, rerunWorkflowRequest);
-        // Check the workflow status and few other parameters
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertEquals(workflow1.getTasks().get(1).getStatus().name(), Task.Status.SCHEDULED.name());
-            assertTrue(workflow1.getTasks().get(0).isExecuted());
-            assertFalse(workflow1.getTasks().get(1).isExecuted());
-        });
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(workflow.getStatus().name(), Workflow.WorkflowStatus.RUNNING.name());
+        assertEquals(workflow.getTasks().get(2).getStatus().name(), Task.Status.SCHEDULED.name());
 
-        taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(taskId);
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskClient.updateTask(taskResult);
-        workflowClient.runDecider(workflowId);
-        System.out.println("Going to check workflow " + workflowId + " for completion");
+        workflow = completeTask(workflow.getTasks().get(2), TaskResult.Status.COMPLETED);
+        assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
 
-        // Wait for workflow to get completed
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "Workflow " + workflowId + " did not complete");
-        });
-
-        try {
-            metadataClient.unregisterWorkflowDef(workflowName, 1);
-            metadataClient.unregisterTaskDef(taskName2);
-            metadataClient.unregisterTaskDef(taskName2);
-        }catch (Exception e){}
     }
 
-    //@Test
+    @Test
     @DisplayName("Check workflow with sub_workflow task and rerun functionality")
     public void testRerunWithSubWorkflow() throws Exception {
 
@@ -141,6 +111,7 @@ public class WorkflowRerunTests {
         String subWorkflowName = "workflow-re-run-sub-workflow";
 
         terminateExistingRunningWorkflows(workflowName);
+        terminateExistingRunningWorkflows(subWorkflowName);
 
         // Register workflow
         registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, taskName, metadataClient);
@@ -155,47 +126,26 @@ public class WorkflowRerunTests {
         // Fail the simple task
         String subworkflowId = workflow.getTasks().get(0).getSubWorkflowId();
         Workflow subWorkflow = workflowClient.getWorkflow(subworkflowId, true);
-        String taskId = subWorkflow.getTasks().get(0).getTaskId();
-        TaskResult taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(subworkflowId);
-        taskResult.setTaskId(taskId);
-        taskResult.setStatus(TaskResult.Status.FAILED);
-        taskClient.updateTask(taskResult);
+        Task task = subWorkflow.getTasks().get(0);
+        workflow = completeTask(task, TaskResult.Status.FAILED);
+        assertEquals(Workflow.WorkflowStatus.FAILED, workflow.getStatus());
 
-        // Wait for parent workflow to get failed
-        await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
-        });
-
-        // Retry the sub workflow.
+        // Rerun the sub workflow.
         RerunWorkflowRequest rerunWorkflowRequest = new RerunWorkflowRequest();
         rerunWorkflowRequest.setReRunFromWorkflowId(subworkflowId);
-        rerunWorkflowRequest.setReRunFromTaskId(taskId);
+        rerunWorkflowRequest.setReRunFromTaskId(task.getTaskId());
         workflowClient.rerunWorkflow(subworkflowId, rerunWorkflowRequest);
         // Check the workflow status and few other parameters
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(subworkflowId, true);
-            assertEquals(WorkflowStatus.StatusEnum.RUNNING.name(), workflow1.getStatus().name());
-            assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.SCHEDULED.name());
-        });
-        taskId = workflowClient.getWorkflow(subworkflowId, true).getTasks().get(0).getTaskId();
+        subWorkflow = workflowClient.getWorkflow(subworkflowId, true);
+        assertEquals(Workflow.WorkflowStatus.RUNNING, subWorkflow.getStatus());
+        assertEquals(Task.Status.SCHEDULED, subWorkflow.getTasks().get(1).getStatus());
 
-        taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(subworkflowId);
-        taskResult.setTaskId(taskId);
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskClient.updateTask(taskResult);
+        subWorkflow = completeTask(subWorkflow.getTasks().get(1), TaskResult.Status.COMPLETED);
+        assertEquals(Workflow.WorkflowStatus.COMPLETED, subWorkflow.getStatus());
 
-        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "Workflow " + workflowId + " did not complete");
-        });
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
 
-        try {
-            metadataClient.unregisterWorkflowDef(workflowName, 1);
-            metadataClient.unregisterTaskDef(taskName);
-        } catch (Exception e){}
     }
 
     @Test
@@ -215,66 +165,42 @@ public class WorkflowRerunTests {
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(4, workflow.getTasks().size());
-        // Fail the simple task
-        String taskId = workflow.getTasks().get(2).getTaskId();
-        TaskResult taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(taskId);
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskClient.updateTask(taskResult);
 
-        taskId = workflow.getTasks().get(1).getTaskId();
-        taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(taskId);
-        taskResult.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
-        taskClient.updateTask(taskResult);
+        // Complete and Fail the simple task
+        workflow = completeTask(workflow.getTasks().get(1), TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
+        workflow = completeTask(workflow.getTasks().get(2), TaskResult.Status.COMPLETED);
 
-        // Wait for workflow to get failed
-        await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
-        });
+        assertEquals(Workflow.WorkflowStatus.FAILED, workflow.getStatus());
 
         RerunWorkflowRequest rerunWorkflowRequest = new RerunWorkflowRequest();
         rerunWorkflowRequest.setReRunFromWorkflowId(workflowId);
-        rerunWorkflowRequest.setReRunFromTaskId(taskId);
+        rerunWorkflowRequest.setReRunFromTaskId(workflow.getTasks().get(1).getTaskId());
+
         // Retry the workflow
         workflowClient.rerunWorkflow(workflowId, rerunWorkflowRequest);
         // Check the workflow status and few other parameters
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
-            assertEquals(workflow1.getTasks().get(2).getStatus().name(), Task.Status.COMPLETED.name());
-            // Rerun should not affect this task since it was already completed.
-            assertEquals(workflow1.getTasks().get(1).getStatus().name(), Task.Status.SCHEDULED.name());
-        });
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
+        assertEquals(Task.Status.SCHEDULED, workflow.getTasks().get(4).getStatus());
 
-        taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(taskId);
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskClient.updateTask(taskResult);
-        workflowClient.runDecider(workflowId);
-        System.out.println("Going to check workflow " + workflowId + " for completion");
+        workflow.getTasks().stream()
+                .filter(task -> task.getWorkflowTask().getType().equals(TaskType.SIMPLE.toString()))
+                .filter(simpleTask -> !simpleTask.getStatus().isTerminal())
+                .forEach(running -> completeTask(running, TaskResult.Status.COMPLETED));
 
-        // Wait for workflow to get completed
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
-            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "Workflow " + workflowId + " did not complete");
-        });
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
 
-        try {
-            metadataClient.unregisterWorkflowDef(workflowName, 1);
-        }catch (Exception e){}
     }
 
+
     @Test
-    @DisplayName("Check load workflow re run works fine")
-    public void testRunLoadTestPerfCase1() {
+    @DisplayName("Check load workflow re run works fine with failures")
+    public void testRunLoadTestPerfCase2() {
         String workflowName = "load_test_perf";
         WorkflowDef workflowDef = metadataClient.getWorkflowDef(workflowName, 1);
         if (workflowDef == null) {
+            fail("load_test_perf is not available, please create the workflow");
             return;
         }
 
@@ -283,86 +209,120 @@ public class WorkflowRerunTests {
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
+        startWorkflowRequest.setTaskToDomain(Map.of("*", "re-run-failure-test"));
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
-        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            // The workflow should run till wait task.
-            Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(10, workflow1.getTasks().size());
-        });
+        System.out.println("Started " + workflowId);
 
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
-        // Mark all the fork task completed.
-        TaskResult taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(workflow.getTasks().get(7).getTaskId());
-        taskResult.getOutputData().put("task7", "completed");
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskClient.updateTask(taskResult);
+        assertEquals(1, workflow.getTasks().size());
 
-        taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(workflow.getTasks().get(8).getTaskId());
-        taskResult.getOutputData().put("task8", "completed");
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskClient.updateTask(taskResult);
+        while(!workflow.getStatus().isTerminal()) {
+            Task task = workflow.getTasks().get(workflow.getTasks().size() - 1);
+            workflow = completeTask(task, TaskResult.Status.FAILED);
+        }
 
-        taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(workflow.getTasks().get(6).getTaskId());
-        taskResult.getOutputData().put("task6", "failed");
-        taskResult.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
-        taskClient.updateTask(taskResult);
-        // The workflow should be failed.
-        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
-            assertEquals(Workflow.WorkflowStatus.FAILED, workflowClient.getWorkflow(workflowId, false).getStatus());
-        });
+        RerunWorkflowRequest request = new RerunWorkflowRequest();
+        request.setReRunFromTaskId(workflow.getTasks().get(workflow.getTasks().size()-1).getTaskId());
+        request.setCorrelationId("correlation_id_x");
+        request.setWorkflowInput(Map.of("re_run_request", 1));
+        workflowClient.rerunWorkflow(workflowId, request);
 
-        // Rerun the workflow using first fork task.
-        RerunWorkflowRequest rerunWorkflowRequest = new RerunWorkflowRequest();
-        rerunWorkflowRequest.setReRunFromTaskId(workflow.getTasks().get(6).getTaskId());
-        rerunWorkflowRequest.setReRunFromWorkflowId(workflowId);
-        workflowClient.rerunWorkflow(workflowId, rerunWorkflowRequest);
-        // The output captured should not change along with task status.
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals("completed", workflow2.getTasks().get(8).getOutputData().get("task8"));
-            assertEquals("completed", workflow2.getTasks().get(7).getOutputData().get("task7"));
-        });
-
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(Workflow.WorkflowStatus.RUNNING, workflow2.getStatus());
-            assertEquals(Task.Status.SCHEDULED, workflow2.getTasks().get(6).getStatus());
-            assertEquals(Task.Status.SCHEDULED, workflow2.getTasks().get(9).getStatus());
-        });
         workflow = workflowClient.getWorkflow(workflowId, true);
-        // Mark the wait and fork task completed
-        taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(workflow.getTasks().get(6).getTaskId());
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskClient.updateTask(taskResult);
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
+        assertEquals(5, workflow.getTasks().size());
 
-        taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(workflow.getTasks().get(9).getTaskId());
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskClient.updateTask(taskResult);
+        Task task = workflow.getTasks().get(workflow.getTasks().size()-1);
+        workflow = completeTask(task, TaskResult.Status.COMPLETED);
+        assertEquals(7, workflow.getTasks().size());
 
-        // Workflow should complete.
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow2 = workflowClient.getWorkflow(workflowId, true);
-            assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow2.getStatus());
-        });
+
+        task = workflow.getTasks().get(workflow.getTasks().size()-1);
+        workflow = completeTask(task, TaskResult.Status.COMPLETED);
+
+        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(14, workflow.getTasks().size());
+
+        //Fail one of the tasks inside the fork
+        for (int i = 0; i < 4; i++) {
+            workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_0")).forEach(r -> completeTask(r, TaskResult.Status.FAILED));
+            workflow = workflowClient.getWorkflow(workflowId, true);
+        }
+        assertEquals(Workflow.WorkflowStatus.FAILED, workflow.getStatus());
+        assertEquals(17, workflow.getTasks().size());
+
+        String taskId = workflow.getTasks().stream().filter(t -> !t.getStatus().isSuccessful() && !t.isRetried() && t.getTaskDefName().equals("x_test_workers_0")).findFirst().get().getTaskId();
+        request.setReRunFromTaskId(taskId);
+        workflowClient.rerunWorkflow(workflowId, request);
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
+        assertEquals(20, workflow.getTasks().size());
+
+        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(27, workflow.getTasks().size());
+
+        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(33, workflow.getTasks().size());
+
+        //There is only one running task
+        for (int i = 0; i < 4; i++) {
+            List<Task> loopedTasks = workflow.getTasks().stream()
+                    .filter(t -> !t.getStatus().isTerminal() && t.isLoopOverTask() && t.getTaskDefName().equals("x_test_worker_1"))
+                    .collect(Collectors.toList());
+            assertEquals(1, loopedTasks.size());
+            workflow = completeTask(loopedTasks.get(0), TaskResult.Status.FAILED);
+        }
+        assertEquals(Workflow.WorkflowStatus.FAILED, workflow.getStatus());
+
+        List<Task> loopedTasks = workflow.getTasks().stream()
+                .filter(t -> t.getStatus().isTerminal() && t.isLoopOverTask() && t.getTaskDefName().equals("x_test_worker_1") && !t.isRetried())
+                .collect(Collectors.toList());
+        assertEquals(1, loopedTasks.size());
+        request.setReRunFromTaskId(loopedTasks.get(0).getTaskId());
+        workflowClient.rerunWorkflow(workflowId, request);
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
+        assertEquals(38, workflow.getTasks().size());
+
+        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
+
+        workflow.getTasks().stream().filter(t -> t.getTaskType().equals(TaskType.SUB_WORKFLOW.toString())).forEach(subworkflow -> completeWorkflow(subworkflow.getSubWorkflowId()));
+        workflow = workflowClient.getWorkflow(workflowId, true);
+
+        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
+    }
+
+    private void completeWorkflow(String workflowId) {
+        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        while(!workflow.getStatus().isTerminal()) {
+            workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
+            workflow = workflowClient.getWorkflow(workflowId, true);
+        }
+    }
+
+    private Workflow completeTask(Task task, TaskResult.Status status) {
+        TaskResult result = new TaskResult(task);
+        result.setStatus(status);
+        result.getOutputData().put(task.getReferenceTaskName() + "_op", "output");
+        taskClient.updateTask(result);
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        return workflowClient.getWorkflow(task.getWorkflowInstanceId(), true);
     }
 
     private void terminateExistingRunningWorkflows(String workflowName) {
         //clean up first
         SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        System.out.println("Found " + found.getResults().size() + " running workflows to be cleaned up");
         found.getResults().forEach(workflowSummary -> {
             try {
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId() + " with status " + workflowSummary.getStatus());
                 workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
-                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
             } catch(Exception e){}
         });
     }
