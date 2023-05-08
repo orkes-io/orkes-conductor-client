@@ -247,6 +247,7 @@ public class WorkflowRerunTests {
             workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_0")).forEach(r -> completeTask(r, TaskResult.Status.FAILED));
             workflow = workflowClient.getWorkflow(workflowId, true);
         }
+        workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(Workflow.WorkflowStatus.FAILED, workflow.getStatus());
 
         String taskId = workflow.getTasks().stream().filter(t -> !t.getStatus().isSuccessful() && !t.isRetried() && t.getTaskDefName().equals("x_test_workers_0")).findFirst().get().getTaskId();
