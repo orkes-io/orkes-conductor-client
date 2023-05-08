@@ -218,23 +218,24 @@ public class TaskRateLimitTests {
         String workflowId5 = workflowClient.startWorkflow(startWorkflowRequest);
 
         Workflow workflow1 = workflowClient.getWorkflow(workflowId1, true);
-        Workflow workflow2 = workflowClient.getWorkflow(workflowId2, true);
-        Workflow workflow3 = workflowClient.getWorkflow(workflowId3, true);
-        AtomicReference<Workflow> workflow4 = new AtomicReference<>(workflowClient.getWorkflow(workflowId4, true));
-        AtomicReference<Workflow> workflow5 = new AtomicReference<>(workflowClient.getWorkflow(workflowId5, true));
-
-        // Assertions
         Assertions.assertEquals(workflow1.getStatus(), Workflow.WorkflowStatus.RUNNING);
-        Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
-        Assertions.assertEquals(workflow3.getStatus(), Workflow.WorkflowStatus.RUNNING);
-        Assertions.assertEquals(workflow4.get().getStatus(), Workflow.WorkflowStatus.RUNNING);
-        Assertions.assertEquals(workflow5.get().getStatus(), Workflow.WorkflowStatus.RUNNING);
-        // Workflow4 and workflow5 tasks should not get scheduled.
         Assertions.assertEquals(workflow1.getTasks().size(), 1);
+
+        Workflow workflow2 = workflowClient.getWorkflow(workflowId2, true);
+        Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
+
+        Workflow workflow3 = workflowClient.getWorkflow(workflowId3, true);
+        Assertions.assertEquals(workflow3.getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow3.getTasks().size(), 1);
-        Assertions.assertEquals(workflow4.get().getTasks().size(), 0);
-        Assertions.assertEquals(1, workflow5.get().getTasks().size());
+
+        Workflow workflow4 = workflowClient.getWorkflow(workflowId4, true);
+        Assertions.assertEquals(workflow4.getStatus(), Workflow.WorkflowStatus.RUNNING);
+        Assertions.assertEquals(workflow4.getTasks().size(), 0);
+
+        Workflow workflow5 = workflowClient.getWorkflow(workflowId5, true);
+        Assertions.assertEquals(workflow5.getStatus(), Workflow.WorkflowStatus.RUNNING);
+        Assertions.assertEquals(1, workflow5.getTasks().size());
 
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId1);
@@ -245,9 +246,12 @@ public class TaskRateLimitTests {
         // Now workflow4 task get scheduled. Workflow5 tasks should not get scheduled.
         // Wait for 1 second to let sweeper run
         await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            workflow4.set(workflowClient.getWorkflow(workflowId4, true));
-            assertEquals(workflow4.get().getTasks().size(), 1);
+            Workflow workflow40 = workflowClient.getWorkflow(workflowId4, true);
+            assertEquals(workflow40.getTasks().size(), 1);
         });
+
+        //terminate all the workflows.
+        workflowClient.terminateWorkflow(List.of(workflowId1, workflowId2, workflowId3, workflowId4, workflowId5), "terminated");
     }
 
     private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient, boolean isExecLimit) {
