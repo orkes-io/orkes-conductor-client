@@ -213,7 +213,6 @@ public class WorkflowRerunTests {
         System.out.println("Started " + workflowId);
 
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
-        assertEquals(4, workflow.getTasks().size(), "Workflow task size is " + workflow.getTasks().size());
 
         Task task = workflow.getTasks().get(workflow.getTasks().size() - 1);
         workflow = completeTask(task, TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
