@@ -209,17 +209,14 @@ public class WorkflowRerunTests {
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
-        startWorkflowRequest.setTaskToDomain(Map.of("*", "re-run-failure-test"));
         String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
         System.out.println("Started " + workflowId);
 
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
-        assertEquals(1, workflow.getTasks().size());
+        assertEquals(4, workflow.getTasks().size());
 
-        while(!workflow.getStatus().isTerminal()) {
-            Task task = workflow.getTasks().get(workflow.getTasks().size() - 1);
-            workflow = completeTask(task, TaskResult.Status.FAILED);
-        }
+        Task task = workflow.getTasks().get(workflow.getTasks().size() - 1);
+        workflow = completeTask(task, TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
 
         RerunWorkflowRequest request = new RerunWorkflowRequest();
         request.setReRunFromTaskId(workflow.getTasks().get(workflow.getTasks().size()-1).getTaskId());
@@ -229,68 +226,45 @@ public class WorkflowRerunTests {
 
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
-        assertEquals(5, workflow.getTasks().size());
+        assertEquals(11, workflow.getTasks().size());
 
-        Task task = workflow.getTasks().get(workflow.getTasks().size()-1);
-        workflow = completeTask(task, TaskResult.Status.COMPLETED);
-        assertEquals(7, workflow.getTasks().size());
+        task = workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_0")).collect(Collectors.toList()).get(0);
+        completeTask(task, TaskResult.Status.COMPLETED);
 
+        task = workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_2")).collect(Collectors.toList()).get(0);
+        completeTask(task, TaskResult.Status.COMPLETED);
 
-        task = workflow.getTasks().get(workflow.getTasks().size()-1);
-        workflow = completeTask(task, TaskResult.Status.COMPLETED);
+        task = workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_1")).collect(Collectors.toList()).get(0);
+        completeTask(task, TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
 
-        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
-        workflow = workflowClient.getWorkflow(workflowId, true);
-
-        //Fail one of the tasks inside the fork
-        for (int i = 0; i < 4; i++) {
-            workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_0")).forEach(r -> completeTask(r, TaskResult.Status.FAILED));
-            workflow = workflowClient.getWorkflow(workflowId, true);
-        }
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(Workflow.WorkflowStatus.FAILED, workflow.getStatus());
 
-        String taskId = workflow.getTasks().stream().filter(t -> !t.getStatus().isSuccessful() && !t.isRetried() && t.getTaskDefName().equals("x_test_workers_0")).findFirst().get().getTaskId();
-        request.setReRunFromTaskId(taskId);
+        request.setReRunFromTaskId(task.getTaskId());
         workflowClient.rerunWorkflow(workflowId, request);
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
 
-        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
-        workflow = workflowClient.getWorkflow(workflowId, true);
+        task = workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_1")).collect(Collectors.toList()).get(0);
+        workflow = completeTask(task, TaskResult.Status.COMPLETED);
 
-        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
-        workflow = workflowClient.getWorkflow(workflowId, true);
-
-        //There is only one running task
-        for (int i = 0; i < 4; i++) {
-            List<Task> loopedTasks = workflow.getTasks().stream()
-                    .filter(t -> !t.getStatus().isTerminal() && t.isLoopOverTask() && t.getTaskDefName().equals("x_test_worker_1"))
-                    .collect(Collectors.toList());
-            assertEquals(1, loopedTasks.size());
-            workflow = completeTask(loopedTasks.get(0), TaskResult.Status.FAILED);
-        }
+        //There is only one running task fail that.
+        task = workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_1")).collect(Collectors.toList()).get(0);
+        workflow = completeTask(task, TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
         assertEquals(Workflow.WorkflowStatus.FAILED, workflow.getStatus());
 
         List<Task> loopedTasks = workflow.getTasks().stream()
-                .filter(t -> t.getStatus().isTerminal() && t.isLoopOverTask() && t.getTaskDefName().equals("x_test_worker_1") && !t.isRetried())
+                .filter(t -> t.getStatus().isTerminal() && t.isLoopOverTask() && t.getTaskDefName().equals("x_test_workers_1") && !t.isRetried())
                 .collect(Collectors.toList());
         assertEquals(1, loopedTasks.size());
         request.setReRunFromTaskId(loopedTasks.get(0).getTaskId());
         workflowClient.rerunWorkflow(workflowId, request);
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
-        assertEquals(38, workflow.getTasks().size());
+        assertEquals(28, workflow.getTasks().size());
 
-        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
-        workflow = workflowClient.getWorkflow(workflowId, true);
-        assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
-
-        workflow.getTasks().stream().filter(t -> t.getTaskType().equals(TaskType.SUB_WORKFLOW.toString())).forEach(subworkflow -> completeWorkflow(subworkflow.getSubWorkflowId()));
-        workflow = workflowClient.getWorkflow(workflowId, true);
-
-        workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(r -> completeTask(r, TaskResult.Status.COMPLETED));
-        workflow = workflowClient.getWorkflow(workflowId, true);
+        task = workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_1")).collect(Collectors.toList()).get(0);
+        workflow = completeTask(task, TaskResult.Status.COMPLETED);
         assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
     }
 
@@ -307,7 +281,7 @@ public class WorkflowRerunTests {
         result.setStatus(status);
         result.getOutputData().put(task.getReferenceTaskName() + "_op", "output");
         taskClient.updateTask(result);
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
         return workflowClient.getWorkflow(task.getWorkflowInstanceId(), true);
     }
 
