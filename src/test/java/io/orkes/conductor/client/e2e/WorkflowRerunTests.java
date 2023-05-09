@@ -213,6 +213,7 @@ public class WorkflowRerunTests {
         System.out.println("Started " + workflowId);
 
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        assertEquals(1, workflow.getTasks().size(), "Workflow task size is " + workflow.getTasks().size());
 
         Task task = workflow.getTasks().get(workflow.getTasks().size() - 1);
         workflow = completeTask(task, TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
@@ -225,7 +226,10 @@ public class WorkflowRerunTests {
 
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
-        assertEquals(11, workflow.getTasks().size());
+        assertEquals(2, workflow.getTasks().size());
+
+        task = workflow.getTasks().get(workflow.getTasks().size() - 1);
+        workflow = completeTask(task, TaskResult.Status.COMPLETED);
 
         task = workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_0")).collect(Collectors.toList()).get(0);
         completeTask(task, TaskResult.Status.COMPLETED);
