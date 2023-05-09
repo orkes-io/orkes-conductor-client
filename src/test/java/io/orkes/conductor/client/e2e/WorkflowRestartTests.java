@@ -261,4 +261,77 @@ public class WorkflowRestartTests {
         metadataClient.unregisterTaskDef("simple");
     }
 
+    @Test
+    @DisplayName("Check workflow with sub_workflow task and restart parent workflow functionality")
+    public void testRestartWithSubWorkflowWithRestartParent() {
+
+        apiClient = ApiUtil.getApiClientWithCredentials();
+        workflowClient = new OrkesWorkflowClient(apiClient);
+        metadataClient = new OrkesMetadataClient(apiClient);
+        taskClient = new OrkesTaskClient(apiClient);
+        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+
+        // Register workflow
+        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, "simple", metadataClient);
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        System.out.print("Workflow id is " + workflowId);
+        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+        // Fail the simple task
+        String subworkflowId = workflow.getTasks().get(0).getSubWorkflowId();
+        Workflow subWorkflow = workflowClient.getWorkflow(subworkflowId, true);
+        String taskId = subWorkflow.getTasks().get(0).getTaskId();
+        TaskResult taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(subworkflowId);
+        taskResult.setTaskId(taskId);
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskClient.updateTask(taskResult);
+
+        // Wait for parent workflow to get failed
+        await().atMost(3, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+        });
+
+        // Restart the sub workflow.
+        workflowClient.restart(workflowId, false);
+        // Check the workflow status and few other parameters
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowId, true);
+            assertEquals(Workflow.WorkflowStatus.RUNNING.name(), workflow1.getStatus().name());
+            assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.IN_PROGRESS.name());
+        });
+
+        // Complete the new sub workflow.
+        String newSubWorkflowId = workflowClient.getWorkflow(workflowId, true).getTasks().get(0).getSubWorkflowId();
+        taskId = workflowClient.getWorkflow(newSubWorkflowId, true).getTasks().get(0).getTaskId();
+        taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(newSubWorkflowId);
+        taskResult.setTaskId(taskId);
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskClient.updateTask(taskResult);
+
+        await().atMost(33, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "workflow " + workflow1.getWorkflowId() + " did not complete");
+        });
+
+        // Now restart the original sub_workflow.
+        workflowClient.restart(subworkflowId, false);
+        // Parent should not get affected since the parent does not contain any information about this sub workflow.
+        Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+        assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+
+        //Terminate the sub workflow.
+        workflowClient.terminateWorkflow(subworkflowId, "Terminated");
+
+        metadataClient.unregisterWorkflowDef(workflowName, 1);
+        metadataClient.unregisterTaskDef("simple");
+    }
+
 }
