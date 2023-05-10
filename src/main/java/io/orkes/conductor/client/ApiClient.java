@@ -843,11 +843,7 @@ public class ApiClient {
                     try {
                         response.body().close();
                     } catch (IOException e) {
-                        throw new ApiException(
-                                response.message(),
-                                e,
-                                response.code(),
-                                response.headers().toMultimap());
+                        LOGGER.error("Unexpected error while closing response body " , e);
                     }
                 }
                 return null;
@@ -862,15 +858,12 @@ public class ApiClient {
                     respBody = body.string();
                     body.close();
                 } catch (IOException e) {
-                    throw new ApiException(
-                            response.message(),
-                            e,
-                            response.code(),
-                            response.headers().toMultimap());
+                    LOGGER.error("Unexpected error while closing response body " , e);
                 }
             }
-            throw new ApiException(response.message(), response.code(), response.headers().toMultimap(), respBody);
+            LOGGER.error("Unexpected error while closing response body ");
         }
+        return null;
     }
 
     /**
