@@ -44,8 +44,8 @@ public class SyncWorkflowExecutionTest {
     }
 
     @Test
-    @DisplayName("Check sync workflow is execute within 2 seconds")
-    public void testSyncWorkflowExecution() {
+    @DisplayName("Check sync workflow is execute within 11 seconds")
+    public void testSyncWorkflowExecution() throws ExecutionException, InterruptedException, TimeoutException {
 
         String workflowName = "load_test_perf_sync_workflow";
 
@@ -54,15 +54,11 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setVersion(1);
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null);
-        try {
-            long start = System.currentTimeMillis();
-            WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
-            long end = System.currentTimeMillis();
-            long timeTaken = end-start;
-            assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
-        } catch (Exception e) {
-            throw new RuntimeException("Workflow " + workflowName + " did not complete in 5 seconds");
-        }
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        long timeTaken = end-start;
+        assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
     }
 
     @Test
