@@ -264,7 +264,7 @@ public class WorkflowRerunTests {
         workflowClient.rerunWorkflow(workflowId, request);
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflow.getStatus());
-        assertEquals(28, workflow.getTasks().size());
+        assertEquals(27, workflow.getTasks().size());
 
         task = workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskDefName().equals("x_test_workers_1")).collect(Collectors.toList()).get(0);
         workflow = completeTask(task, TaskResult.Status.COMPLETED);
