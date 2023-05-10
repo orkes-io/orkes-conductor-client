@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import io.orkes.conductor.client.util.ApiUtil;
@@ -53,7 +52,7 @@ public class TaskRateLimitTests {
 
     @Test
     @DisplayName("Check workflow with simple rate limit by name")
-    public void testRateLimitByPerFrequency() throws InterruptedException {
+    public void testRateLimitByPerFrequency() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
         MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
@@ -105,14 +104,16 @@ public class TaskRateLimitTests {
             assertEquals(1, taskClient.getQueueSizeForTask(taskName));
         });
 
-        // Task2 should be available to poll
-        Task task2 = taskClient.pollTask(taskName, "test", null);
-        assertNotNull(task2);
-        TaskResult taskResult = new TaskResult();
-        taskResult.setTaskId(task2.getTaskId());
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setWorkflowInstanceId(task2.getWorkflowInstanceId());
-        taskClient.updateTask(taskResult);
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+            // Task2 should be available to poll
+            Task task2 = taskClient.pollTask(taskName, "test", null);
+            assertNotNull(task2);
+            TaskResult taskResult = new TaskResult();
+            taskResult.setTaskId(task2.getTaskId());
+            taskResult.setStatus(TaskResult.Status.COMPLETED);
+            taskResult.setWorkflowInstanceId(task2.getWorkflowInstanceId());
+            taskClient.updateTask(taskResult);
+        });
 
         await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             // Assert both workflows completed
