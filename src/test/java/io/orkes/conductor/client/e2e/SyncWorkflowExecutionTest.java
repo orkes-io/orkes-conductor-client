@@ -40,6 +40,7 @@ public class SyncWorkflowExecutionTest {
     @BeforeAll
     public static void init() {
         apiClient = ApiUtil.getApiClientWithCredentials();
+        apiClient.setExecutorThreadCount(10);
         workflowClient = new OrkesWorkflowClient(apiClient);
     }
 
