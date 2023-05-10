@@ -12,6 +12,7 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -149,6 +150,8 @@ public class WebhookTests {
         Request request = builder.post(requestBody).build();
         Response response = httpClient.newCall(request).execute();
         assertEquals(200, response.code());
+        try (ResponseBody ignored = response.body()){
+        }catch(IOException e){}
     }
 
     @SneakyThrows
@@ -215,9 +218,13 @@ public class WebhookTests {
         Request request = builder.post(requestBody).addHeader("X-Authorization", client.getToken()).build();
         Response response = httpClient.newCall(request).execute();
         assertEquals(200, response.code());
-        byte[] responseBytes = response.body().bytes();
-        config = om.readValue(responseBytes, WebhookConfig.class);
-        return config.getId();
+        try (ResponseBody ignored = response.body()){
+            byte[] responseBytes = response.body().bytes();
+            config = om.readValue(responseBytes, WebhookConfig.class);
+            return config.getId();
+        }catch(IOException e){
+            return null;
+        }
     }
 
     @SneakyThrows
@@ -228,8 +235,9 @@ public class WebhookTests {
             OkHttpClient httpClient = new OkHttpClient();
             Request.Builder builder = new Request.Builder().url(url);
             Request request = builder.delete().addHeader("X-Authorization", client.getToken()).build();
-            httpClient.newCall(request).execute();
-
+            Response response = httpClient.newCall(request).execute();
+            try (ResponseBody ignored = response.body()){
+            }catch(IOException e){}
         }
 
         if(receiveWebhookUrl != null) {
@@ -237,8 +245,9 @@ public class WebhookTests {
             OkHttpClient httpClient = new OkHttpClient();
             Request.Builder builder = new Request.Builder().url(url);
             Request request = builder.delete().addHeader("X-Authorization", client.getToken()).build();
-            httpClient.newCall(request).execute();
-
+            Response response = httpClient.newCall(request).execute();
+            try (ResponseBody ignored = response.body()){
+            }catch(IOException e){}
         }
     }
 }
