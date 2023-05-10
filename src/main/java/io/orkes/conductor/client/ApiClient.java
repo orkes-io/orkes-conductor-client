@@ -802,6 +802,7 @@ public class ApiClient {
             T data = handleResponse(response, returnType);
             return new ApiResponse<T>(response.code(), response.headers().toMultimap(), data);
         } catch (IOException e) {
+            LOGGER.error("Error while executing request ", e);
             throw new ApiException(e);
         }
     }
