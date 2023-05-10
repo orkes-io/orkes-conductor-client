@@ -851,7 +851,7 @@ public class ApiClient {
                 return deserialize(response, returnType);
             }
         } else {
-            String respBody = null;
+            String respBody = "";
             if (response.body() != null) {
                 try {
                     ResponseBody body = response.body();
@@ -861,9 +861,8 @@ public class ApiClient {
                     LOGGER.error("Unexpected error while closing response body " , e);
                 }
             }
-            LOGGER.error("Unexpected error while closing response body ");
+            throw new ApiException(response.message(), response.code(), response.headers().toMultimap(), respBody);
         }
-        return null;
     }
 
     /**
