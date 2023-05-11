@@ -207,11 +207,12 @@ public class WorkflowRestartTests {
         workflowClient = new OrkesWorkflowClient(apiClient);
         metadataClient = new OrkesMetadataClient(apiClient);
         taskClient = new OrkesTaskClient(apiClient);
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String subWorkflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String workflowName = "retry-parent-with-sub-workflow";
+        String subWorkflowName = "retry-sub-workflow";
+        String taskName = "simple-no-retry2";
 
         // Register workflow
-        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, "simple", metadataClient);
+        registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, taskName, metadataClient);
 
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
@@ -239,8 +240,9 @@ public class WorkflowRestartTests {
         // Restart the sub workflow.
         workflowClient.restart(subworkflowId, false);
         // Check the workflow status and few other parameters
+        String finalSubworkflowId = subworkflowId;
         await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
-            Workflow workflow1 = workflowClient.getWorkflow(subworkflowId, true);
+            Workflow workflow1 = workflowClient.getWorkflow(finalSubworkflowId, true);
             assertEquals(WorkflowStatus.StatusEnum.RUNNING.name(), workflow1.getStatus().name());
             assertEquals(workflow1.getTasks().get(0).getStatus().name(), Task.Status.SCHEDULED.name());
         });
@@ -257,8 +259,22 @@ public class WorkflowRestartTests {
             assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "workflow " + workflow1.getWorkflowId() + " did not complete");
         });
 
-        metadataClient.unregisterWorkflowDef(workflowName, 1);
-        metadataClient.unregisterTaskDef("simple");
+        // Check restart functionality at parent workflow level.
+        workflowClient.restart(workflowId, false);
+        workflow = workflowClient.getWorkflow(workflowId, true);
+        // Fail the simple task
+        subworkflowId = workflow.getTasks().get(0).getSubWorkflowId();
+        subWorkflow = workflowClient.getWorkflow(subworkflowId, true);
+        taskId = subWorkflow.getTasks().get(0).getTaskId();
+        taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(subworkflowId);
+        taskResult.setTaskId(taskId);
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskClient.updateTask(taskResult);
+        await().atMost(3, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
+            assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "workflow " + workflow1.getWorkflowId() + " did not complete");
+        });
     }
 
 }
