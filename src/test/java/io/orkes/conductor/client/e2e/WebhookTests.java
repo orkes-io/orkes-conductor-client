@@ -80,6 +80,8 @@ public class WebhookTests {
             keys[i] = key;
         }
 
+        terminateExistingRunningWorkflows(WORKFLOW_NAME, workflowClient);
+
         sendWebhook(keys, webhookUrl);
         List<String> workflowIds = new ArrayList<>();
         await().pollInterval(10, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
@@ -249,5 +251,17 @@ public class WebhookTests {
             try (ResponseBody ignored = response.body()){
             }catch(IOException e){}
         }
+    }
+
+    private void terminateExistingRunningWorkflows(String workflowName, WorkflowClient workflowClient) {
+        //clean up first
+        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        System.out.println("Found " + found.getResults().size() + " running workflows to be cleaned up");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId() + " with status " + workflowSummary.getStatus());
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+            } catch(Exception e){}
+        });
     }
 }
