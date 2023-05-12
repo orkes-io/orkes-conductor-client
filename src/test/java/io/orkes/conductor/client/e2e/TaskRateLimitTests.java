@@ -12,6 +12,7 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class TaskRateLimitTests {
         });
 
         // Register workflow
-        registerWorkflowDef(workflowName, taskName, metadataClient, false);
+        registerWorkflowDef(workflowName, taskName, metadataClient, false, false);
 
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
@@ -138,7 +139,7 @@ public class TaskRateLimitTests {
             } catch(Exception e){}
         });
         // Register workflow
-        registerWorkflowDef(workflowName, taskName, metadataClient, true);
+        registerWorkflowDef(workflowName, taskName, metadataClient, true, false);
 
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
@@ -197,7 +198,7 @@ public class TaskRateLimitTests {
         workflowClient.terminateWorkflow(found.getResults().stream().map(s ->s.getWorkflowId()).collect(Collectors.toList()), "terminate");
 
         // Register workflow
-        registerWorkflowDef(workflowName, taskName, metadataClient, false);
+        registerWorkflowDef(workflowName, taskName, metadataClient, false, false);
         TagObject tagObject = new TagObject();
         tagObject.setType(TagObject.TypeEnum.RATE_LIMIT);
         tagObject.setKey("${workflow.correlationId}");
@@ -248,18 +249,25 @@ public class TaskRateLimitTests {
         });
     }
 
-    private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient, boolean isExecLimit) {
-        if (metadataClient.getWorkflowDef(workflowName, 1) != null && metadataClient.getTaskDef(taskName) != null) {
-            return;
-        }
+    private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient, boolean isExecLimit, boolean multivalue) {
+        try {
+            if (metadataClient.getWorkflowDef(workflowName, 1) != null && metadataClient.getTaskDef(taskName) != null) {
+                return;
+            }
+        }catch (Exception e){}
         TaskDef taskDef = new TaskDef(taskName);
         taskDef.setOwnerEmail("test@orkes.io");
         taskDef.setRetryCount(0);
         if (isExecLimit) {
             taskDef.setConcurrentExecLimit(1);
         } else {
-            taskDef.setRateLimitPerFrequency(1);
-            taskDef.setRateLimitFrequencyInSeconds(10);
+            if (multivalue) {
+                taskDef.setRateLimitPerFrequency(2);
+                taskDef.setRateLimitFrequencyInSeconds(10);
+            } else {
+                taskDef.setRateLimitPerFrequency(1);
+                taskDef.setRateLimitFrequencyInSeconds(10);
+            }
         }
 
         WorkflowTask simpleTask = new WorkflowTask();
@@ -267,6 +275,7 @@ public class TaskRateLimitTests {
         simpleTask.setName(taskName);
         simpleTask.setTaskDefinition(taskDef);
         simpleTask.setWorkflowTaskType(TaskType.SIMPLE);
+        simpleTask.setTaskDefinition(taskDef);
         simpleTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
 
 
@@ -280,5 +289,57 @@ public class TaskRateLimitTests {
         workflowDef.setTasks(Arrays.asList(simpleTask));
         metadataClient.registerWorkflowDef(workflowDef);
         metadataClient.registerTaskDefs(Arrays.asList(taskDef));
+    }
+
+    @Test
+    @DisplayName("Check workflow with simple rate limit by name for multiple iteration")
+    public void testRateLimitByPerFrequencyForMultipleIteration() {
+        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
+        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
+        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
+        TaskClient taskClient = new OrkesTaskClient(apiClient);
+        String workflowName = "task-rate-limit-test-multiple-iteration";
+        String taskName = "rate-limited-task-multiple-iteration";
+
+        //clean up first
+        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
+            } catch(Exception e){}
+        });
+
+        // Register workflow
+        registerWorkflowDef(workflowName, taskName, metadataClient, false, true);
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        //Start two workflows. Only first workflow task should be in_progress
+
+        List<String> workflowIds = new ArrayList<>();
+        for(int i=0;i<20;i++) {
+            workflowIds.add(workflowClient.startWorkflow(startWorkflowRequest));
+        }
+
+        for(int i =0;i<10;i++) {
+
+            await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+                List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 5, 1000);
+                assertEquals(tasks.size(), 2);
+                TaskResult taskResult = new TaskResult();
+                taskResult.setTaskId(tasks.get(0).getTaskId());
+                taskResult.setStatus(TaskResult.Status.COMPLETED);
+                taskResult.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
+                taskClient.updateTask(taskResult);
+                taskResult = new TaskResult();
+                taskResult.setTaskId(tasks.get(1).getTaskId());
+                taskResult.setStatus(TaskResult.Status.COMPLETED);
+                taskResult.setWorkflowInstanceId(tasks.get(1).getWorkflowInstanceId());
+                taskClient.updateTask(taskResult);
+            });
+
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+        }
     }
 }
