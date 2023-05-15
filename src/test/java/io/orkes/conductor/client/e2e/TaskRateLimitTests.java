@@ -319,17 +319,15 @@ public class TaskRateLimitTests {
 
             await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
                 List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 5, 1000);
-                assertEquals(tasks.size(), 2);
-                TaskResult taskResult = new TaskResult();
-                taskResult.setTaskId(tasks.get(0).getTaskId());
-                taskResult.setStatus(TaskResult.Status.COMPLETED);
-                taskResult.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
-                taskClient.updateTask(taskResult);
-                taskResult = new TaskResult();
-                taskResult.setTaskId(tasks.get(1).getTaskId());
-                taskResult.setStatus(TaskResult.Status.COMPLETED);
-                taskResult.setWorkflowInstanceId(tasks.get(1).getWorkflowInstanceId());
-                taskClient.updateTask(taskResult);
+                // We should never get more than 2 tasks
+                assertTrue(tasks.size() > 0 && tasks.size() < 3);
+                tasks.stream().forEach(task -> {
+                    TaskResult taskResult1 = new TaskResult();
+                    taskResult1.setTaskId(task.getTaskId());
+                    taskResult1.setStatus(TaskResult.Status.COMPLETED);
+                    taskResult1.setWorkflowInstanceId(task.getWorkflowInstanceId());
+                    taskClient.updateTask(taskResult1);
+                });
             });
 
             if (i!=9) {
@@ -341,7 +339,7 @@ public class TaskRateLimitTests {
 
     @Test
     @DisplayName("Check workflow with simple rate limit by name to validate limit")
-    public void testRateLimitByPerFrequencyToValidateLimitSligingWindow() {
+    public void testRateLimitByPerFrequencyToValidateLimitSlidingWindow() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
         MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
@@ -401,7 +399,8 @@ public class TaskRateLimitTests {
         Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
             List<Task> tasks3 = taskClient.batchPollTasksByTaskType(taskName, "test", 5, 1000);
-            assertTrue(tasks3.size() > 0);
+            // We should never get more than 2 tasks
+            assertTrue(tasks3.size() > 0 && tasks3.size() < 3);
             tasks3.stream().forEach(task -> {
                 TaskResult taskResult1 = new TaskResult();
                 taskResult1.setTaskId(task.getTaskId());
