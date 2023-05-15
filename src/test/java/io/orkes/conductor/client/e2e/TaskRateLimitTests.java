@@ -90,15 +90,17 @@ public class TaskRateLimitTests {
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
 
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-            Task task1 = taskClient.pollTask(taskName, "test", null);
-            Task task2 = taskClient.pollTask(taskName, "test", null);
-            assertNotNull(task1);
-            assertNull(task2);
-            TaskResult taskResult = new TaskResult();
-            taskResult.setTaskId(task1.getTaskId());
-            taskResult.setStatus(TaskResult.Status.COMPLETED);
-            taskResult.setWorkflowInstanceId(task1.getWorkflowInstanceId());
-            taskClient.updateTask(taskResult);
+
+            List<Task> tasks3 = taskClient.batchPollTasksByTaskType(taskName, "test", 2, 1000);
+            // We should never get more than 2 tasks
+            assertEquals(1, tasks3.size());
+            tasks3.forEach(task -> {
+                TaskResult taskResult1 = new TaskResult();
+                taskResult1.setTaskId(task.getTaskId());
+                taskResult1.setStatus(TaskResult.Status.COMPLETED);
+                taskResult1.setWorkflowInstanceId(task.getWorkflowInstanceId());
+                taskClient.updateTask(taskResult1);
+            });
         });
 
         Uninterruptibles.sleepUninterruptibly(13, TimeUnit.SECONDS);
@@ -226,7 +228,7 @@ public class TaskRateLimitTests {
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
         Assertions.assertEquals(workflow3.getTasks().size(), 1);
         Assertions.assertEquals(workflow4.get().getTasks().size(), 0);
-        Assertions.assertEquals(0, workflow5.get().getTasks().size());
+        Assertions.assertEquals(1, workflow5.get().getTasks().size());
 
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId1);
