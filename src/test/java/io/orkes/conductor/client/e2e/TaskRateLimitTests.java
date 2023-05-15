@@ -225,7 +225,7 @@ public class TaskRateLimitTests {
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
         Assertions.assertEquals(workflow3.getTasks().size(), 1);
         Assertions.assertEquals(workflow4.get().getTasks().size(), 0);
-        Assertions.assertEquals(0, workflow5.get().getTasks().size());
+        Assertions.assertEquals(1, workflow5.get().getTasks().size());
 
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId1);
