@@ -149,23 +149,31 @@ public class TaskRateLimitTests {
             workflowIds.add(workflowClient.startWorkflow(startWorkflowRequest));
         }
 
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+            List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 10, 1000);
+            assertEquals(tasks.size(), 5);
+            for(int j=0;j<5;j++) {
+                TaskResult taskResult = new TaskResult();
+                taskResult.setTaskId(tasks.get(j).getTaskId());
+                taskResult.setStatus(TaskResult.Status.COMPLETED);
+                taskResult.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
+                taskClient.updateTask(taskResult);
+            }
+        });
 
-        for(int i =0;i<2;i++) {
+        Uninterruptibles.sleepUninterruptibly(60, TimeUnit.SECONDS);
 
-            await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-                List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 10, 1000);
-                assertEquals(tasks.size(), 5);
-                for(int j=0;j<5;j++) {
-                    TaskResult taskResult = new TaskResult();
-                    taskResult.setTaskId(tasks.get(j).getTaskId());
-                    taskResult.setStatus(TaskResult.Status.COMPLETED);
-                    taskResult.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
-                    taskClient.updateTask(taskResult);
-                }
-            });
-
-            Uninterruptibles.sleepUninterruptibly(60, TimeUnit.SECONDS);
-        }
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+            List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 10, 1000);
+            assertEquals(tasks.size(), 5);
+            for(int j=0;j<5;j++) {
+                TaskResult taskResult = new TaskResult();
+                taskResult.setTaskId(tasks.get(j).getTaskId());
+                taskResult.setStatus(TaskResult.Status.COMPLETED);
+                taskResult.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
+                taskClient.updateTask(taskResult);
+            }
+        });
     }
 
     @Test
@@ -324,7 +332,81 @@ public class TaskRateLimitTests {
                 taskClient.updateTask(taskResult);
             });
 
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+            if (i!=9) {
+                // Do not sleep after iteration
+                Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+            }
         }
+    }
+
+    @Test
+    @DisplayName("Check workflow with simple rate limit by name to validate limit")
+    public void testRateLimitByPerFrequencyToValidateLimitSligingWindow() {
+        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
+        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
+        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
+        TaskClient taskClient = new OrkesTaskClient(apiClient);
+        String workflowName = "task-rate-limit-test-sliding-window";
+        String taskName = "rate-limited-task-sliding-window";
+
+        //clean up first
+        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
+            } catch(Exception e){}
+        });
+
+        // Register workflow
+        registerWorkflowDef(workflowName, taskName, metadataClient, false, true);
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        //Start two workflows. Only first workflow task should be in_progress
+
+        List<String> workflowIds = new ArrayList<>();
+        //Start a workflow and poll for a task.
+        workflowIds.add(workflowClient.startWorkflow(startWorkflowRequest));
+        List<Task> tasks = taskClient.batchPollTasksByTaskType(taskName, "test", 5, 1000);
+        assertEquals(1, tasks.size());
+
+        //Sleep for 7 seconds and start another workflow and poll for the task.
+        Uninterruptibles.sleepUninterruptibly(7, TimeUnit.SECONDS);
+        workflowIds.add(workflowClient.startWorkflow(startWorkflowRequest));
+        List<Task> tasks2 = taskClient.batchPollTasksByTaskType(taskName, "test", 5, 1000);
+        assertEquals(1, tasks2.size());
+
+        //Complete both the workflow.
+        TaskResult taskResult = new TaskResult();
+        taskResult.setTaskId(tasks.get(0).getTaskId());
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskResult.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
+
+        taskClient.updateTask(taskResult);
+        taskResult = new TaskResult();
+        taskResult.setTaskId(tasks2.get(0).getTaskId());
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskResult.setWorkflowInstanceId(tasks2.get(0).getWorkflowInstanceId());
+        taskClient.updateTask(taskResult);
+
+        // Sleep for 3 seconds to move the tick to next window.
+        Uninterruptibles.sleepUninterruptibly(13, TimeUnit.SECONDS);
+        //Start two workflow and poll for that. Both tasks should be available to poll.
+        workflowIds.add(workflowClient.startWorkflow(startWorkflowRequest));
+        workflowIds.add(workflowClient.startWorkflow(startWorkflowRequest));
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            List<Task> tasks3 = taskClient.batchPollTasksByTaskType(taskName, "test", 5, 1000);
+            assertEquals(2, tasks3.size());
+            TaskResult taskResult1 = new TaskResult();
+            taskResult1.setTaskId(tasks3.get(0).getTaskId());
+            taskResult1.setStatus(TaskResult.Status.COMPLETED);
+            taskResult1.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
+            taskResult1 = new TaskResult();
+            taskResult1.setTaskId(tasks3.get(1).getTaskId());
+            taskResult1.setStatus(TaskResult.Status.COMPLETED);
+            taskResult1.setWorkflowInstanceId(tasks.get(0).getWorkflowInstanceId());
+        });
     }
 }
