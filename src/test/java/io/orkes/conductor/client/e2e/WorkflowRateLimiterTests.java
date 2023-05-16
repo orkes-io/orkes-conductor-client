@@ -12,13 +12,19 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import com.google.common.util.concurrent.Uninterruptibles;
+import com.netflix.conductor.common.run.SearchResult;
+import com.netflix.conductor.common.run.WorkflowSummary;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -41,19 +47,28 @@ import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.sdk.examples.ApiUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 public class WorkflowRateLimiterTests {
 
+    static ApiClient apiClient;
+    static WorkflowClient workflowClient;
+    static TaskClient taskClient;
+    static MetadataClient metadataClient;
+
+    @BeforeAll
+    public static void init() {
+        apiClient = ApiUtil.getApiClientWithCredentials();
+        workflowClient = new OrkesWorkflowClient(apiClient);
+        metadataClient  =new OrkesMetadataClient(apiClient);
+        taskClient = new OrkesTaskClient(apiClient);
+    }
     @Test
     @DisplayName("Check workflow with simple rate limit by workflow name")
     public void testRateLimitByWorkflowName() {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
-        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
-        TaskClient taskClient = new OrkesTaskClient(apiClient);
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String workflowName = "workflow-rate-limit-by-name";
+        String taskName = "task-rate-limit-by-name";
         // Register workflow
         registerWorkflowDef(workflowName, taskName, metadataClient);
         TagObject tagObject = new TagObject();
@@ -61,6 +76,8 @@ public class WorkflowRateLimiterTests {
         tagObject.setKey(workflowName);
         tagObject.setValue(3); // Only 3 invocations are allowed.
         metadataClient.addWorkflowTag(tagObject, workflowName);
+
+        terminateExistingRunningWorkflows(workflowName);
 
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName(workflowName);
@@ -116,19 +133,13 @@ public class WorkflowRateLimiterTests {
             workflow5.set(workflowClient.getWorkflow(workflowId5, true));
             assertEquals(workflow4.get().getTasks().size(), 1);
         });
-        metadataClient.unregisterWorkflowDef(workflowName, 1);
-        metadataClient.unregisterTaskDef(taskName);
     }
 
     @Test
     @DisplayName("Check workflow with simple rate limit by correlationId")
     public void testRateLimitByWorkflowCorrelationId() {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
-        MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
-        TaskClient taskClient = new OrkesTaskClient(apiClient);
-        String workflowName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
-        String taskName = RandomStringUtils.randomAlphanumeric(5).toUpperCase();
+        String workflowName = "workflow-rate-limit-by-correlationId";
+        String taskName = "task-rate-limit-by-correlationId";
         // Register workflow
         registerWorkflowDef(workflowName, taskName, metadataClient);
         TagObject tagObject = new TagObject();
@@ -182,8 +193,6 @@ public class WorkflowRateLimiterTests {
                  assertEquals(workflow4.get().getTasks().size(), 1);
              }catch(Exception e){}
         });
-        metadataClient.unregisterWorkflowDef(workflowName, 1);
-        metadataClient.unregisterTaskDef(taskName);
     }
 
     private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient) {
@@ -209,5 +218,120 @@ public class WorkflowRateLimiterTests {
         workflowDef.setTasks(Arrays.asList(simpleTask));
         metadataClient.registerWorkflowDef(workflowDef);
         metadataClient.registerTaskDefs(Arrays.asList(taskDef));
+    }
+
+    @Test
+    @DisplayName("Check workflow with simple rate limit by workflow name with large value")
+    public void testRateLimitByWorkflowNameForLargeValue() {
+        String workflowName = "workflow-rate-limit-by-name-high-value";
+        String taskName = "task-rate-limit-by-name-high-value";
+        // Register workflow
+        registerWorkflowDef(workflowName, taskName, metadataClient);
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.RATE_LIMIT);
+        tagObject.setKey(workflowName);
+        tagObject.setValue(10); // Only 10 invocations are allowed.
+        metadataClient.addWorkflowTag(tagObject, workflowName);
+
+        terminateExistingRunningWorkflows(workflowName);
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setCorrelationId("rate_limited");
+        startWorkflowRequest.setName(workflowName);
+        List<String> workflowIds = new ArrayList<>();
+        // Start 100 workflow.
+        for(int i=0;i<100;i++) {
+            workflowIds.add(workflowClient.startWorkflow(startWorkflowRequest));
+        }
+
+        for(int i=0; i<10; i++) {
+
+            //Only 10 workflows should get slot.
+            int finalI = i;
+            AtomicInteger scheduled_task_workflow = new AtomicInteger();
+            AtomicInteger non_scheduled_task_workflow = new AtomicInteger();
+            await().atMost(20, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+                scheduled_task_workflow.set(0);
+                non_scheduled_task_workflow.set(0);
+                List<Workflow> workflows = new ArrayList<>();
+                for (int j = finalI *10; j < 100; j++) {
+                    workflows.add(workflowClient.getWorkflow(workflowIds.get(j), true));
+                }
+                workflows.stream().forEach(workflow -> {
+                    if (workflow.getTasks().size() == 1) {
+                        scheduled_task_workflow.getAndIncrement();
+                        TaskResult taskResult = new TaskResult();
+                        taskResult.setWorkflowInstanceId(workflow.getWorkflowId());
+                        taskResult.setTaskId(workflow.getTasks().get(0).getTaskId());
+                        taskResult.setStatus(TaskResult.Status.COMPLETED);
+                        taskClient.updateTask(taskResult);
+                    } else {
+                        non_scheduled_task_workflow.getAndIncrement();
+                    }
+                });
+
+                assertTrue(non_scheduled_task_workflow.get() <= (100- 10*finalI));
+                assertTrue(scheduled_task_workflow.get()==10);
+            });
+
+            //Sleep 5 seconds
+            Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+            // Do not run for last iteration.
+            if (i<9) {
+                //Fetch top 10 workflows and run decider on that to speed up the test.
+                for (int j = (finalI + 1) * 10; j < (finalI + 2) * 10; j++) {
+                    workflowClient.runDecider(workflowIds.get(j));
+                }
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Check rate limit in workflow failure scenario")
+    public void testRateLimitByFailedWorkflowCase() {
+        String workflowName = "workflow-rate-limit-failure-scenario";
+        String taskName = "task-rate-limit-failure-scenario";
+        // Register workflow
+        registerWorkflowDef(workflowName, taskName, metadataClient);
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.RATE_LIMIT);
+        tagObject.setKey(workflowName);
+        tagObject.setValue(2); // Only 2 invocations are allowed.
+        metadataClient.addWorkflowTag(tagObject, workflowName);
+
+        terminateExistingRunningWorkflows(workflowName);
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setCorrelationId("rate_limited");
+        startWorkflowRequest.setName(workflowName);
+
+        //Start three workflows and failed the second one.
+        String workflowId1 = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId2 = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId3 = workflowClient.startWorkflow(startWorkflowRequest);
+        await().atMost(3, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(workflowId1, true);
+            assertEquals(1, workflow1.getTasks().size());
+            Workflow workflow2 = workflowClient.getWorkflow(workflowId2, true);
+            assertEquals(1, workflow2.getTasks().size());
+            Workflow workflow3 = workflowClient.getWorkflow(workflowId3, true);
+            assertEquals(0, workflow3.getTasks().size());
+        });
+
+        workflowClient.terminateWorkflow(workflowId2, "Terminated");
+        // Workflow 3 should get chance.
+        await().atMost(2, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow3 = workflowClient.getWorkflow(workflowId3, true);
+            assertEquals(1, workflow3.getTasks().size());
+        });
+    }
+
+    private void terminateExistingRunningWorkflows(String workflowName) {
+        //clean up first
+        SearchResult<WorkflowSummary> found = workflowClient.search(" status IN (RUNNING)");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId());
+            } catch(Exception e){}
+        });
     }
 }
