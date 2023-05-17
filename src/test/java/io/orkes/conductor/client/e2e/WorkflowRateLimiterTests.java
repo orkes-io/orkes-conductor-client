@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.WorkflowSummary;
+import io.orkes.conductor.client.http.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -225,12 +226,14 @@ public class WorkflowRateLimiterTests {
     public void testRateLimitByWorkflowNameForLargeValue() {
         String workflowName = "workflow-rate-limit-by-name-high-value";
         String taskName = "task-rate-limit-by-name-high-value";
+        int total_workflows = 1000;
+        int allowed_workflows = 100;
         // Register workflow
         registerWorkflowDef(workflowName, taskName, metadataClient);
         TagObject tagObject = new TagObject();
         tagObject.setType(TagObject.TypeEnum.RATE_LIMIT);
         tagObject.setKey(workflowName);
-        tagObject.setValue(10); // Only 10 invocations are allowed.
+        tagObject.setValue(allowed_workflows);
         metadataClient.addWorkflowTag(tagObject, workflowName);
 
         terminateExistingRunningWorkflows(workflowName);
@@ -239,46 +242,53 @@ public class WorkflowRateLimiterTests {
         startWorkflowRequest.setName(workflowName);
         List<String> workflowIds = new ArrayList<>();
         // Start 100 workflow.
-        for(int i=0;i<100;i++) {
+        for(int i=0;i<total_workflows;i++) {
             workflowIds.add(workflowClient.startWorkflow(startWorkflowRequest));
         }
 
-        for(int i=0; i<10; i++) {
+        int iteration = total_workflows / allowed_workflows;
 
-            //Only 10 workflows should get slot.
+        for(int i=0; i<iteration ; i++) {
+
+            //Only 100 workflows should get slot.
             int finalI = i;
             AtomicInteger scheduled_task_workflow = new AtomicInteger();
             AtomicInteger non_scheduled_task_workflow = new AtomicInteger();
-            await().atMost(20, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            List<Pair> list = new ArrayList<>();
+            await().atMost(200, TimeUnit.SECONDS).pollInterval(10, TimeUnit.SECONDS).untilAsserted(() -> {
                 scheduled_task_workflow.set(0);
                 non_scheduled_task_workflow.set(0);
+                list.clear();
                 List<Workflow> workflows = new ArrayList<>();
-                for (int j = finalI *10; j < 100; j++) {
+                for (int j = finalI *allowed_workflows; j < total_workflows; j++) {
                     workflows.add(workflowClient.getWorkflow(workflowIds.get(j), true));
                 }
                 workflows.stream().forEach(workflow -> {
                     if (workflow.getTasks().size() == 1) {
                         scheduled_task_workflow.getAndIncrement();
-                        TaskResult taskResult = new TaskResult();
-                        taskResult.setWorkflowInstanceId(workflow.getWorkflowId());
-                        taskResult.setTaskId(workflow.getTasks().get(0).getTaskId());
-                        taskResult.setStatus(TaskResult.Status.COMPLETED);
-                        taskClient.updateTask(taskResult);
+                        list.add(new Pair(workflow.getWorkflowId(), workflow.getTasks().get(0).getTaskId()));
                     } else {
                         non_scheduled_task_workflow.getAndIncrement();
                     }
                 });
 
-                assertTrue(non_scheduled_task_workflow.get() <= (100- 10*finalI));
-                assertTrue(scheduled_task_workflow.get()==10);
+                assertEquals(total_workflows - allowed_workflows*(finalI+1) , non_scheduled_task_workflow.get());
+                assertEquals(allowed_workflows, scheduled_task_workflow.get());
+                list.stream().forEach(pair -> {
+                    TaskResult taskResult = new TaskResult();
+                    taskResult.setStatus(TaskResult.Status.COMPLETED);
+                    taskResult.setWorkflowInstanceId(pair.getName());
+                    taskResult.setTaskId(pair.getValue());
+                    taskClient.updateTask(taskResult);
+                });
             });
 
             //Sleep 5 seconds
-            Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
             // Do not run for last iteration.
-            if (i<9) {
+            if (i < iteration - 1) {
                 //Fetch top 10 workflows and run decider on that to speed up the test.
-                for (int j = (finalI + 1) * 10; j < (finalI + 2) * 10; j++) {
+                for (int j = (i+1) * allowed_workflows; j < allowed_workflows * (i + 2); j++) {
                     workflowClient.runDecider(workflowIds.get(j));
                 }
             }
