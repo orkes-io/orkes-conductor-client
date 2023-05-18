@@ -35,7 +35,7 @@ public class SyncWorkflowExecutionTest {
     static ApiClient apiClient;
     static WorkflowClient workflowClient;
 
-    static int threshold = 11000;
+    static int threshold = 2000;
 
     @BeforeAll
     public static void init() {
@@ -55,11 +55,16 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setVersion(1);
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null);
-        long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
-        long end = System.currentTimeMillis();
-        long timeTaken = end-start;
-        assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
+        try {
+            long start = System.currentTimeMillis();
+            WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
+            long end = System.currentTimeMillis();
+            System.out.println("WorkflowId " + workflowRun.getWorkflowId());
+            long timeTaken = end-start;
+            assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
+        } catch (Exception e) {
+            throw new RuntimeException("Workflow " + workflowName + " did not complete in 5 seconds");
+        }
     }
 
     @Test
@@ -74,9 +79,10 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "simple_task_rka0w_ref");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
         assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
         workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
@@ -94,8 +100,9 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "set_variable_task_1fi09_ref");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
         long timeTaken = end - start;
         assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
     }
@@ -112,9 +119,10 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "json_transform_task_jjowa_ref");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end - start;
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
         assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
     }
 
@@ -130,9 +138,10 @@ public class SyncWorkflowExecutionTest {
 
         CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "http_sync");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
         assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
     }
 
@@ -146,12 +155,13 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
 
-        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "http_fail");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
         assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
         workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
@@ -166,12 +176,13 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
 
-        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "get_random_fact");
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "simple_task_pia0h_ref");
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(35, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end-start;
         assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
         workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
