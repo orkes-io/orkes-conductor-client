@@ -12,9 +12,10 @@
  */
 package io.orkes.conductor.client.e2e;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import com.netflix.conductor.common.run.SearchResult;
+import com.netflix.conductor.common.run.WorkflowSummary;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,8 +47,6 @@ public class WorkflowRetryTests {
     static TaskClient taskClient;
     static MetadataClient metadataClient;
 
-    static String taskDefName = UUID.randomUUID().toString();
-
     @BeforeAll
     public static void init() {
         apiClient = ApiUtil.getApiClientWithCredentials();
@@ -62,6 +61,8 @@ public class WorkflowRetryTests {
     public void testRetrySimpleWorkflow() {
         String workflowName = "retry-simple-workflow";
         String taskDefName = "retry-simple-task1";
+
+        terminateExistingRunningWorkflows(workflowName);
 
         // Register workflow
         registerWorkflowDef(workflowName, taskDefName, taskDefName, metadataClient);
@@ -131,6 +132,8 @@ public class WorkflowRetryTests {
         String subWorkflowName = "retry-sub-workflow";
         String taskName = "simple-no-retry2";
 
+        terminateExistingRunningWorkflows(workflowName);
+
         // Register workflow
         registerWorkflowWithSubWorkflowDef(workflowName, subWorkflowName, taskName, metadataClient);
 
@@ -179,7 +182,63 @@ public class WorkflowRetryTests {
             Workflow workflow1 = workflowClient.getWorkflow(workflowId, false);
             assertEquals(WorkflowStatus.StatusEnum.COMPLETED.name(), workflow1.getStatus().name(), "workflow " + workflowId + " did not complete");
         });
+
+
+        // Check retry at parent workflow level.
+        String newWorkflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        System.out.print("Workflow id is " + newWorkflowId);
+        Workflow newWorkflow = workflowClient.getWorkflow(newWorkflowId, true);
+        // Fail the simple task
+        String newSubworkflowId = newWorkflow.getTasks().get(0).getSubWorkflowId();
+        Workflow newSubWorkflow = workflowClient.getWorkflow(newSubworkflowId, true);
+        taskId = newSubWorkflow.getTasks().get(0).getTaskId();
+        taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(newSubworkflowId);
+        taskResult.setTaskId(taskId);
+        taskResult.setStatus(TaskResult.Status.FAILED);
+        taskClient.updateTask(taskResult);
+
+        // Wait for parent workflow to get failed
+        await().atMost(3, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(newWorkflowId, false);
+            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.FAILED.name());
+        });
+
+        // Retry parent workflow.
+        workflowClient.retryLastFailedTask(newWorkflowId);
+
+        // Wait for parent workflow to get failed
+        await().atMost(3, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(newWorkflowId, false);
+            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.RUNNING.name());
+        });
+
+        newWorkflow = workflowClient.getWorkflow(newWorkflowId, true);
+        newSubworkflowId = newWorkflow.getTasks().get(0).getSubWorkflowId();
+        newSubWorkflow = workflowClient.getWorkflow(newSubworkflowId, true);
+        taskId = newSubWorkflow.getTasks().get(1).getTaskId();
+        taskResult = new TaskResult();
+        taskResult.setWorkflowInstanceId(newSubworkflowId);
+        taskResult.setTaskId(taskId);
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        taskClient.updateTask(taskResult);
+
+        await().atMost(3, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).untilAsserted(() -> {
+            Workflow workflow1 = workflowClient.getWorkflow(newWorkflowId, false);
+            assertEquals(workflow1.getStatus().name(), WorkflowStatus.StatusEnum.COMPLETED.name());
+        });
     }
 
+    private void terminateExistingRunningWorkflows(String workflowName) {
+        //clean up first
+        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        System.out.println("Found " + found.getResults().size() + " running workflows to be cleaned up");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId() + " with status " + workflowSummary.getStatus());
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+            } catch(Exception e){}
+        });
+    }
 
 }

@@ -91,7 +91,7 @@ public class TaskRunnerConfigurer {
         private int updateRetryCount = 3;
         private int threadCount = -1;
         private int shutdownGracePeriodSeconds = 10;
-        private int defaultPollTimeout = 100;
+        private int defaultPollTimeout = 1000;
 
         private int defaultPollCount = 20;
         private final Iterable<Worker> workers;

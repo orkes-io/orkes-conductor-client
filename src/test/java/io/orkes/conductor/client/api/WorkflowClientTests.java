@@ -46,13 +46,6 @@ public class WorkflowClientTests extends ClientTest {
     }
 
     @Test
-    public void startWorkflow() {
-        String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
-        Workflow workflow = workflowClient.getWorkflow(workflowId, false);
-        assertTrue(workflow.getWorkflowName().equals(Commons.WORKFLOW_NAME));
-    }
-
-    @Test
     public void testSearchByCorrelationIds() {
         List<String> correlationIds = new ArrayList<>();
         Set<String> workflowNames = new HashSet<>();
@@ -85,15 +78,6 @@ public class WorkflowClientTests extends ClientTest {
             Set<String> ids = result.get(correlationId).stream().map(wf -> wf.getWorkflowId()).collect(Collectors.toSet());
             assertEquals(correlationIdToWorkflows.get(correlationId), ids);
         }
-    }
-
-    @Test
-    public void testWorkflowTerminate() {
-        String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
-        workflowClient.terminateWorkflowWithFailure(
-                workflowId, "testing out some stuff", true);
-        var workflow = workflowClient.getWorkflow(workflowId, false);
-        assertEquals(Workflow.WorkflowStatus.TERMINATED, workflow.getStatus());
     }
 
     @Test

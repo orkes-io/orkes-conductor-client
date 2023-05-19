@@ -240,14 +240,14 @@ public class SubWorkflowTests {
         configurer = new TaskRunnerConfigurer
                 .Builder((OrkesTaskClient)taskClient, workers)
                 .withTaskToDomain(taskToDomainMap)
-                .withThreadCount(1)
+                .withThreadCount(10)
                 .withTaskPollTimeout(10)
                 .build();
         configurer.init();
 
         configurerNoDomain = new TaskRunnerConfigurer
                 .Builder((OrkesTaskClient)taskClient, workers)
-                .withThreadCount(1)
+                .withThreadCount(10)
                 .withTaskPollTimeout(10)
                 .build();
         configurerNoDomain.init();

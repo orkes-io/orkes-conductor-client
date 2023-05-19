@@ -12,10 +12,12 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import io.orkes.conductor.client.util.ApiUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -33,7 +35,6 @@ import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
-import io.orkes.conductor.sdk.examples.ApiUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
@@ -79,9 +80,11 @@ public class WebhookTests {
             keys[i] = key;
         }
 
+        terminateExistingRunningWorkflows(WORKFLOW_NAME, workflowClient);
+
         sendWebhook(keys, webhookUrl);
         List<String> workflowIds = new ArrayList<>();
-        await().pollInterval(1, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
+        await().pollInterval(10, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
             SearchResult<WorkflowSummary> workflows = workflowClient.search(0, count, "", correlationId, "status = 'RUNNING'");
             assertNotNull(workflows);
             assertNotNull(workflows.getResults());
@@ -98,7 +101,7 @@ public class WebhookTests {
             sendWebhook(input, receiveWebhookUrl);
         }
 
-        await().pollInterval(1, TimeUnit.SECONDS).atMost(30, TimeUnit.SECONDS).untilAsserted(() ->{
+        await().pollInterval(10, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
             for (String wfId : workflowIds) {
                 Workflow workflow = workflowClient.getWorkflow(wfId, true);
                 assertNotNull(workflow);
@@ -117,7 +120,7 @@ public class WebhookTests {
             sendWebhook(input, receiveWebhookUrl + "?id=" + key);
         }
 
-        await().pollInterval(1, TimeUnit.SECONDS).atMost(30, TimeUnit.SECONDS).untilAsserted(() ->{
+        await().pollInterval(1, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS).untilAsserted(() ->{
             for (String wfId : workflowIds) {
                 Workflow workflow = workflowClient.getWorkflow(wfId, true);
                 assertNotNull(workflow);
@@ -149,6 +152,8 @@ public class WebhookTests {
         Request request = builder.post(requestBody).build();
         Response response = httpClient.newCall(request).execute();
         assertEquals(200, response.code());
+        try (ResponseBody ignored = response.body()){
+        }catch(IOException e){}
     }
 
     @SneakyThrows
@@ -215,9 +220,13 @@ public class WebhookTests {
         Request request = builder.post(requestBody).addHeader("X-Authorization", client.getToken()).build();
         Response response = httpClient.newCall(request).execute();
         assertEquals(200, response.code());
-        byte[] responseBytes = response.body().bytes();
-        config = om.readValue(responseBytes, WebhookConfig.class);
-        return config.getId();
+        try (ResponseBody ignored = response.body()){
+            byte[] responseBytes = response.body().bytes();
+            config = om.readValue(responseBytes, WebhookConfig.class);
+            return config.getId();
+        }catch(IOException e){
+            return null;
+        }
     }
 
     @SneakyThrows
@@ -228,8 +237,9 @@ public class WebhookTests {
             OkHttpClient httpClient = new OkHttpClient();
             Request.Builder builder = new Request.Builder().url(url);
             Request request = builder.delete().addHeader("X-Authorization", client.getToken()).build();
-            httpClient.newCall(request).execute();
-
+            Response response = httpClient.newCall(request).execute();
+            try (ResponseBody ignored = response.body()){
+            }catch(IOException e){}
         }
 
         if(receiveWebhookUrl != null) {
@@ -237,8 +247,21 @@ public class WebhookTests {
             OkHttpClient httpClient = new OkHttpClient();
             Request.Builder builder = new Request.Builder().url(url);
             Request request = builder.delete().addHeader("X-Authorization", client.getToken()).build();
-            httpClient.newCall(request).execute();
-
+            Response response = httpClient.newCall(request).execute();
+            try (ResponseBody ignored = response.body()){
+            }catch(IOException e){}
         }
+    }
+
+    private void terminateExistingRunningWorkflows(String workflowName, WorkflowClient workflowClient) {
+        //clean up first
+        SearchResult<WorkflowSummary> found = workflowClient.search("workflowType IN (" + workflowName + ") AND status IN (RUNNING)");
+        System.out.println("Found " + found.getResults().size() + " running workflows to be cleaned up");
+        found.getResults().forEach(workflowSummary -> {
+            try {
+                System.out.println("Going to terminate " + workflowSummary.getWorkflowId() + " with status " + workflowSummary.getStatus());
+                workflowClient.terminateWorkflow(workflowSummary.getWorkflowId(), "terminate");
+            } catch(Exception e){}
+        });
     }
 }

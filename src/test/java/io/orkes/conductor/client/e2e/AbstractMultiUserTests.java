@@ -12,9 +12,11 @@
  */
 package io.orkes.conductor.client.e2e;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
+import com.squareup.okhttp.ResponseBody;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -93,8 +95,12 @@ public abstract class AbstractMultiUserTests {
                 .addHeader("accept", "application/json")
                 .build();
         Response response = client.newCall(request).execute();
-        byte[] data = response.body().bytes();
-        Map<String, Object> userInfo = objectMapper.readValue(data, Map.class);
-        return userInfo.get("id").toString();
+        try (ResponseBody body  = response.body()) {
+            byte[] data = body.bytes();
+            Map<String, Object> userInfo = objectMapper.readValue(data, Map.class);
+            return userInfo.get("id").toString();
+        }catch(IOException e) {
+            return null;
+        }
     }
 }

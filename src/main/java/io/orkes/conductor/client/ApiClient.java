@@ -654,32 +654,14 @@ public class ApiClient {
             return null;
         }
 
-        if ("byte[]".equals(returnType.toString())) {
-            // Handle binary response (byte array).
-            try {
-                return (T) response.body().bytes();
-            } catch (IOException e) {
-                throw new ApiException(e);
-            }
-        } else if (returnType.equals(File.class)) {
-            // Handle file downloading.
-            return (T) downloadFileFromResponse(response);
-        }
-
-        String respBody;
-        try {
-            if (response.body() != null) {
-                ResponseBody body = response.body();
-                respBody = body.string();
-                body.close();
-            } else {
-                respBody = null;
-            }
+        String respBody = null;
+        try(ResponseBody body = response.body()) {
+            respBody = body.string();
         } catch (IOException e) {
             throw new ApiException(e);
         }
 
-        if (respBody == null || "".equals(respBody)) {
+        if ("".equals(respBody)) {
             return null;
         }
 
@@ -820,6 +802,7 @@ public class ApiClient {
             T data = handleResponse(response, returnType);
             return new ApiResponse<T>(response.code(), response.headers().toMultimap(), data);
         } catch (IOException e) {
+            LOGGER.error("Error while executing request ", e);
             throw new ApiException(e);
         }
     }
@@ -839,35 +822,18 @@ public class ApiClient {
             if (returnType == null || response.code() == 204) {
                 // returning null if the returnType is not defined,
                 // or the status code is 204 (No Content)
-                if (response.body() != null) {
-                    try {
-                        response.body().close();
-                    } catch (IOException e) {
-                        throw new ApiException(
-                                response.message(),
-                                e,
-                                response.code(),
-                                response.headers().toMultimap());
-                    }
+                try (ResponseBody ignored = response.body()) {
+                } catch(IOException e) {
                 }
                 return null;
             } else {
                 return deserialize(response, returnType);
             }
         } else {
-            String respBody = null;
-            if (response.body() != null) {
-                try {
-                    ResponseBody body = response.body();
-                    respBody = body.string();
-                    body.close();
-                } catch (IOException e) {
-                    throw new ApiException(
-                            response.message(),
-                            e,
-                            response.code(),
-                            response.headers().toMultimap());
-                }
+            String respBody = "";
+            try (ResponseBody body = response.body()) {
+                respBody = body.string();
+            } catch(IOException e) {
             }
             throw new ApiException(response.message(), response.code(), response.headers().toMultimap(), respBody);
         }
