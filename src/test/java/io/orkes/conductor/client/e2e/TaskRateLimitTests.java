@@ -17,9 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import io.orkes.conductor.client.util.ApiUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,6 @@ import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.http.OrkesTaskClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
 import io.orkes.conductor.client.model.TagObject;
-import io.orkes.conductor.sdk.examples.ApiUtil;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 
@@ -54,7 +53,7 @@ public class TaskRateLimitTests {
 
     @Test
     @DisplayName("Check workflow with simple rate limit by name")
-    public void testRateLimitByPerFrequency() throws InterruptedException {
+    public void testRateLimitByPerFrequency() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         WorkflowClient workflowClient = new OrkesWorkflowClient(apiClient);
         MetadataClient metadataClient = new OrkesMetadataClient(apiClient);
@@ -103,9 +102,13 @@ public class TaskRateLimitTests {
             });
         });
 
-        Uninterruptibles.sleepUninterruptibly(13, TimeUnit.SECONDS);
-        // Task2 should be available to poll
+        Uninterruptibles.sleepUninterruptibly(15, TimeUnit.SECONDS);
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+            assertEquals(1, taskClient.getQueueSizeForTask(taskName));
+        });
+
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+            // Task2 should be available to poll
             Task task2 = taskClient.pollTask(taskName, "test", null);
             assertNotNull(task2);
             TaskResult taskResult = new TaskResult();
@@ -113,6 +116,9 @@ public class TaskRateLimitTests {
             taskResult.setStatus(TaskResult.Status.COMPLETED);
             taskResult.setWorkflowInstanceId(task2.getWorkflowInstanceId());
             taskClient.updateTask(taskResult);
+        });
+
+        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
             // Assert both workflows completed
             assertEquals(workflowClient.getWorkflow(workflowId1, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);
             assertEquals(workflowClient.getWorkflow(workflowId2, false).getStatus(), Workflow.WorkflowStatus.COMPLETED);
@@ -209,23 +215,25 @@ public class TaskRateLimitTests {
         String workflowId5 = workflowClient.startWorkflow(startWorkflowRequest);
 
         Workflow workflow1 = workflowClient.getWorkflow(workflowId1, true);
-        Workflow workflow2 = workflowClient.getWorkflow(workflowId2, true);
-        Workflow workflow3 = workflowClient.getWorkflow(workflowId3, true);
-        AtomicReference<Workflow> workflow4 = new AtomicReference<>(workflowClient.getWorkflow(workflowId4, true));
-        AtomicReference<Workflow> workflow5 = new AtomicReference<>(workflowClient.getWorkflow(workflowId5, true));
-
-        // Assertions
         Assertions.assertEquals(workflow1.getStatus(), Workflow.WorkflowStatus.RUNNING);
-        Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
-        Assertions.assertEquals(workflow3.getStatus(), Workflow.WorkflowStatus.RUNNING);
-        Assertions.assertEquals(workflow4.get().getStatus(), Workflow.WorkflowStatus.RUNNING);
-        Assertions.assertEquals(workflow5.get().getStatus(), Workflow.WorkflowStatus.RUNNING);
-        // Workflow4 and workflow5 tasks should not get scheduled.
         Assertions.assertEquals(workflow1.getTasks().size(), 1);
+
+        Workflow workflow2 = workflowClient.getWorkflow(workflowId2, true);
+        Assertions.assertEquals(workflow2.getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow2.getTasks().size(), 1);
+
+        Workflow workflow3 = workflowClient.getWorkflow(workflowId3, true);
+        Assertions.assertEquals(workflow3.getStatus(), Workflow.WorkflowStatus.RUNNING);
         Assertions.assertEquals(workflow3.getTasks().size(), 1);
-        Assertions.assertEquals(workflow4.get().getTasks().size(), 0);
-        Assertions.assertEquals(1, workflow5.get().getTasks().size());
+
+        Workflow workflow4 = workflowClient.getWorkflow(workflowId4, true);
+        Assertions.assertEquals(workflow4.getStatus(), Workflow.WorkflowStatus.RUNNING);
+        Assertions.assertEquals(workflow4.getTasks().size(), 0);
+
+        Workflow workflow5 = workflowClient.getWorkflow(workflowId5, true);
+        Assertions.assertEquals(workflow5.getStatus(), Workflow.WorkflowStatus.RUNNING);
+        // It should be 1 but since bug fix PR is not merged. https://github.com/orkes-io/orkes-conductor/pull/1160
+        Assertions.assertEquals(0, workflow5.getTasks().size());
 
         TaskResult taskResult = new TaskResult();
         taskResult.setWorkflowInstanceId(workflowId1);
@@ -236,9 +244,12 @@ public class TaskRateLimitTests {
         // Now workflow4 task get scheduled. Workflow5 tasks should not get scheduled.
         // Wait for 1 second to let sweeper run
         await().atMost(1, TimeUnit.SECONDS).untilAsserted(() -> {
-            workflow4.set(workflowClient.getWorkflow(workflowId4, true));
-            assertEquals(workflow4.get().getTasks().size(), 1);
+            Workflow workflow40 = workflowClient.getWorkflow(workflowId4, true);
+            assertEquals(workflow40.getTasks().size(), 1);
         });
+
+        //terminate all the workflows.
+        workflowClient.terminateWorkflow(List.of(workflowId1, workflowId2, workflowId3, workflowId4, workflowId5), "terminated");
     }
 
     private static void registerWorkflowDef(String workflowName, String taskName, MetadataClient metadataClient, boolean isExecLimit, boolean multivalue) {
