@@ -29,7 +29,11 @@ import io.orkes.conductor.client.model.WorkflowTestRequest;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 public abstract class WorkflowClient extends com.netflix.conductor.client.http.WorkflowClient {
+
+    @Deprecated
     public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask);
+
+    public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds);
 
     public abstract WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException;
 
