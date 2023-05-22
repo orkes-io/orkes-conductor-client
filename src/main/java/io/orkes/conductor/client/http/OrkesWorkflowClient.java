@@ -102,6 +102,15 @@ public class OrkesWorkflowClient extends WorkflowClient {
     }
 
     @Override
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds) {
+        if(apiClient.isUseGRPC()) {
+            return grpcWorkflowClient.executeWorkflow(request, waitUntilTask, waitForSeconds);
+        } else {
+            return executeWorkflowHttp(request, waitUntilTask, waitForSeconds);
+        }
+    }
+
+    @Override
     public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<WorkflowRun> future = executeWorkflow(request, waitUntilTask);
         return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
@@ -120,6 +129,29 @@ public class OrkesWorkflowClient extends WorkflowClient {
                                         startWorkflowRequest.getVersion(),
                                         waitUntilTask,
                                         requestId);
+                        future.complete(response);
+                    } catch (Throwable t) {
+                        future.completeExceptionally(t);
+                    }
+                });
+
+        return future;
+    }
+
+    private CompletableFuture<WorkflowRun> executeWorkflowHttp(StartWorkflowRequest startWorkflowRequest, String waitUntilTask, Integer waitForSeconds) {
+        CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
+        String requestId = UUID.randomUUID().toString();
+        executorService.submit(
+                () -> {
+                    try {
+                        WorkflowRun response =
+                                httpClient.executeWorkflow(
+                                        startWorkflowRequest,
+                                        startWorkflowRequest.getName(),
+                                        startWorkflowRequest.getVersion(),
+                                        waitUntilTask,
+                                        requestId,
+                                        waitForSeconds);
                         future.complete(response);
                     } catch (Throwable t) {
                         future.completeExceptionally(t);

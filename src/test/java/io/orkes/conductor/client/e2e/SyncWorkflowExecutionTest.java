@@ -186,4 +186,102 @@ public class SyncWorkflowExecutionTest {
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
         workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
+
+    @Test
+    @DisplayName("Check sync workflow end with set variable task. when wait until task is specified as null")
+    public void testSyncWorkflowExecution8() throws ExecutionException, InterruptedException, TimeoutException {
+
+        String workflowName = "sync_workflow_end_with_set_variable_task";
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null);
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
+        long timeTaken = end - start;
+        assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
+    }
+
+    @Test
+    @DisplayName("Check sync workflow end with set variable task. when wrong wait until task is specified")
+    public void testSyncWorkflowExecution9() throws ExecutionException, InterruptedException, TimeoutException {
+
+        String workflowName = "sync_workflow_end_with_set_variable_task";
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, "no_such_Task_exist");
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
+        long timeTaken = end - start;
+        assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
+    }
+
+    @Test
+    @DisplayName("Check sync workflow end with set variable task. The wait for duration is given.")
+    public void testSyncWorkflowExecution10() throws ExecutionException, InterruptedException, TimeoutException {
+
+        String workflowName = "sync_workflow_end_with_set_variable_task";
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null, 1);
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(1, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
+        long timeTaken = end - start;
+        assertTrue(timeTaken < threshold, "Time taken was " + timeTaken);
+    }
+
+    @Test
+    @DisplayName("Check sync workflow with simple task. The wait for duration is given.")
+    public void testSyncWorkflowExecution11() throws ExecutionException, InterruptedException, TimeoutException {
+
+        String workflowName = "sync_workflow_end_with_simple_task";
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null, 2);
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        long timeTaken = end - start;
+        assertTrue(timeTaken < 2500, "Time taken was " + timeTaken);
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+        workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
+    }
+
+    @Test
+    @DisplayName("Check sync workflow with simple task. The wait for duration is not given.")
+    public void testSyncWorkflowExecution12() throws ExecutionException, InterruptedException, TimeoutException {
+
+        String workflowName = "sync_workflow_end_with_simple_task";
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null, (Integer)null);
+        long start = System.currentTimeMillis();
+        WorkflowRun workflowRun = completableFuture.get(11, TimeUnit.SECONDS);
+        long end = System.currentTimeMillis();
+        long timeTaken = end-start;
+        System.out.println("WorkflowId " + workflowRun.getWorkflowId());
+        assertTrue(timeTaken < 11000, "Time taken was " + timeTaken);
+        assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
+        workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
+    }
 }

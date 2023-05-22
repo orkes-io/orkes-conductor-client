@@ -102,6 +102,40 @@ public class GrpcWorkflowClient {
         return future;
     }
 
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String waitUntilTask, Integer waitForSeconds) {
+        if (!responseStream.isReady()) {
+            int connectAttempts = 3;
+            int sleepTime = 200;
+
+            while (connectAttempts > 0) {
+                reConnect();
+                log.info("Connection attempt {} backoff for {} millis", connectAttempts, sleepTime);
+                Uninterruptibles.sleepUninterruptibly(sleepTime, TimeUnit.MILLISECONDS);
+                if(responseStream.isReady()) {
+                    break;
+                }
+                connectAttempts--;
+                sleepTime = sleepTime * 2;
+            }
+            if(!responseStream.isReady()) {
+                throw new RuntimeException("Server is not yet ready to accept the requests");
+            }
+        }
+        String requestId = UUID.randomUUID().toString();
+
+        OrkesWorkflowService.StartWorkflowRequest.Builder requestBuilder = OrkesWorkflowService.StartWorkflowRequest.newBuilder();
+        requestBuilder.setRequestId(requestId).setIdempotencyKey(requestId).setMonitor(true);
+        if (waitUntilTask != null) {
+            requestBuilder.setWaitUntilTask(waitUntilTask);
+        }
+        requestBuilder.setRequest(protoMappingHelper.toProto(startWorkflowRequest));
+        CompletableFuture<WorkflowRun> future = executionMonitor.monitorRequest(requestId);
+        synchronized (requestStream) {
+            requestStream.onNext(requestBuilder.build());
+        }
+        return future;
+    }
+
     public void shutdown() {
         channel.shutdown();
     }
