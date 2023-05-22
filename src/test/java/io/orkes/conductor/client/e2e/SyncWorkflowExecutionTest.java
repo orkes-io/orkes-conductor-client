@@ -254,12 +254,12 @@ public class SyncWorkflowExecutionTest {
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
 
-        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null, 2);
+        CompletableFuture<WorkflowRun> completableFuture = workflowClient.executeWorkflow(startWorkflowRequest, null, 5);
         long start = System.currentTimeMillis();
-        WorkflowRun workflowRun = completableFuture.get(3, TimeUnit.SECONDS);
+        WorkflowRun workflowRun = completableFuture.get(6, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         long timeTaken = end - start;
-        assertTrue(timeTaken < 2500, "Time taken was " + timeTaken);
+        assertTrue(timeTaken < 6000, "Time taken was " + timeTaken);
         assertEquals(Workflow.WorkflowStatus.RUNNING, workflowRun.getStatus());
         workflowClient.terminateWorkflow(workflowRun.getWorkflowId(), "Terminated");
     }
