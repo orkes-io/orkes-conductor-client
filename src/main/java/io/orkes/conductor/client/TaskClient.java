@@ -14,4 +14,7 @@ package io.orkes.conductor.client;
 
 
 
-public class TaskClient extends com.netflix.conductor.client.http.TaskClient {}
+public class TaskClient extends com.netflix.conductor.client.http.TaskClient {
+
+
+}

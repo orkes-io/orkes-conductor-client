@@ -25,6 +25,7 @@ import com.netflix.conductor.common.metadata.tasks.PollData;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskExecLog;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
@@ -1824,7 +1825,7 @@ public class TaskResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call updateTaskCall(
+    private com.squareup.okhttp.Call updateTaskCall(
             TaskResult taskResult,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1928,33 +1929,22 @@ public class TaskResourceApi {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for updateTask1
-     *
-     * @param body (required)
-     * @param workflowId (required)
-     * @param taskRefName (required)
-     * @param status (required)
-     * @param workerId (optional)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
-    public com.squareup.okhttp.Call updateTask1Call(
+    private com.squareup.okhttp.Call updateTaskByRefNameCall(
             Map<String, Object> body,
             String workflowId,
             String taskRefName,
             String status,
             String workerId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            boolean sync)
             throws ApiException {
         Object localVarPostBody = body;
-
+        String path =  "/tasks/{workflowId}/{taskRefName}/{status}";
+        if(sync) {
+            path += "/sync";
+        }
         // create path and map variables
         String localVarPath =
-                "/tasks/{workflowId}/{taskRefName}/{status}"
+                path
                         .replaceAll(
                                 "\\{" + "workflowId" + "\\}",
                                 apiClient.escapeString(workflowId.toString()))
@@ -1985,28 +1975,7 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new com.squareup.okhttp.Interceptor() {
-                                @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
-                                        throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
         return apiClient.buildCall(
@@ -2018,7 +1987,7 @@ public class TaskResourceApi {
                 localVarHeaderParams,
                 localVarFormParams,
                 localVarAuthNames,
-                progressRequestListener);
+                null);
     }
 
     private com.squareup.okhttp.Call updateTask1ValidateBeforeCall(
@@ -2026,8 +1995,7 @@ public class TaskResourceApi {
             String workflowId,
             String taskRefName,
             String status,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            boolean sync)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -2051,14 +2019,13 @@ public class TaskResourceApi {
         }
 
         com.squareup.okhttp.Call call =
-                updateTask1Call(
+                updateTaskByRefNameCall(
                         body,
                         workflowId,
                         taskRefName,
                         status,
-                        null,
-                        progressListener,
-                        progressRequestListener);
+                        getIdentity(),
+                        sync);
         return call;
     }
 
@@ -2073,10 +2040,42 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
+    @Deprecated
     public String updateTask1(
             Map<String, Object> body, String workflowId, String taskRefName, String status)
             throws ApiException {
-        ApiResponse<String> resp = updateTask1WithHttpInfo(body, workflowId, taskRefName, status);
+        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        ApiResponse<String> resp = updateTask1WithHttpInfo(body, workflowId, taskRefName, status, false, localVarReturnType);
+        return resp.getData();
+    }
+
+    /**
+     *
+     * @param output Task Output
+     * @param workflowId Workflow Id
+     * @param taskRefName Reference name of the task to be updated
+     * @param status Status
+     * @return Task Id
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response
+     */
+    public String updateTaskByRefName(Map<String, Object> output, String workflowId, String taskRefName, String status)  throws ApiException {
+        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        ApiResponse<String> resp = updateTask1WithHttpInfo(output, workflowId, taskRefName, status, false, localVarReturnType);
+        return resp.getData();
+    }
+
+    /**
+     *
+     * @param output Task Output
+     * @param workflowId Workflow Id
+     * @param taskRefName Reference name of the task to be updated
+     * @param status Status
+     * @return Status of the workflow after updating the task
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response
+     */
+    public Workflow updateTaskSync(Map<String, Object> output, String workflowId, String taskRefName, String status)  throws ApiException {
+        Type localVarReturnType = new TypeToken<Workflow>() {}.getType();
+        ApiResponse<Workflow> resp = updateTask1WithHttpInfo(output, workflowId, taskRefName, status, true, localVarReturnType);
         return resp.getData();
     }
 
@@ -2091,12 +2090,18 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<String> updateTask1WithHttpInfo(
-            Map<String, Object> body, String workflowId, String taskRefName, String status)
+    private <T>ApiResponse<T> updateTask1WithHttpInfo(Map<String, Object> body, String workflowId, String taskRefName, String status, boolean sync, Type returnType)
             throws ApiException {
         com.squareup.okhttp.Call call =
-                updateTask1ValidateBeforeCall(body, workflowId, taskRefName, status, null, null);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
+                updateTask1ValidateBeforeCall(body, workflowId, taskRefName, status, sync);
+        return apiClient.execute(call, returnType);
+    }
+
+    private ApiResponse<Workflow> updateTaskSyncWithHttpInfo(Map<String, Object> body, String workflowId, String taskRefName, String status, boolean sync)
+            throws ApiException {
+        com.squareup.okhttp.Call call =
+                updateTask1ValidateBeforeCall(body, workflowId, taskRefName, status, sync);
+        Type localVarReturnType = new TypeToken<Workflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

@@ -12,21 +12,26 @@
  */
 package io.orkes.conductor.client.http;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.netflix.conductor.common.config.ObjectMapperProvider;
 import com.netflix.conductor.common.metadata.tasks.PollData;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskExecLog;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.TaskSummary;
+import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.grpc.GrpcTaskClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class OrkesTaskClient extends TaskClient implements AutoCloseable{
 
@@ -35,6 +40,8 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable{
     private TaskResourceApi taskResourceApi;
 
     private GrpcTaskClient grpcTaskClient;
+
+    private ObjectMapper objectMapper = new ObjectMapperProvider().getObjectMapper();
 
     public OrkesTaskClient(ApiClient apiClient) {
         this.apiClient = apiClient;
@@ -91,6 +98,42 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable{
         } else {
             taskResourceApi.updateTask(taskResult);
         }
+    }
+
+
+    /**
+     * Update the task status and output based given workflow id and task reference name
+     * @param workflowId Workflow Id
+     * @param taskReferenceName Reference name of the task to be updated
+     * @param status Status of the task
+     * @param output Output for the task
+     */
+    public void updateTask(String workflowId, String taskReferenceName, TaskResult.Status status, Object output) {
+        Map<String, Object> outputMap = new HashMap<>();
+        try {
+            outputMap = objectMapper.convertValue(output, Map.class);;
+        } catch (Exception e) {
+            outputMap.put("result", output);
+        }
+        taskResourceApi.updateTaskByRefName(outputMap, workflowId, taskReferenceName, status.toString());
+    }
+
+    /**
+     * Update the task status and output based given workflow id and task reference name and return back the updated workflow status
+     * @param workflowId Workflow Id
+     * @param taskReferenceName Reference name of the task to be updated
+     * @param status Status of the task
+     * @param output Output for the task
+     * @return Status of the workflow after updating the task
+     */
+    public Workflow updateTaskSync(String workflowId, String taskReferenceName, TaskResult.Status status, Object output) {
+        Map<String, Object> outputMap = new HashMap<>();
+        try {
+            outputMap = objectMapper.convertValue(output, Map.class);;
+        } catch (Exception e) {
+            outputMap.put("result", output);
+        }
+        return taskResourceApi.updateTaskSync(outputMap, workflowId, taskReferenceName, status.toString());
     }
 
     @Override
