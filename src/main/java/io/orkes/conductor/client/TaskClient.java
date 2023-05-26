@@ -13,8 +13,28 @@
 package io.orkes.conductor.client;
 
 
+import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import com.netflix.conductor.common.run.Workflow;
 
-public class TaskClient extends com.netflix.conductor.client.http.TaskClient {
+public abstract class TaskClient extends com.netflix.conductor.client.http.TaskClient {
 
+    /**
+     * Update the task status and output based given workflow id and task reference name
+     * @param workflowId Workflow Id
+     * @param taskReferenceName Reference name of the task to be updated
+     * @param status Status of the task
+     * @param output Output for the task
+     */
+    public abstract void updateTask(String workflowId, String taskReferenceName, TaskResult.Status status, Object output);
+
+    /**
+     * Update the task status and output based given workflow id and task reference name and return back the updated workflow status
+     * @param workflowId Workflow Id
+     * @param taskReferenceName Reference name of the task to be updated
+     * @param status Status of the task
+     * @param output Output for the task
+     * @return Status of the workflow after updating the task
+     */
+    public abstract Workflow updateTaskSync(String workflowId, String taskReferenceName, TaskResult.Status status, Object output);
 
 }
