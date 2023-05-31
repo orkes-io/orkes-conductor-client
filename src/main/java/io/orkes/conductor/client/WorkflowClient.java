@@ -15,6 +15,7 @@ package io.orkes.conductor.client;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -78,4 +79,16 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
      * @return Workflow
      */
     public abstract Workflow testWorkflow(WorkflowTestRequest testRequest);
+
+    /**
+     * Update the workflow by setting variables as given.  This is similar to SET_VARIABLE task except that with
+     * this API, the workflow variables can be updated any anytime while the workflow is in RUNNING state.
+     * This API is useful for cases where the state of the workflow needs to be updated based on an external trigger,
+     * such as terminate a long-running do_while loop with a terminating condition based on the workflow variables.
+     *
+     * @param workflowId Id of the workflow
+     * @param variables Workflow variables.  The variables are merged with existing variables.
+     * @return Updated state of the workflow
+     */
+    public abstract Workflow updateVariables(String workflowId, Map<String, Object> variables);
 }

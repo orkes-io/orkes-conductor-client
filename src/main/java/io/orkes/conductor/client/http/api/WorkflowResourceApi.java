@@ -14,16 +14,14 @@ package io.orkes.conductor.client.http.api;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.SkipTaskRequest;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
 
+import com.squareup.okhttp.Call;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
@@ -3791,5 +3789,45 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call = uploadCompletedWorkflowsValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeToken<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
+    }
+
+    public Workflow updateVariables(String workflowId, Map<String, Object> variables) {
+        com.squareup.okhttp.Call call = updateVariablesCall(workflowId, variables);
+        Type returnType = new TypeToken<Workflow>() {}.getType();
+        ApiResponse<Workflow> response = apiClient.execute(call, returnType);
+        return response.getData();
+    }
+
+    private Call updateVariablesCall(String workflowId, Map<String, Object> variables) {
+        Object localVarPostBody = variables;
+        String localVarPath = "/workflow/{workflowId}/variables".replaceAll(
+                "\\{" + "workflowId" + "\\}",
+                apiClient.escapeString(workflowId.toString()));
+
+                        ;
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {"*/*"};
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {};
+
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+        String[] localVarAuthNames = new String[] {"api_key"};
+        return apiClient.buildCall(
+                localVarPath,
+                "POST",
+                localVarQueryParams,
+                localVarCollectionQueryParams,
+                localVarPostBody,
+                localVarHeaderParams,
+                localVarFormParams,
+                localVarAuthNames,
+                null);
     }
 }

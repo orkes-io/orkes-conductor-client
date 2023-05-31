@@ -16,6 +16,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
@@ -81,22 +83,45 @@ public class WorkflowClientTests extends ClientTest {
     }
 
     @Test
-    void testUnsupportedMethods() {
-        assertThrows(
-                UnsupportedOperationException.class,
-                () -> {
-                    workflowClient.resetCallbacksForInProgressTasks("");
-                });
-        assertThrows(
-                UnsupportedOperationException.class,
-                () -> {
-                    workflowClient.searchV2("");
-                });
-        assertThrows(
-                UnsupportedOperationException.class,
-                () -> {
-                    workflowClient.searchV2(0, 0, "", "", "");
-                });
+    public void testUpdateVariables() {
+        ConductorWorkflow<Object> workflow = new ConductorWorkflow<>(workflowExecutor);
+        workflow.add(new SimpleTask("simple_task","simple_task_ref"));
+        workflow.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+        workflow.setTimeoutSeconds(60);
+        workflow.setName("update_variable_test");
+        workflow.setVersion(1);
+        workflow.registerWorkflow(true, true);
+
+        StartWorkflowRequest request = new StartWorkflowRequest();
+        request.setName(workflow.getName());
+        request.setVersion(workflow.getVersion());
+        request.setInput(Map.of());
+        String workflowId = workflowClient.startWorkflow(request);
+        assertNotNull(workflowId);
+
+        Workflow execution = workflowClient.getWorkflow(workflowId, false);
+        assertNotNull(execution);
+        assertTrue(execution.getVariables().isEmpty());
+
+        Map<String, Object> variables = Map.of("k1", "v1", "k2", 42, "k3", Arrays.asList(3, 4, 5));
+        execution = workflowClient.updateVariables(workflowId, variables);
+        assertNotNull(execution);
+        assertFalse(execution.getVariables().isEmpty());
+        assertEquals(variables.get("k1"), execution.getVariables().get("k1"));
+        assertEquals(variables.get("k2").toString(), execution.getVariables().get("k2").toString());
+        assertEquals(variables.get("k3").toString(), execution.getVariables().get("k3").toString());
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("k1", null);
+        map.put("v1", "xyz");
+        execution = workflowClient.updateVariables(workflowId, map);
+        assertNotNull(execution);
+        assertFalse(execution.getVariables().isEmpty());
+        assertEquals(null, execution.getVariables().get("k1"));
+        assertEquals(variables.get("k2").toString(), execution.getVariables().get("k2").toString());
+        assertEquals(variables.get("k3").toString(), execution.getVariables().get("k3").toString());
+        assertEquals("xyz", execution.getVariables().get("v1").toString());
+
     }
 
     StartWorkflowRequest getStartWorkflowRequest() {
