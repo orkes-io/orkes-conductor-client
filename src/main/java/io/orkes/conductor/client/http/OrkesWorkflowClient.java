@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.*;
 
@@ -327,6 +328,10 @@ public class OrkesWorkflowClient extends WorkflowClient {
         return httpClient.testWorkflow(testRequest);
     }
 
+    @Override
+    public Workflow updateVariables(String workflowId, Map<String, Object> variables) {
+        return httpClient.updateVariables(workflowId, variables);
+    }
     @Override
     public void shutdown() {
         if(apiClient.isUseGRPC()) {
