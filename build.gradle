@@ -20,7 +20,7 @@ ext {
     versions = [
             awaitility      : '4.2.0',
             commonsLang     : '3.12.0',
-            conductor       : '3.9.0-orkes-o',
+            conductor       : '3.13.7',
             jackson         : '2.11.4!!',
             jersey          : '1.19.4',
             junit           : '5.9.0',
