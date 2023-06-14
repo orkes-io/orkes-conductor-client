@@ -17,7 +17,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import io.orkes.conductor.client.util.ApiUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -35,6 +34,7 @@ import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.OrkesWorkflowClient;
+import io.orkes.conductor.client.util.ApiUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
