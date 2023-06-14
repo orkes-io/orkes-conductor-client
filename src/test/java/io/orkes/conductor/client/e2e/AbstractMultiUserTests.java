@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
-import com.squareup.okhttp.ResponseBody;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -31,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
