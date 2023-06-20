@@ -300,7 +300,11 @@ public class TaskRunnerConfigurer {
                 this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
         final Integer taskPollTimeout =
                 this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
-        LOGGER.info("Starting worker: {} with {} threads and {} pollTimeout", worker.getTaskDefName(),threadCountForTask, taskPollTimeout);
+        final Map<String, String> envTaskNameToDomain = 
+                EnvironmentVariableReader.getTaskNameToDomain();
+        taskToDomain.putAll(envTaskNameToDomain);
+        LOGGER.info("Starting worker: {} with {} threads and {} pollTimeout", 
+            worker.getTaskDefName(), threadCountForTask, taskPollTimeout);
         LOGGER.info("Domain map for tasks = {}", taskToDomain);
         final TaskRunner taskRunner =
                 new TaskRunner(
@@ -320,7 +324,7 @@ public class TaskRunnerConfigurer {
 
         final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
         final Integer taskPollTimeout = this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
-        final Integer taskPollcount = this.taskPollCount.getOrDefault(worker.getTaskDefName(), defaultPollCount);
+        final Integer taskPollCount = this.taskPollCount.getOrDefault(worker.getTaskDefName(), defaultPollCount);
         String taskType = worker.getTaskDefName();
         String domain =
                 Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
@@ -328,7 +332,7 @@ public class TaskRunnerConfigurer {
         LOGGER.info("Starting gRPC worker: {} with {} threads", worker.getTaskDefName(), threadCountForTask);
 
         ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCountForTask, threadCountForTask, 1, TimeUnit.MINUTES, new ArrayBlockingQueue<>(threadCountForTask * 100));
-        PooledPoller pooledPoller = new PooledPoller(apiClient, worker, domain, taskPollcount, taskPollTimeout, executor, threadCountForTask);
+        PooledPoller pooledPoller = new PooledPoller(apiClient, worker, domain, taskPollCount, taskPollTimeout, executor, threadCountForTask);
         pooledPoller.start();
     }
 }
