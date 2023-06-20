@@ -68,7 +68,7 @@ public class EnvironmentVariableReader {
             }
             String taskName = matcher.group(1);
             taskConfigurations.put(taskName, value);
-            LOGGER.debug("Found domain: " + value + " for taskName: " + taskName + " from env var");
+            LOGGER.info("Found domain: " + value + " for taskName: " + taskName + " from env var");
         }
         return taskConfigurations;
     }

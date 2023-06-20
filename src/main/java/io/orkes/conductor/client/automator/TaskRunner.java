@@ -49,7 +49,7 @@ class TaskRunner {
     private final TaskClient taskClient;
     private final int updateRetryCount;
     private final ThreadPoolExecutor executorService;
-    private final Map<String /* taskType */, String /* domain */> taskToDomain;
+    private final String domain;
     private final int taskPollTimeout;
 
     public static final String DOMAIN = "domain";
@@ -73,7 +73,6 @@ class TaskRunner {
         this.eurekaClient = eurekaClient;
         this.taskClient = taskClient;
         this.updateRetryCount = updateRetryCount;
-        this.taskToDomain = taskToDomain;
         this.taskPollTimeout = taskPollTimeout;
         this.permits = new Semaphore(threadCount);
         this.executorService =
@@ -84,12 +83,16 @@ class TaskRunner {
                                         .namingPattern(workerNamePrefix)
                                         .uncaughtExceptionHandler(uncaughtExceptionHandler)
                                         .build());
+        this.domain = Optional.ofNullable(PropertyFactory.getString(worker.getTaskDefName(), DOMAIN, null))
+            .orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null))
+            .orElse(taskToDomain.get(worker.getTaskDefName())));
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
         LOGGER.info(
-                "Initialized the TaskPollExecutor for {} with {} threads and threadPrefix {}",
+                "Initialized the TaskRunner for {} with {} threads and threadPrefix {} and domain {}",
                 worker.getTaskDefName(),
                 threadCount,
-                workerNamePrefix);
+                workerNamePrefix,
+                domain);
     }
 
     public void pollAndExecute() {
@@ -164,8 +167,6 @@ class TaskRunner {
         }
 
         try {
-
-            String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null)).orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
             LOGGER.trace("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
             Stopwatch stopwatch = Stopwatch.createStarted();
             int tasksToPoll = pollCount;
