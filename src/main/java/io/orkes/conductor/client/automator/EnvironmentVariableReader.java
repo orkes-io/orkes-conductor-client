@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Reads and processes environmental variables related to Conductor worker
  * configuration. The following environmental variable pattern is supported:
- * - CONDUCTOR_WORKER_${TASK_NAME}_DOMAIN
+ * - CONDUCTOR_WORKER_.*_DOMAIN
  *
  * The pattern allows users to define custom task-specific configuration by
  * setting environmental variables with a specific format. The "TASK_NAME" part
