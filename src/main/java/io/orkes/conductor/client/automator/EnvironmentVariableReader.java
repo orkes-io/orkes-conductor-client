@@ -34,12 +34,10 @@ import org.slf4j.LoggerFactory;
  * to use underscores (_) instead of dots (.) within the task name.
  *
  * Examples:
- * - CONDUCTOR_WORKER_EMAIL_NOTIFICATION_DOMAIN: Configuration for the
- * "EMAIL_NOTIFICATION" task.
- * - CONDUCTOR_WORKER_Em@il_N0T1F1C4TI0N_DOMAIN: Configuration for the
- * "Em@il_N0T1F1C4TI0N" task.
- * - CONDUCTOR_WORKER_DATA_PROCESSING_DOMAIN: Configuration for the
- * "DATA_PROCESSING" task.
+ * - CONDUCTOR_WORKER_email_notification_DOMAIN: Configuration for the
+ * "email_notification" task.
+ * - CONDUCTOR_WORKER_data_processing_DOMAIN: Configuration for the
+ * "data_processing" task.
  *
  * If a task-specific configuration is not found, default configuration values
  * will be used.

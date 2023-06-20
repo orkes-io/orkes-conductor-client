@@ -17,9 +17,8 @@ public class TaskToDomainTests {
     @Test
     public void testDomainPropagation() throws Exception {
         List<String> taskNames = List.of(
-                "EMAIL_NOTIFICATION",
                 "email_notification",
-                "DATA_PROCESSING");
+                "data_processing");
         List<Worker> workers = new LinkedList<>();
         taskNames.forEach(
                 (taskName) -> {
