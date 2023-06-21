@@ -10,6 +10,7 @@ import io.orkes.conductor.sdk.examples.ApiUtil;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +30,12 @@ public class TaskToDomainTests {
         TaskRunnerConfigurer configurer = new TaskRunnerConfigurer.Builder((OrkesTaskClient) taskClient, workers)
                 .withThreadCount(1)
                 .withTaskPollTimeout(10)
+                // docs-marker-start-1
+                .withTaskToDomain(
+                        Map.of(
+                                "exampleTaskNameA", "test",
+                                "exampleTaskNameB", "test"))
+                // docs-marker-end-1
                 .build();
         configurer.init();
         Thread.sleep(5000);
@@ -60,5 +67,4 @@ public class TaskToDomainTests {
             return 1;
         }
     }
-
 }
