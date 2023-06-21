@@ -71,7 +71,6 @@ public class TaskRunnerConfigurer {
         this.sleepWhenRetry = builder.sleepWhenRetry;
         this.updateRetryCount = builder.updateRetryCount;
         this.workerNamePrefix = builder.workerNamePrefix;
-        this.taskToDomain = builder.taskToDomain;
         this.taskToThreadCount = builder.taskToThreadCount;
         this.taskPollTimeout = builder.taskPollTimeout;
         this.taskPollCount = builder.taskPollCount;
@@ -82,6 +81,10 @@ public class TaskRunnerConfigurer {
         this.threadCount = builder.threadCount;
         builder.workers.forEach(this.workers::add);
         taskRunners = new LinkedList<>();
+        final Map<String, String> envTaskNameToDomain = 
+                EnvironmentVariableReader.getTaskNameToDomain();
+        envTaskNameToDomain.putAll(builder.taskToDomain);
+        this.taskToDomain = envTaskNameToDomain;
     }
 
     /** Builder used to create the instances of TaskRunnerConfigurer */
@@ -300,9 +303,6 @@ public class TaskRunnerConfigurer {
                 this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
         final Integer taskPollTimeout =
                 this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
-        final Map<String, String> envTaskNameToDomain = 
-                EnvironmentVariableReader.getTaskNameToDomain();
-        taskToDomain.putAll(envTaskNameToDomain);
         LOGGER.info("Starting worker: {} with {} threads and {} pollTimeout", 
             worker.getTaskDefName(), threadCountForTask, taskPollTimeout);
         LOGGER.info("Domain map for tasks = {}", taskToDomain);
