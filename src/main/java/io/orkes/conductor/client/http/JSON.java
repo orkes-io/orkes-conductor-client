@@ -18,6 +18,7 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.threeten.bp.LocalDate;
@@ -37,6 +38,7 @@ public class JSON {
     private SqlDateTypeAdapter sqlDateTypeAdapter = new SqlDateTypeAdapter();
     private OffsetDateTimeTypeAdapter offsetDateTimeTypeAdapter = new OffsetDateTimeTypeAdapter();
     private LocalDateTypeAdapter localDateTypeAdapter = new LocalDateTypeAdapter();
+    private GsonLocalDateTime localDateTimeTypeAdapter = new GsonLocalDateTime();
 
     public static GsonBuilder createGson() {
         GsonFireBuilder fireBuilder = new GsonFireBuilder();
@@ -50,6 +52,7 @@ public class JSON {
                 .registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter)
                 .registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter)
                 .registerTypeAdapter(LocalDate.class, localDateTypeAdapter)
+                .registerTypeAdapter(LocalDateTime.class, localDateTimeTypeAdapter)
                 .serializeNulls()
                 .create();
     }
@@ -298,6 +301,21 @@ public class JSON {
             }
         }
     }
+
+    public static class GsonLocalDateTime implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+
+        @Override
+        public LocalDateTime deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            String ldtString = jsonElement.getAsString();
+            return LocalDateTime.parse(ldtString, java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        }
+
+        @Override
+        public JsonElement serialize(LocalDateTime localDateTime, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(localDateTime.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        }
+    }
+
 
     public JSON setDateFormat(DateFormat dateFormat) {
         dateTypeAdapter.setFormat(dateFormat);
