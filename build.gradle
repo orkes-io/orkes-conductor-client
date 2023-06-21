@@ -203,6 +203,8 @@ test {
         exceptionFormat = "short"
         showStandardStreams = true
     }
+    environment "CONDUCTOR_WORKER_email_notification_DOMAIN", "emailNotificationWorkerDomain"
+    environment "CONDUCTOR_WORKER_data_processing_DOMAIN", "dataProcessingWorkerDomain"
 }
 
 jacocoTestReport {
