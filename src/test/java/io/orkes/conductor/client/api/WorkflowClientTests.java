@@ -70,7 +70,7 @@ public class WorkflowClientTests extends ClientTest {
         }
         //Let's give couple of seconds for indexing to complete
         Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
-        Map<String, List<Workflow>> result = workflowClient.getWorkflowsByNamesAndCorrelationIds(correlationIds, workflowNames.stream().collect(Collectors.toList()), true, false);
+        Map<String, List<Workflow>> result = workflowClient.getWorkflowsByCorrelationIdsAndNames(correlationIds, workflowNames.stream().collect(Collectors.toList()), true, false);
         assertNotNull(result);
         assertEquals(correlationIds.size(), result.size());
         for (String correlationId : correlationIds) {
