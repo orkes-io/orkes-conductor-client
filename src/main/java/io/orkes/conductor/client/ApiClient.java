@@ -41,7 +41,6 @@ import java.util.regex.Pattern;
 import javax.net.ssl.*;
 
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.LocalDate;
