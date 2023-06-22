@@ -31,8 +31,8 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.gsonfire.GsonFireBuilder;
 
-public class JSON {
-    private final Gson gson;
+public class JSON implements JSONMapper {
+    private Gson gson;
     private boolean isLenientOnJson = false;
     private DateTypeAdapter dateTypeAdapter = new DateTypeAdapter();
     private SqlDateTypeAdapter sqlDateTypeAdapter = new SqlDateTypeAdapter();
@@ -55,6 +55,13 @@ public class JSON {
                 .registerTypeAdapter(LocalDateTime.class, localDateTimeTypeAdapter)
                 .serializeNulls()
                 .create();
+    }
+
+    public void setGson(Gson gson) {
+        if(gson == null) {
+            throw new RuntimeException("Gson must not be null");
+        }
+        this.gson = gson;
     }
 
     public JSON setLenientOnJson(boolean lenientOnJson) {
