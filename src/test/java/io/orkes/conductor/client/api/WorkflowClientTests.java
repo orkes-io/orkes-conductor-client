@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -27,6 +28,7 @@ import com.netflix.conductor.sdk.workflow.def.tasks.Http;
 import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
+import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.util.Commons;
@@ -38,11 +40,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkflowClientTests extends ClientTest {
     private final WorkflowClient workflowClient;
+    private final MetadataClient metadataClient;
 
     private final WorkflowExecutor workflowExecutor;
 
     public WorkflowClientTests() {
         this.workflowClient = super.orkesClients.getWorkflowClient();
+        this.metadataClient = super.orkesClients.getMetadataClient();
         this.workflowExecutor = new WorkflowExecutor(
                 super.orkesClients.getTaskClient(),
                 super.orkesClients.getWorkflowClient(),
@@ -162,6 +166,44 @@ public class WorkflowClientTests extends ClientTest {
                 workflowId, "testing out some stuff", true);
         var workflow = workflowClient.getWorkflow(workflowId, false);
         assertEquals(Workflow.WorkflowStatus.TERMINATED, workflow.getStatus());
+    }
+
+    @Test
+    public void testSkipTaskFromWorkflow() throws Exception {
+        var workflowName = "random_workflow_name_1hqiuwheiquwhe";
+        var taskName1 = "random_task_name_1hqiuwheiquwheajnsdsand";
+        var taskName2 = "random_task_name_1hqiuwheiquwheajnsdsandjsadh";
+
+        var taskDef1 = new TaskDef(taskName1);
+        taskDef1.setRetryCount(0);
+        taskDef1.setOwnerEmail("test@orkes.io");
+        var taskDef2 = new TaskDef(taskName2);
+        taskDef2.setRetryCount(0);
+        taskDef2.setOwnerEmail("test@orkes.io");
+
+        TestUtil.retryMethodCall(
+                () -> metadataClient.registerTaskDefs(List.of(taskDef1, taskDef2)));
+
+        var wf = new ConductorWorkflow<>(workflowExecutor);
+        wf.setName(workflowName);
+        wf.setVersion(1);
+        wf.add(new SimpleTask(taskName1, taskName1));
+        wf.add(new SimpleTask(taskName2, taskName2));
+        TestUtil.retryMethodCall(
+                () -> wf.registerWorkflow(true));
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+        startWorkflowRequest.setInput(new HashMap<>());
+        var workflowId = (String) TestUtil.retryMethodCall(
+                () -> workflowClient.startWorkflow(startWorkflowRequest));
+        System.out.println("workflowId: " + workflowId);
+
+        TestUtil.retryMethodCall(
+                () -> workflowClient.skipTaskFromWorkflow(workflowId, taskName2));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.terminateWorkflow(workflowId, null));
     }
 
     public void testUpdateVariables() {
