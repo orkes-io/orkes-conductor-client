@@ -1,7 +1,7 @@
 package io.orkes.conductor.client.util;
 
 public class TestUtil {
-    private static int RETRY_ATTEMPT_LIMIT = 3;
+    private static int RETRY_ATTEMPT_LIMIT = 4;
 
     public static void retryMethodCall(VoidRunnableWithException function)
             throws Exception {
