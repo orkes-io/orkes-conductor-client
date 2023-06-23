@@ -203,7 +203,7 @@ public class WorkflowClientTests extends ClientTest {
         TestUtil.retryMethodCall(
                 () -> workflowClient.skipTaskFromWorkflow(workflowId, taskName2));
         TestUtil.retryMethodCall(
-                () -> workflowClient.terminateWorkflow(workflowId, null));
+                () -> workflowClient.terminateWorkflowsWithFailure(List.of(workflowId), null, false));
     }
 
     public void testUpdateVariables() {
