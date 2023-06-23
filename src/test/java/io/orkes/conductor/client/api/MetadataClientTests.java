@@ -68,8 +68,8 @@ public class MetadataClientTests extends ClientTest {
         metadataClient.registerWorkflowDef(workflowDef, true);
         ((OrkesMetadataClient) metadataClient)
                 .getWorkflowDefWithMetadata(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
-        WorkflowDef receivedWorkflowDef =
-                metadataClient.getWorkflowDef(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
+        WorkflowDef receivedWorkflowDef = metadataClient.getWorkflowDef(Commons.WORKFLOW_NAME,
+                Commons.WORKFLOW_VERSION);
         assertTrue(receivedWorkflowDef.getName().equals(Commons.WORKFLOW_NAME));
         assertEquals(receivedWorkflowDef.getVersion(), Commons.WORKFLOW_VERSION);
     }
@@ -87,6 +87,7 @@ public class MetadataClientTests extends ClientTest {
         TagObject tagObject = Commons.getTagObject();
         metadataClient.addTaskTag(tagObject, Commons.TASK_NAME);
         metadataClient.setTaskTags(List.of(tagObject), Commons.TASK_NAME);
+        assertNotNull(metadataClient.getTags());
         List<TagObject> tags = metadataClient.getTaskTags(Commons.TASK_NAME);
         assertIterableEquals(List.of(tagObject), tags);
         metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
