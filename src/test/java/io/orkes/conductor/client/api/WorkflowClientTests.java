@@ -28,6 +28,7 @@ import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.TestUtil;
 
@@ -116,6 +117,12 @@ public class WorkflowClientTests extends ClientTest {
                 () -> workflowClient.terminateWorkflows(List.of(workflowId), "reason"));
         TestUtil.retryMethodCall(
                 () -> workflowClient.restart(workflowId, true));
+        try {
+            TestUtil.retryMethodCall(
+                    () -> workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME));
+        } catch (ApiException e) {
+            assertEquals(e.getCode(), "500");
+        }
         TestUtil.retryMethodCall(
                 () -> workflowClient.terminateWorkflow(List.of(workflowId), "reason"));
         TestUtil.retryMethodCall(
@@ -134,13 +141,8 @@ public class WorkflowClientTests extends ClientTest {
                 () -> workflowClient.resumeWorkflow(workflowId));
         TestUtil.retryMethodCall(
                 () -> workflowClient.pauseWorkflow(workflowId));
-        // try {
-        // workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME);
-        // } catch (ApiException e) {
-        // if (e.getStatusCode() != 500) {
-        // throw e;
-        // }
-        // }
+        TestUtil.retryMethodCall(
+                () -> workflowClient.resumeWorkflow(workflowId));
         TestUtil.retryMethodCall(
                 () -> workflowClient.pauseWorkflow(List.of(workflowId)));
         TestUtil.retryMethodCall(

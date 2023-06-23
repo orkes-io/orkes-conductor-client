@@ -5,11 +5,13 @@ public class TestUtil {
 
     public static void retryMethodCall(VoidRunnableWithException function)
             throws Exception {
+        Exception lastException = null;
         for (int retryCounter = 0; retryCounter < RETRY_ATTEMPT_LIMIT; retryCounter += 1) {
             try {
                 function.run();
                 return;
             } catch (Exception e) {
+                lastException = e;
                 System.out.println("Attempt " + (retryCounter + 1) + " failed: " + e.getMessage());
                 try {
                     Thread.sleep(1000 * (1 << retryCounter)); // Sleep for 2^retryCounter second(s) before retrying
@@ -18,15 +20,17 @@ public class TestUtil {
                 }
             }
         }
-        throw new Exception("Failed to execute method call after " + RETRY_ATTEMPT_LIMIT + " attempts");
+        throw lastException;
     }
 
     public static Object retryMethodCall(RunnableWithException function)
             throws Exception {
+        Exception lastException = null;
         for (int retryCounter = 0; retryCounter < RETRY_ATTEMPT_LIMIT; retryCounter += 1) {
             try {
                 return function.run();
             } catch (Exception e) {
+                lastException = e;
                 System.out.println("Attempt " + (retryCounter + 1) + " failed: " + e.getMessage());
                 try {
                     Thread.sleep(1000 * (1 << retryCounter)); // Sleep for 2^retryCounter second(s) before retrying
@@ -35,7 +39,7 @@ public class TestUtil {
                 }
             }
         }
-        throw new Exception("Failed to execute method call after " + RETRY_ATTEMPT_LIMIT + " attempts");
+        throw lastException;
     }
 
     @FunctionalInterface
