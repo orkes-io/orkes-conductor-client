@@ -23,7 +23,7 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class ApplicationResourceApi {
     private ApiClient apiClient;
@@ -167,7 +167,7 @@ public class ApplicationResourceApi {
             String applicationId, String role) throws ApiException {
         com.squareup.okhttp.Call call =
                 addRoleToApplicationUserValidateBeforeCall(applicationId, role, null, null);
-        Type localVarReturnType = new TypeToken<ConductorUser>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -283,7 +283,7 @@ public class ApplicationResourceApi {
     private ApiResponse<CreateAccessKeyResponse> createAccessKeyWithHttpInfo(String id)
             throws ApiException {
         com.squareup.okhttp.Call call = createAccessKeyValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<CreateAccessKeyResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<CreateAccessKeyResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -399,7 +399,7 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
         com.squareup.okhttp.Call call = createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, null, null);
-        Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -530,7 +530,7 @@ public class ApplicationResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 deleteAccessKeyValidateBeforeCall(applicationId, keyId, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -644,7 +644,7 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<Object> deleteApplicationWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = deleteApplicationValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -761,7 +761,7 @@ public class ApplicationResourceApi {
     private ApiResponse<List<AccessKeyResponse>> getAccessKeysWithHttpInfo(String id)
             throws ApiException {
         com.squareup.okhttp.Call call = getAccessKeysValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<List<AccessKeyResponse>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<AccessKeyResponse>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -878,7 +878,7 @@ public class ApplicationResourceApi {
     private ApiResponse<ConductorApplication> getApplicationWithHttpInfo(String id)
             throws ApiException {
         com.squareup.okhttp.Call call = getApplicationValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -983,7 +983,7 @@ public class ApplicationResourceApi {
     private ApiResponse<List<ConductorApplication>> listApplicationsWithHttpInfo()
             throws ApiException {
         com.squareup.okhttp.Call call = listApplicationsValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<List<ConductorApplication>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<ConductorApplication>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1111,7 +1111,7 @@ public class ApplicationResourceApi {
             String applicationId, String role) throws ApiException {
         com.squareup.okhttp.Call call =
                 removeRoleFromApplicationUserValidateBeforeCall(applicationId, role, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1246,7 +1246,7 @@ public class ApplicationResourceApi {
             String applicationId, String keyId) throws ApiException {
         com.squareup.okhttp.Call call =
                 toggleAccessKeyStatusValidateBeforeCall(applicationId, keyId, null, null);
-        Type localVarReturnType = new TypeToken<AccessKeyResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<AccessKeyResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1382,7 +1382,7 @@ public class ApplicationResourceApi {
         com.squareup.okhttp.Call call =
                 updateApplicationValidateBeforeCall(
                         createOrUpdateApplicationRequest, id, null, null);
-        Type localVarReturnType = new TypeToken<ConductorApplication>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorApplication>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 }

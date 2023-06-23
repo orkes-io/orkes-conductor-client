@@ -23,7 +23,7 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class TokenResourceApi {
     /**
@@ -128,7 +128,7 @@ public class TokenResourceApi {
     public static ApiResponse<Map<String, String>> generateTokenWithHttpInfo(
             ApiClient apiClient, GenerateTokenRequest generateTokenRequest) throws ApiException {
         com.squareup.okhttp.Call call = generateTokenValidateBeforeCall(apiClient, generateTokenRequest, null, null);
-        Type localVarReturnType = new TypeToken<Map<String, String>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -224,7 +224,7 @@ public class TokenResourceApi {
     public static ApiResponse<Object> getUserInfoWithHttpInfo(ApiClient apiClient)
             throws ApiException {
         com.squareup.okhttp.Call call = getUserInfoValidateBeforeCall(apiClient, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 }

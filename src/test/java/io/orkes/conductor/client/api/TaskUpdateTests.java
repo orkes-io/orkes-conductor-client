@@ -110,6 +110,7 @@ public class TaskUpdateTests {
         int maxLoop = 10;
         int count = 0;
         while (!workflow.getStatus().isTerminal() && count < maxLoop) {
+            workflow = workflowClient.getWorkflow(workflowId, true);
             List<String> runningTasks = workflow.getTasks().stream()
                     .filter(task -> !task.getStatus().isTerminal() && task.getTaskType().equals("there_is_no_worker"))
                     .map(t -> t.getReferenceTaskName())

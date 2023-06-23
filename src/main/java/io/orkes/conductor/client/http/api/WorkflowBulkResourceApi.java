@@ -24,7 +24,7 @@ import com.netflix.conductor.common.model.BulkResponse;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class WorkflowBulkResourceApi {
     private ApiClient apiClient;
@@ -155,7 +155,7 @@ public class WorkflowBulkResourceApi {
     private ApiResponse<BulkResponse> pauseWorkflow1WithHttpInfo(List<String> workflowIds)
             throws ApiException {
         com.squareup.okhttp.Call call = pauseWorkflow1ValidateBeforeCall(workflowIds, null, null);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
     /**
@@ -282,7 +282,7 @@ public class WorkflowBulkResourceApi {
             List<String> workflowIds, Boolean useLatestDefinitions) throws ApiException {
         com.squareup.okhttp.Call call =
                 restart1ValidateBeforeCall(workflowIds, useLatestDefinitions, null, null);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -396,7 +396,7 @@ public class WorkflowBulkResourceApi {
     private ApiResponse<BulkResponse> resumeWorkflow1WithHttpInfo(List<String> workflowIds)
             throws ApiException {
         com.squareup.okhttp.Call call = resumeWorkflow1ValidateBeforeCall(workflowIds, null, null);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -510,7 +510,7 @@ public class WorkflowBulkResourceApi {
     private ApiResponse<BulkResponse> retry1WithHttpInfo(List<String> workflowIds)
             throws ApiException {
         com.squareup.okhttp.Call call = retry1ValidateBeforeCall(workflowIds, null, null);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -636,7 +636,7 @@ public class WorkflowBulkResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 terminateValidateBeforeCall(workflowIds, reason, triggerFailureWorkflow, null, null);
-        Type localVarReturnType = new TypeToken<BulkResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 }

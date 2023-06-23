@@ -25,7 +25,8 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 
 public class MetadataResourceApi {
     private ApiClient apiClient;
@@ -293,8 +294,7 @@ public class MetadataResourceApi {
     private ApiResponse<WorkflowDef> getWithHttpInfo(String name, Integer version, Boolean metadata)
             throws ApiException {
         com.squareup.okhttp.Call call = getValidateBeforeCall(name, version, metadata, null, null);
-        Type localVarReturnType = new TypeToken<WorkflowDef>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return apiClient.execute(call, WorkflowDef.class);
     }
 
     /**
@@ -433,7 +433,7 @@ public class MetadataResourceApi {
             String access, Boolean metadata, String tagKey, String tagValue) throws ApiException {
         com.squareup.okhttp.Call call =
                 getAllWorkflowsValidateBeforeCall(access, metadata, tagKey, tagValue, null, null);
-        Type localVarReturnType = new TypeToken<List<WorkflowDef>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<WorkflowDef>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -560,7 +560,7 @@ public class MetadataResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 getTaskDefValidateBeforeCall(tasktype, metadata, null, null);
-        Type localVarReturnType = new TypeToken<TaskDef>() {}.getType();
+        Type localVarReturnType = new TypeReference<TaskDef>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -700,7 +700,7 @@ public class MetadataResourceApi {
             String access, Boolean metadata, String tagKey, String tagValue) throws ApiException {
         com.squareup.okhttp.Call call =
                 getTaskDefsValidateBeforeCall(access, metadata, tagKey, tagValue, null, null);
-        Type localVarReturnType = new TypeToken<List<TaskDef>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<TaskDef>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

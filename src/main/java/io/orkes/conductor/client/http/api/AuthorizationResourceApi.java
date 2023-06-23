@@ -24,7 +24,7 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.AuthorizationRequest;
 import io.orkes.conductor.client.model.Subject;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class AuthorizationResourceApi {
     private ApiClient apiClient;
@@ -169,7 +169,7 @@ public class AuthorizationResourceApi {
     private ApiResponse<Map<String, List<Subject>>> getPermissionsWithHttpInfo(
             String type, String id) throws ApiException {
         com.squareup.okhttp.Call call = getPermissionsValidateBeforeCall(type, id, null, null);
-        Type localVarReturnType = new TypeToken<Map<String, List<Subject>>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, List<Subject>>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

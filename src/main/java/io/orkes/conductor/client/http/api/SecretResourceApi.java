@@ -20,7 +20,7 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.TagObject;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class SecretResourceApi {
     private ApiClient apiClient;
@@ -151,7 +151,7 @@ public class SecretResourceApi {
      */
     private ApiResponse<Object> deleteSecretWithHttpInfo(String key) throws ApiException {
         com.squareup.okhttp.Call call = deleteSecretValidateBeforeCall(key, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -267,7 +267,7 @@ public class SecretResourceApi {
      */
     private ApiResponse<String> getSecretWithHttpInfo(String key) throws ApiException {
         com.squareup.okhttp.Call call = getSecretValidateBeforeCall(key, null, null);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        Type localVarReturnType = new TypeReference<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -371,7 +371,7 @@ public class SecretResourceApi {
      */
     private ApiResponse<Set<String>> listAllSecretNamesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = listAllSecretNamesValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<Set<String>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Set<String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -477,7 +477,7 @@ public class SecretResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 listSecretsThatUserCanGrantAccessToValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<List<String>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -600,7 +600,7 @@ public class SecretResourceApi {
      */
     private ApiResponse<Object> putSecretWithHttpInfo(String body, String key) throws ApiException {
         com.squareup.okhttp.Call call = putSecretValidateBeforeCall(body, key, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -716,7 +716,7 @@ public class SecretResourceApi {
      */
     private ApiResponse<Boolean> secretExistsWithHttpInfo(String key) throws ApiException {
         com.squareup.okhttp.Call call = secretExistsValidateBeforeCall(key, null, null);
-        Type localVarReturnType = new TypeToken<Boolean>() {}.getType();
+        Type localVarReturnType = new TypeReference<Boolean>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

@@ -14,7 +14,10 @@ package io.orkes.conductor.client.http.api;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.SkipTaskRequest;
@@ -26,7 +29,7 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.common.model.WorkflowRun;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.squareup.okhttp.Call;
 
 public class WorkflowResourceApi {
@@ -122,7 +125,7 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 executeWorkflowValidateBeforeCall(
                         body, name, version, waitUntilTaskRef, requestId, waitForSeconds,null, null);
-        Type localVarReturnType = new TypeToken<WorkflowRun>() {}.getType();
+        Type localVarReturnType = new TypeReference<WorkflowRun>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -187,7 +190,7 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 executeWorkflowValidateBeforeCall(
                         body, name, version, waitUntilTaskRef, requestId, null, null);
-        Type localVarReturnType = new TypeToken<WorkflowRun>() {}.getType();
+        Type localVarReturnType = new TypeReference<WorkflowRun>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -438,7 +441,7 @@ public class WorkflowResourceApi {
                         requestId,
                         progressListener,
                         progressRequestListener);
-        Type localVarReturnType = new TypeToken<WorkflowRun>() {}.getType();
+        Type localVarReturnType = new TypeReference<WorkflowRun>() {}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
 
         return call;
@@ -811,7 +814,7 @@ public class WorkflowResourceApi {
             String workflowId, Boolean includeTasks) throws ApiException {
         com.squareup.okhttp.Call call =
                 getExecutionStatusValidateBeforeCall(workflowId, includeTasks, null, null);
-        Type localVarReturnType = new TypeToken<Workflow>() {}.getType();
+        Type localVarReturnType = new TypeReference<Workflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -956,7 +959,7 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 getExternalStorageLocationValidateBeforeCall(
                         path, operation, payloadType, null, null);
-        Type localVarReturnType = new TypeToken<ExternalStorageLocation>() {}.getType();
+        Type localVarReturnType = new TypeReference<ExternalStorageLocation>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1104,7 +1107,7 @@ public class WorkflowResourceApi {
             String name, Integer version, Long startTime, Long endTime) throws ApiException {
         com.squareup.okhttp.Call call =
                 getRunningWorkflowValidateBeforeCall(name, version, startTime, endTime, null, null);
-        Type localVarReturnType = new TypeToken<List<String>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1249,7 +1252,7 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 getWorkflowStatusSummaryValidateBeforeCall(
                         workflowId, includeOutput, includeVariables, null, null);
-        Type localVarReturnType = new TypeToken<WorkflowStatus>() {}.getType();
+        Type localVarReturnType = new TypeReference<WorkflowStatus>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1401,7 +1404,7 @@ public class WorkflowResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 getWorkflowsValidateBeforeCall(body, name, includeClosed, includeTasks, null, null);
-        Type localVarReturnType = new TypeToken<Map<String, List<Workflow>>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, List<Workflow>>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1502,7 +1505,7 @@ public class WorkflowResourceApi {
      */
     public Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks) throws ApiException {
         com.squareup.okhttp.Call call = getWorkflowsByNamesAndCorrelationIdsBeforeCall(request, includeClosed, includeTasks, null, null);
-        Type localVarReturnType = new TypeToken<Map<String, List<Workflow>>>(){}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, List<Workflow>>>(){}.getType();
         ApiResponse<Map<String, List<Workflow>>> response = apiClient.execute(call, localVarReturnType);
         return response.getData();
     }
@@ -1637,7 +1640,7 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 getWorkflows1ValidateBeforeCall(
                         name, correlationId, includeClosed, includeTasks, null, null);
-        Type localVarReturnType = new TypeToken<List<Workflow>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<Workflow>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1887,7 +1890,7 @@ public class WorkflowResourceApi {
             RerunWorkflowRequest rerunWorkflowRequest, String workflowId) throws ApiException {
         com.squareup.okhttp.Call call =
                 rerunValidateBeforeCall(rerunWorkflowRequest, workflowId, null, null);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        Type localVarReturnType = new TypeReference<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -2561,7 +2564,7 @@ public class WorkflowResourceApi {
                 searchValidateBeforeCall(
                         queryId, start, size, sort, freeText, query, skipCache, null, null);
         Type localVarReturnType =
-                new TypeToken<ScrollableSearchResultWorkflowSummary>() {}.getType();
+                new TypeReference<ScrollableSearchResultWorkflowSummary>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -2713,7 +2716,7 @@ public class WorkflowResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 searchV2ValidateBeforeCall(start, size, sort, freeText, query, null, null);
-        Type localVarReturnType = new TypeToken<SearchResultWorkflow>() {}.getType();
+        Type localVarReturnType = new TypeReference<SearchResultWorkflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -2866,7 +2869,7 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 searchWorkflowsByTasksValidateBeforeCall(
                         start, size, sort, freeText, query, null, null);
-        Type localVarReturnType = new TypeToken<SearchResultWorkflowSummary>() {}.getType();
+        Type localVarReturnType = new TypeReference<SearchResultWorkflowSummary>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -3019,7 +3022,7 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 searchWorkflowsByTasksV2ValidateBeforeCall(
                         start, size, sort, freeText, query, null, null);
-        Type localVarReturnType = new TypeToken<SearchResultWorkflow>() {}.getType();
+        Type localVarReturnType = new TypeReference<SearchResultWorkflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -3376,14 +3379,14 @@ public class WorkflowResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 startWorkflowValidateBeforeCall(startWorkflowRequest, null, null);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        Type localVarReturnType = new TypeReference<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     private ApiResponse<Workflow> testWorkflowWithHttpInfo(WorkflowTestRequest testRequest) throws ApiException {
         com.squareup.okhttp.Call call =
                 testWorkflowValidateBeforeCall(testRequest, null, null);
-        Type localVarReturnType = new TypeToken<Workflow>() {}.getType();
+        Type localVarReturnType = new TypeReference<Workflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -3554,7 +3557,7 @@ public class WorkflowResourceApi {
         com.squareup.okhttp.Call call =
                 startWorkflow1ValidateBeforeCall(
                         body, name, version, correlationId, priority, null, null);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        Type localVarReturnType = new TypeReference<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -3787,13 +3790,13 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<Object> uploadCompletedWorkflowsWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = uploadCompletedWorkflowsValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     public Workflow updateVariables(String workflowId, Map<String, Object> variables) {
         com.squareup.okhttp.Call call = updateVariablesCall(workflowId, variables);
-        Type returnType = new TypeToken<Workflow>() {}.getType();
+        Type returnType = new TypeReference<Workflow>() {}.getType();
         ApiResponse<Workflow> response = apiClient.execute(call, returnType);
         return response.getData();
     }
