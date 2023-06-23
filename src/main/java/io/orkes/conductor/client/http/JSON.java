@@ -13,7 +13,6 @@
 package io.orkes.conductor.client.http;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -24,38 +23,28 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import com.netflix.conductor.sdk.workflow.utils.ObjectMapperProvider;
+
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import com.google.gson.internal.bind.util.ISO8601Utils;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import io.gsonfire.GsonFireBuilder;
+import lombok.SneakyThrows;
 
 public class JSON {
-    private final Gson gson;
-    private boolean isLenientOnJson = false;
+    private final ObjectMapper objectMapper;
     private DateTypeAdapter dateTypeAdapter = new DateTypeAdapter();
     private SqlDateTypeAdapter sqlDateTypeAdapter = new SqlDateTypeAdapter();
     private OffsetDateTimeTypeAdapter offsetDateTimeTypeAdapter = new OffsetDateTimeTypeAdapter();
     private LocalDateTypeAdapter localDateTypeAdapter = new LocalDateTypeAdapter();
 
-    public static GsonBuilder createGson() {
-        GsonFireBuilder fireBuilder = new GsonFireBuilder();
-        return fireBuilder.createGsonBuilder();
-    }
-
     public JSON() {
-        gson = createGson()
-                .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
-                .registerTypeAdapter(Date.class, dateTypeAdapter)
-                .registerTypeAdapter(java.sql.Date.class, sqlDateTypeAdapter)
-                .registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter)
-                .registerTypeAdapter(LocalDate.class, localDateTypeAdapter)
-                .serializeNulls()
-                .create();
+        objectMapper = new ObjectMapperProvider().getObjectMapper();
     }
 
     public JSON setLenientOnJson(boolean lenientOnJson) {
-        isLenientOnJson = lenientOnJson;
         return this;
     }
 
@@ -65,8 +54,9 @@ public class JSON {
      * @param obj Object
      * @return String representation of the JSON
      */
+    @SneakyThrows
     public String serialize(Object obj) {
-        return gson.toJson(obj);
+        return objectMapper.writeValueAsString(obj);
     }
 
     /**
@@ -80,20 +70,14 @@ public class JSON {
     @SuppressWarnings("unchecked")
     public <T> T deserialize(String body, Type returnType) {
         try {
-            if (isLenientOnJson) {
-                JsonReader jsonReader = new JsonReader(new StringReader(body));
-                // see
-                // https://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/com/google/gson/stream/JsonReader.html#setLenient(boolean)
-                jsonReader.setLenient(true);
-                return gson.fromJson(jsonReader, returnType);
-            } else {
-                return gson.fromJson(body, returnType);
+            if (returnType.equals(String.class)) {
+                return (T) body;
             }
-        } catch (JsonParseException e) {
-            // Fallback processing when failed to parse JSON form response body:
-            // return the response body string directly for the String return type;
-            if (returnType.equals(String.class)) return (T) body;
-            else throw (e);
+
+            JavaType javaType = objectMapper.getTypeFactory().constructType(returnType);
+            return objectMapper.readValue(body, javaType);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

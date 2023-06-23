@@ -33,7 +33,7 @@ import io.orkes.conductor.client.http.api.TaskResourceApi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class OrkesTaskClient extends TaskClient implements AutoCloseable{
+public class OrkesTaskClient extends TaskClient implements AutoCloseable {
 
     protected ApiClient apiClient;
 
@@ -61,6 +61,11 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable{
         return this;
     }
 
+    public OrkesTaskClient withWriteTimeout(int writeTimeout) {
+        apiClient.setWriteTimeout(writeTimeout);
+        return this;
+    }
+
     public OrkesTaskClient withConnectTimeout(int connectTimeout) {
         apiClient.setConnectTimeout(connectTimeout);
         return this;
@@ -69,6 +74,11 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable{
     public ApiClient getApiClient() {
         return apiClient;
     }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
+
 
     @Override
     public Task pollTask(String taskType, String workerId, String domain) {
