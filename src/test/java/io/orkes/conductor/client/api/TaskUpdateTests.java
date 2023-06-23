@@ -66,8 +66,10 @@ public class TaskUpdateTests {
         WorkflowDef workflowDef = om.readValue(new InputStreamReader(is), WorkflowDef.class);
         metadataClient.registerWorkflowDef(workflowDef, true);
         workflowName = workflowDef.getName();
-        tasks = workflowDef.collectTasks().stream().map(task -> task.getTaskReferenceName()).collect(Collectors.toList());
+        tasks = workflowDef.collectTasks().stream().map(task -> task.getTaskReferenceName())
+                .collect(Collectors.toList());
     }
+
     @Test
     public void testUpdateByRefName() {
         StartWorkflowRequest request = new StartWorkflowRequest();
@@ -116,7 +118,7 @@ public class TaskUpdateTests {
                     .map(t -> t.getReferenceTaskName())
                     .collect(Collectors.toList());
             System.out.println("Running tasks: " + runningTasks);
-            if(runningTasks.isEmpty()) {
+            if (runningTasks.isEmpty()) {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 count++;
                 continue;
@@ -124,11 +126,12 @@ public class TaskUpdateTests {
             for (String referenceName : runningTasks) {
                 System.out.println("Updating " + referenceName);
                 try {
-                    workflow = taskClient.updateTaskSync(workflowId, referenceName, TaskResult.Status.COMPLETED, new TaskOutput());
+                    workflow = taskClient.updateTaskSync(workflowId, referenceName, TaskResult.Status.COMPLETED,
+                            new TaskOutput());
                     System.out.println("Workflow: " + workflow);
                 } catch (ApiException apiException) {
-                    //404 == task was updated already and there are no pending tasks
-                    if(apiException.getStatusCode() != 404) {
+                    // 404 == task was updated already and there are no pending tasks
+                    if (apiException.getStatusCode() != 404) {
                         fail(apiException);
                     }
                 }
@@ -139,6 +142,58 @@ public class TaskUpdateTests {
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertEquals(Workflow.WorkflowStatus.COMPLETED, workflow.getStatus());
     }
+
+    @Test
+    public void testUnsupportedMethods() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    taskClient.ack("taskName", "workerId");
+                });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    taskClient.removeTaskFromQueue("taskName", "taskId");
+                });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    taskClient.getPollData("taskName");
+                });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    taskClient.getAllPollData();
+                });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    taskClient.requeueAllPendingTasks();
+                });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    taskClient.search("freeText");
+                });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    taskClient.searchV2("freeText");
+                });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    taskClient.search(4, 20, "sort", "freeText", "query");
+                });
+
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    taskClient.searchV2(4, 20, "sort", "freeText", "query");
+                });
+    }
+
+    // taskClient.pollTask(workflowName, workflowName, workflowName)
 
     private static class TaskOutput {
         private String name = "hello";
