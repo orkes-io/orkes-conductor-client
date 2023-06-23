@@ -308,22 +308,22 @@ public class ApiClient {
     }
 
     public ApiClient setDateFormat(DateFormat dateFormat) {
-        this.json.setDateFormat(dateFormat);
+        LOGGER.warn("This feature is deprecated");
         return this;
     }
 
     public ApiClient setSqlDateFormat(DateFormat dateFormat) {
-        this.json.setSqlDateFormat(dateFormat);
+        LOGGER.warn("This feature is deprecated");
         return this;
     }
 
     public ApiClient setOffsetDateTimeFormat(DateTimeFormatter dateFormat) {
-        this.json.setOffsetDateTimeFormat(dateFormat);
+        LOGGER.warn("This feature is deprecated");
         return this;
     }
 
     public ApiClient setLocalDateFormat(DateTimeFormatter dateFormat) {
-        this.json.setLocalDateFormat(dateFormat);
+        LOGGER.warn("This feature is deprecated");
         return this;
     }
 

@@ -12,16 +12,11 @@
  */
 package io.orkes.conductor.client.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** UpsertUserRequest */
@@ -33,7 +28,6 @@ public class UpsertUserRequest {
     private String name = null;
 
     /** Gets or Sets roles */
-    @JsonAdapter(RolesEnum.Adapter.class)
     public enum RolesEnum {
         ADMIN("ADMIN"),
         USER("USER"),
@@ -63,20 +57,6 @@ public class UpsertUserRequest {
                 }
             }
             return null;
-        }
-
-        public static class Adapter extends TypeAdapter<RolesEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final RolesEnum enumeration)
-                    throws IOException {
-                jsonWriter.value(String.valueOf(enumeration.getValue()));
-            }
-
-            @Override
-            public RolesEnum read(final JsonReader jsonReader) throws IOException {
-                Object value = jsonReader.nextString();
-                return RolesEnum.fromValue((String) (value));
-            }
         }
     }
 

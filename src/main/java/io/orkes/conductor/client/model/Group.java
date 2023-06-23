@@ -12,20 +12,14 @@
  */
 package io.orkes.conductor.client.model;
 
-import java.io.IOException;
 import java.util.*;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** Group */
 public class Group {
     /** Gets or Sets inner */
-    @JsonAdapter(InnerEnum.Adapter.class)
     public enum InnerEnum {
         CREATE("CREATE"),
         READ("READ"),
@@ -55,20 +49,6 @@ public class Group {
                 }
             }
             return null;
-        }
-
-        public static class Adapter extends TypeAdapter<InnerEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final InnerEnum enumeration)
-                    throws IOException {
-                jsonWriter.value(String.valueOf(enumeration.getValue()));
-            }
-
-            @Override
-            public InnerEnum read(final JsonReader jsonReader) throws IOException {
-                Object value = jsonReader.nextString();
-                return InnerEnum.fromValue((String) (value));
-            }
         }
     }
 
