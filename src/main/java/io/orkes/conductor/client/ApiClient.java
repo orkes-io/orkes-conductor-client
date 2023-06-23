@@ -30,7 +30,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.DateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
@@ -473,8 +472,7 @@ public class ApiClient {
             return "";
         } else if (param instanceof Date
                 || param instanceof OffsetDateTime
-                || param instanceof LocalDate
-                || param instanceof LocalDateTime) {
+                || param instanceof LocalDate) {
             // Serialize to json string and remove the " enclosing characters
             String jsonStr = json.serialize(param);
             return jsonStr.substring(1, jsonStr.length() - 1);
