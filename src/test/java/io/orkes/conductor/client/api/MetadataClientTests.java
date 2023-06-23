@@ -24,6 +24,7 @@ import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.OrkesMetadataClient;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.util.Commons;
+import io.orkes.conductor.client.util.TestUtil;
 import io.orkes.conductor.client.util.WorkflowUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,7 +76,7 @@ public class MetadataClientTests extends ClientTest {
     }
 
     @Test
-    void tagTask() {
+    void tagTask() throws Exception {
         metadataClient.registerTaskDefs(List.of(Commons.getTaskDef()));
         try {
             metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
@@ -87,11 +88,15 @@ public class MetadataClientTests extends ClientTest {
         TagObject tagObject = Commons.getTagObject();
         metadataClient.addTaskTag(tagObject, Commons.TASK_NAME);
         metadataClient.setTaskTags(List.of(tagObject), Commons.TASK_NAME);
-        assertNotNull(metadataClient.getTags());
-        List<TagObject> tags = metadataClient.getTaskTags(Commons.TASK_NAME);
+        var allTags = (List<TagObject>) TestUtil.retryMethodCall(
+                () -> metadataClient.getTags());
+        assertNotNull(allTags);
+        List<TagObject> tags = (List<TagObject>) TestUtil.retryMethodCall(
+                () -> metadataClient.getTaskTags(Commons.TASK_NAME));
         assertIterableEquals(List.of(tagObject), tags);
         metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
-        tags = metadataClient.getTaskTags(Commons.TASK_NAME);
+        tags = (List<TagObject>) TestUtil.retryMethodCall(
+                () -> metadataClient.getTaskTags(Commons.TASK_NAME));
         assertIterableEquals(List.of(), tags);
     }
 
