@@ -34,6 +34,7 @@ public class MetadataClientTests extends ClientTest {
 
     public MetadataClientTests() {
         metadataClient = super.orkesClients.getMetadataClient();
+        ((OrkesMetadataClient) metadataClient).withReadTimeout(45000);
     }
 
     @Test
@@ -88,9 +89,9 @@ public class MetadataClientTests extends ClientTest {
         TagObject tagObject = Commons.getTagObject();
         metadataClient.addTaskTag(tagObject, Commons.TASK_NAME);
         metadataClient.setTaskTags(List.of(tagObject), Commons.TASK_NAME);
-        var allTags = (List<TagObject>) TestUtil.retryMethodCall(
-                () -> metadataClient.getTags());
-        assertNotNull(allTags);
+        assertNotNull(
+                TestUtil.retryMethodCall(
+                        () -> metadataClient.getTags()));
         List<TagObject> tags = (List<TagObject>) TestUtil.retryMethodCall(
                 () -> metadataClient.getTaskTags(Commons.TASK_NAME));
         assertIterableEquals(List.of(tagObject), tags);
