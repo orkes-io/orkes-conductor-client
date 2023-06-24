@@ -194,6 +194,10 @@ public class TaskClientTests extends ClientTest {
         assertNotNull(details);
         TestUtil.retryMethodCall(
                 () -> taskClient.requeuePendingTasksByTaskType(taskName2));
+        TestUtil.retryMethodCall(
+                () -> taskClient.getQueueSizeForTask(taskName1));
+        TestUtil.retryMethodCall(
+                () -> taskClient.getQueueSizeForTask(taskName1, null, null, null));
     }
 
     @Test
