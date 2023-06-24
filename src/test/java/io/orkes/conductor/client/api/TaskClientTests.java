@@ -198,6 +198,8 @@ public class TaskClientTests extends ClientTest {
                 () -> taskClient.getQueueSizeForTask(taskName1));
         TestUtil.retryMethodCall(
                 () -> taskClient.getQueueSizeForTask(taskName1, null, null, null));
+        TestUtil.retryMethodCall(
+                () -> taskClient.batchPollTasksByTaskType(taskName2, "random worker id", 5, 3000));
     }
 
     @Test
