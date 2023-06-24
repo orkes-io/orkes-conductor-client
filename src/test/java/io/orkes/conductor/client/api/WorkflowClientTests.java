@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -39,18 +40,18 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkflowClientTests extends ClientTest {
-    private final WorkflowClient workflowClient;
-    private final MetadataClient metadataClient;
+    private static WorkflowClient workflowClient;
+    private static MetadataClient metadataClient;
+    private static WorkflowExecutor workflowExecutor;
 
-    private final WorkflowExecutor workflowExecutor;
-
-    public WorkflowClientTests() {
-        this.workflowClient = super.orkesClients.getWorkflowClient();
-        this.metadataClient = super.orkesClients.getMetadataClient();
-        this.workflowExecutor = new WorkflowExecutor(
-                super.orkesClients.getTaskClient(),
-                super.orkesClients.getWorkflowClient(),
-                super.orkesClients.getMetadataClient(),
+    @BeforeAll
+    public static void setup() {
+        workflowClient = orkesClients.getWorkflowClient();
+        metadataClient = orkesClients.getMetadataClient();
+        workflowExecutor = new WorkflowExecutor(
+                orkesClients.getTaskClient(),
+                orkesClients.getWorkflowClient(),
+                orkesClients.getMetadataClient(),
                 10);
     }
 
@@ -263,6 +264,11 @@ public class WorkflowClientTests extends ClientTest {
                 () -> {
                     workflowClient.searchV2(0, 0, "", "", "");
                 });
+    }
+
+    @Test
+    void testExecuteWorkflow() {
+        // TODO
     }
 
     StartWorkflowRequest getStartWorkflowRequest() {

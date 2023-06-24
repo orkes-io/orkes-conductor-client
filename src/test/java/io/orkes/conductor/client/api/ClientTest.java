@@ -16,9 +16,9 @@ import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.util.ApiUtil;
 
 public abstract class ClientTest {
-    protected final OrkesClients orkesClients;
+    protected static OrkesClients orkesClients;
 
-    public ClientTest() {
-        this.orkesClients = ApiUtil.getOrkesClient();
+    static {
+        orkesClients = ApiUtil.getOrkesClient();
     }
 }

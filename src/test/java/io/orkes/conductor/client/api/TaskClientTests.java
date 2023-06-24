@@ -27,47 +27,51 @@ import org.junit.jupiter.api.Test;
 import org.testcontainers.shaded.com.google.common.util.concurrent.Uninterruptibles;
 
 import com.netflix.conductor.common.config.ObjectMapperProvider;
+import com.netflix.conductor.common.metadata.tasks.Task;
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
+import com.netflix.conductor.common.metadata.tasks.TaskExecLog;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.run.Workflow;
+import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
+import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
+import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import io.orkes.conductor.client.MetadataClient;
-import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.util.ApiUtil;
+import io.orkes.conductor.client.util.TestUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskUpdateTests {
+public class TaskClientTests extends ClientTest {
 
     private static TaskClient taskClient;
-
     private static WorkflowClient workflowClient;
-
     private static MetadataClient metadataClient;
+    private static WorkflowExecutor workflowExecutor;
 
     private static String workflowName = "";
 
-    private static List<String> tasks = null;
-
     @BeforeAll
     public static void setup() throws IOException {
-        OrkesClients orkesClients = ApiUtil.getOrkesClient();
         taskClient = orkesClients.getTaskClient();
         metadataClient = orkesClients.getMetadataClient();
         workflowClient = orkesClients.getWorkflowClient();
-        InputStream is = TaskUpdateTests.class.getResourceAsStream("/sdk_test.json");
+        InputStream is = TaskClientTests.class.getResourceAsStream("/sdk_test.json");
         ObjectMapper om = new ObjectMapperProvider().getObjectMapper();
         WorkflowDef workflowDef = om.readValue(new InputStreamReader(is), WorkflowDef.class);
         metadataClient.registerWorkflowDef(workflowDef, true);
         workflowName = workflowDef.getName();
-        tasks = workflowDef.collectTasks().stream().map(task -> task.getTaskReferenceName())
-                .collect(Collectors.toList());
+        workflowExecutor = new WorkflowExecutor(
+                orkesClients.getTaskClient(),
+                orkesClients.getWorkflowClient(),
+                orkesClients.getMetadataClient(),
+                10);
     }
 
     @Test
@@ -144,6 +148,55 @@ public class TaskUpdateTests {
     }
 
     @Test
+    public void testTaskLog() throws Exception {
+        var workflowName = "random_workflow_name_1hqiuwhjasdsadqqwe";
+        var taskName1 = "random_task_name_1najsbdha";
+        var taskName2 = "random_task_name_1bhasvdgasvd12y378t";
+
+        var taskDef1 = new TaskDef(taskName1);
+        taskDef1.setRetryCount(0);
+        taskDef1.setOwnerEmail("test@orkes.io");
+        var taskDef2 = new TaskDef(taskName2);
+        taskDef2.setRetryCount(0);
+        taskDef2.setOwnerEmail("test@orkes.io");
+
+        TestUtil.retryMethodCall(
+                () -> metadataClient.registerTaskDefs(List.of(taskDef1, taskDef2)));
+
+        var wf = new ConductorWorkflow<>(workflowExecutor);
+        wf.setName(workflowName);
+        wf.setVersion(1);
+        wf.add(new SimpleTask(taskName1, taskName1));
+        wf.add(new SimpleTask(taskName2, taskName2));
+        TestUtil.retryMethodCall(
+                () -> wf.registerWorkflow(true));
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+        startWorkflowRequest.setInput(new HashMap<>());
+        var workflowId = (String) TestUtil.retryMethodCall(
+                () -> workflowClient.startWorkflow(startWorkflowRequest));
+        System.out.println("Started workflow with id: " + workflowId);
+
+        var task = (Task) TestUtil.retryMethodCall(
+                () -> taskClient.pollTask(taskName1, "random worker", null));
+        assertNotNull(task);
+        var taskId = task.getTaskId();
+
+        TestUtil.retryMethodCall(
+                () -> taskClient.logMessageForTask(taskId, "random message"));
+        var logs = (List<TaskExecLog>) TestUtil.retryMethodCall(
+                () -> taskClient.getTaskLogs(taskId));
+        assertNotNull(logs);
+        var details = (Task) TestUtil.retryMethodCall(
+                () -> taskClient.getTaskDetails(taskId));
+        assertNotNull(details);
+        TestUtil.retryMethodCall(
+                () -> taskClient.requeuePendingTasksByTaskType(taskName2));
+    }
+
+    @Test
     public void testUnsupportedMethods() {
         assertThrows(
                 UnsupportedOperationException.class,
@@ -192,8 +245,6 @@ public class TaskUpdateTests {
                     taskClient.searchV2(4, 20, "sort", "freeText", "query");
                 });
     }
-
-    // taskClient.pollTask(workflowName, workflowName, workflowName)
 
     private static class TaskOutput {
         private String name = "hello";
