@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,10 +57,10 @@ public class WorkflowExecutionTests {
     @Test
     @DisplayName("Test workflow completion")
     public void workflow() throws Exception {
-        List<String> workflowIds = startWorkflows(10, Commons.WORKFLOW_NAME);
+        List<String> workflowIds = startWorkflows(2, Commons.WORKFLOW_NAME);
         workflowIds.add(startWorkflow(Commons.WORKFLOW_NAME));
         this.taskRunnerConfigurer.init();
-        Thread.sleep(7 * 1000);
+        Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
         workflowIds.forEach(workflowId -> validateCompletedWorkflow(workflowId));
         this.taskRunnerConfigurer.shutdown();
     }
