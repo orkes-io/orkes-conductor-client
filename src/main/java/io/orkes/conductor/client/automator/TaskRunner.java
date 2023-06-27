@@ -44,14 +44,12 @@ import com.google.common.util.concurrent.Uninterruptibles;
 class TaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunner.class);
     private static final Registry REGISTRY = Spectator.globalRegistry();
-
     private final EurekaClient eurekaClient;
     private final TaskClient taskClient;
     private final int updateRetryCount;
     private final ThreadPoolExecutor executorService;
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
     private final int taskPollTimeout;
-
     public static final String DOMAIN = "domain";
     private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
     public static final String ALL_WORKERS = "all";
@@ -59,6 +57,16 @@ class TaskRunner {
     private final Semaphore permits;
 
     private final Worker worker;
+
+    private int pollingIntervalInMillis;
+
+    private final String domain;
+
+    private final String taskType;
+
+    private int errorAt;
+
+    private int pollingErrorCount = 0;
 
     TaskRunner(
             Worker worker,
@@ -76,6 +84,13 @@ class TaskRunner {
         this.taskToDomain = taskToDomain;
         this.taskPollTimeout = taskPollTimeout;
         this.permits = new Semaphore(threadCount);
+        this.pollingIntervalInMillis = worker.getPollingInterval();
+        this.taskType = worker.getTaskDefName();
+        this.domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
+                .orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null))
+                        .orElse(taskToDomain.get(taskType)));
+        this.errorAt = PropertyFactory.getInteger(taskType, DOMAIN, 100);
+
         this.executorService =
                 (ThreadPoolExecutor)
                         Executors.newFixedThreadPool(
@@ -86,10 +101,13 @@ class TaskRunner {
                                         .build());
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
         LOGGER.info(
-                "Initialized the TaskPollExecutor for '{}' with {} threads and threadPrefix {}",
-                worker.getTaskDefName(),
+                "Starting Worker for taskType '{}' with {} threads, {} polling interval (ms) and domain {}",
+                taskType,
                 threadCount,
-                workerNamePrefix);
+                pollingIntervalInMillis,
+                domain);
+        LOGGER.info("Polling errors for taskType {} will be printed at every {} occurance.", taskType, errorAt);
+
     }
 
     public void pollAndExecute() {
@@ -101,12 +119,12 @@ class TaskRunner {
                     if (stopwatch == null) {
                         stopwatch = Stopwatch.createStarted();
                     }
-                    Uninterruptibles.sleepUninterruptibly(worker.getPollingInterval(), TimeUnit.MILLISECONDS);
+                    Uninterruptibles.sleepUninterruptibly(pollingIntervalInMillis, TimeUnit.MILLISECONDS);
                     continue;
                 }
                 if (stopwatch != null) {
                     stopwatch.stop();
-                    LOGGER.trace("Poller for task {} waited for {} ms before getting {} tasks to execute", worker.getTaskDefName(), stopwatch.elapsed(TimeUnit.MILLISECONDS), tasks.size());
+                    LOGGER.trace("Poller for task {} waited for {} ms before getting {} tasks to execute", taskType, stopwatch.elapsed(TimeUnit.MILLISECONDS), tasks.size());
                     stopwatch = null;
                 }
                 tasks.forEach(task -> this.executorService.submit(() -> this.processTask(task)));
@@ -138,7 +156,7 @@ class TaskRunner {
         Boolean discoveryOverride =
                 Optional.ofNullable(
                                 PropertyFactory.getBoolean(
-                                        worker.getTaskDefName(), OVERRIDE_DISCOVERY, null))
+                                        taskType, OVERRIDE_DISCOVERY, null))
                         .orElseGet(
                                 () ->
                                         PropertyFactory.getBoolean(
@@ -150,11 +168,10 @@ class TaskRunner {
             return tasks;
         }
         if (worker.paused()) {
-            MetricsContainer.incrementTaskPausedCount(worker.getTaskDefName());
+            MetricsContainer.incrementTaskPausedCount(taskType);
             LOGGER.trace("Worker {} has been paused. Not polling anymore!", worker.getClass());
             return tasks;
         }
-        String taskType = worker.getTaskDefName();
         int pollCount = 0;
         while(permits.tryAcquire()){
             pollCount++;
@@ -165,7 +182,7 @@ class TaskRunner {
 
         try {
 
-            String domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null)).orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
+
             LOGGER.trace("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
             Stopwatch stopwatch = Stopwatch.createStarted();
             int tasksToPoll = pollCount;
@@ -175,7 +192,22 @@ class TaskRunner {
             LOGGER.debug("Time taken to poll {} task with a batch size of {} is {} ms", taskType, tasks.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
         }  catch (Throwable e) {
-            LOGGER.error("Error when polling for tasks: {}", e.getMessage(), e);
+            //For the first N (errorAt) errors, just print them as is...
+            boolean printError = false;
+            if(pollingErrorCount < errorAt) {
+                printError = true;
+            } else if (pollingErrorCount % errorAt == 0) {
+                printError = true;
+            }
+            pollingErrorCount++;
+            if(pollingErrorCount > 1_000_000) {
+                //Reset after 1 million errors
+                pollingErrorCount = 0;
+            }
+            if(printError) {
+                LOGGER.error("Error polling for taskType: {}, error = {}", taskType, e.getMessage(), e);
+            }
+            pollingErrorCount++;
             permits.release(pollCount - tasks.size());
         }
         return tasks;
@@ -185,7 +217,6 @@ class TaskRunner {
         if (count < 1) {
             return Collections.emptyList();
         }
-        String taskType = worker.getTaskDefName();
         String workerId = worker.getIdentity();
         LOGGER.debug("poll {} in the domain {} with batch size {}", taskType, domain, count);
         return taskClient.batchPollTasksInDomain(
@@ -201,7 +232,7 @@ class TaskRunner {
             };
 
     private void processTask(Task task) {
-        LOGGER.trace("Executing task: {} of type: {} in worker: {} at {}", task.getTaskId(), task.getTaskDefName(), worker.getClass().getSimpleName(), worker.getIdentity());
+        LOGGER.trace("Executing task: {} of type: {} in worker: {} at {}", task.getTaskId(), taskType, worker.getClass().getSimpleName(), worker.getIdentity());
         LOGGER.trace("task {} is getting executed after {} ms of getting polled", task.getTaskId(), (System.currentTimeMillis()-task.getStartTime()));
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
@@ -324,7 +355,7 @@ class TaskRunner {
 
     private void handleException(Throwable t, TaskResult result, Worker worker, Task task) {
         LOGGER.error(String.format("Error while executing task %s", task.toString()), t);
-        MetricsContainer.incrementTaskExecutionErrorCount(worker.getTaskDefName(), t);
+        MetricsContainer.incrementTaskExecutionErrorCount(taskType, t);
         result.setStatus(TaskResult.Status.FAILED);
         result.setReasonForIncompletion("Error while executing the task: " + t);
         StringWriter stringWriter = new StringWriter();
