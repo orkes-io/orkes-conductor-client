@@ -22,10 +22,10 @@ import java.util.concurrent.TimeoutException;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.model.BulkResponse;
 import com.netflix.conductor.common.run.Workflow;
+import com.netflix.conductor.common.run.WorkflowTestRequest;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.WorkflowStatus;
-import io.orkes.conductor.client.model.WorkflowTestRequest;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 public abstract class WorkflowClient extends com.netflix.conductor.client.http.WorkflowClient {

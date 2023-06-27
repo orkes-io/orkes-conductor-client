@@ -14,7 +14,7 @@ package io.orkes.conductor.client.http;
 
 import java.lang.reflect.Type;
 
-import com.netflix.conductor.sdk.workflow.utils.ObjectMapperProvider;
+import com.netflix.conductor.common.config.ObjectMapperProvider;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
