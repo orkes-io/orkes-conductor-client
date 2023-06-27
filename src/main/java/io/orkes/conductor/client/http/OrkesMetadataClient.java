@@ -91,6 +91,11 @@ public class OrkesMetadataClient extends MetadataClient  {
     }
 
     @Override
+    public List<TaskDef> getAllTaskDefs() {
+        return metadataResourceApi.getTaskDefs(null, false, null, null);
+    }
+
+    @Override
     public void registerTaskDefs(List<TaskDef> taskDefs) {
         metadataResourceApi.registerTaskDef(taskDefs);
     }

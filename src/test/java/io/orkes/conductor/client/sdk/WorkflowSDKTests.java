@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import io.orkes.conductor.client.util.ApiUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.StandardEnvironment;
 
@@ -41,8 +42,7 @@ public class WorkflowSDKTests {
 
     @Test
     public void testCreateWorkflow() {
-        ApiClientAutoConfiguration apiClientAutoConfiguration = new ApiClientAutoConfiguration();
-        ApiClient apiClient = apiClientAutoConfiguration.getApiClient(new StandardEnvironment());
+        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         OrkesClients clients = new OrkesClients(apiClient);
         OrkesAnnotatedWorkerExecutor workerExecutor = new OrkesAnnotatedWorkerExecutor(clients.getTaskClient(), new WorkerConfiguration());
         workerExecutor.initWorkers("io.orkes.conductor.client.sdk");

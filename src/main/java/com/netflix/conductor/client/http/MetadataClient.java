@@ -89,4 +89,10 @@ public abstract class MetadataClient {
      * @param taskType Task type to be unregistered.
      */
     public abstract void unregisterTaskDef(String taskType);
+
+    /**
+     *
+     * @return All the registered task definitions
+     */
+    public abstract List<TaskDef> getAllTaskDefs();
 }
