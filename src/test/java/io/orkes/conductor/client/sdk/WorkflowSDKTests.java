@@ -18,9 +18,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import io.orkes.conductor.client.util.ApiUtil;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.env.StandardEnvironment;
 
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
@@ -32,8 +30,8 @@ import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.OrkesClients;
-import io.orkes.conductor.client.spring.ApiClientAutoConfiguration;
 import io.orkes.conductor.client.spring.OrkesAnnotatedWorkerExecutor;
+import io.orkes.conductor.client.util.ApiUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
