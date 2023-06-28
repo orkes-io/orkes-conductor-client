@@ -22,6 +22,8 @@ import io.orkes.conductor.client.ApiClient;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.TimeUnit;
+
 @Configuration(proxyBeanMethods = false)
 @Slf4j
 public class ApiClientAutoConfiguration {
@@ -29,6 +31,8 @@ public class ApiClientAutoConfiguration {
     public static final String CONDUCTOR_SERVER_URL = "conductor.server.url";
     public static final String CONDUCTOR_CLIENT_KEY_ID = "conductor.security.client.key-id";
     public static final String CONDUCTOR_CLIENT_SECRET = "conductor.security.client.secret";
+
+    public static final String CONDUCTOR_TOKEN_REFRESH_SEC = "conductor.security.token.refresh.seconds";
 
     public static final String CONDUCTOR_GRPC_SERVER = "conductor.grpc.host";
 
@@ -41,7 +45,7 @@ public class ApiClientAutoConfiguration {
         String rootUri = env.getProperty(CONDUCTOR_SERVER_URL);
         String keyId = env.getProperty(CONDUCTOR_CLIENT_KEY_ID);
         String secret = env.getProperty(CONDUCTOR_CLIENT_SECRET);
-
+        Integer tokenRefreshInterval = env.getProperty(CONDUCTOR_TOKEN_REFRESH_SEC, Integer.class);
         if (rootUri.endsWith("/")) {
             rootUri = rootUri.substring(0, rootUri.length() - 1);
         }
@@ -53,6 +57,9 @@ public class ApiClientAutoConfiguration {
 
         ApiClient apiClient = new ApiClient(rootUri);
         apiClient = configureGrpc(apiClient, env);
+        if(tokenRefreshInterval != null) {
+            apiClient.setTokenRefreshTime(tokenRefreshInterval, TimeUnit.SECONDS);
+        }
         return apiClient;
     }
 

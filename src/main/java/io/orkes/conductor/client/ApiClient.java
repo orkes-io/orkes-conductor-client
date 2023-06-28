@@ -12,25 +12,6 @@
  */
 package io.orkes.conductor.client;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.squareup.okhttp.*;
-import com.squareup.okhttp.internal.http.HttpMethod;
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.api.TokenResourceApi;
-import io.orkes.conductor.client.http.auth.ApiKeyAuth;
-import io.orkes.conductor.client.http.auth.Authentication;
-import io.orkes.conductor.client.model.GenerateTokenRequest;
-import okio.BufferedSink;
-import okio.Okio;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
-
-import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,6 +38,28 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.*;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
+import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.http.api.TokenResourceApi;
+import io.orkes.conductor.client.http.auth.ApiKeyAuth;
+import io.orkes.conductor.client.http.auth.Authentication;
+import io.orkes.conductor.client.model.GenerateTokenRequest;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.squareup.okhttp.*;
+import com.squareup.okhttp.internal.http.HttpMethod;
+import okio.BufferedSink;
+import okio.Okio;
 
 public class ApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
