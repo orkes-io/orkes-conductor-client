@@ -75,6 +75,10 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable {
         return apiClient;
     }
 
+    /**
+     *
+     * @return ObjectMapper used to serialize objects - can be modified to add additional modules.
+     */
     public ObjectMapper getObjectMapper() {
         return objectMapper;
     }

@@ -12,6 +12,25 @@
  */
 package io.orkes.conductor.client;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.squareup.okhttp.*;
+import com.squareup.okhttp.internal.http.HttpMethod;
+import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.http.api.TokenResourceApi;
+import io.orkes.conductor.client.http.auth.ApiKeyAuth;
+import io.orkes.conductor.client.http.auth.Authentication;
+import io.orkes.conductor.client.model.GenerateTokenRequest;
+import okio.BufferedSink;
+import okio.Okio;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,44 +52,22 @@ import java.text.DateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.net.ssl.*;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
-
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.http.api.TokenResourceApi;
-import io.orkes.conductor.client.http.auth.ApiKeyAuth;
-import io.orkes.conductor.client.http.auth.Authentication;
-import io.orkes.conductor.client.model.GenerateTokenRequest;
-
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.squareup.okhttp.*;
-import com.squareup.okhttp.internal.http.HttpMethod;
-import okio.BufferedSink;
-import okio.Okio;
 
 public class ApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
 
     private static final String TOKEN_CACHE_KEY = "TOKEN";
-    private final Cache<String, String> tokenCache;
+    private Cache<String, String> tokenCache;
 
     private final String basePath;
     private final Map<String, String> defaultHeaderMap = new HashMap<String, String>();
 
     private String tempFolderPath;
-
-    private Map<String, Authentication> authentications;
 
     private InputStream sslCaCert;
     private boolean verifyingSsl;
@@ -91,51 +88,66 @@ public class ApiClient {
 
     private int executorThreadCount = 0;
 
+    private long tokenRefreshInSeconds = 2700;  //45 minutes
+
+    private ScheduledExecutorService tokenRefreshService;
     /*
      * Constructor for ApiClient
      */
 
     public ApiClient() {
-        this("http://localhost:8080/api");
+        this("http://localhost:8080/api", null, null);
     }
 
     public ApiClient(String basePath) {
-        this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
+        this(basePath, null, null);
+    }
+
+    public ApiClient(String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
+        this(basePath, secretsManager.getSecret(keyPath), secretsManager.getSecret(secretPath));
+    }
+
+    public ApiClient(String basePath, String keyId, String keySecret) {
         if(basePath.endsWith("/")) {
             basePath = basePath.substring(0, basePath.length()-1);
         }
         this.basePath = basePath;
-        httpClient = new OkHttpClient();
-        httpClient.setRetryOnConnectionFailure(true);
-        verifyingSsl = true;
-        json = new JSON();
-        authentications = new HashMap<>();
-    }
 
-    public ApiClient(String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
-        this(basePath);
-        try {
-            keyId = secretsManager.getSecret(keyPath);
-            keySecret = secretsManager.getSecret(secretPath);
-            getToken();
-        } catch (Throwable t) {
-            LOGGER.error(t.getMessage(), t);
-        }
-    }
-
-    public ApiClient(String basePath, String keyId, String keySecret) {
-        this(basePath);
         this.keyId = keyId;
         this.keySecret = keySecret;
-        try {
-            getToken();
-        } catch (Throwable t) {
-            LOGGER.error(t.getMessage(), t);
+        this.httpClient = new OkHttpClient();
+        this.httpClient.setRetryOnConnectionFailure(true);
+        this.verifyingSsl = true;
+        this.json = new JSON();
+        this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(tokenRefreshInSeconds, TimeUnit.SECONDS).build();
+        if(useSecurity()) {
+            scheduleTokenRefresh();
+            try {
+                //This should be in the try catch so if the client is initialized and if the server is down or not reachable
+                //Client will still initialize without errors
+                getToken();
+            } catch (Throwable t) {
+                LOGGER.error(t.getMessage(), t);
+            }
         }
     }
 
-    public ApiClient(String basePath, String token) {
-        this(basePath);
+    public void setTokenRefreshTime(long duration, TimeUnit timeUnit) {
+        this.tokenRefreshInSeconds = timeUnit.toSeconds(duration);
+        Cache<String, String> tokenCacheNew = CacheBuilder.newBuilder().expireAfterWrite(tokenRefreshInSeconds, TimeUnit.SECONDS).build();
+        synchronized (tokenCache) {
+            tokenCache = tokenCacheNew;
+            tokenRefreshService.shutdownNow();
+            scheduleTokenRefresh();
+        }
+    }
+
+    private void scheduleTokenRefresh() {
+        this.tokenRefreshService = Executors.newSingleThreadScheduledExecutor();
+        long refreshInterval = Math.max(30, tokenRefreshInSeconds - 30);
+        this.tokenRefreshService.scheduleAtFixedRate(()-> {
+            refreshToken();
+        }, refreshInterval,refreshInterval, TimeUnit.SECONDS);
     }
 
     public boolean useSecurity() {
@@ -338,13 +350,7 @@ public class ApiClient {
      * @param apiKey API key
      */
     public void setApiKey(String apiKey) {
-        for (Authentication auth : authentications.values()) {
-            if (auth instanceof ApiKeyAuth) {
-                ((ApiKeyAuth) auth).setApiKey(apiKey);
-                return;
-            }
-        }
-        throw new RuntimeException("No API key authentication configured!");
+        this.keyId = apiKey;
     }
 
     /**
@@ -1096,15 +1102,10 @@ public class ApiClient {
      * @param headerParams Map of header parameters
      */
     public void updateParamsForAuth(String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
-        if(useSecurity() && authentications.isEmpty()) {
-            LOGGER.debug("No authentication set, will refresh token");
-            refreshToken();
-        }
-        for (String authName : authNames) {
-            Authentication auth = authentications.get(authName);
-            if (auth != null) {
-                auth.applyToParams(queryParams, headerParams);
-            }
+        String token = getToken();
+        if(useSecurity()) {
+            Authentication auth = getApiKeyHeader(token);
+            auth.applyToParams(queryParams, headerParams);
         }
     }
 
@@ -1259,19 +1260,19 @@ public class ApiClient {
     }
 
     private String refreshToken() {
+        LOGGER.debug("Refreshing token @ {}", new Date());
         if (this.keyId == null || this.keySecret == null) {
             throw new RuntimeException("KeyId and KeySecret must be set in order to get an authentication token");
         }
         GenerateTokenRequest generateTokenRequest = new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
         Map<String, String> response = TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
         String token = response.get("token");
-        this.setApiKeyHeader(token);
         return token;
     }
 
-    private synchronized void setApiKeyHeader(String token) {
+    private ApiKeyAuth getApiKeyHeader(String token) {
         ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
         apiKeyAuth.setApiKey(token);
-        authentications.put("api_key", apiKeyAuth);
+        return apiKeyAuth;
     }
 }

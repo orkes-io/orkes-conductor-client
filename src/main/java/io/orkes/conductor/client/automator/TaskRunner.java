@@ -89,8 +89,17 @@ class TaskRunner {
         this.domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
                 .orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null))
                         .orElse(taskToDomain.get(taskType)));
-        this.errorAt = PropertyFactory.getInteger(taskType, DOMAIN, 100);
 
+        int defaultLoggingInterval = 100;
+        int errorInterval = PropertyFactory.getInteger(taskType, "LOG_INTERVAL", 0);
+        if(errorInterval == 0) {
+            errorInterval = PropertyFactory.getInteger(ALL_WORKERS, "LOG_INTERVAL", 0);
+        }
+        if(errorInterval == 0) {
+            errorInterval = defaultLoggingInterval;
+        }
+        this.errorAt = errorInterval;
+        LOGGER.info("Polling errors will be sampled at every {} error (after the first 100 errors) for taskType {}", this.errorAt, taskType);
         this.executorService =
                 (ThreadPoolExecutor)
                         Executors.newFixedThreadPool(
@@ -192,23 +201,21 @@ class TaskRunner {
             LOGGER.debug("Time taken to poll {} task with a batch size of {} is {} ms", taskType, tasks.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
         }  catch (Throwable e) {
-            //For the first N (errorAt) errors, just print them as is...
+            permits.release(pollCount - tasks.size());
+
+            //For the first 100 errors, just print them as is...
             boolean printError = false;
-            if(pollingErrorCount < errorAt) {
-                printError = true;
-            } else if (pollingErrorCount % errorAt == 0) {
+            if(pollingErrorCount < 100 || pollingErrorCount % errorAt == 0) {
                 printError = true;
             }
             pollingErrorCount++;
-            if(pollingErrorCount > 1_000_000) {
-                //Reset after 1 million errors
+            if(pollingErrorCount > 10_000_000) {
+                //Reset after 10 million errors
                 pollingErrorCount = 0;
             }
             if(printError) {
                 LOGGER.error("Error polling for taskType: {}, error = {}", taskType, e.getMessage(), e);
             }
-            pollingErrorCount++;
-            permits.release(pollCount - tasks.size());
         }
         return tasks;
     }
