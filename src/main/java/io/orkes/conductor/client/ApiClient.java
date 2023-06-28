@@ -122,6 +122,16 @@ public class ApiClient {
         this.httpClient.setRetryOnConnectionFailure(true);
         this.verifyingSsl = true;
         this.json = new JSON();
+        String refreshInterval = System.getenv("CONDUCTOR_SECURITY_TOKEN_REFRESH_INTERVAL");
+        if(refreshInterval == null) {
+            refreshInterval = System.getProperty("CONDUCTOR_SECURITY_TOKEN_REFRESH_INTERVAL");
+        }
+        if(refreshInterval != null) {
+            try {
+                this.tokenRefreshInSeconds = Integer.parseInt(refreshInterval);
+            }catch (Exception ignored){}
+        }
+        LOGGER.info("Setting token refresh interval to {} seconds", this.tokenRefreshInSeconds);
         this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(tokenRefreshInSeconds, TimeUnit.SECONDS).build();
         if(useSecurity()) {
             scheduleTokenRefresh();
@@ -135,19 +145,10 @@ public class ApiClient {
         }
     }
 
-    public void setTokenRefreshTime(long duration, TimeUnit timeUnit) {
-        this.tokenRefreshInSeconds = timeUnit.toSeconds(duration);
-        Cache<String, String> tokenCacheNew = CacheBuilder.newBuilder().expireAfterWrite(tokenRefreshInSeconds, TimeUnit.SECONDS).build();
-        synchronized (tokenCache) {
-            tokenCache = tokenCacheNew;
-            tokenRefreshService.shutdownNow();
-            scheduleTokenRefresh();
-        }
-    }
-
     private void scheduleTokenRefresh() {
         this.tokenRefreshService = Executors.newSingleThreadScheduledExecutor();
         long refreshInterval = Math.max(30, tokenRefreshInSeconds - 30);
+        LOGGER.info("Starting token refresh thread to run at every {} seconds", refreshInterval);
         this.tokenRefreshService.scheduleAtFixedRate(()-> {
             refreshToken();
         }, refreshInterval,refreshInterval, TimeUnit.SECONDS);
