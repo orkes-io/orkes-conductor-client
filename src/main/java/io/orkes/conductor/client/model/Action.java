@@ -12,20 +12,14 @@
  */
 package io.orkes.conductor.client.model;
 
-import java.io.IOException;
 import java.util.Objects;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** Action */
 public class Action {
     /** Gets or Sets action */
-    @JsonAdapter(ActionEnum.Adapter.class)
     public enum ActionEnum {
         START_WORKFLOW("start_workflow"),
         COMPLETE_TASK("complete_task"),
@@ -55,20 +49,6 @@ public class Action {
                 }
             }
             return null;
-        }
-
-        public static class Adapter extends TypeAdapter<ActionEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final ActionEnum enumeration)
-                    throws IOException {
-                jsonWriter.value(String.valueOf(enumeration.getValue()));
-            }
-
-            @Override
-            public ActionEnum read(final JsonReader jsonReader) throws IOException {
-                Object value = jsonReader.nextString();
-                return ActionEnum.fromValue((String) (value));
-            }
         }
     }
 

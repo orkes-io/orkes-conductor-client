@@ -26,7 +26,7 @@ import io.orkes.conductor.client.model.GrantedAccessResponse;
 import io.orkes.conductor.client.model.Response;
 import io.orkes.conductor.client.model.UpsertUserRequest;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class UserResourceApi {
     private ApiClient apiClient;
@@ -157,7 +157,7 @@ public class UserResourceApi {
      */
     private ApiResponse<Response> deleteUserWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = deleteUserValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Response>() {}.getType();
+        Type localVarReturnType = new TypeReference<Response>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -276,7 +276,7 @@ public class UserResourceApi {
     private ApiResponse<GrantedAccessResponse> getGrantedPermissionsWithHttpInfo(String userId)
             throws ApiException {
         com.squareup.okhttp.Call call = getGrantedPermissionsValidateBeforeCall(userId, null, null);
-        Type localVarReturnType = new TypeToken<GrantedAccessResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<GrantedAccessResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -391,7 +391,7 @@ public class UserResourceApi {
      */
     private ApiResponse<ConductorUser> getUserWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = getUserValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<ConductorUser>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -502,7 +502,7 @@ public class UserResourceApi {
     private ApiResponse<List<ConductorUser>> listUsersWithHttpInfo(Boolean apps)
             throws ApiException {
         com.squareup.okhttp.Call call = listUsersValidateBeforeCall(apps, null, null);
-        Type localVarReturnType = new TypeToken<List<ConductorUser>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<ConductorUser>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -622,7 +622,7 @@ public class UserResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 sendInviteEmailValidateBeforeCall(id, conductorUser, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -750,7 +750,7 @@ public class UserResourceApi {
             UpsertUserRequest upsertUserRequest, String id) throws ApiException {
         com.squareup.okhttp.Call call =
                 upsertUserValidateBeforeCall(upsertUserRequest, id, null, null);
-        Type localVarReturnType = new TypeToken<ConductorUser>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 }

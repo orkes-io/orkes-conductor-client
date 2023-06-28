@@ -26,7 +26,7 @@ import io.orkes.conductor.client.model.GrantedAccessResponse;
 import io.orkes.conductor.client.model.Group;
 import io.orkes.conductor.client.model.UpsertGroupRequest;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class GroupResourceApi {
     private ApiClient apiClient;
@@ -408,7 +408,7 @@ public class GroupResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 getGrantedPermissions1ValidateBeforeCall(groupId, null, null);
-        Type localVarReturnType = new TypeToken<GrantedAccessResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<GrantedAccessResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -523,7 +523,7 @@ public class GroupResourceApi {
      */
     private ApiResponse<Group> getGroupWithHttpInfo(String id) throws ApiException {
         com.squareup.okhttp.Call call = getGroupValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<Group>() {}.getType();
+        Type localVarReturnType = new TypeReference<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -640,7 +640,7 @@ public class GroupResourceApi {
     private ApiResponse<List<ConductorUser>> getUsersInGroupWithHttpInfo(String id)
             throws ApiException {
         com.squareup.okhttp.Call call = getUsersInGroupValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeToken<List<ConductorUser>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<ConductorUser>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -743,7 +743,7 @@ public class GroupResourceApi {
      */
     private ApiResponse<List<Group>> listGroupsWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = listGroupsValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<List<Group>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<Group>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1001,7 +1001,7 @@ public class GroupResourceApi {
             UpsertGroupRequest upsertGroupRequest, String id) throws ApiException {
         com.squareup.okhttp.Call call =
                 upsertGroupValidateBeforeCall(upsertGroupRequest, id, null, null);
-        Type localVarReturnType = new TypeToken<Group>() {}.getType();
+        Type localVarReturnType = new TypeReference<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 }

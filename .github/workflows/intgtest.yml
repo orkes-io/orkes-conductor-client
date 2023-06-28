@@ -1,6 +1,13 @@
-name: Integration Tests
+name: CI
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   integration-test:
@@ -18,7 +25,7 @@ jobs:
         run: |
           hostname
           echo "host is $HOSTNAME"
-          ./gradlew clean test -x check
+          ./gradlew clean test
         env:
           SDK_INTEGRATION_TESTS_SERVER_API_URL: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_API_URL }}
           SDK_INTEGRATION_TESTS_SERVER_KEY_ID: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_KEY_ID }}

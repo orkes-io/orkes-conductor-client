@@ -14,11 +14,10 @@ package io.orkes.conductor.client.model.event;
 
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import io.orkes.conductor.client.http.JSON;
 
 public abstract class QueueConfiguration {
-    private static final Gson gson = new GsonBuilder().create();
+    private static final JSON json = new JSON();
 
     private final String queueName;
     private final String queueType;
@@ -49,6 +48,7 @@ public abstract class QueueConfiguration {
         return this.queueName;
     }
 
+    @Deprecated
     public String getConfiguration() throws Exception {
         if (this.consumer == null) {
             throw new RuntimeException("consumer must be set");
@@ -60,6 +60,20 @@ public abstract class QueueConfiguration {
                 Map.of(
                         "consumer", this.consumer.getConfiguration(),
                         "producer", this.producer.getConfiguration());
-        return gson.toJson(config);
+        return json.serialize(config);
+    }
+
+    public Map<String, Object> getQueueConfiguration() throws Exception {
+        if (this.consumer == null) {
+            throw new RuntimeException("consumer must be set");
+        }
+        if (this.producer == null) {
+            throw new RuntimeException("producer must be set");
+        }
+        Map<String, Object> config =
+                Map.of(
+                        "consumer", this.consumer.getConfiguration(),
+                        "producer", this.producer.getConfiguration());
+        return config;
     }
 }

@@ -16,36 +16,42 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
 import com.netflix.conductor.sdk.workflow.def.tasks.Http;
+import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
+import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.util.Commons;
+import io.orkes.conductor.client.util.TestUtil;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkflowClientTests extends ClientTest {
-    private final WorkflowClient workflowClient;
+    private static WorkflowClient workflowClient;
+    private static MetadataClient metadataClient;
+    private static WorkflowExecutor workflowExecutor;
 
-    private final WorkflowExecutor workflowExecutor;
-
-    public WorkflowClientTests() {
-        this.workflowClient = super.orkesClients.getWorkflowClient();
-        this.workflowExecutor = new WorkflowExecutor(
-                super.orkesClients.getTaskClient(),
-                super.orkesClients.getWorkflowClient(),
-                super.orkesClients.getMetadataClient(),
+    @BeforeAll
+    public static void setup() {
+        workflowClient = orkesClients.getWorkflowClient();
+        metadataClient = orkesClients.getMetadataClient();
+        workflowExecutor = new WorkflowExecutor(
+                orkesClients.getTaskClient(),
+                orkesClients.getWorkflowClient(),
+                orkesClients.getMetadataClient(),
                 10);
     }
 
@@ -80,70 +86,78 @@ public class WorkflowClientTests extends ClientTest {
                 correlationIdToWorkflows.put(correlationId, ids);
             }
         }
-        //Let's give couple of seconds for indexing to complete
+        // Let's give couple of seconds for indexing to complete
         Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
-        Map<String, List<Workflow>> result = workflowClient.getWorkflowsByNamesAndCorrelationIds(correlationIds, workflowNames.stream().collect(Collectors.toList()), true, false);
+        Map<String, List<Workflow>> result = workflowClient.getWorkflowsByNamesAndCorrelationIds(correlationIds,
+                workflowNames.stream().collect(Collectors.toList()), true, false);
         assertNotNull(result);
         assertEquals(correlationIds.size(), result.size());
         for (String correlationId : correlationIds) {
             assertEquals(5, result.get(correlationId).size());
-            Set<String> ids = result.get(correlationId).stream().map(wf -> wf.getWorkflowId()).collect(Collectors.toSet());
+            Set<String> ids = result.get(correlationId).stream().map(wf -> wf.getWorkflowId())
+                    .collect(Collectors.toSet());
             assertEquals(correlationIdToWorkflows.get(correlationId), ids);
         }
     }
 
     @Test
-    public void testWorkflowMethods() {
-        String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
-        List<Workflow> workflows =
-                workflowClient.getWorkflows(
-                        Commons.WORKFLOW_NAME, "askdjbjqhbdjqhbdjqhsbdjqhsbd", false, false);
+    public void testWorkflowMethods() throws Exception {
+        var workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
+        var workflows = (List<Workflow>) TestUtil.retryMethodCall(
+                () -> workflowClient.getWorkflows(
+                        Commons.WORKFLOW_NAME, "askdjbjqhbdjqhbdjqhsbdjqhsbd", false, false));
         assertTrue(workflows.isEmpty());
-        workflowClient.terminateWorkflow(workflowId, "reason");
-        workflowClient.retryLastFailedTask(workflowId);
-        workflowClient.getRunningWorkflow(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
-        workflowClient.getWorkflowsByTimePeriod(
-                Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION, 0L, 0L);
-        workflowClient.search(2, 5, "", "", Commons.WORKFLOW_NAME);
-        workflowClient.terminateWorkflows(List.of(workflowId), "reason");
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.restart(workflowId, true);
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.terminateWorkflow(List.of(workflowId), "reason");
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.restartWorkflow(List.of(workflowId), true);
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.terminateWorkflow(workflowId, "reason");
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.retryWorkflow(List.of(workflowId));
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.terminateWorkflow(workflowId, "reason");
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.rerunWorkflow(workflowId, new RerunWorkflowRequest());
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.pauseWorkflow(workflowId);
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.resumeWorkflow(workflowId);
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.pauseWorkflow(workflowId);
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        TestUtil.retryMethodCall(
+                () -> workflowClient.terminateWorkflow(workflowId, "reason"));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.retryLastFailedTask(workflowId));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.getRunningWorkflow(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.getWorkflowsByTimePeriod(
+                        Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION, 0L, 0L));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.search(2, 5, "", "", Commons.WORKFLOW_NAME));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.terminateWorkflows(List.of(workflowId), "reason"));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.restart(workflowId, true));
         try {
-            workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME);
+            TestUtil.retryMethodCall(
+                    () -> workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME));
         } catch (ApiException e) {
-            if (e.getStatusCode() != 500) {
-                throw e;
-            }
+            assertEquals(e.getCode(), "500");
         }
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.pauseWorkflow(List.of(workflowId));
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.resumeWorkflow(List.of(workflowId));
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.deleteWorkflow(workflowId, false);
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.search(Commons.WORKFLOW_NAME);
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-        workflowClient.runDecider(workflowId);
+        TestUtil.retryMethodCall(
+                () -> workflowClient.terminateWorkflow(List.of(workflowId), "reason"));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.restartWorkflow(List.of(workflowId), true));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.terminateWorkflow(workflowId, "reason"));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.retryWorkflow(List.of(workflowId)));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.terminateWorkflow(workflowId, "reason"));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.rerunWorkflow(workflowId, new RerunWorkflowRequest()));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.pauseWorkflow(workflowId));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.resumeWorkflow(workflowId));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.pauseWorkflow(workflowId));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.resumeWorkflow(workflowId));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.pauseWorkflow(List.of(workflowId)));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.resumeWorkflow(List.of(workflowId)));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.deleteWorkflow(workflowId, false));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.search(Commons.WORKFLOW_NAME));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.runDecider(workflowId));
     }
 
     @Test
@@ -155,9 +169,47 @@ public class WorkflowClientTests extends ClientTest {
         assertEquals(Workflow.WorkflowStatus.TERMINATED, workflow.getStatus());
     }
 
+    @Test
+    public void testSkipTaskFromWorkflow() throws Exception {
+        var workflowName = "random_workflow_name_1hqiuwheiquwhe";
+        var taskName1 = "random_task_name_1hqiuwheiquwheajnsdsand";
+        var taskName2 = "random_task_name_1hqiuwheiquwheajnsdsandjsadh";
+
+        var taskDef1 = new TaskDef(taskName1);
+        taskDef1.setRetryCount(0);
+        taskDef1.setOwnerEmail("test@orkes.io");
+        var taskDef2 = new TaskDef(taskName2);
+        taskDef2.setRetryCount(0);
+        taskDef2.setOwnerEmail("test@orkes.io");
+
+        TestUtil.retryMethodCall(
+                () -> metadataClient.registerTaskDefs(List.of(taskDef1, taskDef2)));
+
+        var wf = new ConductorWorkflow<>(workflowExecutor);
+        wf.setName(workflowName);
+        wf.setVersion(1);
+        wf.add(new SimpleTask(taskName1, taskName1));
+        wf.add(new SimpleTask(taskName2, taskName2));
+        TestUtil.retryMethodCall(
+                () -> wf.registerWorkflow(true));
+
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName(workflowName);
+        startWorkflowRequest.setVersion(1);
+        startWorkflowRequest.setInput(new HashMap<>());
+        var workflowId = (String) TestUtil.retryMethodCall(
+                () -> workflowClient.startWorkflow(startWorkflowRequest));
+        System.out.println("workflowId: " + workflowId);
+
+        TestUtil.retryMethodCall(
+                () -> workflowClient.skipTaskFromWorkflow(workflowId, taskName2));
+        TestUtil.retryMethodCall(
+                () -> workflowClient.terminateWorkflowsWithFailure(List.of(workflowId), null, false));
+    }
+
     public void testUpdateVariables() {
         ConductorWorkflow<Object> workflow = new ConductorWorkflow<>(workflowExecutor);
-        workflow.add(new SimpleTask("simple_task","simple_task_ref"));
+        workflow.add(new SimpleTask("simple_task", "simple_task_ref"));
         workflow.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
         workflow.setTimeoutSeconds(60);
         workflow.setName("update_variable_test");
@@ -212,6 +264,11 @@ public class WorkflowClientTests extends ClientTest {
                 () -> {
                     workflowClient.searchV2(0, 0, "", "", "");
                 });
+    }
+
+    @Test
+    void testExecuteWorkflow() {
+        // TODO
     }
 
     StartWorkflowRequest getStartWorkflowRequest() {

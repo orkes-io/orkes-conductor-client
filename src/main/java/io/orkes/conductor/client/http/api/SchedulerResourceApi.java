@@ -25,7 +25,8 @@ import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 
 public class SchedulerResourceApi {
     private ApiClient apiClient;
@@ -269,7 +270,7 @@ public class SchedulerResourceApi {
     private ApiResponse<List<WorkflowSchedule>> getAllSchedulesWithHttpInfo(String workflowName)
             throws ApiException {
         com.squareup.okhttp.Call call = getAllSchedulesValidateBeforeCall(workflowName, null, null);
-        Type localVarReturnType = new TypeToken<List<WorkflowSchedule>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<WorkflowSchedule>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -421,7 +422,7 @@ public class SchedulerResourceApi {
         com.squareup.okhttp.Call call =
                 getNextFewSchedulesValidateBeforeCall(
                         cronExpression, scheduleStartTime, scheduleEndTime, limit, null, null);
-        Type localVarReturnType = new TypeToken<List<Long>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<Long>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -538,7 +539,7 @@ public class SchedulerResourceApi {
      */
     private ApiResponse<WorkflowSchedule> getScheduleWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = getScheduleValidateBeforeCall(name, null, null);
-        Type localVarReturnType = new TypeToken<WorkflowSchedule>() {}.getType();
+        Type localVarReturnType = new TypeReference<WorkflowSchedule>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -642,7 +643,7 @@ public class SchedulerResourceApi {
      */
     private ApiResponse<Map<String, Object>> pauseAllSchedulesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = pauseAllSchedulesValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<Map<String, Object>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -862,7 +863,7 @@ public class SchedulerResourceApi {
     private ApiResponse<Map<String, Object>> requeueAllExecutionRecordsWithHttpInfo()
             throws ApiException {
         com.squareup.okhttp.Call call = requeueAllExecutionRecordsValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<Map<String, Object>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -966,7 +967,7 @@ public class SchedulerResourceApi {
      */
     private ApiResponse<Map<String, Object>> resumeAllSchedulesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = resumeAllSchedulesValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<Map<String, Object>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1349,7 +1350,7 @@ public class SchedulerResourceApi {
         com.squareup.okhttp.Call call =
                 searchV22ValidateBeforeCall(start, size, sort, freeText, query, null, null);
         Type localVarReturnType =
-                new TypeToken<SearchResultWorkflowScheduleExecutionModel>() {}.getType();
+                new TypeReference<SearchResultWorkflowScheduleExecutionModel>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

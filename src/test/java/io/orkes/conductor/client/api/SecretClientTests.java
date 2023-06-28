@@ -12,10 +12,13 @@
  */
 package io.orkes.conductor.client.api;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.SecretClient;
 import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.model.TagObject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,10 +43,19 @@ public class SecretClientTests extends ClientTest {
             }
         }
         secretClient.putSecret(SECRET_NAME, SECRET_KEY);
+        secretClient.putTagForSecret(List.of(getTagObject()), SECRET_KEY);
         assertTrue(secretClient.listSecretsThatUserCanGrantAccessTo().contains(SECRET_KEY));
         assertTrue(secretClient.listAllSecretNames().contains(SECRET_KEY));
         assertEquals(SECRET_NAME, secretClient.getSecret(SECRET_KEY));
         assertTrue(secretClient.secretExists(SECRET_KEY));
         secretClient.deleteSecret(SECRET_KEY);
+    }
+
+    private TagObject getTagObject() {
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setKey("department");
+        tagObject.setValue("accounts");
+        return tagObject;
     }
 }

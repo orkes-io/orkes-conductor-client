@@ -33,6 +33,8 @@ import java.text.DateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,14 +65,12 @@ public class ApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
 
     private static final String TOKEN_CACHE_KEY = "TOKEN";
-    private final Cache<String, String> tokenCache;
+    private Cache<String, String> tokenCache;
 
     private final String basePath;
     private final Map<String, String> defaultHeaderMap = new HashMap<String, String>();
 
     private String tempFolderPath;
-
-    private Map<String, Authentication> authentications;
 
     private InputStream sslCaCert;
     private boolean verifyingSsl;
@@ -91,51 +91,67 @@ public class ApiClient {
 
     private int executorThreadCount = 0;
 
+    private long tokenRefreshInSeconds = 2700;  //45 minutes
+
+    private ScheduledExecutorService tokenRefreshService;
     /*
      * Constructor for ApiClient
      */
 
     public ApiClient() {
-        this("http://localhost:8080/api");
+        this("http://localhost:8080/api", null, null);
     }
 
     public ApiClient(String basePath) {
-        this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
+        this(basePath, null, null);
+    }
+
+    public ApiClient(String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
+        this(basePath, secretsManager.getSecret(keyPath), secretsManager.getSecret(secretPath));
+    }
+
+    public ApiClient(String basePath, String keyId, String keySecret) {
         if(basePath.endsWith("/")) {
             basePath = basePath.substring(0, basePath.length()-1);
         }
         this.basePath = basePath;
-        httpClient = new OkHttpClient();
-        httpClient.setRetryOnConnectionFailure(true);
-        verifyingSsl = true;
-        json = new JSON();
-        authentications = new HashMap<>();
-    }
 
-    public ApiClient(String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
-        this(basePath);
-        try {
-            keyId = secretsManager.getSecret(keyPath);
-            keySecret = secretsManager.getSecret(secretPath);
-            getToken();
-        } catch (Throwable t) {
-            LOGGER.error(t.getMessage(), t);
-        }
-    }
-
-    public ApiClient(String basePath, String keyId, String keySecret) {
-        this(basePath);
         this.keyId = keyId;
         this.keySecret = keySecret;
-        try {
-            getToken();
-        } catch (Throwable t) {
-            LOGGER.error(t.getMessage(), t);
+        this.httpClient = new OkHttpClient();
+        this.httpClient.setRetryOnConnectionFailure(true);
+        this.verifyingSsl = true;
+        this.json = new JSON();
+        String refreshInterval = System.getenv("CONDUCTOR_SECURITY_TOKEN_REFRESH_INTERVAL");
+        if(refreshInterval == null) {
+            refreshInterval = System.getProperty("CONDUCTOR_SECURITY_TOKEN_REFRESH_INTERVAL");
+        }
+        if(refreshInterval != null) {
+            try {
+                this.tokenRefreshInSeconds = Integer.parseInt(refreshInterval);
+            }catch (Exception ignored){}
+        }
+        LOGGER.info("Setting token refresh interval to {} seconds", this.tokenRefreshInSeconds);
+        this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(tokenRefreshInSeconds, TimeUnit.SECONDS).build();
+        if(useSecurity()) {
+            scheduleTokenRefresh();
+            try {
+                //This should be in the try catch so if the client is initialized and if the server is down or not reachable
+                //Client will still initialize without errors
+                getToken();
+            } catch (Throwable t) {
+                LOGGER.error(t.getMessage(), t);
+            }
         }
     }
 
-    public ApiClient(String basePath, String token) {
-        this(basePath);
+    private void scheduleTokenRefresh() {
+        this.tokenRefreshService = Executors.newSingleThreadScheduledExecutor();
+        long refreshInterval = Math.max(30, tokenRefreshInSeconds - 30);
+        LOGGER.info("Starting token refresh thread to run at every {} seconds", refreshInterval);
+        this.tokenRefreshService.scheduleAtFixedRate(()-> {
+            refreshToken();
+        }, refreshInterval,refreshInterval, TimeUnit.SECONDS);
     }
 
     public boolean useSecurity() {
@@ -308,22 +324,22 @@ public class ApiClient {
     }
 
     public ApiClient setDateFormat(DateFormat dateFormat) {
-        this.json.setDateFormat(dateFormat);
+        LOGGER.warn("This feature is deprecated");
         return this;
     }
 
     public ApiClient setSqlDateFormat(DateFormat dateFormat) {
-        this.json.setSqlDateFormat(dateFormat);
+        LOGGER.warn("This feature is deprecated");
         return this;
     }
 
     public ApiClient setOffsetDateTimeFormat(DateTimeFormatter dateFormat) {
-        this.json.setOffsetDateTimeFormat(dateFormat);
+        LOGGER.warn("This feature is deprecated");
         return this;
     }
 
     public ApiClient setLocalDateFormat(DateTimeFormatter dateFormat) {
-        this.json.setLocalDateFormat(dateFormat);
+        LOGGER.warn("This feature is deprecated");
         return this;
     }
 
@@ -338,13 +354,7 @@ public class ApiClient {
      * @param apiKey API key
      */
     public void setApiKey(String apiKey) {
-        for (Authentication auth : authentications.values()) {
-            if (auth instanceof ApiKeyAuth) {
-                ((ApiKeyAuth) auth).setApiKey(apiKey);
-                return;
-            }
-        }
-        throw new RuntimeException("No API key authentication configured!");
+        this.keyId = apiKey;
     }
 
     /**
@@ -1096,15 +1106,10 @@ public class ApiClient {
      * @param headerParams Map of header parameters
      */
     public void updateParamsForAuth(String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
-        if(useSecurity() && authentications.isEmpty()) {
-            LOGGER.debug("No authentication set, will refresh token");
-            refreshToken();
-        }
-        for (String authName : authNames) {
-            Authentication auth = authentications.get(authName);
-            if (auth != null) {
-                auth.applyToParams(queryParams, headerParams);
-            }
+        String token = getToken();
+        if(useSecurity()) {
+            Authentication auth = getApiKeyHeader(token);
+            auth.applyToParams(queryParams, headerParams);
         }
     }
 
@@ -1259,19 +1264,19 @@ public class ApiClient {
     }
 
     private String refreshToken() {
+        LOGGER.debug("Refreshing token @ {}", new Date());
         if (this.keyId == null || this.keySecret == null) {
             throw new RuntimeException("KeyId and KeySecret must be set in order to get an authentication token");
         }
         GenerateTokenRequest generateTokenRequest = new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
         Map<String, String> response = TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
         String token = response.get("token");
-        this.setApiKeyHeader(token);
         return token;
     }
 
-    private synchronized void setApiKeyHeader(String token) {
+    private ApiKeyAuth getApiKeyHeader(String token) {
         ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
         apiKeyAuth.setApiKey(token);
-        authentications.put("api_key", apiKeyAuth);
+        return apiKeyAuth;
     }
 }

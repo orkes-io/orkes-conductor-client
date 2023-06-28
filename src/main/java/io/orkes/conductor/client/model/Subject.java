@@ -12,14 +12,9 @@
  */
 package io.orkes.conductor.client.model;
 
-import java.io.IOException;
 import java.util.Objects;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** Subject */
@@ -28,7 +23,6 @@ public class Subject {
     private String id = null;
 
     /** Gets or Sets type */
-    @JsonAdapter(TypeEnum.Adapter.class)
     public enum TypeEnum {
         USER("USER"),
         ROLE("ROLE"),
@@ -56,20 +50,6 @@ public class Subject {
                 }
             }
             return null;
-        }
-
-        public static class Adapter extends TypeAdapter<TypeEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final TypeEnum enumeration)
-                    throws IOException {
-                jsonWriter.value(String.valueOf(enumeration.getValue()));
-            }
-
-            @Override
-            public TypeEnum read(final JsonReader jsonReader) throws IOException {
-                Object value = jsonReader.nextString();
-                return TypeEnum.fromValue((String) (value));
-            }
         }
     }
 

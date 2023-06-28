@@ -24,7 +24,7 @@ import com.netflix.conductor.common.metadata.events.EventHandler;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class EventResourceApi {
     private ApiClient apiClient;
@@ -287,7 +287,7 @@ public class EventResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 deleteQueueConfigValidateBeforeCall(queueType, queueName, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -391,7 +391,7 @@ public class EventResourceApi {
      */
     private ApiResponse<List<EventHandler>> getEventHandlersWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getEventHandlersValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<List<EventHandler>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<EventHandler>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -520,7 +520,7 @@ public class EventResourceApi {
             String event, Boolean activeOnly) throws ApiException {
         com.squareup.okhttp.Call call =
                 getEventHandlersForEventValidateBeforeCall(event, activeOnly, null, null);
-        Type localVarReturnType = new TypeToken<List<EventHandler>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<EventHandler>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -653,7 +653,7 @@ public class EventResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 getQueueConfigValidateBeforeCall(queueType, queueName, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -757,7 +757,7 @@ public class EventResourceApi {
      */
     private ApiResponse<Object> getQueueNamesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getQueueNamesValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -901,7 +901,7 @@ public class EventResourceApi {
             String body, String queueType, String queueName) throws ApiException {
         com.squareup.okhttp.Call call =
                 putQueueConfigValidateBeforeCall(body, queueType, queueName, null, null);
-        Type localVarReturnType = new TypeToken<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

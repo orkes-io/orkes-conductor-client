@@ -12,22 +12,16 @@
  */
 package io.orkes.conductor.client.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** AuthorizationRequest */
 public class AuthorizationRequest {
     /** The set of access which is granted or removed */
-    @JsonAdapter(AccessEnum.Adapter.class)
     public enum AccessEnum {
         CREATE("CREATE"),
         READ("READ"),
@@ -57,20 +51,6 @@ public class AuthorizationRequest {
                 }
             }
             return null;
-        }
-
-        public static class Adapter extends TypeAdapter<AccessEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final AccessEnum enumeration)
-                    throws IOException {
-                jsonWriter.value(String.valueOf(enumeration.getValue()));
-            }
-
-            @Override
-            public AccessEnum read(final JsonReader jsonReader) throws IOException {
-                Object value = jsonReader.nextString();
-                return AccessEnum.fromValue((String) (value));
-            }
         }
     }
 

@@ -24,7 +24,8 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 
 public class TagsApi {
     private ApiClient apiClient;
@@ -650,7 +651,7 @@ public class TagsApi {
      */
     private ApiResponse<List<TagObject>> getTagsWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getTagsValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<List<TagObject>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -769,7 +770,7 @@ public class TagsApi {
     private ApiResponse<List<TagObject>> getTaskTagsWithHttpInfo(String taskName)
             throws ApiException {
         com.squareup.okhttp.Call call = getTaskTagsValidateBeforeCall(taskName, null, null);
-        Type localVarReturnType = new TypeToken<List<TagObject>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -887,7 +888,7 @@ public class TagsApi {
     private ApiResponse<List<TagObject>> getWorkflowTagsWithHttpInfo(String name)
             throws ApiException {
         com.squareup.okhttp.Call call = getWorkflowTagsValidateBeforeCall(name, null, null);
-        Type localVarReturnType = new TypeToken<List<TagObject>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

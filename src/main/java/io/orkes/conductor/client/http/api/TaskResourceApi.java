@@ -34,7 +34,7 @@ import io.orkes.conductor.client.model.SearchResultTask;
 import io.orkes.conductor.client.model.SearchResultTaskSummary;
 
 import com.amazonaws.util.EC2MetadataUtils;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class TaskResourceApi {
     private ApiClient apiClient;
@@ -154,7 +154,7 @@ public class TaskResourceApi {
      */
     private ApiResponse<Map<String, Long>> allWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = allValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<Map<String, Long>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, Long>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -259,7 +259,7 @@ public class TaskResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call = allVerboseValidateBeforeCall(null, null);
         Type localVarReturnType =
-                new TypeToken<Map<String, Map<String, Map<String, Long>>>>() {}.getType();
+                new TypeReference<Map<String, Map<String, Map<String, Long>>>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -416,7 +416,7 @@ public class TaskResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 batchPollValidateBeforeCall(tasktype, workerid, domain, count, timeout, null, null);
-        Type localVarReturnType = new TypeToken<List<Task>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<Task>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -520,7 +520,7 @@ public class TaskResourceApi {
      */
     private ApiResponse<List<PollData>> getAllPollDataWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getAllPollDataValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<List<PollData>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<PollData>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -665,7 +665,7 @@ public class TaskResourceApi {
         com.squareup.okhttp.Call call =
                 getExternalStorageLocation1ValidateBeforeCall(
                         path, operation, payloadType, null, null);
-        Type localVarReturnType = new TypeToken<ExternalStorageLocation>() {}.getType();
+        Type localVarReturnType = new TypeReference<ExternalStorageLocation>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -782,7 +782,7 @@ public class TaskResourceApi {
     private ApiResponse<List<PollData>> getPollDataWithHttpInfo(String taskType)
             throws ApiException {
         com.squareup.okhttp.Call call = getPollDataValidateBeforeCall(taskType, null, null);
-        Type localVarReturnType = new TypeToken<List<PollData>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<PollData>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -900,7 +900,7 @@ public class TaskResourceApi {
      */
     private ApiResponse<Task> getTaskWithHttpInfo(String taskId) throws ApiException {
         com.squareup.okhttp.Call call = getTaskValidateBeforeCall(taskId, null, null);
-        Type localVarReturnType = new TypeToken<Task>() {}.getType();
+        Type localVarReturnType = new TypeReference<Task>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1019,7 +1019,7 @@ public class TaskResourceApi {
     private ApiResponse<List<TaskExecLog>> getTaskLogsWithHttpInfo(String taskId)
             throws ApiException {
         com.squareup.okhttp.Call call = getTaskLogsValidateBeforeCall(taskId, null, null);
-        Type localVarReturnType = new TypeToken<List<TaskExecLog>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<TaskExecLog>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1276,7 +1276,7 @@ public class TaskResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 pollValidateBeforeCall(tasktype, workerid, domain, null, null);
-        Type localVarReturnType = new TypeToken<Task>() {}.getType();
+        Type localVarReturnType = new TypeReference<Task>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1395,7 +1395,7 @@ public class TaskResourceApi {
     private ApiResponse<String> requeuePendingTaskWithHttpInfo(String taskType)
             throws ApiException {
         com.squareup.okhttp.Call call = requeuePendingTaskValidateBeforeCall(taskType, null, null);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        Type localVarReturnType = new TypeReference<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1547,7 +1547,7 @@ public class TaskResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 search1ValidateBeforeCall(start, size, sort, freeText, query, null, null);
-        Type localVarReturnType = new TypeToken<SearchResultTaskSummary>() {}.getType();
+        Type localVarReturnType = new TypeReference<SearchResultTaskSummary>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1699,7 +1699,7 @@ public class TaskResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 searchV21ValidateBeforeCall(start, size, sort, freeText, query, null, null);
-        Type localVarReturnType = new TypeToken<SearchResultTask>() {}.getType();
+        Type localVarReturnType = new TypeReference<SearchResultTask>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1812,7 +1812,7 @@ public class TaskResourceApi {
     private ApiResponse<Map<String, Integer>> sizeWithHttpInfo(List<String> taskType)
             throws ApiException {
         com.squareup.okhttp.Call call = sizeValidateBeforeCall(taskType, null, null);
-        Type localVarReturnType = new TypeToken<Map<String, Integer>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, Integer>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1925,7 +1925,7 @@ public class TaskResourceApi {
      */
     private ApiResponse<String> updateTaskWithHttpInfo(TaskResult taskResult) throws ApiException {
         com.squareup.okhttp.Call call = updateTaskValidateBeforeCall(taskResult, null, null);
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        Type localVarReturnType = new TypeReference<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -2044,7 +2044,7 @@ public class TaskResourceApi {
     public String updateTask1(
             Map<String, Object> body, String workflowId, String taskRefName, String status)
             throws ApiException {
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        Type localVarReturnType = new TypeReference<String>() {}.getType();
         ApiResponse<String> resp = updateTask1WithHttpInfo(body, workflowId, taskRefName, status, false, localVarReturnType);
         return resp.getData();
     }
@@ -2059,7 +2059,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response
      */
     public String updateTaskByRefName(Map<String, Object> output, String workflowId, String taskRefName, String status)  throws ApiException {
-        Type localVarReturnType = new TypeToken<String>() {}.getType();
+        Type localVarReturnType = new TypeReference<String>() {}.getType();
         ApiResponse<String> resp = updateTask1WithHttpInfo(output, workflowId, taskRefName, status, false, localVarReturnType);
         return resp.getData();
     }
@@ -2074,7 +2074,7 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response
      */
     public Workflow updateTaskSync(Map<String, Object> output, String workflowId, String taskRefName, String status)  throws ApiException {
-        Type localVarReturnType = new TypeToken<Workflow>() {}.getType();
+        Type localVarReturnType = new TypeReference<Workflow>() {}.getType();
         ApiResponse<Workflow> resp = updateTask1WithHttpInfo(output, workflowId, taskRefName, status, true, localVarReturnType);
         return resp.getData();
     }
@@ -2101,7 +2101,7 @@ public class TaskResourceApi {
             throws ApiException {
         com.squareup.okhttp.Call call =
                 updateTask1ValidateBeforeCall(body, workflowId, taskRefName, status, sync);
-        Type localVarReturnType = new TypeToken<Workflow>() {}.getType();
+        Type localVarReturnType = new TypeReference<Workflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

@@ -12,16 +12,11 @@
  */
 package io.orkes.conductor.client.model;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** WorkflowStatus */
@@ -33,7 +28,6 @@ public class WorkflowStatus {
     private Map<String, Object> output = null;
 
     /** Gets or Sets status */
-    @JsonAdapter(StatusEnum.Adapter.class)
     public enum StatusEnum {
         RUNNING("RUNNING"),
         COMPLETED("COMPLETED"),
@@ -64,20 +58,6 @@ public class WorkflowStatus {
                 }
             }
             return null;
-        }
-
-        public static class Adapter extends TypeAdapter<StatusEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final StatusEnum enumeration)
-                    throws IOException {
-                jsonWriter.value(String.valueOf(enumeration.getValue()));
-            }
-
-            @Override
-            public StatusEnum read(final JsonReader jsonReader) throws IOException {
-                Object value = jsonReader.nextString();
-                return StatusEnum.fromValue((String) (value));
-            }
         }
     }
 

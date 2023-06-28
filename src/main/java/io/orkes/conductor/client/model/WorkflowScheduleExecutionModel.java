@@ -12,16 +12,11 @@
  */
 package io.orkes.conductor.client.model;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** WorkflowScheduleExecutionModel */
@@ -48,7 +43,6 @@ public class WorkflowScheduleExecutionModel {
     private StartWorkflowRequest startWorkflowRequest = null;
 
     /** Gets or Sets state */
-    @JsonAdapter(StateEnum.Adapter.class)
     public enum StateEnum {
         POLLED("POLLED"),
         FAILED("FAILED"),
@@ -76,20 +70,6 @@ public class WorkflowScheduleExecutionModel {
                 }
             }
             return null;
-        }
-
-        public static class Adapter extends TypeAdapter<StateEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final StateEnum enumeration)
-                    throws IOException {
-                jsonWriter.value(String.valueOf(enumeration.getValue()));
-            }
-
-            @Override
-            public StateEnum read(final JsonReader jsonReader) throws IOException {
-                Object value = jsonReader.nextString();
-                return StateEnum.fromValue((String) (value));
-            }
         }
     }
 

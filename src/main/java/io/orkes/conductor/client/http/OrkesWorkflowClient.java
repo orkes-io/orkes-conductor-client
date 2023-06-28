@@ -16,7 +16,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.*;
 
@@ -29,6 +28,7 @@ import com.netflix.conductor.common.model.BulkResponse;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowSummary;
+import com.netflix.conductor.common.run.WorkflowTestRequest;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
@@ -37,12 +37,11 @@ import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
 import io.orkes.conductor.client.model.WorkflowStatus;
-import io.orkes.conductor.client.model.WorkflowTestRequest;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 import com.google.common.base.Preconditions;
 
-public class OrkesWorkflowClient extends WorkflowClient {
+public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable {
 
     protected ApiClient apiClient;
 
@@ -335,10 +334,17 @@ public class OrkesWorkflowClient extends WorkflowClient {
     @Override
     public void shutdown() {
         if(apiClient.isUseGRPC()) {
-            grpcWorkflowClient.shutdown();
+            if(grpcWorkflowClient != null) {
+                grpcWorkflowClient.shutdown();
+            }
         }
         if(executorService != null) {
-            executorService.shutdown();;
+            executorService.shutdown();
         }
+    }
+
+    @Override
+    public void close() {
+        shutdown();
     }
 }
