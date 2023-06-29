@@ -6,7 +6,7 @@ metadata (Workflows and tasks), run workflows, create workers and more.
 ## Add `orkes-conductor-client` dependency to your project
 ### Gradle
 ```
-implementation 'io.orkes.conductor:orkes-conductor-client:1.1.14'
+implementation 'io.orkes.conductor:orkes-conductor-client:2.0.1'
 ```
 ### Maven
 ```
