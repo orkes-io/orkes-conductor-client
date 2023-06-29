@@ -110,7 +110,7 @@ class TaskRunner {
                                         .build());
         ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
         LOGGER.info(
-                "Starting Worker for taskType '{}' with {} threads, {} polling interval (ms) and domain {}",
+                "Starting Worker for taskType '{}' with {} threads, {} ms polling interval and domain {}",
                 taskType,
                 threadCount,
                 pollingIntervalInMillis,
