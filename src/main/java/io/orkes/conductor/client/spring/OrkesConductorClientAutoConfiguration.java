@@ -21,10 +21,7 @@ import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 import com.netflix.conductor.sdk.workflow.executor.task.AnnotatedWorkerExecutor;
 import com.netflix.conductor.sdk.workflow.executor.task.WorkerConfiguration;
 
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.OrkesClients;
-import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.http.OrkesTaskClient;
+import io.orkes.conductor.client.*;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,13 +30,48 @@ import lombok.extern.slf4j.Slf4j;
 public class OrkesConductorClientAutoConfiguration {
 
     @Bean
-    public TaskClient taskClient(ApiClient apiClient) {
-        TaskClient taskClient = new OrkesTaskClient(apiClient);
-        return taskClient;
+    public TaskClient taskClient(OrkesClients clients) {
+        return clients.getTaskClient();
     }
 
     @Bean
-    public WorkflowExecutor getWorkflowExecutor(ApiClient apiClient, AnnotatedWorkerExecutor annotatedWorkerExecutor) {
+    public MetadataClient metadataClient(OrkesClients clients) {
+        return clients.getMetadataClient();
+    }
+
+    @Bean
+    public WorkflowClient workflowClient(OrkesClients clients) {
+        return clients.getWorkflowClient();
+    }
+
+    @Bean
+    public AuthorizationClient authorizationClient(OrkesClients clients) {
+        return clients.getAuthorizationClient();
+    }
+
+    @Bean
+    public EventClient eventClient(OrkesClients clients) {
+        return clients.getEventClient();
+    }
+
+    @Bean
+    public SchedulerClient schedulerClient(OrkesClients clients) {
+        return clients.getSchedulerClient();
+    }
+
+    @Bean
+    public SecretClient secretClient(OrkesClients clients) {
+        return clients.getSecretClient();
+    }
+
+    @Bean
+    public OrkesClients orkesClients(ApiClient apiClient) {
+        OrkesClients clients = new OrkesClients(apiClient);
+        return clients;
+    }
+
+    @Bean
+    public WorkflowExecutor workflowExecutor(ApiClient apiClient, AnnotatedWorkerExecutor annotatedWorkerExecutor) {
         OrkesClients clients = new OrkesClients(apiClient);
         return new WorkflowExecutor(
                 clients.getTaskClient(),

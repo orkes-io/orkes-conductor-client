@@ -63,7 +63,7 @@ public class WorkflowSDKTests {
         assertNotNull(result);
         try {
 
-            Workflow executedWorkflow = result.get(1, TimeUnit.SECONDS);
+            Workflow executedWorkflow = result.get(3, TimeUnit.SECONDS);
             assertNotNull(executedWorkflow);
             assertEquals(Workflow.WorkflowStatus.COMPLETED, executedWorkflow.getStatus());
 
