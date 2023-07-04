@@ -14,7 +14,7 @@ Each worker embodies design pattern and follows certain basic principles:
 
 ### Creating Task Workers
 
-Task workers must implement methods from `WorkflowInterface`. [Code sample](https://github.com/orkes-io/orkes-conductor-client/blob/main/src/test/java/io/orkes/conductor/client/util/SimpleWorker.java).
+Task workers must implement methods from `WorkflowInterface`. [Code sample](https://github.com/orkes-io/orkes-conductor-client/blob/main/src/test/java/io/orkes/conductor/client/util/SimpleWorker.java)
 
 
 ## Starting Workers
@@ -27,5 +27,9 @@ Worker SDK collects [these metrics](https://conductor.netflix.com/metrics/client
 
 
 Metrics on client side supplements the one collected from server in identifying the network as well as client side issues.
+
+### Task Domains
+
+Workers can be initialized with Task Domains, so they can pick up domain specific tasks based on Task to Domain Mapping provided during workflow creation. [Code sample](../../example/java/io/orkes/conductor/sdk/examples/TaskDomainWorker.java)
 
 ### Next: [Create workflows using code](../workflow/README.md)
