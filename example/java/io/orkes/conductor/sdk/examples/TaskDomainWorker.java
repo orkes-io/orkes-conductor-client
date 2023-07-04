@@ -33,14 +33,6 @@ import io.orkes.conductor.client.spring.OrkesAnnotatedWorkerExecutor;
 
 
 public class TaskDomainWorker {
-    public static final String PROPERTY_DOMAIN_TASK_NAME = "task-domain-property-simple-task";
-    public static final String ALL_DOMAIN_TASK_NAME = "task-domain-all-simple-task";
-    public static final String RUNNER_DOMAIN_TASK_NAME = "task-domain-runner-simple-task";
-    public static final String ANNOTATED_DOMAIN_TASK_NAME = "task-domain-annotated-simple-task";
-    public static final String PROPERTY_TASK_DOMAIN = "test-domain-prop";
-    public static final String RUNNER_TASK_DOMAIN = "test-domain-runner";
-    public static final String ANNOTATED_TASK_DOMAIN = "test-domain-annotated";
-
     // This program demonstrates different mechanisms for setting task domains during worker initialization
     // 1. Using task specific property in application.properties
     // 2. Using task agnostic property in application.properties
@@ -54,7 +46,7 @@ public class TaskDomainWorker {
     //    "task-domain-property-simple-task": "test-domain-prop",
     //    "task-domain-all-simple-task": "test-domain-common",
     //    "task-domain-runner-simple-task": "test-domain-common",
-    //    "task-domain-annotated-simple-task": "test-domain-common",
+    //    "task-domain-annotated-simple-task": "test-domain-common"
     //}
     // Example Task to Domain Mapping for workflow creation when property, conductor.worker.all.domain, is not set
     //{
@@ -80,7 +72,7 @@ public class TaskDomainWorker {
         startTaskRunnerWorkers(taskClient);
     }
 
-    @WorkerTask(value=PROPERTY_DOMAIN_TASK_NAME, pollingInterval = 200)
+    @WorkerTask(value="task-domain-property-simple-task", pollingInterval = 200)
     public TaskResult sendPropertyTaskDomain(Task task) {
         // test-domain-prop should be picked up as Task Domain
         TaskResult result = new TaskResult(task);
@@ -92,7 +84,7 @@ public class TaskDomainWorker {
         return result;
     }
 
-    @WorkerTask(value=ALL_DOMAIN_TASK_NAME, pollingInterval = 200)
+    @WorkerTask(value="task-domain-all-simple-task", pollingInterval = 200)
     public TaskResult sendAllTaskDomain(Task task) {
         // test-domain-common should be picked up as Task Domain
         TaskResult result = new TaskResult(task);
@@ -103,10 +95,10 @@ public class TaskDomainWorker {
         return result;
     }
 
-    @WorkerTask(value=ANNOTATED_DOMAIN_TASK_NAME, domain=ANNOTATED_TASK_DOMAIN, pollingInterval = 200)
+    @WorkerTask(value="task-domain-annotated-simple-task", domain="test-domain-annotated", pollingInterval = 200)
     public TaskResult sendAnnotatedTaskDomain(Task task) {
         // test-domain-common should be picked up as Task Domain if conductor.worker.all.domain is populated
-        // For ANNOTATED_TASK_DOMAIN to be picked up, conductor.worker.all.domain shouldn't be populated
+        // For test-domain-annotated to be picked up, conductor.worker.all.domain shouldn't be populated
         TaskResult result = new TaskResult(task);
 
         result.getOutputData().put("key", "value");
@@ -121,9 +113,9 @@ public class TaskDomainWorker {
         TaskRunnerConfigurer.Builder builder = new TaskRunnerConfigurer.Builder(taskClient, workers);
 
         // test-domain-common should be picked up as Task Domain if conductor.worker.all.domain is populated
-        // For RUNNER_TASK_DOMAIN to be picked up, conductor.worker.all.domain shouldn't be populated
+        // For test-domain-runner to be picked up, conductor.worker.all.domain shouldn't be populated
         Map<String, String> taskToDomains = new HashMap<>();
-        taskToDomains.put(RUNNER_DOMAIN_TASK_NAME, RUNNER_TASK_DOMAIN);
+        taskToDomains.put("task-domain-runner-simple-task", "test-domain-runner");
         Map<String, Integer> taskThreadCount = new HashMap<>();
 
         TaskRunnerConfigurer taskRunner =
@@ -146,7 +138,7 @@ public class TaskDomainWorker {
 
         @Override
         public String getTaskDefName() {
-            return RUNNER_DOMAIN_TASK_NAME;
+            return "task-domain-runner-simple-task";
         }
 
         public TaskResult execute(Task task) {
@@ -162,9 +154,8 @@ public class TaskDomainWorker {
 
     public static void setSystemProperties() {
         // This is in lieu of setting properties in application.properties
-        System.setProperty("conductor.worker.task-domain-property-simple-task.domain", PROPERTY_TASK_DOMAIN);
-        // Un-commenting the below line will give precedence to ALL_DOMAIN_TASK_NAME
-        // instead of RUNNER_TASK_DOMAIN and ANNOTATED_DOMAIN_TASK_NAME
-        // System.setProperty("conductor.worker.all.domain", ALL_DOMAIN_TASK_NAME);
+        System.setProperty("conductor.worker.task-domain-property-simple-task.domain", "test-domain-prop");
+        // If below line is un-commented, test-domain-common trumps test-domain-runner and test-domain-annotated
+        // System.setProperty("conductor.worker.all.domain", "test-domain-common");
     }
 }
