@@ -111,6 +111,9 @@ public class ApiClient {
     }
 
     public ApiClient(String basePath, String keyId, String keySecret) {
+        if(basePath == null) {
+            basePath = "http://localhost:8080/api";
+        }
         if(basePath.endsWith("/")) {
             basePath = basePath.substring(0, basePath.length()-1);
         }

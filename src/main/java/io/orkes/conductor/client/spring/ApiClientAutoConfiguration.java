@@ -41,7 +41,7 @@ public class ApiClientAutoConfiguration {
         String rootUri = env.getProperty(CONDUCTOR_SERVER_URL);
         String keyId = env.getProperty(CONDUCTOR_CLIENT_KEY_ID);
         String secret = env.getProperty(CONDUCTOR_CLIENT_SECRET);
-        if (rootUri.endsWith("/")) {
+        if (rootUri != null && rootUri.endsWith("/")) {
             rootUri = rootUri.substring(0, rootUri.length() - 1);
         }
         if (StringUtils.isNotBlank(keyId) && StringUtils.isNotBlank(secret)) {

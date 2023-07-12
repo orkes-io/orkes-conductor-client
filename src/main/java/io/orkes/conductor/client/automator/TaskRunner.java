@@ -60,7 +60,7 @@ class TaskRunner {
 
     private int pollingIntervalInMillis;
 
-    private final String domain;
+    private String domain;
 
     private final String taskType;
 
@@ -86,9 +86,17 @@ class TaskRunner {
         this.permits = new Semaphore(threadCount);
         this.pollingIntervalInMillis = worker.getPollingInterval();
         this.taskType = worker.getTaskDefName();
-        this.domain = Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
-                .orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null))
-                        .orElse(taskToDomain.get(taskType)));
+
+        //1. Is there a worker level override?
+        this.domain = PropertyFactory.getString(taskType, DOMAIN, null);
+        if(this.domain == null) {
+            //2. If not, is there a blanket override?
+            this.domain = PropertyFactory.getString(ALL_WORKERS, DOMAIN, null);
+        }
+        if(this.domain == null) {
+            //3. was it supplied as part of the config?
+            this.domain = taskToDomain.get(taskType);
+        }
 
         int defaultLoggingInterval = 100;
         int errorInterval = PropertyFactory.getInteger(taskType, "LOG_INTERVAL", 0);
