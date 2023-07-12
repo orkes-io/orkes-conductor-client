@@ -12,13 +12,7 @@
  */
 package io.orkes.conductor.client.spring;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import io.orkes.conductor.client.MetadataClient;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -26,10 +20,6 @@ import org.springframework.context.annotation.Bean;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.sdk.workflow.executor.task.WorkerConfiguration;
-
-import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 
 import lombok.extern.slf4j.Slf4j;
 
