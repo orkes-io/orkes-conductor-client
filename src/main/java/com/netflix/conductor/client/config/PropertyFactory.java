@@ -85,7 +85,8 @@ public class PropertyFactory {
 
     private static PropertyFactory getPropertyFactory(String workerName, String property) {
         String key = property + "." + workerName;
-        return PROPERTY_FACTORY_MAP.computeIfAbsent(
+        PropertyFactory value = PROPERTY_FACTORY_MAP.computeIfAbsent(
                 key, t -> new PropertyFactory(PROPERTY_PREFIX, property, workerName));
+        return value;
     }
 }

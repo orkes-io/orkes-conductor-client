@@ -28,19 +28,26 @@ public class OrkesSpringWorkerConfiguration extends WorkerConfiguration {
 
     @Override
     public int getPollingInterval(String taskName) {
-        String key = "conductor.worker." + taskName + ".pollingInterval";
-        return environment.getProperty(key, Integer.class, 0);
+        return getProperty(taskName, "pollingInterval", Integer.class, 0);
     }
 
     @Override
     public int getThreadCount(String taskName) {
-        String key = "conductor.worker." + taskName + ".threadCount";
-        return environment.getProperty(key, Integer.class, 0);
+        return getProperty(taskName, "threadCount", Integer.class, 0);
     }
 
     @Override
     public String getDomain(String taskName) {
-        String key = "conductor.worker." + taskName + ".domain";
-        return environment.getProperty(key, String.class, null);
+        return getProperty(taskName, "domain", String.class, null);
+    }
+
+    private <T>T getProperty(String taskName, String property, Class<T> type, T defaultValue) {
+        String key = "conductor.worker." + taskName + "." + property;
+        T value = environment.getProperty(key, type, defaultValue);
+        if(value == null || value == defaultValue) {
+            key = "conductor.worker.all." + property;
+            value = environment.getProperty(key, type, defaultValue);
+        }
+        return value;
     }
 }

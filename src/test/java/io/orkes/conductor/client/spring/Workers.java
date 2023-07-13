@@ -23,7 +23,7 @@ import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 @Component
 public class Workers {
 
-    @WorkerTask(value = "hello", threadCount = 3)
+    @WorkerTask(value = "hello", threadCount = 1, pollingInterval = 99)
     public String helloWorld(@InputParam("name") String name) {
         TaskContext context = TaskContext.get();
         System.out.println(new Date() + ":: Poll count: " + context.getPollCount());

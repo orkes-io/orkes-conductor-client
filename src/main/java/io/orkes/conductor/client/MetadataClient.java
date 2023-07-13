@@ -42,4 +42,6 @@ public abstract class MetadataClient extends com.netflix.conductor.client.http.M
     public abstract void setTaskTags(List<TagObject> tagObjects, String taskName);
 
     public abstract void setWorkflowTags(List<TagObject> tagObjects, String name);
+
+    public abstract List<WorkflowDef> getAllWorkflowDefs();
 }

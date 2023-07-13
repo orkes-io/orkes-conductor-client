@@ -159,4 +159,9 @@ public class OrkesMetadataClient extends MetadataClient  {
     public void setWorkflowTags(List<TagObject> tagObjects, String name) {
         tagsApi.setWorkflowTags(tagObjects, name);
     }
+
+    @Override
+    public List<WorkflowDef> getAllWorkflowDefs() {
+        return metadataResourceApi.getAllWorkflows(null, false, null, null);
+    }
 }
