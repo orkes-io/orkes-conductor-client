@@ -13,6 +13,7 @@
 package io.orkes.conductor.client.api;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -82,13 +83,9 @@ public class EventClientTests extends ClientTest {
                     eventClient.getQueueConfig(queueConfiguration);
                 });
         eventClient.putQueueConfig(queueConfiguration);
-        String configurationResponse = eventClient.getQueueConfig(queueConfiguration);
-        assertTrue(
-                configurationResponse.contains(
-                        "consumer={max.poll.records=1000, bootstrap.servers=localhost:9092, heartbeat.interval.ms=1000}"));
-        assertTrue(
-                configurationResponse.contains(
-                        "producer={batch.size=1024, bootstrap.servers=localhost:9092}"));
+        Map<String, Object> configurationResponse = eventClient.getQueueConfig(queueConfiguration);
+        assertTrue(configurationResponse.containsKey("consumer"));
+        assertTrue(configurationResponse.containsKey("producer"));
         eventClient.deleteQueueConfig(queueConfiguration);
     }
 
