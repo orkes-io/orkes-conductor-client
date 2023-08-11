@@ -24,6 +24,4 @@ public abstract class EventClient extends com.netflix.conductor.client.http.Even
     public abstract void deleteQueueConfig(QueueConfiguration queueConfiguration);
 
     public abstract void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception;
-
-    public abstract void publishEvent(String id, Map<String, Object> payload, String queueType, String queueName) throws Exception;
 }

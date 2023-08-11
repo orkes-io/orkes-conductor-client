@@ -86,9 +86,4 @@ public class OrkesEventClient extends EventClient {
     public void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception {
         eventResourceApi.putQueueConfig(queueConfiguration.getConfiguration(), queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
-
-    @Override
-    public void publishEvent(String id, Map<String, Object> payload, String queueType, String queueName) throws Exception {
-        eventResourceApi.publishEvent(id, payload, queueType, queueName);
-    }
 }
