@@ -343,6 +343,10 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
         }
     }
 
+    public void jumpToTask(String workflowId, String taskReferenceName, Map<String, Object> input) {
+        httpClient.jumpToTaskWithHttpInfo(workflowId, taskReferenceName, input);
+    }
+
     @Override
     public void close() {
         shutdown();
