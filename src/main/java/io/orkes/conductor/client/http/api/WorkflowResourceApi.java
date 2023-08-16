@@ -3865,7 +3865,7 @@ public class WorkflowResourceApi {
     private com.squareup.okhttp.Call jumpToTaskValidateBeforeCall(Map<String, Object> body, String workflowId, String taskReferenceName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
-            throw new ApiException("Missing the required parameter 'body' when calling jumpToTask(Async)");
+            throw new ApiException("Missing the required parameter 'input' when calling jumpToTask(Async)");
         }
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
