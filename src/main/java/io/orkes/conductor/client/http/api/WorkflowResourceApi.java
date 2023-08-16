@@ -3890,7 +3890,7 @@ public class WorkflowResourceApi {
         Object localVarPostBody = body;
 
         // create path and map variables
-        String localVarPath = "/api/workflow/{workflowId}/jump/{taskReferenceName}"
+        String localVarPath = "/workflow/{workflowId}/jump/{taskReferenceName}"
                 .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
