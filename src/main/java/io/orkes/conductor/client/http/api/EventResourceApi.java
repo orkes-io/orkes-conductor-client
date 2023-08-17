@@ -635,8 +635,8 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Object getQueueConfig(String queueType, String queueName) throws ApiException {
-        ApiResponse<Object> resp = getQueueConfigWithHttpInfo(queueType, queueName);
+    public Map<String, Object> getQueueConfig(String queueType, String queueName) throws ApiException {
+        ApiResponse<Map<String, Object>> resp = getQueueConfigWithHttpInfo(queueType, queueName);
         return resp.getData();
     }
 
@@ -649,11 +649,11 @@ public class EventResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<Object> getQueueConfigWithHttpInfo(String queueType, String queueName)
+    private ApiResponse<Map<String, Object>> getQueueConfigWithHttpInfo(String queueType, String queueName)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 getQueueConfigValidateBeforeCall(queueType, queueName, null, null);
-        Type localVarReturnType = new TypeReference<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

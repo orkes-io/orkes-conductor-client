@@ -13,6 +13,7 @@
 package io.orkes.conductor.client.http;
 
 import java.util.List;
+import java.util.Map;
 
 import com.netflix.conductor.common.metadata.events.EventHandler;
 
@@ -72,8 +73,8 @@ public class OrkesEventClient extends EventClient {
     }
 
     @Override
-    public String getQueueConfig(QueueConfiguration queueConfiguration) {
-        return eventResourceApi.getQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName()).toString();
+    public Map<String, Object> getQueueConfig(QueueConfiguration queueConfiguration) {
+        return eventResourceApi.getQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 
     @Override

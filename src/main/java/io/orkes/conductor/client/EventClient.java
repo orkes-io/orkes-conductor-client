@@ -14,10 +14,12 @@ package io.orkes.conductor.client;
 
 
 
+import java.util.Map;
+
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 
 public abstract class EventClient extends com.netflix.conductor.client.http.EventClient {
-    public abstract String getQueueConfig(QueueConfiguration queueConfiguration);
+    public abstract Map<String, Object> getQueueConfig(QueueConfiguration queueConfiguration);
 
     public abstract void deleteQueueConfig(QueueConfiguration queueConfiguration);
 
