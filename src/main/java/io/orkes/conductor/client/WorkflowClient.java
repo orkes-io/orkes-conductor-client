@@ -90,4 +90,6 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
      * @return Updated state of the workflow
      */
     public abstract Workflow updateVariables(String workflowId, Map<String, Object> variables);
+
+    public abstract void jumpToTask(String workflowId, String taskReferenceName, Map<String, Object> input);
 }
