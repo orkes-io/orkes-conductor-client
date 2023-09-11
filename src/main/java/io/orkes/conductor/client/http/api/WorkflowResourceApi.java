@@ -22,6 +22,7 @@ import java.util.Map;
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.SkipTaskRequest;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import com.netflix.conductor.common.metadata.workflow.UpgradeWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowTestRequest;
 
@@ -3929,5 +3930,105 @@ public class WorkflowResourceApi {
         String[] localVarAuthNames = new String[] { "api_key" };
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
+
+    /**
+     * Upgrade running workflow to newer version
+     * Upgrade running workflow to newer version
+     * @param body  (required)
+     * @param version  (required)
+     * @param workflowId  (required)
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public void upgradeRunningWorkflowToVersion(UpgradeWorkflowRequest body, Integer version, String workflowId) throws ApiException {
+        upgradeRunningWorkflowToVersionWithHttpInfo(body, version, workflowId);
+    }
+
+    /**
+     * Upgrade running workflow to newer version
+     * Upgrade running workflow to newer version
+     * @param body  (required)
+     * @param version  (required)
+     * @param workflowId  (required)
+     * @return ApiResponse&lt;Void&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    private ApiResponse<Void> upgradeRunningWorkflowToVersionWithHttpInfo(UpgradeWorkflowRequest body, Integer version, String workflowId) throws ApiException {
+        com.squareup.okhttp.Call call = upgradeRunningWorkflowToVersionValidateBeforeCall(body, version, workflowId, null, null);
+        return apiClient.execute(call);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call upgradeRunningWorkflowToVersionValidateBeforeCall(UpgradeWorkflowRequest body, Integer version, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling upgradeRunningWorkflowToVersion(Async)");
+        }
+        // verify the required parameter 'version' is set
+        if (version == null) {
+            throw new ApiException("Missing the required parameter 'version' when calling upgradeRunningWorkflowToVersion(Async)");
+        }
+        // verify the required parameter 'workflowId' is set
+        if (workflowId == null) {
+            throw new ApiException("Missing the required parameter 'workflowId' when calling upgradeRunningWorkflowToVersion(Async)");
+        }
+
+        com.squareup.okhttp.Call call = upgradeRunningWorkflowToVersionCall(body, version, workflowId, progressListener, progressRequestListener);
+        return call;
+    }
+
+    /**
+     * Build call for upgradeRunningWorkflowToVersion
+     * @param body  (required)
+     * @param version  (required)
+     * @param workflowId  (required)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    private com.squareup.okhttp.Call upgradeRunningWorkflowToVersionCall(UpgradeWorkflowRequest body, Integer version, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/workflow/{workflowId}/upgrade/{version}"
+                .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        if (version != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("version", version));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+                "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
 
 }

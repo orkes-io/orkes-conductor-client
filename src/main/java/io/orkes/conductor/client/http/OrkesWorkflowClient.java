@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
+import com.netflix.conductor.common.metadata.workflow.UpgradeWorkflowRequest;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -346,6 +347,11 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     @Override
     public void jumpToTask(String workflowId, String taskReferenceName, Map<String, Object> input) {
         httpClient.jumpToTaskWithHttpInfo(workflowId, taskReferenceName, input);
+    }
+
+    @Override
+    public void upgradeRunningWorkflowToVersion(String workflowId, Integer version, UpgradeWorkflowRequest upgradeWorkflowRequest ) {
+        httpClient.upgradeRunningWorkflowToVersion(upgradeWorkflowRequest,version, workflowId);
     }
 
     @Override
