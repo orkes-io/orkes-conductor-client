@@ -12,12 +12,15 @@
  */
 package io.orkes.conductor.client.api;
 
+import io.orkes.conductor.client.model.TagObject;
 import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.SchedulerClient;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 import io.orkes.conductor.client.util.Commons;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,6 +44,10 @@ public class SchedulerClientTests extends ClientTest {
         assertEquals(NAME, workflowSchedule.getName());
         assertEquals(CRON_EXPRESSION, workflowSchedule.getCronExpression());
         assertFalse(schedulerClient.searchV22(0, 10, "ASC", "*", "").getResults().isEmpty());
+        schedulerClient.setSchedulerTags(getTagObject(), NAME);
+        assertEquals(getTagObject(), schedulerClient.getSchedulerTags(NAME));
+        schedulerClient.deleteSchedulerTags(getTagObject(), NAME);
+        assertEquals(0, schedulerClient.getSchedulerTags(NAME).size());
         schedulerClient.pauseSchedule(NAME);
         workflowSchedule = schedulerClient.getSchedule(NAME);
         assertTrue(workflowSchedule.isPaused());
@@ -62,5 +69,13 @@ public class SchedulerClientTests extends ClientTest {
                 .name(NAME)
                 .cronExpression(CRON_EXPRESSION)
                 .startWorkflowRequest(Commons.getStartWorkflowRequest());
+    }
+
+    private List<TagObject> getTagObject() {
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setKey("department");
+        tagObject.setValue("accounts");
+        return List.of(tagObject);
     }
 }
