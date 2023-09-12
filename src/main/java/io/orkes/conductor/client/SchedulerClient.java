@@ -48,4 +48,6 @@ public interface SchedulerClient {
 
     void deleteTagForSchedule(List<TagObject> body, String name);
 
+    List<TagObject> getTagsForSchedule(String name);
+
     }
