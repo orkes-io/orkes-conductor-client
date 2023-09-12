@@ -81,4 +81,10 @@ public interface AuthorizationClient {
     AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId);
 
     ConductorApplication updateApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id);
+
+    void putTagForApplication(List<TagObject> body, String applicationId);
+
+    List<TagObject> getTagsForApplication(String applicationId);
+
+    void deleteTagForApplication(List<TagObject> body, String applicationId);
 }
