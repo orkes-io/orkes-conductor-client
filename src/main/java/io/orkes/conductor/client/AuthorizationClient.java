@@ -82,9 +82,9 @@ public interface AuthorizationClient {
 
     ConductorApplication updateApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id);
 
-    void putTagForApplication(List<TagObject> body, String applicationId);
+    void setApplicationTags(List<TagObject> body, String applicationId);
 
-    List<TagObject> getTagsForApplication(String applicationId);
+    List<TagObject> getApplicationTags(String applicationId);
 
-    void deleteTagForApplication(List<TagObject> body, String applicationId);
+    void deleteApplicationTags(List<TagObject> body, String applicationId);
 }

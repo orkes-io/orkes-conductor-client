@@ -187,17 +187,17 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public void putTagForApplication(List<TagObject> tags, String applicationId) {
+    public void setApplicationTags(List<TagObject> tags, String applicationId) {
         applicationResourceApi.putTagForApplication(tags, applicationId);
     }
 
     @Override
-    public List<TagObject> getTagsForApplication(String applicationId) {
+    public List<TagObject> getApplicationTags(String applicationId) {
         return applicationResourceApi.getTagsForApplication(applicationId);
     }
 
     @Override
-    public void deleteTagForApplication(List<TagObject> tags, String applicationId) {
+    public void deleteApplicationTags(List<TagObject> tags, String applicationId) {
         applicationResourceApi.deleteTagForApplication(tags, applicationId);
     }
 }

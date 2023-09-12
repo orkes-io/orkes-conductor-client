@@ -44,10 +44,10 @@ public interface SchedulerClient {
     SearchResultWorkflowScheduleExecutionModel searchV22(
             Integer start, Integer size, String sort, String freeText, String query);
 
-    void putTagForSchedule(List<TagObject> body, String name);
+    void setSchedulerTags(List<TagObject> body, String name);
 
-    void deleteTagForSchedule(List<TagObject> body, String name);
+    void deleteSchedulerTags(List<TagObject> body, String name);
 
-    List<TagObject> getTagsForSchedule(String name);
+    List<TagObject> getSchedulerTags(String name);
 
     }

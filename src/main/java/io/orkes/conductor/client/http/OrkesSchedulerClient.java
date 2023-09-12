@@ -92,17 +92,17 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public void putTagForSchedule(List<TagObject> body, String name) {
+    public void setSchedulerTags(List<TagObject> body, String name) {
         schedulerResourceApi.putTagForSchedule(body, name);
     }
 
     @Override
-    public void deleteTagForSchedule(List<TagObject> body, String name) {
+    public void deleteSchedulerTags(List<TagObject> body, String name) {
         schedulerResourceApi.deleteTagForSchedule(body, name);
     }
 
     @Override
-    public List<TagObject> getTagsForSchedule(String name) {
+    public List<TagObject> getSchedulerTags(String name) {
         return schedulerResourceApi.getTagsForSchedule(name);
     }
 }
