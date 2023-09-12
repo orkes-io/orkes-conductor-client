@@ -14,8 +14,10 @@ package io.orkes.conductor.client;
 
 import java.util.List;
 
+import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
+import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 
 public interface SchedulerClient {
@@ -42,4 +44,9 @@ public interface SchedulerClient {
 
     SearchResultWorkflowScheduleExecutionModel searchV22(
             Integer start, Integer size, String sort, String freeText, String query);
-}
+
+    void putTagForSchedule(List<TagObject> body, String name);
+
+    void deleteTagForSchedule(List<TagObject> body, String name);
+
+    }
