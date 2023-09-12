@@ -23,6 +23,7 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
+import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -1454,4 +1455,247 @@ public class SchedulerResourceApi {
         com.squareup.okhttp.Call call = testTimeoutValidateBeforeCall(null, null);
         return apiClient.execute(call);
     }
+
+
+    /**
+     * Returns all the tags of the Scheduler
+     *
+     * @param name (required)
+     * @return List&lt;TagObject&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
+     *     response body
+     */
+    public List<TagObject> getSchedulerTags(String name) throws ApiException {
+        ApiResponse<List<TagObject>> resp = getSchedulerTagsWithHttpInfo(name);
+        return resp.getData();
+    }
+
+    /**
+     * Returns all the tags of the Scheduler
+     *
+     * @param name (required)
+     * @return ApiResponse&lt;List&lt;TagObject&gt;&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
+     *     response body
+     */
+    private ApiResponse<List<TagObject>> getSchedulerTagsWithHttpInfo(String name)
+            throws ApiException {
+        com.squareup.okhttp.Call call = getSchedulerTagsValidateBeforeCall(name, null, null);
+        Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    private com.squareup.okhttp.Call getSchedulerTagsValidateBeforeCall(
+            String name,
+            final ProgressResponseBody.ProgressListener progressListener,
+            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            throws ApiException {
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException(
+                    "Missing the required parameter 'name' when calling getWorkflowTags(Async)");
+        }
+
+        return getSchedulerTagsCall(name, progressListener, progressRequestListener);
+    }
+
+    /**
+     * Build call for getSchedulerTags
+     *
+     * @param name (required)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call getSchedulerTagsCall(
+            String name,
+            final ProgressResponseBody.ProgressListener progressListener,
+            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            throws ApiException {
+        Object localVarPostBody = null;
+
+        // create path and map variables
+        String localVarPath =
+                "/scheduler/schedules/{name}/tags"
+                        .replaceAll(
+                                "\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {"application/json"};
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {};
+
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if (progressListener != null) {
+            apiClient
+                    .getHttpClient()
+                    .networkInterceptors()
+                    .add(
+                            new com.squareup.okhttp.Interceptor() {
+                                @Override
+                                public com.squareup.okhttp.Response intercept(
+                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                        throws IOException {
+                                    com.squareup.okhttp.Response originalResponse =
+                                            chain.proceed(chain.request());
+                                    return originalResponse
+                                            .newBuilder()
+                                            .body(
+                                                    new ProgressResponseBody(
+                                                            originalResponse.body(),
+                                                            progressListener))
+                                            .build();
+                                }
+                            });
+        }
+
+        String[] localVarAuthNames = new String[] {"api_key"};
+        return apiClient.buildCall(
+                localVarPath,
+                "GET",
+                localVarQueryParams,
+                localVarCollectionQueryParams,
+                localVarPostBody,
+                localVarHeaderParams,
+                localVarFormParams,
+                localVarAuthNames,
+                progressRequestListener);
+    }
+
+    /**
+     * Set the tags of the Scheduler
+     *
+     * @param tagObjects (required)
+     * @param name (required)
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
+     *     response body
+     */
+    public void setSchedulerTags(List<TagObject> tagObjects, String name) throws ApiException {
+        setSchedulerTagsWithHttpInfo(tagObjects, name);
+    }
+
+    /**
+     * Set the tags of the scheduler
+     *
+     * @param tagObjects (required)
+     * @param name (required)
+     * @return ApiResponse&lt;Void&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
+     *     response body
+     */
+    private ApiResponse<Void> setSchedulerTagsWithHttpInfo(List<TagObject> tagObjects, String name)
+            throws ApiException {
+        com.squareup.okhttp.Call call =
+                setSchedulerTagsValidateBeforeCall(tagObjects, name, null, null);
+        return apiClient.execute(call);
+    }
+
+    private com.squareup.okhttp.Call setSchedulerTagsValidateBeforeCall(
+            List<TagObject> tagObjects,
+            String name,
+            final ProgressResponseBody.ProgressListener progressListener,
+            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            throws ApiException {
+        // verify the required parameter 'body' is set
+        if (tagObjects == null) {
+            throw new ApiException(
+                    "Missing the required parameter 'tagObjects' when calling setSchedulerTags(Async)");
+        }
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException(
+                    "Missing the required parameter 'name' when calling setSchedulerTags(Async)");
+        }
+
+        return setSchedulerTagsCall(tagObjects, name, progressListener, progressRequestListener);
+    }
+
+    /**
+     * Build call for setSchedulerTags
+     *
+     * @param tagObjects (required)
+     * @param name (required)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call setSchedulerTagsCall(
+            List<TagObject> tagObjects,
+            String name,
+            final ProgressResponseBody.ProgressListener progressListener,
+            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            throws ApiException {
+        Object localVarPostBody = tagObjects;
+
+        // create path and map variables
+        String localVarPath =
+                "/scheduler/schedules/{name}/tags"
+                        .replaceAll(
+                                "\\{" + "name" + "\\}", apiClient.escapeString(name));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {};
+
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {"application/json"};
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if (progressListener != null) {
+            apiClient
+                    .getHttpClient()
+                    .networkInterceptors()
+                    .add(
+                            new com.squareup.okhttp.Interceptor() {
+                                @Override
+                                public com.squareup.okhttp.Response intercept(
+                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                        throws IOException {
+                                    com.squareup.okhttp.Response originalResponse =
+                                            chain.proceed(chain.request());
+                                    return originalResponse
+                                            .newBuilder()
+                                            .body(
+                                                    new ProgressResponseBody(
+                                                            originalResponse.body(),
+                                                            progressListener))
+                                            .build();
+                                }
+                            });
+        }
+
+        String[] localVarAuthNames = new String[] {"api_key"};
+        return apiClient.buildCall(
+                localVarPath,
+                "PUT",
+                localVarQueryParams,
+                localVarCollectionQueryParams,
+                localVarPostBody,
+                localVarHeaderParams,
+                localVarFormParams,
+                localVarAuthNames,
+                progressRequestListener);
+    }
+
+
 }

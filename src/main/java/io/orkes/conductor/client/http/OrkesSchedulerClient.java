@@ -19,6 +19,7 @@ import io.orkes.conductor.client.SchedulerClient;
 import io.orkes.conductor.client.http.api.SchedulerResourceApi;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
+import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 
 public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient {
@@ -89,4 +90,21 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
             throws ApiException {
         return schedulerResourceApi.searchV22(start, size, sort, freeText, query);
     }
+
+    @Override
+    public List<TagObject> getSchedulerTags(String name) {
+        return schedulerResourceApi.getSchedulerTags(name);
+    }
+
+    @Override
+    public void deleteSchedulerTag(TagObject tagObject, String name) {
+
+    }
+
+    @Override
+    public void setSchedulerTags(List<TagObject> tagObjects, String name) {
+        schedulerResourceApi.setSchedulerTags(tagObjects, name);
+    }
+
+
 }
