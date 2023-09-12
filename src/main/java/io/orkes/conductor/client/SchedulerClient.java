@@ -14,7 +14,6 @@ package io.orkes.conductor.client;
 
 import java.util.List;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
 import io.orkes.conductor.client.model.TagObject;
