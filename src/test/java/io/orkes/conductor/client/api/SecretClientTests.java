@@ -43,7 +43,12 @@ public class SecretClientTests extends ClientTest {
             }
         }
         secretClient.putSecret(SECRET_NAME, SECRET_KEY);
-        secretClient.putTagForSecret(List.of(getTagObject()), SECRET_KEY);
+        secretClient.setSecretTags(List.of(getTagObject()), SECRET_KEY);
+        List<TagObject> tags = secretClient.getSecretTags(SECRET_KEY);
+        assertEquals(tags.size(), 1);
+        assertEquals(tags.get(0), getTagObject());
+        secretClient.deleteSecretTags(List.of(getTagObject()), SECRET_KEY);
+        assertEquals(secretClient.getSecretTags(SECRET_KEY).size(), 0);
         assertTrue(secretClient.listSecretsThatUserCanGrantAccessTo().contains(SECRET_KEY));
         assertTrue(secretClient.listAllSecretNames().contains(SECRET_KEY));
         assertEquals(SECRET_NAME, secretClient.getSecret(SECRET_KEY));

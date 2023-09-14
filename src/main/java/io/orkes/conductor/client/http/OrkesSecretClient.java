@@ -61,7 +61,17 @@ public class OrkesSecretClient extends OrkesClient implements SecretClient {
     }
 
     @Override
-    public void putTagForSecret(List<TagObject> tags, String key) {
+    public void setSecretTags(List<TagObject> tags, String key) {
         secretResourceApi.putTagForSecret(tags, key);
+    }
+
+    @Override
+    public void deleteSecretTags(List<TagObject> tags, String key) {
+        secretResourceApi.deleteTagForSecret(tags, key);
+    }
+
+    @Override
+    public List<TagObject> getSecretTags(String key) {
+        return secretResourceApi.getTags(key);
     }
 }

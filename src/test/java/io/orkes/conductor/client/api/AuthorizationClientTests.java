@@ -32,6 +32,7 @@ import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 
+import static io.orkes.conductor.client.util.Commons.getTagObject;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthorizationClientTests extends ClientTest {
@@ -143,6 +144,10 @@ public class AuthorizationClientTests extends ClientTest {
         assertEquals(1, accessKeyResponses.size());
         authorizationClient.toggleAccessKeyStatus(application.getId(), accessKey.getId());
         authorizationClient.deleteAccessKey(application.getId(), accessKey.getId());
+        authorizationClient.setApplicationTags(getTagObject(), application.getId());
+        assertEquals(getTagObject(), authorizationClient.getApplicationTags(application.getId()));
+        authorizationClient.deleteApplicationTags(getTagObject(), application.getId());
+        assertEquals(0, authorizationClient.getApplicationTags(application.getId()).size());
         accessKeyResponses = authorizationClient.getAccessKeys(application.getId());
         assertEquals(0, accessKeyResponses.size());
 
@@ -316,5 +321,13 @@ public class AuthorizationClientTests extends ClientTest {
         target.setType(TargetRef.TypeEnum.TAG);
         request.setTarget(target);
         return request;
+    }
+
+    private List<TagObject> getTagObject() {
+        TagObject tagObject = new TagObject();
+        tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setKey("department");
+        tagObject.setValue("accounts");
+        return List.of(tagObject);
     }
 }

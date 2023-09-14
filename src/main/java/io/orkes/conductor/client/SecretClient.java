@@ -29,5 +29,8 @@ public interface SecretClient {
     void putSecret(String value, String key);
 
     boolean secretExists(String key);
-    void putTagForSecret(List<TagObject> tags, String key);
+    void setSecretTags(List<TagObject> tags, String key);
+
+    void deleteSecretTags(List<TagObject> body, String key);
+    List<TagObject> getSecretTags(String key);
 }

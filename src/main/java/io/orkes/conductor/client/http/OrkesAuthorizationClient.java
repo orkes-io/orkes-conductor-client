@@ -185,4 +185,19 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     public ConductorApplication updateApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id) throws ApiException {
         return applicationResourceApi.updateApplication(createOrUpdateApplicationRequest, id);
     }
+
+    @Override
+    public void setApplicationTags(List<TagObject> tags, String applicationId) {
+        applicationResourceApi.putTagForApplication(tags, applicationId);
+    }
+
+    @Override
+    public List<TagObject> getApplicationTags(String applicationId) {
+        return applicationResourceApi.getTagsForApplication(applicationId);
+    }
+
+    @Override
+    public void deleteApplicationTags(List<TagObject> tags, String applicationId) {
+        applicationResourceApi.deleteTagForApplication(tags, applicationId);
+    }
 }
