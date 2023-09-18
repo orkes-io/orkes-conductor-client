@@ -3935,68 +3935,59 @@ public class WorkflowResourceApi {
      * Upgrade running workflow to newer version
      * Upgrade running workflow to newer version
      * @param body  (required)
-     * @param version  (required)
      * @param workflowId  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public void upgradeRunningWorkflowToVersion(UpgradeWorkflowRequest body, Integer version, String workflowId) throws ApiException {
-        upgradeRunningWorkflowToVersionWithHttpInfo(body, version, workflowId);
+    public void upgradeRunningWorkflowToVersion(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
+        upgradeRunningWorkflowToVersionWithHttpInfo(body, workflowId);
     }
 
     /**
      * Upgrade running workflow to newer version
      * Upgrade running workflow to newer version
      * @param body  (required)
-     * @param version  (required)
      * @param workflowId  (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    private ApiResponse<Void> upgradeRunningWorkflowToVersionWithHttpInfo(UpgradeWorkflowRequest body, Integer version, String workflowId) throws ApiException {
-        com.squareup.okhttp.Call call = upgradeRunningWorkflowToVersionValidateBeforeCall(body, version, workflowId, null, null);
+    public ApiResponse<Void> upgradeRunningWorkflowToVersionWithHttpInfo(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
+        com.squareup.okhttp.Call call = upgradeRunningWorkflowToVersionValidateBeforeCall(body, workflowId, null, null);
         return apiClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call upgradeRunningWorkflowToVersionValidateBeforeCall(UpgradeWorkflowRequest body, Integer version, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call upgradeRunningWorkflowToVersionValidateBeforeCall(UpgradeWorkflowRequest body, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling upgradeRunningWorkflowToVersion(Async)");
-        }
-        // verify the required parameter 'version' is set
-        if (version == null) {
-            throw new ApiException("Missing the required parameter 'version' when calling upgradeRunningWorkflowToVersion(Async)");
         }
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException("Missing the required parameter 'workflowId' when calling upgradeRunningWorkflowToVersion(Async)");
         }
 
-        com.squareup.okhttp.Call call = upgradeRunningWorkflowToVersionCall(body, version, workflowId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = upgradeRunningWorkflowToVersionCall(body, workflowId, progressListener, progressRequestListener);
         return call;
     }
 
     /**
      * Build call for upgradeRunningWorkflowToVersion
      * @param body  (required)
-     * @param version  (required)
      * @param workflowId  (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call upgradeRunningWorkflowToVersionCall(UpgradeWorkflowRequest body, Integer version, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call upgradeRunningWorkflowToVersionCall(UpgradeWorkflowRequest body, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
-        String localVarPath = "/workflow/{workflowId}/upgrade/{version}"
+        String localVarPath = "/workflow/{workflowId}/upgrade"
                 .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        if (version != null)
-            localVarQueryParams.addAll(apiClient.parameterToPair("version", version));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -4029,6 +4020,5 @@ public class WorkflowResourceApi {
         String[] localVarAuthNames = new String[] { "api_key" };
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
-
 
 }

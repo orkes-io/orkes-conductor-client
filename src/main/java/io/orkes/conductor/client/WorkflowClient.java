@@ -94,5 +94,5 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
 
     public abstract void jumpToTask(String workflowId, String taskReferenceName, Map<String, Object> input);
 
-    public abstract void upgradeRunningWorkflowToVersion(String workflowId, Integer version, UpgradeWorkflowRequest body);
+    public abstract void upgradeRunningWorkflowToVersion(String workflowId, UpgradeWorkflowRequest body);
 }
