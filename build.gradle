@@ -20,7 +20,7 @@ ext {
     versions = [
             awaitility      : '4.2.0',
             commonsLang     : '3.12.0',
-            conductor       : '3.9.12-orkes',
+            conductor       : '3.9.21-orkes',
             jackson         : '2.11.4!!',
             junit           : '5.9.0',
             slf4j           : '1.7.36',

@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import com.netflix.conductor.common.metadata.workflow.UpgradeWorkflowRequest;
 import com.netflix.conductor.common.model.BulkResponse;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowTestRequest;
@@ -92,4 +93,6 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
     public abstract Workflow updateVariables(String workflowId, Map<String, Object> variables);
 
     public abstract void jumpToTask(String workflowId, String taskReferenceName, Map<String, Object> input);
+
+    public abstract void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest body);
 }
