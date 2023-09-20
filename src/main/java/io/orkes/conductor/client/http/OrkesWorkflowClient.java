@@ -350,8 +350,8 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
-    public void upgradeRunningWorkflowToVersion(String workflowId, UpgradeWorkflowRequest upgradeWorkflowRequest ) {
-        httpClient.upgradeRunningWorkflowToVersion(upgradeWorkflowRequest, workflowId);
+    public void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest upgradeWorkflowRequest ) {
+        httpClient.upgradeRunningWorkflow(upgradeWorkflowRequest, workflowId);
     }
 
     @Override
