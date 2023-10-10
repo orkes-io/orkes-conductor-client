@@ -19,10 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
-import com.netflix.conductor.common.metadata.workflow.SkipTaskRequest;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.metadata.workflow.UpgradeWorkflowRequest;
+import com.netflix.conductor.common.metadata.workflow.*;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowTestRequest;
 
@@ -3837,67 +3834,23 @@ public class WorkflowResourceApi {
     }
 
     /**
-     * Jump workflow execution to given task
-     * Jump workflow execution to given task.
-     * @param body  (required)
-     * @param workflowId  (required)
-     * @param taskReferenceName  (optional)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public void jumpToTask(Map<String, Object> body, String workflowId, String taskReferenceName) throws ApiException {
-        jumpToTaskWithHttpInfo(workflowId, taskReferenceName, body);
-    }
-
-    /**
-     * Jump workflow execution to given task
-     * Jump workflow execution to given task.
-     * @param input  (required)
-     * @param workflowId  (required)
-     * @param taskReferenceName  (optional)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public ApiResponse<Void> jumpToTaskWithHttpInfo(String workflowId, String taskReferenceName, Map<String, Object> input) throws ApiException {
-        com.squareup.okhttp.Call call = jumpToTaskValidateBeforeCall(input, workflowId, taskReferenceName, null, null);
-        return apiClient.execute(call);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call jumpToTaskValidateBeforeCall(Map<String, Object> body, String workflowId, String taskReferenceName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        // verify the required parameter 'body' is set
-        if (body == null) {
-            throw new ApiException("Missing the required parameter 'input' when calling jumpToTask(Async)");
-        }
-        // verify the required parameter 'workflowId' is set
-        if (workflowId == null) {
-            throw new ApiException("Missing the required parameter 'workflowId' when calling jumpToTask(Async)");
-        }
-
-        com.squareup.okhttp.Call call = jumpToTaskCall(body, workflowId, taskReferenceName, progressListener, progressRequestListener);
-        return call;
-    }
-
-    /**
      * Build call for jumpToTask
      * @param body  (required)
      * @param workflowId  (required)
-     * @param taskReferenceName  (optional)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call jumpToTaskCall(Map<String, Object> body, String workflowId, String taskReferenceName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call jumpToTaskCall(JumpWorkflowExecutionRequest body, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
-        String localVarPath = "/workflow/{workflowId}/jump/{taskReferenceName}"
+        String localVarPath = "/workflow/{workflowId}/jump"
                 .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        if (taskReferenceName != null)
-            localVarQueryParams.addAll(apiClient.parameterToPair("taskReferenceName", taskReferenceName));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -3931,6 +3884,44 @@ public class WorkflowResourceApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call jumpToTaskValidateBeforeCall(JumpWorkflowExecutionRequest body, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling jumpToTask(Async)");
+        }
+        // verify the required parameter 'workflowId' is set
+        if (workflowId == null) {
+            throw new ApiException("Missing the required parameter 'workflowId' when calling jumpToTask(Async)");
+        }
+
+        com.squareup.okhttp.Call call = jumpToTaskCall(body, workflowId, progressListener, progressRequestListener);
+        return call;
+    }
+
+    /**
+     * Jump workflow execution to given task
+     * Jump workflow execution to given task.
+     * @param body  (required)
+     * @param workflowId  (required)
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public void jumpToTask(JumpWorkflowExecutionRequest body, String workflowId) throws ApiException {
+        jumpToTaskWithHttpInfo(body, workflowId);
+    }
+
+    /**
+     * Jump workflow execution to given task
+     * Jump workflow execution to given task.
+     * @param body  (required)
+     * @param workflowId  (required)
+     * @return ApiResponse&lt;Void&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<Void> jumpToTaskWithHttpInfo(JumpWorkflowExecutionRequest body, String workflowId) throws ApiException {
+        com.squareup.okhttp.Call call = jumpToTaskValidateBeforeCall(body, workflowId, null, null);
+        return apiClient.execute(call);
+    }
     /**
      * Upgrade running workflow to newer version
      * Upgrade running workflow to newer version
