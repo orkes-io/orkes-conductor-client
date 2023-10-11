@@ -19,12 +19,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-import com.netflix.conductor.common.metadata.workflow.UpgradeWorkflowRequest;
+import com.netflix.conductor.common.metadata.workflow.*;
+import io.orkes.conductor.client.model.JumpWorkflowExecutionRequest;
 import org.apache.commons.lang.StringUtils;
 
-import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
-import com.netflix.conductor.common.metadata.workflow.SkipTaskRequest;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.model.BulkResponse;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.Workflow;
@@ -345,8 +343,8 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
-    public void jumpToTask(String workflowId, String taskReferenceName, Map<String, Object> input) {
-        httpClient.jumpToTaskWithHttpInfo(workflowId, taskReferenceName, input);
+    public void jumpToTask(String workflowId, JumpWorkflowExecutionRequest jumpWorkflowExecutionRequest) {
+        httpClient.jumpToTaskWithHttpInfo(jumpWorkflowExecutionRequest, workflowId);
     }
 
     @Override
