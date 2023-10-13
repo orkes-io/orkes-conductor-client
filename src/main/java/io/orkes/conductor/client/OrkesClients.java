@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Orkes, Inc.
+ * Copyright 2023 Orkes, Inc.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -49,4 +49,6 @@ public class OrkesClients {
     public TaskClient getTaskClient() {
         return new OrkesTaskClient(apiClient);
     }
+
+    public HumanTaskClient getHumanTaskClient() {return new OrkesHumanTaskClient(apiClient);}
 }
