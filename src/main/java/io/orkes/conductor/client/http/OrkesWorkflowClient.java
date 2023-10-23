@@ -111,7 +111,27 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
 
     @Override
     public Map<String, Object> executeWorkflowAsGetApi(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds, String authorization) {
-        return executeWorkflowHttpGet(request, waitUntilTask, waitForSeconds, authorization);
+        String requestId = UUID.randomUUID().toString();
+        return httpClient.executeWorkflowAsGetAPI(
+                request.getName(),
+                request.getVersion(),
+                requestId,
+                waitUntilTask,
+                waitForSeconds,
+                authorization);
+    }
+
+    @Override
+    public Map<String, Object> executeWorkflowAsApi(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds, String authorization) {
+        String requestId = UUID.randomUUID().toString();
+        return httpClient.executeWorkflowAsAPI(
+                request.getInput(),
+                request.getName(),
+                requestId,
+                waitUntilTask,
+                waitForSeconds,
+                authorization,
+                request.getVersion());
     }
 
     @Override
