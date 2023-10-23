@@ -37,6 +37,8 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
 
     public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds);
 
+    public abstract Map<String, Object> executeWorkflowAsGetApi(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds, String authorization);
+
     public abstract WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException;
 
     public abstract BulkResponse pauseWorkflow(List<String> workflowIds) throws ApiException;

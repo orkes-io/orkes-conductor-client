@@ -110,6 +110,11 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
+    public Map<String, Object> executeWorkflowAsGetApi(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds, String authorization) {
+        return executeWorkflowHttpGet(request, waitUntilTask, waitForSeconds, authorization);
+    }
+
+    @Override
     public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<WorkflowRun> future = executeWorkflow(request, waitUntilTask);
         return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
@@ -158,6 +163,17 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
                 });
 
         return future;
+    }
+
+    private Map<String, Object> executeWorkflowHttpGet(StartWorkflowRequest startWorkflowRequest, String waitUntilTask, Integer waitForSeconds, String authorization) {
+        String requestId = UUID.randomUUID().toString();
+        return httpClient.executeWorkflowAsGetAPI(
+                    startWorkflowRequest.getName(),
+                    startWorkflowRequest.getVersion(),
+                    requestId,
+                    waitUntilTask,
+                    waitForSeconds,
+                    authorization);
     }
 
     @Override
