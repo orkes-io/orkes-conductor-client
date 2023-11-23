@@ -4011,5 +4011,606 @@ public class WorkflowResourceApi {
         String[] localVarAuthNames = new String[] { "api_key" };
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
+    /**
+     * Build call for executeWorkflow
+     * @param body  (required)
+     * @param requestId  (required)
+     * @param name  (required)
+     * @param version  (required)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    private com.squareup.okhttp.Call executeWorkflowCall(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, String xOnConflict, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/api/workflow/execute/{name}/{version}"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()))
+                .replaceAll("\\{" + "version" + "\\}", apiClient.escapeString(version.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        if (requestId != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("requestId", requestId));
+        if (waitUntilTaskRef != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("waitUntilTaskRef", waitUntilTaskRef));
+        if (waitForSeconds != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("waitForSeconds", waitForSeconds));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        if (xIdempotencyKey != null)
+            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(xIdempotencyKey));
+        if (xOnConflict != null)
+            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(xOnConflict));
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+                "application/json"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+                "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call executeWorkflowValidateBeforeCall(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, String xOnConflict, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling executeWorkflow(Async)");
+        }
+        // verify the required parameter 'requestId' is set
+        if (requestId == null) {
+            throw new ApiException("Missing the required parameter 'requestId' when calling executeWorkflow(Async)");
+        }
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException("Missing the required parameter 'name' when calling executeWorkflow(Async)");
+        }
+        // verify the required parameter 'version' is set
+        if (version == null) {
+            throw new ApiException("Missing the required parameter 'version' when calling executeWorkflow(Async)");
+        }
+
+        com.squareup.okhttp.Call call = executeWorkflowCall(body, requestId, name, version, xIdempotencyKey, xOnConflict, waitUntilTaskRef, waitForSeconds, progressListener, progressRequestListener);
+        return call;
+    }
+
+    /**
+     * Execute a workflow synchronously
+     *
+     * @param body  (required)
+     * @param requestId  (required)
+     * @param name  (required)
+     * @param version  (required)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @return WorkflowRun
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public WorkflowRun executeWorkflow(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, String xOnConflict, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+        ApiResponse<WorkflowRun> resp = executeWorkflowWithHttpInfo(body, requestId, name, version, xIdempotencyKey, xOnConflict, waitUntilTaskRef, waitForSeconds);
+        return resp.getData();
+    }
+
+    /**
+     * Execute a workflow synchronously
+     *
+     * @param body  (required)
+     * @param requestId  (required)
+     * @param name  (required)
+     * @param version  (required)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @return ApiResponse&lt;WorkflowRun&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    private ApiResponse<WorkflowRun> executeWorkflowWithHttpInfo(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, String xOnConflict, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+        com.squareup.okhttp.Call call = executeWorkflowValidateBeforeCall(body, requestId, name, version, xIdempotencyKey, xOnConflict, waitUntilTaskRef, waitForSeconds, null, null);
+        Type localVarReturnType = new TypeReference<WorkflowRun>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    /**
+     * Build call for executeWorkflowAsAPI
+     * @param body  (required)
+     * @param name  (required)
+     * @param requestId  (optional)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @param authorization  (optional)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param version  (optional)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    private com.squareup.okhttp.Call executeWorkflowAsAPICall(Map<String, Object> body, String name, String requestId, String waitUntilTaskRef, Integer waitForSeconds, String authorization, String xIdempotencyKey, String xOnConflict, Integer version, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/api/workflow/execute/{name}"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        if (version != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("version", version));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        if (requestId != null)
+            localVarHeaderParams.put("requestId", apiClient.parameterToString(requestId));
+        if (waitUntilTaskRef != null)
+            localVarHeaderParams.put("waitUntilTaskRef", apiClient.parameterToString(waitUntilTaskRef));
+        if (waitForSeconds != null)
+            localVarHeaderParams.put("waitForSeconds", apiClient.parameterToString(waitForSeconds));
+        if (authorization != null)
+            localVarHeaderParams.put("authorization", apiClient.parameterToString(authorization));
+        if (xIdempotencyKey != null)
+            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(xIdempotencyKey));
+        if (xOnConflict != null)
+            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(xOnConflict));
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+                "application/json"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+                "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call executeWorkflowAsAPIValidateBeforeCall(Map<String, Object> body, String name, String requestId, String waitUntilTaskRef, Integer waitForSeconds, String authorization, String xIdempotencyKey, String xOnConflict, Integer version, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling executeWorkflowAsAPI(Async)");
+        }
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException("Missing the required parameter 'name' when calling executeWorkflowAsAPI(Async)");
+        }
+
+        com.squareup.okhttp.Call call = executeWorkflowAsAPICall(body, name, requestId, waitUntilTaskRef, waitForSeconds, authorization, xIdempotencyKey, xOnConflict, version, progressListener, progressRequestListener);
+        return call;
+    }
+
+    /**
+     * Execute a workflow synchronously with input and outputs
+     *
+     * @param body  (required)
+     * @param name  (required)
+     * @param requestId  (optional)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @param authorization  (optional)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param version  (optional)
+     * @return Map&lt;String, Object&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public Map<String, Object> executeWorkflowAsAPI(Map<String, Object> body, String name, String requestId, String waitUntilTaskRef, Integer waitForSeconds, String authorization, String xIdempotencyKey, String xOnConflict, Integer version) throws ApiException {
+        ApiResponse<Map<String, Object>> resp = executeWorkflowAsAPIWithHttpInfo(body, name, requestId, waitUntilTaskRef, waitForSeconds, authorization, xIdempotencyKey, xOnConflict, version);
+        return resp.getData();
+    }
+
+    /**
+     * Execute a workflow synchronously with input and outputs
+     *
+     * @param body  (required)
+     * @param name  (required)
+     * @param requestId  (optional)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @param authorization  (optional)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param version  (optional)
+     * @return ApiResponse&lt;Map&lt;String, Object&gt;&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    private ApiResponse<Map<String, Object>> executeWorkflowAsAPIWithHttpInfo(Map<String, Object> body, String name, String requestId, String waitUntilTaskRef, Integer waitForSeconds, String authorization, String xIdempotencyKey, String xOnConflict, Integer version) throws ApiException {
+        com.squareup.okhttp.Call call = executeWorkflowAsAPIValidateBeforeCall(body, name, requestId, waitUntilTaskRef, waitForSeconds, authorization, xIdempotencyKey, xOnConflict, version, null, null);
+        Type localVarReturnType = new TypeReference<Map<String, Object>>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    /**
+     * Execute a workflow synchronously with input and outputs using get api
+     *
+     * @param name  (required)
+     * @param version  (optional)
+     * @param requestId  (optional)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @param authorization  (optional)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @return Map&lt;String, Object&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public Map<String, Object> executeWorkflowAsGetAPI(String name, Integer version, String requestId, String waitUntilTaskRef, Integer waitForSeconds, String authorization, String xIdempotencyKey, String xOnConflict) throws ApiException {
+        ApiResponse<Map<String, Object>> resp = executeWorkflowAsGetAPIWithHttpInfo(name, version, requestId, waitUntilTaskRef, waitForSeconds, authorization, xIdempotencyKey, xOnConflict);
+        return resp.getData();
+    }
+
+    /**
+     * Execute a workflow synchronously with input and outputs using get api
+     *
+     * @param name  (required)
+     * @param version  (optional)
+     * @param requestId  (optional)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @param authorization  (optional)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @return ApiResponse&lt;Map&lt;String, Object&gt;&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    private ApiResponse<Map<String, Object>> executeWorkflowAsGetAPIWithHttpInfo(String name, Integer version, String requestId, String waitUntilTaskRef, Integer waitForSeconds, String authorization, String xIdempotencyKey, String xOnConflict) throws ApiException {
+        com.squareup.okhttp.Call call = executeWorkflowAsGetAPIValidateBeforeCall(name, version, requestId, waitUntilTaskRef, waitForSeconds, authorization, xIdempotencyKey, xOnConflict, null, null);
+        Type localVarReturnType = new TypeReference<Map<String, Object>>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call executeWorkflowAsGetAPIValidateBeforeCall(String name, Integer version, String requestId, String waitUntilTaskRef, Integer waitForSeconds, String authorization, String xIdempotencyKey, String xOnConflict, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException("Missing the required parameter 'name' when calling executeWorkflowAsGetAPI(Async)");
+        }
+
+        com.squareup.okhttp.Call call = executeWorkflowAsGetAPICall(name, version, requestId, waitUntilTaskRef, waitForSeconds, authorization, xIdempotencyKey, xOnConflict, progressListener, progressRequestListener);
+        return call;
+    }
+
+    /**
+     * Build call for executeWorkflowAsGetAPI
+     * @param name  (required)
+     * @param version  (optional)
+     * @param requestId  (optional)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @param authorization  (optional)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    private com.squareup.okhttp.Call executeWorkflowAsGetAPICall(String name, Integer version, String requestId, String waitUntilTaskRef, Integer waitForSeconds, String authorization, String xIdempotencyKey, String xOnConflict, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = null;
+
+        // create path and map variables
+        String localVarPath = "/api/workflow/execute/{name}"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        if (version != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("version", version));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        if (requestId != null)
+            localVarHeaderParams.put("requestId", apiClient.parameterToString(requestId));
+        if (waitUntilTaskRef != null)
+            localVarHeaderParams.put("waitUntilTaskRef", apiClient.parameterToString(waitUntilTaskRef));
+        if (waitForSeconds != null)
+            localVarHeaderParams.put("waitForSeconds", apiClient.parameterToString(waitForSeconds));
+        if (authorization != null)
+            localVarHeaderParams.put("authorization", apiClient.parameterToString(authorization));
+        if (xIdempotencyKey != null)
+            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(xIdempotencyKey));
+        if (xOnConflict != null)
+            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(xOnConflict));
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+                "application/json"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    /**
+     * Build call for startWorkflow
+     * @param body  (required)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call startWorkflowCall(StartWorkflowRequest body, String xIdempotencyKey, String xOnConflict, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/api/workflow";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        if (xIdempotencyKey != null)
+            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(xIdempotencyKey));
+        if (xOnConflict != null)
+            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(xOnConflict));
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+                "text/plain"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+                "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call startWorkflowValidateBeforeCall(StartWorkflowRequest body, String xIdempotencyKey, String xOnConflict, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling startWorkflow(Async)");
+        }
+
+        com.squareup.okhttp.Call call = startWorkflowCall(body, xIdempotencyKey, xOnConflict, progressListener, progressRequestListener);
+        return call;
+
+
+
+
+
+    }
+
+    /**
+     * Start a new workflow with StartWorkflowRequest, which allows task to be executed in a domain
+     *
+     * @param body  (required)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @return String
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public String startWorkflow(StartWorkflowRequest body, String xIdempotencyKey, String xOnConflict) throws ApiException {
+        ApiResponse<String> resp = startWorkflowWithHttpInfo(body, xIdempotencyKey, xOnConflict);
+        return resp.getData();
+    }
+
+    /**
+     * Start a new workflow with StartWorkflowRequest, which allows task to be executed in a domain
+     *
+     * @param body  (required)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @return ApiResponse&lt;String&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    private ApiResponse<String> startWorkflowWithHttpInfo(StartWorkflowRequest body, String xIdempotencyKey, String xOnConflict) throws ApiException {
+        com.squareup.okhttp.Call call = startWorkflowValidateBeforeCall(body, xIdempotencyKey, xOnConflict, null, null);
+        Type localVarReturnType = new TypeReference<String>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    /**
+     * Build call for startWorkflow1
+     * @param body  (required)
+     * @param name  (required)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param version  (optional)
+     * @param correlationId  (optional)
+     * @param priority  (optional, default to 0)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    private com.squareup.okhttp.Call startWorkflow1Call(Map<String, Object> body, String name, String xIdempotencyKey, String xOnConflict, Integer version, String correlationId, Integer priority, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/api/workflow/{name}"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        if (version != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("version", version));
+        if (correlationId != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("correlationId", correlationId));
+        if (priority != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("priority", priority));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        if (xIdempotencyKey != null)
+            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(xIdempotencyKey));
+        if (xOnConflict != null)
+            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(xOnConflict));
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+                "text/plain"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+                "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                            .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call startWorkflow1ValidateBeforeCall(Map<String, Object> body, String name, String xIdempotencyKey, String xOnConflict, Integer version, String correlationId, Integer priority, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling startWorkflow1(Async)");
+        }
+        // verify the required parameter 'name' is set
+        if (name == null) {
+            throw new ApiException("Missing the required parameter 'name' when calling startWorkflow1(Async)");
+        }
+
+        com.squareup.okhttp.Call call = startWorkflow1Call(body, name, xIdempotencyKey, xOnConflict, version, correlationId, priority, progressListener, progressRequestListener);
+        return call;
+
+
+
+
+
+    }
+
+    /**
+     * Start a new workflow. Returns the ID of the workflow instance that can be later used for tracking
+     *
+     * @param body  (required)
+     * @param name  (required)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param version  (optional)
+     * @param correlationId  (optional)
+     * @param priority  (optional, default to 0)
+     * @return String
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public String startWorkflow1(Map<String, Object> body, String name, String xIdempotencyKey, String xOnConflict, Integer version, String correlationId, Integer priority) throws ApiException {
+        ApiResponse<String> resp = startWorkflow1WithHttpInfo(body, name, xIdempotencyKey, xOnConflict, version, correlationId, priority);
+        return resp.getData();
+    }
+
+    /**
+     * Start a new workflow. Returns the ID of the workflow instance that can be later used for tracking
+     *
+     * @param body  (required)
+     * @param name  (required)
+     * @param xIdempotencyKey  (optional)
+     * @param xOnConflict  (optional)
+     * @param version  (optional)
+     * @param correlationId  (optional)
+     * @param priority  (optional, default to 0)
+     * @return ApiResponse&lt;String&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    private ApiResponse<String> startWorkflow1WithHttpInfo(Map<String, Object> body, String name, String xIdempotencyKey, String xOnConflict, Integer version, String correlationId, Integer priority) throws ApiException {
+        com.squareup.okhttp.Call call = startWorkflow1ValidateBeforeCall(body, name, xIdempotencyKey, xOnConflict, version, correlationId, priority, null, null);
+        Type localVarReturnType = new TypeReference<String>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
 
 }
