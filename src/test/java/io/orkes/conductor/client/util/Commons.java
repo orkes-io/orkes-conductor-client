@@ -32,7 +32,7 @@ public class Commons {
 
     public static TagObject getTagObject() {
         TagObject tagObject = new TagObject();
-        tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setType(null);
         tagObject.setKey("a");
         tagObject.setValue("b");
         return tagObject;
@@ -40,7 +40,7 @@ public class Commons {
 
     public static TagString getTagString() {
         TagString tagString = new TagString();
-        tagString.setType(TagString.TypeEnum.METADATA);
+        tagString.setType(null);
         tagString.setKey("a");
         tagString.setValue("b");
         return tagString;

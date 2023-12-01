@@ -55,6 +55,8 @@ public class TagObject {
     }
 
     @SerializedName("type")
+    @Deprecated
+    // Type has been moved to WorkflowDef.RateLimitConfig
     private TypeEnum type = null;
 
     @SerializedName("value")

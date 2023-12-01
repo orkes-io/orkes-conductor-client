@@ -4018,8 +4018,8 @@ public class WorkflowResourceApi {
      * @param requestId  (required)
      * @param name  (required)
      * @param version  (required)
-     * @param xIdempotencyKey  (optional)
-     * @param xOnConflict  (optional)
+     * @param idempotencyKey  (optional)
+     * @param onConflict  (optional)
      * @param waitUntilTaskRef  (optional)
      * @param waitForSeconds  (optional, default to 10)
      * @param progressListener Progress listener
@@ -4027,7 +4027,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call executeWorkflowCall(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call executeWorkflowCall(StartWorkflowRequest body, String requestId, String name, Integer version, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -4045,10 +4045,10 @@ public class WorkflowResourceApi {
             localVarQueryParams.addAll(apiClient.parameterToPair("waitForSeconds", waitForSeconds));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        if (xIdempotencyKey != null)
-            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(xIdempotencyKey));
-        if (xOnConflict != null)
-            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(xOnConflict));
+        if (idempotencyKey != null)
+            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(idempotencyKey));
+        if (onConflict != null)
+            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(onConflict));
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
@@ -4081,7 +4081,7 @@ public class WorkflowResourceApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call executeWorkflowValidateBeforeCall(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call executeWorkflowValidateBeforeCall(StartWorkflowRequest body, String requestId, String name, Integer version, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling executeWorkflow(Async)");
@@ -4099,7 +4099,7 @@ public class WorkflowResourceApi {
             throw new ApiException("Missing the required parameter 'version' when calling executeWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call = executeWorkflowCall(body, requestId, name, version, xIdempotencyKey, xOnConflict, waitUntilTaskRef, waitForSeconds, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = executeWorkflowCall(body, requestId, name, version, idempotencyKey, onConflict, waitUntilTaskRef, waitForSeconds, progressListener, progressRequestListener);
         return call;
     }
 
@@ -4110,15 +4110,15 @@ public class WorkflowResourceApi {
      * @param requestId  (required)
      * @param name  (required)
      * @param version  (required)
-     * @param xIdempotencyKey  (optional)
-     * @param xOnConflict  (optional)
+     * @param idempotencyKey  (optional)
+     * @param onConflict  (optional)
      * @param waitUntilTaskRef  (optional)
      * @param waitForSeconds  (optional, default to 10)
      * @return WorkflowRun
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public WorkflowRun executeWorkflow(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
-        ApiResponse<WorkflowRun> resp = executeWorkflowWithHttpInfo(body, requestId, name, version, xIdempotencyKey, xOnConflict, waitUntilTaskRef, waitForSeconds);
+    public WorkflowRun executeWorkflow(StartWorkflowRequest body, String requestId, String name, Integer version, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+        ApiResponse<WorkflowRun> resp = executeWorkflowWithHttpInfo(body, requestId, name, version, idempotencyKey, onConflict, waitUntilTaskRef, waitForSeconds);
         return resp.getData();
     }
 
@@ -4129,32 +4129,32 @@ public class WorkflowResourceApi {
      * @param requestId  (required)
      * @param name  (required)
      * @param version  (required)
-     * @param xIdempotencyKey  (optional)
-     * @param xOnConflict  (optional)
+     * @param idempotencyKey  (optional)
+     * @param onConflict  (optional)
      * @param waitUntilTaskRef  (optional)
      * @param waitForSeconds  (optional, default to 10)
      * @return ApiResponse&lt;WorkflowRun&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    private ApiResponse<WorkflowRun> executeWorkflowWithHttpInfo(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
-        com.squareup.okhttp.Call call = executeWorkflowValidateBeforeCall(body, requestId, name, version, xIdempotencyKey, xOnConflict, waitUntilTaskRef, waitForSeconds, null, null);
+    private ApiResponse<WorkflowRun> executeWorkflowWithHttpInfo(StartWorkflowRequest body, String requestId, String name, Integer version, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+        com.squareup.okhttp.Call call = executeWorkflowValidateBeforeCall(body, requestId, name, version, idempotencyKey, onConflict, waitUntilTaskRef, waitForSeconds, null, null);
         Type localVarReturnType = new TypeReference<WorkflowRun>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
-    public WorkflowRun executeWorkflow(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTaskRef) throws ApiException {
-        ApiResponse<WorkflowRun> resp = executeWorkflowWithHttpInfo(body, requestId, name, version, xIdempotencyKey, xOnConflict, waitUntilTaskRef);
+    public WorkflowRun executeWorkflow(StartWorkflowRequest body, String requestId, String name, Integer version, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTaskRef) throws ApiException {
+        ApiResponse<WorkflowRun> resp = executeWorkflowWithHttpInfo(body, requestId, name, version, idempotencyKey, onConflict, waitUntilTaskRef);
         return resp.getData();
     }
 
-    private ApiResponse<WorkflowRun> executeWorkflowWithHttpInfo(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTaskRef) throws ApiException {
-        com.squareup.okhttp.Call call = executeWorkflowValidateBeforeCall(body, requestId, name, version, xIdempotencyKey, xOnConflict, waitUntilTaskRef, null, null);
+    private ApiResponse<WorkflowRun> executeWorkflowWithHttpInfo(StartWorkflowRequest body, String requestId, String name, Integer version, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTaskRef) throws ApiException {
+        com.squareup.okhttp.Call call = executeWorkflowValidateBeforeCall(body, requestId, name, version, idempotencyKey, onConflict, waitUntilTaskRef, null, null);
         Type localVarReturnType = new TypeReference<WorkflowRun>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call executeWorkflowValidateBeforeCall(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTaskRef, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call executeWorkflowValidateBeforeCall(StartWorkflowRequest body, String requestId, String name, Integer version, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTaskRef, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling executeWorkflow(Async)");
@@ -4172,11 +4172,11 @@ public class WorkflowResourceApi {
             throw new ApiException("Missing the required parameter 'version' when calling executeWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call = executeWorkflowCall(body, requestId, name, version, xIdempotencyKey, xOnConflict, waitUntilTaskRef, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = executeWorkflowCall(body, requestId, name, version, idempotencyKey, onConflict, waitUntilTaskRef, progressListener, progressRequestListener);
         return call;
     }
 
-    private com.squareup.okhttp.Call executeWorkflowCall(StartWorkflowRequest body, String requestId, String name, Integer version, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTaskRef, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call executeWorkflowCall(StartWorkflowRequest body, String requestId, String name, Integer version, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTaskRef, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -4192,10 +4192,10 @@ public class WorkflowResourceApi {
             localVarQueryParams.addAll(apiClient.parameterToPair("waitUntilTaskRef", waitUntilTaskRef));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        if (xIdempotencyKey != null)
-            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(xIdempotencyKey));
-        if (xOnConflict != null)
-            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(xOnConflict));
+        if (idempotencyKey != null)
+            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(idempotencyKey));
+        if (onConflict != null)
+            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(onConflict));
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
