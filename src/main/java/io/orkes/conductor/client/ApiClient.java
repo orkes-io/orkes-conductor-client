@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.*;
 
+import com.netflix.conductor.common.validation.ErrorResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -863,6 +864,19 @@ public class ApiClient {
             if (response.body() != null) {
                 try {
                     respBody = response.body().string();
+                    if (response.code() == 409) {
+                            ErrorResponse errorResponse = json.deserialize(respBody, ErrorResponse.class);
+                            String message = null;
+                            if  (errorResponse != null && errorResponse.getMessage() != null) {
+                                message = errorResponse.getMessage();
+                            } else {
+                                message = response.message();
+                            }
+                            throw new ConflictException(
+                                    message,
+                                    response.code(),
+                                    response.headers().toMultimap(), respBody);
+                    }
                 } catch (IOException e) {
                     throw new ApiException(
                             response.message(),

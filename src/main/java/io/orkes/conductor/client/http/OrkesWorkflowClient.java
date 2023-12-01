@@ -87,7 +87,7 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
-    public String startWorkflow(StartWorkflowRequest startWorkflowRequest) {
+    public String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ConflictException {
         return httpClient.startWorkflow(startWorkflowRequest);
     }
 
@@ -116,13 +116,13 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds, String xIdempotencyKey, IdempotencyStrategy xOnConflict) {
-        return executeWorkflowWithIdempotencyHttp(request, xIdempotencyKey, xOnConflict, waitUntilTask, waitForSeconds);
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds, String idempotencyKey, IdempotencyStrategy onConflict) {
+        return executeWorkflowWithIdempotencyHttp(request, idempotencyKey, onConflict, waitUntilTask, waitForSeconds);
     }
 
     @Override
-    public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout, String xIdempotencyKey, IdempotencyStrategy xOnConflict) throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<WorkflowRun> future = executeWorkflowWithIdempotencyHttp(request, xIdempotencyKey, xOnConflict, waitUntilTask);
+    public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout, String idempotencyKey, IdempotencyStrategy onConflict) throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<WorkflowRun> future = executeWorkflowWithIdempotencyHttp(request, idempotencyKey, onConflict, waitUntilTask);
         return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
     }
 
@@ -171,7 +171,7 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
         return future;
     }
 
-    private CompletableFuture<WorkflowRun> executeWorkflowWithIdempotencyHttp(StartWorkflowRequest startWorkflowRequest, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTask, Integer waitForSeconds) {
+    private CompletableFuture<WorkflowRun> executeWorkflowWithIdempotencyHttp(StartWorkflowRequest startWorkflowRequest, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTask, Integer waitForSeconds) {
         CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
         String requestId = UUID.randomUUID().toString();
         executorService.submit(
@@ -183,8 +183,8 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
                                         requestId,
                                         startWorkflowRequest.getName(),
                                         startWorkflowRequest.getVersion(),
-                                        xIdempotencyKey,
-                                        xOnConflict,
+                                        idempotencyKey,
+                                        onConflict,
                                         waitUntilTask,
                                         waitForSeconds);
                         future.complete(response);
@@ -196,7 +196,7 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
         return future;
     }
 
-    private CompletableFuture<WorkflowRun> executeWorkflowWithIdempotencyHttp(StartWorkflowRequest startWorkflowRequest, String xIdempotencyKey, IdempotencyStrategy xOnConflict, String waitUntilTask) {
+    private CompletableFuture<WorkflowRun> executeWorkflowWithIdempotencyHttp(StartWorkflowRequest startWorkflowRequest, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTask) {
         CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
         String requestId = UUID.randomUUID().toString();
         executorService.submit(
@@ -208,8 +208,8 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
                                         requestId,
                                         startWorkflowRequest.getName(),
                                         startWorkflowRequest.getVersion(),
-                                        xIdempotencyKey,
-                                        xOnConflict,
+                                        idempotencyKey,
+                                        onConflict,
                                         waitUntilTask);
                         future.complete(response);
                     } catch (Throwable t) {
