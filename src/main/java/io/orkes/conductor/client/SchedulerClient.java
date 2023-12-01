@@ -41,7 +41,7 @@ public interface SchedulerClient {
 
     void saveSchedule(SaveScheduleRequest saveScheduleRequest);
 
-    SearchResultWorkflowScheduleExecutionModel searchV22(
+    SearchResultWorkflowScheduleExecutionModel searchV2(
             Integer start, Integer size, String sort, String freeText, String query);
 
     void setSchedulerTags(List<TagObject> body, String name);

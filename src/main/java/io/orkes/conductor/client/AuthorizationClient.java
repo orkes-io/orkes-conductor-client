@@ -21,7 +21,7 @@ public interface AuthorizationClient {
 
     // Permissions
 
-    Map<String, List<Subject>> getPermissions(String type, String id);
+    Map<String, List<Subject>> getPermissions(ResourceType type, String id);
 
     void grantPermissions(AuthorizationRequest authorizationRequest);
 

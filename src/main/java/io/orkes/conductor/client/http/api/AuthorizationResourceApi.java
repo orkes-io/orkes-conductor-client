@@ -22,6 +22,7 @@ import java.util.Map;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.AuthorizationRequest;
+import io.orkes.conductor.client.model.ResourceType;
 import io.orkes.conductor.client.model.Subject;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -56,7 +57,7 @@ public class AuthorizationResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public com.squareup.okhttp.Call getPermissionsCall(
-            String type,
+            ResourceType type,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -122,7 +123,7 @@ public class AuthorizationResourceApi {
     }
 
     private com.squareup.okhttp.Call getPermissionsValidateBeforeCall(
-            String type,
+            ResourceType type,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -152,7 +153,7 @@ public class AuthorizationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public Map<String, List<Subject>> getPermissions(String type, String id) throws ApiException {
+    public Map<String, List<Subject>> getPermissions(ResourceType type, String id) throws ApiException {
         ApiResponse<Map<String, List<Subject>>> resp = getPermissionsWithHttpInfo(type, id);
         return resp.getData();
     }
@@ -167,7 +168,7 @@ public class AuthorizationResourceApi {
      *     response body
      */
     private ApiResponse<Map<String, List<Subject>>> getPermissionsWithHttpInfo(
-            String type, String id) throws ApiException {
+            ResourceType type, String id) throws ApiException {
         com.squareup.okhttp.Call call = getPermissionsValidateBeforeCall(type, id, null, null);
         Type localVarReturnType = new TypeReference<Map<String, List<Subject>>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);

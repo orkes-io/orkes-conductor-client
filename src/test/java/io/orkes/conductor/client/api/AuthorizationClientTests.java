@@ -255,7 +255,7 @@ public class AuthorizationClientTests extends ClientTest {
             }
         }
         assertTrue(found);
-        authorizationClient.getPermissions("abc", Commons.GROUP_ID);
+        authorizationClient.getPermissions(ResourceType.TAG, Commons.GROUP_ID);
         assertEquals(authorizationClient.getApplication(applicationId).getId(), applicationId);
         assertTrue(
                 authorizationClient
@@ -325,7 +325,7 @@ public class AuthorizationClientTests extends ClientTest {
 
     private List<TagObject> getTagObject() {
         TagObject tagObject = new TagObject();
-        tagObject.setType(TagObject.TypeEnum.METADATA);
+        tagObject.setType(null);
         tagObject.setKey("department");
         tagObject.setValue("accounts");
         return List.of(tagObject);
