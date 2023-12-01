@@ -12,20 +12,20 @@
  */
 package io.orkes.conductor.client.http;
 
-import com.netflix.conductor.client.exception.ConductorClientException;
+import io.orkes.conductor.client.OrkesClientException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
 
-public class ConflictException extends ConductorClientException {
+public class ConflictException extends OrkesClientException {
 
-    private int code = 0;
-    private Map<String, List<String>> responseHeaders = null;
+    private int code;
+    private Map<String, List<String>> responseHeaders;
 
-    private String responseBody = null;
+    private String responseBody;
 
-    private String message = null;
+    private String message;
 
     public ConflictException(
             String message,
@@ -79,5 +79,10 @@ public class ConflictException extends ConductorClientException {
     @Override
     public String toString() {
         return responseBody;
+    }
+
+    @Override
+    public boolean isClientError() {
+        return code > 399 && code < 499;
     }
 }

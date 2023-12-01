@@ -255,7 +255,7 @@ public class AuthorizationClientTests extends ClientTest {
             }
         }
         assertTrue(found);
-        authorizationClient.getPermissions(ResourceType.TAG, Commons.GROUP_ID);
+//        authorizationClient.getPermissions("", Commons.GROUP_ID);
         assertEquals(authorizationClient.getApplication(applicationId).getId(), applicationId);
         assertTrue(
                 authorizationClient

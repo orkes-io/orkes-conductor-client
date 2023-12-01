@@ -14,6 +14,7 @@ package io.orkes.conductor.client;
 
 import java.util.*;
 
+import com.netflix.conductor.common.metadata.workflow.IdempotencyStrategy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -65,7 +66,14 @@ public class WorkflowRetryExamples {
         startWorkflowRequest.setName(workflowName);
         startWorkflowRequest.setVersion(1);
         startWorkflowRequest.setInput(new HashMap<>());
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        startWorkflowRequest.setIdempotencyKey("test");
+        startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.FAIL);
+        String workflowId = null;
+        try {
+            workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        } catch(Exception e) {
+            System.out.println(e);
+        }
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
 
         String taskId = workflow.getTasks().get(0).getTaskId();

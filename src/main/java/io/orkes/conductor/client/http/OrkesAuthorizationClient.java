@@ -40,7 +40,7 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public Map<String, List<Subject>> getPermissions(ResourceType type, String id) throws ApiException {
+    public Map<String, List<Subject>> getPermissions(String type, String id) throws ApiException {
         return authorizationResourceApi.getPermissions(type, id);
     }
 
