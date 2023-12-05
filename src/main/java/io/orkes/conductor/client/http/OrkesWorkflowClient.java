@@ -92,7 +92,7 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask) {
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask) throws ConflictException {
         if(apiClient.isUseGRPC()) {
             return grpcWorkflowClient.executeWorkflow(request, waitUntilTask);
         } else {
@@ -101,7 +101,7 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds) {
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds) throws ConflictException {
         if(apiClient.isUseGRPC()) {
             return grpcWorkflowClient.executeWorkflow(request, waitUntilTask, waitForSeconds);
         } else {

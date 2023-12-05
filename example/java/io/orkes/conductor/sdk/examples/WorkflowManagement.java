@@ -14,6 +14,7 @@ package io.orkes.conductor.sdk.examples;
 
 import java.util.Arrays;
 
+import com.netflix.conductor.common.metadata.workflow.IdempotencyStrategy;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.OrkesClients;
@@ -51,9 +52,16 @@ public class WorkflowManagement {
         startWorkflowRequest.setName(workflowDef.getName());
         startWorkflowRequest.setVersion(workflowDef.getVersion());
         startWorkflowRequest.setCorrelationId("test_workflow");
+        startWorkflowRequest.setIdempotencyKey("test");
+        startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.FAIL);
 
         // Start the workflow
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        String workflowId = null;
+        try {
+            workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+        }catch (Exception e) {
+            System.out.println(e);
+        }
         // Get the workflow execution status
         workflowClient.getWorkflow(workflowId, true);
         // Pause the workflow

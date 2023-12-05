@@ -85,7 +85,7 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public SearchResultWorkflowScheduleExecutionModel searchV2(
+    public SearchResultWorkflowScheduleExecutionModel searchV22(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         return schedulerResourceApi.searchV22(start, size, sort, freeText, query);
