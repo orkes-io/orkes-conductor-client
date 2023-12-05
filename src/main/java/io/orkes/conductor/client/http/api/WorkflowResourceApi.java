@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.netflix.conductor.common.metadata.workflow.*;
-import com.netflix.conductor.common.metadata.workflow.IdempotencyStrategy;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowTestRequest;
 
@@ -4012,4 +4011,5 @@ public class WorkflowResourceApi {
         String[] localVarAuthNames = new String[] { "api_key" };
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
+
 }
