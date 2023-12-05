@@ -115,17 +115,6 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
         return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
     }
 
-    @Override
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds, String idempotencyKey, IdempotencyStrategy onConflict) {
-        return executeWorkflowWithIdempotencyHttp(request, idempotencyKey, onConflict, waitUntilTask, waitForSeconds);
-    }
-
-    @Override
-    public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout, String idempotencyKey, IdempotencyStrategy onConflict) throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<WorkflowRun> future = executeWorkflowWithIdempotencyHttp(request, idempotencyKey, onConflict, waitUntilTask);
-        return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
-    }
-
     private CompletableFuture<WorkflowRun> executeWorkflowHttp(StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
         CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
         String requestId = UUID.randomUUID().toString();
@@ -162,55 +151,6 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
                                         waitUntilTask,
                                         requestId,
                                         waitForSeconds);
-                        future.complete(response);
-                    } catch (Throwable t) {
-                        future.completeExceptionally(t);
-                    }
-                });
-
-        return future;
-    }
-
-    private CompletableFuture<WorkflowRun> executeWorkflowWithIdempotencyHttp(StartWorkflowRequest startWorkflowRequest, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTask, Integer waitForSeconds) {
-        CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
-        String requestId = UUID.randomUUID().toString();
-        executorService.submit(
-                () -> {
-                    try {
-                        WorkflowRun response =
-                                httpClient.executeWorkflow(
-                                        startWorkflowRequest,
-                                        requestId,
-                                        startWorkflowRequest.getName(),
-                                        startWorkflowRequest.getVersion(),
-                                        idempotencyKey,
-                                        onConflict,
-                                        waitUntilTask,
-                                        waitForSeconds);
-                        future.complete(response);
-                    } catch (Throwable t) {
-                        future.completeExceptionally(t);
-                    }
-                });
-
-        return future;
-    }
-
-    private CompletableFuture<WorkflowRun> executeWorkflowWithIdempotencyHttp(StartWorkflowRequest startWorkflowRequest, String idempotencyKey, IdempotencyStrategy onConflict, String waitUntilTask) {
-        CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
-        String requestId = UUID.randomUUID().toString();
-        executorService.submit(
-                () -> {
-                    try {
-                        WorkflowRun response =
-                                httpClient.executeWorkflow(
-                                        startWorkflowRequest,
-                                        requestId,
-                                        startWorkflowRequest.getName(),
-                                        startWorkflowRequest.getVersion(),
-                                        idempotencyKey,
-                                        onConflict,
-                                        waitUntilTask);
                         future.complete(response);
                     } catch (Throwable t) {
                         future.completeExceptionally(t);
