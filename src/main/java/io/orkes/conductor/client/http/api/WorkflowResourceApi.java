@@ -341,10 +341,6 @@ public class WorkflowResourceApi {
                     apiClient.parameterToPair("waitForSeconds", waitForSeconds));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        if (body.getIdempotencyKey() != null)
-            localVarHeaderParams.put("X-Idempotency-key", apiClient.parameterToString(body.getIdempotencyKey()));
-        if (body.getIdempotencyStrategy() != null)
-            localVarHeaderParams.put("X-on-conflict", apiClient.parameterToString(body.getIdempotencyStrategy()));
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
