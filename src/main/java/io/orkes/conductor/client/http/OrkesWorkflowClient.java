@@ -20,7 +20,6 @@ import java.util.UUID;
 import java.util.concurrent.*;
 
 import com.netflix.conductor.common.metadata.workflow.*;
-import io.orkes.conductor.client.model.JumpWorkflowExecutionRequest;
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.conductor.common.model.BulkResponse;
@@ -340,11 +339,6 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
         if(executorService != null) {
             executorService.shutdown();
         }
-    }
-
-    @Override
-    public void jumpToTask(String workflowId, JumpWorkflowExecutionRequest jumpWorkflowExecutionRequest) {
-        httpClient.jumpToTaskWithHttpInfo(jumpWorkflowExecutionRequest, workflowId);
     }
 
     @Override
