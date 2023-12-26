@@ -14,8 +14,10 @@ package io.orkes.conductor.client;
 
 
 
+import java.util.List;
 import java.util.Map;
 
+import com.netflix.conductor.common.metadata.events.EventHandler;
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 
 public abstract class EventClient extends com.netflix.conductor.client.http.EventClient {
@@ -24,4 +26,7 @@ public abstract class EventClient extends com.netflix.conductor.client.http.Even
     public abstract void deleteQueueConfig(QueueConfiguration queueConfiguration);
 
     public abstract void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception;
+
+    public abstract List<EventHandler> getEventHandlers();
+
 }
