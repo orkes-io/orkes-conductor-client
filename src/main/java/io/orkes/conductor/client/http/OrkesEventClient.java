@@ -73,6 +73,11 @@ public class OrkesEventClient extends EventClient {
     }
 
     @Override
+    public void handleIncomingEvent(Map<String, Object> payload) {
+        this.eventResourceApi.handleIncomingEvent(payload);
+    }
+
+    @Override
     public void unregisterEventHandler(String name) {
         eventResourceApi.removeEventHandlerStatus(name);
     }

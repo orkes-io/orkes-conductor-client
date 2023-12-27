@@ -29,4 +29,6 @@ public abstract class EventClient extends com.netflix.conductor.client.http.Even
 
     public abstract List<EventHandler> getEventHandlers();
 
+    public abstract void handleIncomingEvent(Map<String, Object> payload);
+
 }
