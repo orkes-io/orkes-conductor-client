@@ -22,7 +22,12 @@ import java.util.Map;
 import com.netflix.conductor.common.metadata.events.EventHandler;
 
 import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.Configuration;
+import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.ProgressRequestBody;
+import io.orkes.conductor.client.http.ProgressResponseBody;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -48,8 +53,8 @@ public class EventResourceApi {
     /**
      * Build call for addEventHandler
      *
-     * @param eventHandler (required)
-     * @param progressListener Progress listener
+     * @param eventHandler            (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -103,7 +108,7 @@ public class EventResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "POST",
@@ -137,7 +142,7 @@ public class EventResourceApi {
      *
      * @param eventHandler (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public void addEventHandler(EventHandler eventHandler) throws ApiException {
         addEventHandlerWithHttpInfo(eventHandler);
@@ -149,7 +154,7 @@ public class EventResourceApi {
      * @param eventHandler (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Void> addEventHandlerWithHttpInfo(EventHandler eventHandler)
             throws ApiException {
@@ -160,9 +165,9 @@ public class EventResourceApi {
     /**
      * Build call for deleteQueueConfig
      *
-     * @param queueType (required)
-     * @param queueName (required)
-     * @param progressListener Progress listener
+     * @param queueType               (required)
+     * @param queueName               (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -224,7 +229,7 @@ public class EventResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "DELETE",
@@ -267,7 +272,7 @@ public class EventResourceApi {
      * @param queueName (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public Object deleteQueueConfig(String queueType, String queueName) throws ApiException {
         ApiResponse<Object> resp = deleteQueueConfigWithHttpInfo(queueType, queueName);
@@ -281,20 +286,21 @@ public class EventResourceApi {
      * @param queueName (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Object> deleteQueueConfigWithHttpInfo(String queueType, String queueName)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 deleteQueueConfigValidateBeforeCall(queueType, queueName, null, null);
-        Type localVarReturnType = new TypeReference<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for getEventHandlers
      *
-     * @param progressListener Progress listener
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -347,7 +353,7 @@ public class EventResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "GET",
@@ -375,7 +381,7 @@ public class EventResourceApi {
      *
      * @return List&lt;EventHandler&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public List<EventHandler> getEventHandlers() throws ApiException {
         ApiResponse<List<EventHandler>> resp = getEventHandlersWithHttpInfo();
@@ -387,20 +393,21 @@ public class EventResourceApi {
      *
      * @return ApiResponse&lt;List&lt;EventHandler&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<List<EventHandler>> getEventHandlersWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getEventHandlersValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeReference<List<EventHandler>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<EventHandler>>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for getEventHandlersForEvent
      *
-     * @param event (required)
-     * @param activeOnly (optional, default to true)
-     * @param progressListener Progress listener
+     * @param event                   (required)
+     * @param activeOnly              (optional, default to true)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -460,7 +467,7 @@ public class EventResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "GET",
@@ -494,11 +501,11 @@ public class EventResourceApi {
     /**
      * Get event handlers for a given event
      *
-     * @param event (required)
+     * @param event      (required)
      * @param activeOnly (optional, default to true)
      * @return List&lt;EventHandler&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public List<EventHandler> getEventHandlersForEvent(String event, Boolean activeOnly)
             throws ApiException {
@@ -510,26 +517,27 @@ public class EventResourceApi {
     /**
      * Get event handlers for a given event
      *
-     * @param event (required)
+     * @param event      (required)
      * @param activeOnly (optional, default to true)
      * @return ApiResponse&lt;List&lt;EventHandler&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<List<EventHandler>> getEventHandlersForEventWithHttpInfo(
             String event, Boolean activeOnly) throws ApiException {
         com.squareup.okhttp.Call call =
                 getEventHandlersForEventValidateBeforeCall(event, activeOnly, null, null);
-        Type localVarReturnType = new TypeReference<List<EventHandler>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<EventHandler>>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for getQueueConfig
      *
-     * @param queueType (required)
-     * @param queueName (required)
-     * @param progressListener Progress listener
+     * @param queueType               (required)
+     * @param queueName               (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -591,7 +599,7 @@ public class EventResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "GET",
@@ -633,7 +641,7 @@ public class EventResourceApi {
      * @param queueName (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public Map<String, Object> getQueueConfig(String queueType, String queueName) throws ApiException {
         ApiResponse<Map<String, Object>> resp = getQueueConfigWithHttpInfo(queueType, queueName);
@@ -647,20 +655,21 @@ public class EventResourceApi {
      * @param queueName (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Map<String, Object>> getQueueConfigWithHttpInfo(String queueType, String queueName)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 getQueueConfigValidateBeforeCall(queueType, queueName, null, null);
-        Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, Object>>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for getQueueNames
      *
-     * @param progressListener Progress listener
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -713,7 +722,7 @@ public class EventResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "GET",
@@ -741,7 +750,7 @@ public class EventResourceApi {
      *
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public Object getQueueNames() throws ApiException {
         ApiResponse<Object> resp = getQueueNamesWithHttpInfo();
@@ -753,21 +762,22 @@ public class EventResourceApi {
      *
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Object> getQueueNamesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getQueueNamesValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeReference<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for putQueueConfig
      *
-     * @param body (required)
-     * @param queueType (required)
-     * @param queueName (required)
-     * @param progressListener Progress listener
+     * @param body                    (required)
+     * @param queueType               (required)
+     * @param queueName               (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -829,7 +839,7 @@ public class EventResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "PUT",
@@ -874,12 +884,12 @@ public class EventResourceApi {
     /**
      * Create or update queue config by name
      *
-     * @param body (required)
+     * @param body      (required)
      * @param queueType (required)
      * @param queueName (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public Object putQueueConfig(String body, String queueType, String queueName)
             throws ApiException {
@@ -890,26 +900,27 @@ public class EventResourceApi {
     /**
      * Create or update queue config by name
      *
-     * @param body (required)
+     * @param body      (required)
      * @param queueType (required)
      * @param queueName (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Object> putQueueConfigWithHttpInfo(
             String body, String queueType, String queueName) throws ApiException {
         com.squareup.okhttp.Call call =
                 putQueueConfigValidateBeforeCall(body, queueType, queueName, null, null);
-        Type localVarReturnType = new TypeReference<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for removeEventHandlerStatus
      *
-     * @param name (required)
-     * @param progressListener Progress listener
+     * @param name                    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -967,7 +978,7 @@ public class EventResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "DELETE",
@@ -1001,7 +1012,7 @@ public class EventResourceApi {
      *
      * @param name (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public void removeEventHandlerStatus(String name) throws ApiException {
         removeEventHandlerStatusWithHttpInfo(name);
@@ -1013,7 +1024,7 @@ public class EventResourceApi {
      * @param name (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Void> removeEventHandlerStatusWithHttpInfo(String name)
             throws ApiException {
@@ -1025,8 +1036,8 @@ public class EventResourceApi {
     /**
      * Build call for updateEventHandler
      *
-     * @param eventHandler (required)
-     * @param progressListener Progress listener
+     * @param eventHandler            (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1080,7 +1091,7 @@ public class EventResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "PUT",
@@ -1114,11 +1125,17 @@ public class EventResourceApi {
      *
      * @param eventHandler (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public void updateEventHandler(EventHandler eventHandler) throws ApiException {
         updateEventHandlerWithHttpInfo(eventHandler);
     }
+
+
+    public void handleIncomingEvent(Map<String, Object> payload) {
+        handleIncomingEventWithHttpInfo(payload);
+    }
+
 
     /**
      * Update an existing event handler.
@@ -1126,7 +1143,7 @@ public class EventResourceApi {
      * @param eventHandler (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Void> updateEventHandlerWithHttpInfo(EventHandler eventHandler)
             throws ApiException {
@@ -1134,4 +1151,73 @@ public class EventResourceApi {
                 updateEventHandlerValidateBeforeCall(eventHandler, null, null);
         return apiClient.execute(call);
     }
+
+    private ApiResponse<Void> handleIncomingEventWithHttpInfo(Map<String, Object> payload)
+            throws ApiException {
+        com.squareup.okhttp.Call call = handleIncomingEventValidateBeforeCall(payload, null, null);
+        return apiClient.execute(call);
+    }
+
+    private com.squareup.okhttp.Call handleIncomingEventValidateBeforeCall(
+            Map<String, Object> payload,
+            final ProgressResponseBody.ProgressListener progressListener,
+            final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = payload;
+
+        // create path and map variables
+        String localVarPath = "/event/handleIncomingEvent";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {};
+
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {"application/json"};
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if (progressListener != null) {
+            apiClient
+                    .getHttpClient()
+                    .networkInterceptors()
+                    .add(
+                            new com.squareup.okhttp.Interceptor() {
+                                @Override
+                                public com.squareup.okhttp.Response intercept(
+                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                        throws IOException {
+                                    com.squareup.okhttp.Response originalResponse =
+                                            chain.proceed(chain.request());
+                                    return originalResponse
+                                            .newBuilder()
+                                            .body(
+                                                    new ProgressResponseBody(
+                                                            originalResponse.body(),
+                                                            progressListener))
+                                            .build();
+                                }
+                            });
+        }
+
+        String[] localVarAuthNames = new String[] {"api_key"};
+        return apiClient.buildCall(
+                localVarPath,
+                "POST",
+                localVarQueryParams,
+                localVarCollectionQueryParams,
+                localVarPostBody,
+                localVarHeaderParams,
+                localVarFormParams,
+                localVarAuthNames,
+                progressRequestListener);
+    }
+
+
 }

@@ -12,15 +12,15 @@
  */
 package io.orkes.conductor.client.api;
 
-import io.orkes.conductor.client.model.TagObject;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.SchedulerClient;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
+import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 import io.orkes.conductor.client.util.Commons;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +31,7 @@ public class SchedulerClientTests extends ClientTest {
     private final SchedulerClient schedulerClient;
 
     public SchedulerClientTests() {
-        schedulerClient = super.orkesClients.getSchedulerClient();
+        schedulerClient = orkesClients.getSchedulerClient();
     }
 
     @Test
@@ -73,7 +73,6 @@ public class SchedulerClientTests extends ClientTest {
 
     private List<TagObject> getTagObject() {
         TagObject tagObject = new TagObject();
-        tagObject.setType(TagObject.TypeEnum.METADATA);
         tagObject.setKey("department");
         tagObject.setValue("accounts");
         return List.of(tagObject);

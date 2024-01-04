@@ -29,11 +29,12 @@ import io.orkes.conductor.client.util.WorkflowUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("unchecked")
 public class MetadataClientTests extends ClientTest {
     private final MetadataClient metadataClient;
 
     public MetadataClientTests() {
-        metadataClient = super.orkesClients.getMetadataClient();
+        metadataClient = orkesClients.getMetadataClient();
         ((OrkesMetadataClient) metadataClient).withReadTimeout(45000);
     }
 
@@ -50,7 +51,7 @@ public class MetadataClientTests extends ClientTest {
         metadataClient.registerTaskDefs(List.of(taskDef));
         metadataClient.updateTaskDef(taskDef);
         TaskDef receivedTaskDef = metadataClient.getTaskDef(Commons.TASK_NAME);
-        assertTrue(taskDef.getName().equals(receivedTaskDef.getName()));
+        assertEquals(taskDef.getName(), receivedTaskDef.getName());
     }
 
     @Test
@@ -72,7 +73,7 @@ public class MetadataClientTests extends ClientTest {
                 .getWorkflowDefWithMetadata(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
         WorkflowDef receivedWorkflowDef = metadataClient.getWorkflowDef(Commons.WORKFLOW_NAME,
                 Commons.WORKFLOW_VERSION);
-        assertTrue(receivedWorkflowDef.getName().equals(Commons.WORKFLOW_NAME));
+        assertEquals(receivedWorkflowDef.getName(), Commons.WORKFLOW_NAME);
         assertEquals(receivedWorkflowDef.getVersion(), Commons.WORKFLOW_VERSION);
     }
 
@@ -91,7 +92,7 @@ public class MetadataClientTests extends ClientTest {
         metadataClient.setTaskTags(List.of(tagObject), Commons.TASK_NAME);
         assertNotNull(
                 TestUtil.retryMethodCall(
-                        () -> metadataClient.getTags()));
+                        metadataClient::getTags));
         List<TagObject> tags = (List<TagObject>) TestUtil.retryMethodCall(
                 () -> metadataClient.getTaskTags(Commons.TASK_NAME));
         assertIterableEquals(List.of(tagObject), tags);

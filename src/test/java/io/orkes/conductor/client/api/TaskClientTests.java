@@ -85,6 +85,8 @@ public class TaskClientTests extends ClientTest {
         Workflow workflow = workflowClient.getWorkflow(workflowId, true);
         assertNotNull(workflow);
 
+        System.out.println("Running test for workflow: " + workflowId);
+
         int maxLoop = 10;
         int count = 0;
         while (!workflow.getStatus().isTerminal() && count < maxLoop) {
@@ -130,8 +132,7 @@ public class TaskClientTests extends ClientTest {
             for (String referenceName : runningTasks) {
                 System.out.println("Updating " + referenceName);
                 try {
-                    workflow = taskClient.updateTaskSync(workflowId, referenceName, TaskResult.Status.COMPLETED,
-                            new TaskOutput());
+                    workflow = taskClient.updateTaskSync(workflowId, referenceName, TaskResult.Status.COMPLETED, new TaskOutput());
                     System.out.println("Workflow: " + workflow);
                 } catch (ApiException apiException) {
                     // 404 == task was updated already and there are no pending tasks
