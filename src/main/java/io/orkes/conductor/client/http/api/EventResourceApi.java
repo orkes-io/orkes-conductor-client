@@ -12,8 +12,15 @@
  */
 package io.orkes.conductor.client.http.api;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.netflix.conductor.common.metadata.events.EventHandler;
+
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
@@ -22,12 +29,7 @@ import io.orkes.conductor.client.http.Pair;
 import io.orkes.conductor.client.http.ProgressRequestBody;
 import io.orkes.conductor.client.http.ProgressResponseBody;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class EventResourceApi {
     private ApiClient apiClient;

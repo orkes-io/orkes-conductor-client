@@ -12,15 +12,15 @@
  */
 package io.orkes.conductor.client.api;
 
-import io.orkes.conductor.client.model.TagObject;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.SchedulerClient;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
+import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 import io.orkes.conductor.client.util.Commons;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
