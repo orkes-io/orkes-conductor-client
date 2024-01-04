@@ -31,7 +31,7 @@ public class SchedulerClientTests extends ClientTest {
     private final SchedulerClient schedulerClient;
 
     public SchedulerClientTests() {
-        schedulerClient = super.orkesClients.getSchedulerClient();
+        schedulerClient = orkesClients.getSchedulerClient();
     }
 
     @Test
@@ -73,7 +73,6 @@ public class SchedulerClientTests extends ClientTest {
 
     private List<TagObject> getTagObject() {
         TagObject tagObject = new TagObject();
-        tagObject.setType(TagObject.TypeEnum.METADATA);
         tagObject.setKey("department");
         tagObject.setValue("accounts");
         return List.of(tagObject);

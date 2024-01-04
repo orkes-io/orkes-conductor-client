@@ -58,7 +58,6 @@ public class SecretClientTests extends ClientTest {
 
     private TagObject getTagObject() {
         TagObject tagObject = new TagObject();
-        tagObject.setType(TagObject.TypeEnum.METADATA);
         tagObject.setKey("department");
         tagObject.setValue("accounts");
         return tagObject;
