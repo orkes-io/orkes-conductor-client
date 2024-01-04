@@ -74,7 +74,7 @@ public class OrkesEventClient extends EventClient {
 
     @Override
     public void handleIncomingEvent(Map<String, Object> payload) {
-        this.eventResourceApi.handleIncomingEvent(payload);
+        eventResourceApi.handleIncomingEvent(payload);
     }
 
     @Override
