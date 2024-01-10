@@ -81,6 +81,7 @@ public class ApiClient {
 
     private String keyId;
     private String keySecret;
+    private String token;
 
     private String grpcHost = "localhost";
     private int grpcPort = 8090;
@@ -104,6 +105,10 @@ public class ApiClient {
 
     public ApiClient(String basePath) {
         this(basePath, null, null);
+    }
+    public ApiClient(String basePath, String token) {
+        this(basePath, null, null);
+        this.token = token;
     }
 
     public ApiClient(String basePath, SecretsManager secretsManager, String keyPath, String secretPath) {
@@ -149,6 +154,9 @@ public class ApiClient {
     }
 
     private void scheduleTokenRefresh() {
+        if(this.token != null) {
+            return;
+        }
         this.tokenRefreshService = Executors.newSingleThreadScheduledExecutor();
         long refreshInterval = Math.max(30, tokenRefreshInSeconds - 30);
         LOGGER.info("Starting token refresh thread to run at every {} seconds", refreshInterval);
@@ -158,7 +166,7 @@ public class ApiClient {
     }
 
     public boolean useSecurity() {
-        return StringUtils.isNotBlank(keyId) && StringUtils.isNotBlank(keySecret);
+        return this.token != null || (StringUtils.isNotBlank(keyId) && StringUtils.isNotBlank(keySecret));
     }
 
     public boolean isUseGRPC() {
@@ -1260,6 +1268,9 @@ public class ApiClient {
             if (!useSecurity()) {
                 return null;
             }
+            if(this.token != null) {
+                return this.token;
+            }
             return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
         } catch (ExecutionException e) {
             return null;
@@ -1267,6 +1278,9 @@ public class ApiClient {
     }
 
     private String refreshToken() {
+        if(this.token != null) {
+            return this.token;
+        }
         LOGGER.debug("Refreshing token @ {}", new Date());
         if (this.keyId == null || this.keySecret == null) {
             throw new RuntimeException("KeyId and KeySecret must be set in order to get an authentication token");
