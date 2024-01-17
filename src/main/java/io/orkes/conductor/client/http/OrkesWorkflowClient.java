@@ -14,12 +14,14 @@ package io.orkes.conductor.client.http;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
 import org.apache.commons.lang.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 
 import com.netflix.conductor.common.metadata.workflow.*;
 import com.netflix.conductor.common.model.BulkResponse;
@@ -35,6 +37,7 @@ import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
 import io.orkes.conductor.client.model.JumpWorkflowExecutionRequest;
+import io.orkes.conductor.client.model.WorkflowStateUpdate;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.common.model.WorkflowRun;
 
@@ -350,6 +353,15 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     @Override
     public void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest upgradeWorkflowRequest ) {
         httpClient.upgradeRunningWorkflow(upgradeWorkflowRequest, workflowId);
+    }
+
+    @Override
+    public WorkflowRun updateWorkflow(String workflowId, List<String> waitUntilTaskRefNames, Integer waitForSeconds, WorkflowStateUpdate updateRequest) {
+        String joinedReferenceNames = "";
+        if (waitUntilTaskRefNames != null) {
+            joinedReferenceNames = String.join(",", waitUntilTaskRefNames);
+        }
+        return httpClient.updateWorkflowState(updateRequest, UUID.randomUUID().toString(), workflowId, joinedReferenceNames, waitForSeconds);
     }
 
     @Override
