@@ -112,4 +112,3 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
     public abstract WorkflowRun updateWorkflow(String workflowId, List<String> waitUntilTaskRefNames, Integer waitForSeconds,
         WorkflowStateUpdate updateRequest);
 }
-

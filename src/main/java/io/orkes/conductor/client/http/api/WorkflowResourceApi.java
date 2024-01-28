@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.reflect.TypeToken;
 import com.netflix.conductor.common.metadata.workflow.*;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowTestRequest;
@@ -30,6 +29,7 @@ import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.reflect.TypeToken;
 import com.squareup.okhttp.Call;
 
 public class WorkflowResourceApi {
@@ -4018,7 +4018,7 @@ public class WorkflowResourceApi {
     /**
      * Update workflow and task status
      * Updates the workflow variables, tasks and triggers evaluation.
-     * @param body  (required)
+     * @param updateRequest  (required)
      * @param requestId  (required)
      * @param workflowId  (required)
      * @param waitUntilTaskRef  (optional)
