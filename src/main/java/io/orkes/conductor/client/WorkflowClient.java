@@ -26,6 +26,7 @@ import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowTestRequest;
 
 import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.model.WorkflowStateUpdate;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.common.model.WorkflowRun;
 
@@ -93,4 +94,18 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
     public abstract Workflow updateVariables(String workflowId, Map<String, Object> variables);
 
     public abstract void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest body);
+
+    /**
+     *
+     * Update a runningw workflow by updating its variables or one of the scheduled task identified by task reference name
+     * @param workflowId Id of the workflow to be updated
+     * @param waitUntilTaskRefNames List of task reference names to wait for.  The api call will  wait for ANY of these tasks to be availble in workflow.
+     * @param waitForSeconds Maximum time to wait for.  If the workflow does not complete or reach one of the tasks listed  in waitUntilTaskRefNames by this time,
+     *                       the call will return with the current status of the workflow
+     * @param updateRequest Payload for updating state of workflow.
+     *
+     * @return
+     */
+    public abstract WorkflowRun updateWorkflow(String workflowId, List<String> waitUntilTaskRefNames, Integer waitForSeconds,
+        WorkflowStateUpdate updateRequest);
 }

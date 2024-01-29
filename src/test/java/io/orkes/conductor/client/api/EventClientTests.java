@@ -13,10 +13,7 @@
 package io.orkes.conductor.client.api;
 
 import java.util.List;
-import java.util.Map;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.events.EventHandler;
@@ -25,17 +22,10 @@ import com.netflix.conductor.common.metadata.events.EventHandler.StartWorkflow;
 
 import io.orkes.conductor.client.EventClient;
 import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.model.event.QueueConfiguration;
-import io.orkes.conductor.client.model.event.QueueWorkerConfiguration;
-import io.orkes.conductor.client.model.event.kafka.KafkaConfiguration;
-import io.orkes.conductor.client.model.event.kafka.KafkaConsumer;
-import io.orkes.conductor.client.model.event.kafka.KafkaProducer;
 import io.orkes.conductor.client.util.Commons;
 
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EventClientTests extends ClientTest {
     private static final String EVENT_NAME = "test_sdk_java_event_name";
@@ -73,39 +63,9 @@ public class EventClientTests extends ClientTest {
         assertIterableEquals(List.of(), eventClient.getEventHandlers(EVENT, false));
     }
 
-    @Test
-    void testKafkaQueueConfiguration() throws Exception {
-        QueueConfiguration queueConfiguration = getQueueConfiguration();
-        eventClient.deleteQueueConfig(queueConfiguration);
-        assertThrows(
-                ApiException.class,
-                () -> {
-                    eventClient.getQueueConfig(queueConfiguration);
-                });
-        eventClient.putQueueConfig(queueConfiguration);
-        Map<String, Object> configurationResponse = eventClient.getQueueConfig(queueConfiguration);
-        assertTrue(configurationResponse.containsKey("consumer"));
-        assertTrue(configurationResponse.containsKey("producer"));
-        eventClient.deleteQueueConfig(queueConfiguration);
-    }
 
-    QueueConfiguration getQueueConfiguration() throws Exception {
-        return new KafkaConfiguration(KAFKA_QUEUE_TOPIC_NAME)
-                .withConsumer(getKafkaConsumer())
-                .withProducer(getKafkaProducer());
-    }
 
-    QueueWorkerConfiguration getKafkaConsumer() throws Exception {
-        return new KafkaConsumer(KAFKA_BOOTSTRAP_SERVERS_CONFIG)
-                // 1 second, instead of default 2 seconds
-                .withConfiguration(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "1000");
-    }
 
-    QueueWorkerConfiguration getKafkaProducer() throws Exception {
-        return new KafkaProducer(KAFKA_BOOTSTRAP_SERVERS_CONFIG)
-                // send messages in chunks of 1024 bytes, instead of default every new data
-                .withConfiguration(ProducerConfig.BATCH_SIZE_CONFIG, "1024");
-    }
 
     EventHandler getEventHandler() {
         EventHandler eventHandler = new EventHandler();

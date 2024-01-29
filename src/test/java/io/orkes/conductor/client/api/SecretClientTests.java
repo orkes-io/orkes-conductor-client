@@ -45,9 +45,6 @@ public class SecretClientTests extends ClientTest {
         secretClient.putSecret(SECRET_NAME, SECRET_KEY);
         secretClient.setSecretTags(List.of(getTagObject()), SECRET_KEY);
         List<TagObject> tags = secretClient.getSecretTags(SECRET_KEY);
-        secretClient.deleteSecretTags(tags, SECRET_KEY);
-        secretClient.putSecret(SECRET_NAME, SECRET_KEY);
-        secretClient.setSecretTags(List.of(getTagObject()), SECRET_KEY);
         assertEquals(tags.size(), 1);
         assertEquals(tags.get(0), getTagObject());
         secretClient.deleteSecretTags(List.of(getTagObject()), SECRET_KEY);
@@ -61,7 +58,6 @@ public class SecretClientTests extends ClientTest {
 
     private TagObject getTagObject() {
         TagObject tagObject = new TagObject();
-        tagObject.setType(null);
         tagObject.setKey("department");
         tagObject.setValue("accounts");
         return tagObject;
