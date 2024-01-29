@@ -48,6 +48,8 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import com.netflix.conductor.common.validation.ErrorResponse;
+
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.http.api.TokenResourceApi;
 import io.orkes.conductor.client.http.auth.ApiKeyAuth;
@@ -863,6 +865,19 @@ public class ApiClient {
             if (response.body() != null) {
                 try {
                     respBody = response.body().string();
+                    if (response.code() == 409) {
+                            ErrorResponse errorResponse = json.deserialize(respBody, ErrorResponse.class);
+                            String message = null;
+                            if  (errorResponse != null && errorResponse.getMessage() != null) {
+                                message = errorResponse.getMessage();
+                            } else {
+                                message = response.message();
+                            }
+                            throw new ConflictException(
+                                    message,
+                                    response.code(),
+                                    response.headers().toMultimap(), respBody);
+                    }
                 } catch (IOException e) {
                     throw new ApiException(
                             response.message(),

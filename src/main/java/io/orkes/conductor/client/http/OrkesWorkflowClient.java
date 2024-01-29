@@ -34,7 +34,6 @@ import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
 import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
-import io.orkes.conductor.client.model.JumpWorkflowExecutionRequest;
 import io.orkes.conductor.client.model.WorkflowStateUpdate;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.common.model.WorkflowRun;
@@ -88,12 +87,12 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
-    public String startWorkflow(StartWorkflowRequest startWorkflowRequest) {
+    public String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ConflictException {
         return httpClient.startWorkflow(startWorkflowRequest);
     }
 
     @Override
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask) {
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask) throws ConflictException {
         if(apiClient.isUseGRPC()) {
             return grpcWorkflowClient.executeWorkflow(request, waitUntilTask);
         } else {
@@ -102,7 +101,7 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds) {
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds) throws ConflictException {
         if(apiClient.isUseGRPC()) {
             return grpcWorkflowClient.executeWorkflow(request, waitUntilTask, waitForSeconds);
         } else {
@@ -341,11 +340,6 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
         if(executorService != null) {
             executorService.shutdown();
         }
-    }
-
-    @Override
-    public void jumpToTask(String workflowId, JumpWorkflowExecutionRequest jumpWorkflowExecutionRequest) {
-        httpClient.jumpToTaskWithHttpInfo(jumpWorkflowExecutionRequest, workflowId);
     }
 
     @Override

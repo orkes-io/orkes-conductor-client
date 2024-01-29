@@ -32,6 +32,7 @@ public class Commons {
 
     public static TagObject getTagObject() {
         TagObject tagObject = new TagObject();
+        tagObject.setType(null);
         tagObject.setKey("a");
         tagObject.setValue("b");
         return tagObject;
@@ -39,6 +40,7 @@ public class Commons {
 
     public static TagString getTagString() {
         TagString tagString = new TagString();
+        tagString.setType(null);
         tagString.setKey("a");
         tagString.setValue("b");
         return tagString;

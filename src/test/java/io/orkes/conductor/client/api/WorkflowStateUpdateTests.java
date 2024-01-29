@@ -15,6 +15,7 @@ package io.orkes.conductor.client.api;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -23,16 +24,19 @@ import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import com.netflix.conductor.common.metadata.workflow.IdempotencyStrategy;
 import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.model.WorkflowStateUpdate;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 import lombok.SneakyThrows;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class WorkflowStateUpdateTests extends ClientTest {
 
@@ -95,5 +99,30 @@ public class WorkflowStateUpdateTests extends ClientTest {
             .map(task -> task.getReferenceTaskName() + ":" + task.getStatus())
             .collect(Collectors.toList()));
 
+    }
+
+    @Test
+    public void testIdempotency() {
+        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+        startWorkflowRequest.setName("sync_task_variable_updates");
+        startWorkflowRequest.setVersion(1);
+        String idempotencyKey = UUID.randomUUID().toString();
+        startWorkflowRequest.setIdempotencyKey(idempotencyKey);
+        startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.FAIL);
+        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+
+
+        startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.RETURN_EXISTING);
+        String workflowId2 = workflowClient.startWorkflow(startWorkflowRequest);
+        assertEquals(workflowId, workflowId2);
+
+        startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.FAIL);
+        boolean conflict = false;
+        try {
+            workflowClient.startWorkflow(startWorkflowRequest);
+        } catch (ConflictException ce) {
+            conflict = true;
+        }
+        assertTrue(conflict);
     }
 }

@@ -206,6 +206,7 @@ public class WorkflowClientTests extends ClientTest {
                 () -> workflowClient.terminateWorkflowsWithFailure(List.of(workflowId), null, false));
     }
 
+    @Test
     public void testUpdateVariables() {
         ConductorWorkflow<Object> workflow = new ConductorWorkflow<>(workflowExecutor);
         workflow.add(new SimpleTask("simple_task", "simple_task_ref"));

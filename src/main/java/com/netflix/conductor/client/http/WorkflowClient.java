@@ -23,6 +23,8 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 import com.netflix.conductor.common.run.WorkflowTestRequest;
 import com.netflix.conductor.common.utils.ExternalPayloadStorage;
 
+import io.orkes.conductor.client.http.ConflictException;
+
 public abstract class WorkflowClient {
 
     /** Creates a default workflow client */
@@ -39,7 +41,7 @@ public abstract class WorkflowClient {
      * @param startWorkflowRequest the {@link StartWorkflowRequest} object to start the workflow
      * @return the id of the workflow instance that can be used for tracking
      */
-    public abstract String startWorkflow(StartWorkflowRequest startWorkflowRequest);
+    public abstract String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ConflictException;
 
     /**
      * Retrieve a workflow by workflow id

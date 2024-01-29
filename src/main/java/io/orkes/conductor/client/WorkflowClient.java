@@ -26,7 +26,6 @@ import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.run.WorkflowTestRequest;
 
 import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.model.JumpWorkflowExecutionRequest;
 import io.orkes.conductor.client.model.WorkflowStateUpdate;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.common.model.WorkflowRun;
@@ -94,8 +93,6 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
      */
     public abstract Workflow updateVariables(String workflowId, Map<String, Object> variables);
 
-    public abstract void jumpToTask(String workflowId, JumpWorkflowExecutionRequest jumpWorkflowExecutionRequest);
-
     public abstract void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest body);
 
     /**
@@ -107,7 +104,7 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
      *                       the call will return with the current status of the workflow
      * @param updateRequest Payload for updating state of workflow.
      *
-     * @return
+     * @return Returns updated workflow execution
      */
     public abstract WorkflowRun updateWorkflow(String workflowId, List<String> waitUntilTaskRefNames, Integer waitForSeconds,
         WorkflowStateUpdate updateRequest);
