@@ -20,7 +20,7 @@ ext {
     versions = [
             awaitility      : '4.2.0',
             commonsLang     : '3.12.0',
-            conductor       : '3.9.21-orkes',
+            conductor       : '3.9.24-orkes',
             jackson         : '2.11.4!!',
             junit           : '5.9.0',
             slf4j           : '1.7.36',
@@ -47,7 +47,9 @@ dependencies {
 
     api ("io.orkes.conductor:conductor-common:${versions.conductor}")
     api ("io.orkes.conductor:conductor-grpc:${versions.conductor}")
-    api ("io.orkes.conductor:conductor-java-sdk:${versions.conductor}")
+    api ("io.orkes.conductor:conductor-java-sdk:${versions.conductor}") {
+        exclude group: 'com.netflix.conductor'
+    }
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
 
     implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
@@ -98,7 +100,6 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}!!"
     implementation "org.apache.logging.log4j:log4j-jul:${versions.log4j}!!"
     implementation "org.apache.logging.log4j:log4j-web:${versions.log4j}!!"
-    //implementation "org.apache.logging.log4j:log4j-to-slf4j:${versions.log4j}!!"
 
     //spring
     implementation "org.springframework:spring-context:5.3.24"

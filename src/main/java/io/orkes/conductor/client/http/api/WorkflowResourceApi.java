@@ -29,6 +29,7 @@ import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.reflect.TypeToken;
 import com.squareup.okhttp.Call;
 
 public class WorkflowResourceApi {
@@ -4012,4 +4013,106 @@ public class WorkflowResourceApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
+
+
+    /**
+     * Update workflow and task status
+     * Updates the workflow variables, tasks and triggers evaluation.
+     * @param updateRequest  (required)
+     * @param requestId  (required)
+     * @param workflowId  (required)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @return WorkflowRun
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public WorkflowRun updateWorkflowState(WorkflowStateUpdate updateRequest, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+        ApiResponse<WorkflowRun> resp = updateWorkflowAndTaskStateWithHttpInfo(updateRequest, requestId, workflowId, waitUntilTaskRef, waitForSeconds);
+        return resp.getData();
+    }
+
+    /**
+     * Update workflow and task status
+     * Updates the workflow variables, tasks and triggers evaluation.
+     * @param body  (required)
+     * @param requestId  (required)
+     * @param workflowId  (required)
+     * @param waitUntilTaskRef  (optional)
+     * @param waitForSeconds  (optional, default to 10)
+     * @return ApiResponse&lt;WorkflowRun&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<WorkflowRun> updateWorkflowAndTaskStateWithHttpInfo(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+        com.squareup.okhttp.Call call = updateWorkflowAndTaskStateValidateBeforeCall(body, requestId, workflowId, waitUntilTaskRef, waitForSeconds, null, null);
+        Type localVarReturnType = new TypeToken<WorkflowRun>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+
+    public com.squareup.okhttp.Call updateWorkflowAndTaskStateCall(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/workflow/{workflowId}/state"
+            .replaceAll("\\{" + "workflowId" + "\\}", apiClient.escapeString(workflowId.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        if (requestId != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("requestId", requestId));
+        if (waitUntilTaskRef != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("waitUntilTaskRef", waitUntilTaskRef));
+        if (waitForSeconds != null)
+            localVarQueryParams.addAll(apiClient.parameterToPair("waitForSeconds", waitForSeconds));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "*/*"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                        .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                        .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "api_key" };
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call updateWorkflowAndTaskStateValidateBeforeCall(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling updateWorkflowAndTaskState(Async)");
+        }
+        // verify the required parameter 'requestId' is set
+        if (requestId == null) {
+            throw new ApiException("Missing the required parameter 'requestId' when calling updateWorkflowAndTaskState(Async)");
+        }
+        // verify the required parameter 'workflowId' is set
+        if (workflowId == null) {
+            throw new ApiException("Missing the required parameter 'workflowId' when calling updateWorkflowAndTaskState(Async)");
+        }
+
+        com.squareup.okhttp.Call call = updateWorkflowAndTaskStateCall(body, requestId, workflowId, waitUntilTaskRef, waitForSeconds, progressListener, progressRequestListener);
+        return call;
+    }
 }
