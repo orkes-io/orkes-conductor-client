@@ -12,9 +12,6 @@
  */
 package io.orkes.conductor.client.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +29,10 @@ import com.netflix.conductor.common.run.Workflow;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.model.WorkflowStateUpdate;
 import io.orkes.conductor.common.model.WorkflowRun;
+
 import lombok.SneakyThrows;
+
+import static org.junit.Assert.assertEquals;
 
 public class WorkflowStateUpdateTests extends ClientTest {
 
