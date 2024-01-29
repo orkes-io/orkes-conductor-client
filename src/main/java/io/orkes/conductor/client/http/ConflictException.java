@@ -12,11 +12,12 @@
  */
 package io.orkes.conductor.client.http;
 
-import io.orkes.conductor.client.OrkesClientException;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
+import io.orkes.conductor.client.OrkesClientException;
 
 public class ConflictException extends OrkesClientException {
 

@@ -104,7 +104,7 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
      *                       the call will return with the current status of the workflow
      * @param updateRequest Payload for updating state of workflow.
      *
-     * @return
+     * @return Returns updated workflow execution
      */
     public abstract WorkflowRun updateWorkflow(String workflowId, List<String> waitUntilTaskRefNames, Integer waitForSeconds,
         WorkflowStateUpdate updateRequest);
