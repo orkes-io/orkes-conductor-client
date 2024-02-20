@@ -23,6 +23,7 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.TaskSummary;
 import com.netflix.conductor.common.utils.ExternalPayloadStorage;
+import io.orkes.conductor.client.model.ExtendedTaskSummary;
 
 /** Client for conductor task management including polling for task, updating task status etc. */
 public abstract class TaskClient {
@@ -186,7 +187,7 @@ public abstract class TaskClient {
      * @param query the search query
      * @return the {@link SearchResult} containing the {@link TaskSummary} that match the query
      */
-    public abstract SearchResult<TaskSummary> search(
+    public abstract List<ExtendedTaskSummary> search(
             Integer start, Integer size, String sort, String freeText, String query);
 
     /**

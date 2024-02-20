@@ -25,13 +25,12 @@ import com.netflix.conductor.common.metadata.tasks.PollData;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskExecLog;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.model.ExternalStorageLocation;
-import io.orkes.conductor.client.model.SearchResultTask;
-import io.orkes.conductor.client.model.SearchResultTaskSummary;
+import io.orkes.conductor.client.model.*;
 
 import com.amazonaws.util.EC2MetadataUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -1520,10 +1519,10 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public SearchResultTaskSummary search1(
+    public List<ExtendedTaskSummary> search1(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
-        ApiResponse<SearchResultTaskSummary> resp =
+        ApiResponse<List<ExtendedTaskSummary>> resp =
                 search1WithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
     }
@@ -1542,12 +1541,12 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<SearchResultTaskSummary> search1WithHttpInfo(
+    private ApiResponse<List<ExtendedTaskSummary>> search1WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 search1ValidateBeforeCall(start, size, sort, freeText, query, null, null);
-        Type localVarReturnType = new TypeReference<SearchResultTaskSummary>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<ExtendedTaskSummary>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

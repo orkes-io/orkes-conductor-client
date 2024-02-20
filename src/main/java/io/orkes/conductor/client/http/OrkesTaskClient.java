@@ -32,6 +32,7 @@ import io.orkes.conductor.client.grpc.GrpcTaskClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.orkes.conductor.client.model.ExtendedTaskSummary;
 
 public class OrkesTaskClient extends TaskClient implements AutoCloseable {
 
@@ -223,8 +224,8 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable {
     }
 
     @Override
-    public SearchResult<TaskSummary> search(Integer start, Integer size, String sort, String freeText, String query) {
-        throw new UnsupportedOperationException("search operation on tasks is not supported");
+    public List<ExtendedTaskSummary> search(Integer start, Integer size, String sort, String freeText, String query) {
+        return taskResourceApi.search1(start, size, sort, freeText, query);
     }
 
     @Override
