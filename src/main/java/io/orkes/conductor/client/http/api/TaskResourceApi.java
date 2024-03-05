@@ -1519,10 +1519,10 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public List<ExtendedTaskSummary> search1(
+    public SearchResult<List<ExtendedTaskSummary>> search1(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
-        ApiResponse<List<ExtendedTaskSummary>> resp =
+        ApiResponse<SearchResult<List<ExtendedTaskSummary>>> resp =
                 search1WithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
     }
@@ -1541,12 +1541,12 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<List<ExtendedTaskSummary>> search1WithHttpInfo(
+    private ApiResponse<SearchResult<List<ExtendedTaskSummary>>> search1WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
                 search1ValidateBeforeCall(start, size, sort, freeText, query, null, null);
-        Type localVarReturnType = new TypeReference<List<ExtendedTaskSummary>>() {}.getType();
+        Type localVarReturnType = new TypeReference<SearchResult<List<ExtendedTaskSummary>>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
