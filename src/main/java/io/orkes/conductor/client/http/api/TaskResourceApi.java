@@ -1411,7 +1411,7 @@ public class TaskResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call search1Call(
+    public com.squareup.okhttp.Call searchTasksCall(
             Integer start,
             Integer size,
             String sort,
@@ -1483,7 +1483,7 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call search1ValidateBeforeCall(
+    private com.squareup.okhttp.Call searchTasksValidateBeforeCall(
             Integer start,
             Integer size,
             String sort,
@@ -1494,7 +1494,7 @@ public class TaskResourceApi {
             throws ApiException {
 
         com.squareup.okhttp.Call call =
-                search1Call(
+                searchTasksCall(
                         start,
                         size,
                         sort,
@@ -1519,11 +1519,11 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public SearchResult<List<ExtendedTaskSummary>> search1(
+    public SearchResult<List<ExtendedTaskSummary>> searchTasks(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         ApiResponse<SearchResult<List<ExtendedTaskSummary>>> resp =
-                search1WithHttpInfo(start, size, sort, freeText, query);
+                searchTasksWithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
     }
 
@@ -1541,11 +1541,11 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<SearchResult<List<ExtendedTaskSummary>>> search1WithHttpInfo(
+    private ApiResponse<SearchResult<List<ExtendedTaskSummary>>> searchTasksWithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
-                search1ValidateBeforeCall(start, size, sort, freeText, query, null, null);
+                searchTasksValidateBeforeCall(start, size, sort, freeText, query, null, null);
         Type localVarReturnType = new TypeReference<SearchResult<List<ExtendedTaskSummary>>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
