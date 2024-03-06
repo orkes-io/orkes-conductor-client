@@ -187,7 +187,7 @@ public abstract class TaskClient {
      * @param query the search query
      * @return the {@link SearchResult} containing the {@link TaskSummary} that match the query
      */
-    public abstract SearchResult<List<ExtendedTaskSummary>> search(
+    public abstract SearchResult<ExtendedTaskSummary> search(
             Integer start, Integer size, String sort, String freeText, String query);
 
     /**
