@@ -167,7 +167,7 @@ public class AuthorizationClientTests extends ClientTest {
         AuthorizationRequest request = new AuthorizationRequest();
         request.access(Arrays.asList(AuthorizationRequest.AccessEnum.READ));
         SubjectRef subject = new SubjectRef();
-        subject.setId("Example Group");
+        subject.setId("worker-test-group31dfe7a4-bd85-4ccc-9571-7c0e018ebc32");
         subject.setType(SubjectRef.TypeEnum.GROUP);
         request.setSubject(subject);
         TargetRef target = new TargetRef();
@@ -182,7 +182,7 @@ public class AuthorizationClientTests extends ClientTest {
         AuthorizationRequest request = new AuthorizationRequest();
         request.access(Arrays.asList(AuthorizationRequest.AccessEnum.EXECUTE));
         SubjectRef subject = new SubjectRef();
-        subject.setId("app:89b6d9b8-c56c-41e7-98de-4049f57943c1");
+        subject.setId("conductoruser1@gmail.com");
         subject.setType(SubjectRef.TypeEnum.USER);
         request.setSubject(subject);
         TargetRef target = new TargetRef();
@@ -313,7 +313,7 @@ public class AuthorizationClientTests extends ClientTest {
         AuthorizationRequest request = new AuthorizationRequest();
         request.access(Arrays.asList(AuthorizationRequest.AccessEnum.READ));
         SubjectRef subject = new SubjectRef();
-        subject.setId("Example Group");
+        subject.setId("worker-test-group31dfe7a4-bd85-4ccc-9571-7c0e018ebc32");
         subject.setType(SubjectRef.TypeEnum.GROUP);
         request.setSubject(subject);
         TargetRef target = new TargetRef();
