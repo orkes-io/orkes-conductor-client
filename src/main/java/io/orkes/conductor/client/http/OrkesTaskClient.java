@@ -223,7 +223,7 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable {
     }
 
     @Override
-    public SearchResult<ExtendedTaskSummary> search(Integer start, Integer size, String sort, String freeText, String query) {
+    public SearchResult<TaskSummary> search(Integer start, Integer size, String sort, String freeText, String query) {
         return taskResourceApi.searchTasks(start, size, sort, freeText, query);
     }
 
