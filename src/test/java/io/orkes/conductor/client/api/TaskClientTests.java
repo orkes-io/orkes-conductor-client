@@ -240,11 +240,6 @@ public class TaskClientTests extends ClientTest {
                 () -> {
                     taskClient.searchV2("freeText");
                 });
-        assertThrows(
-                UnsupportedOperationException.class,
-                () -> {
-                    taskClient.search(4, 20, "sort", "freeText", "query");
-                });
 
         assertThrows(
                 UnsupportedOperationException.class,

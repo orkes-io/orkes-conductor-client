@@ -25,13 +25,12 @@ import com.netflix.conductor.common.metadata.tasks.PollData;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskExecLog;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.model.ExternalStorageLocation;
-import io.orkes.conductor.client.model.SearchResultTask;
-import io.orkes.conductor.client.model.SearchResultTaskSummary;
+import io.orkes.conductor.client.model.*;
 
 import com.amazonaws.util.EC2MetadataUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -1412,7 +1411,7 @@ public class TaskResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call search1Call(
+    public com.squareup.okhttp.Call searchTasksCall(
             Integer start,
             Integer size,
             String sort,
@@ -1484,7 +1483,7 @@ public class TaskResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call search1ValidateBeforeCall(
+    private com.squareup.okhttp.Call searchTasksValidateBeforeCall(
             Integer start,
             Integer size,
             String sort,
@@ -1495,7 +1494,7 @@ public class TaskResourceApi {
             throws ApiException {
 
         com.squareup.okhttp.Call call =
-                search1Call(
+                searchTasksCall(
                         start,
                         size,
                         sort,
@@ -1520,11 +1519,11 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    public SearchResultTaskSummary search1(
+    public SearchResult<TaskSummary> searchTasks(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
-        ApiResponse<SearchResultTaskSummary> resp =
-                search1WithHttpInfo(start, size, sort, freeText, query);
+        ApiResponse<SearchResult<TaskSummary>> resp =
+                searchTasksWithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
     }
 
@@ -1542,12 +1541,12 @@ public class TaskResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
      *     response body
      */
-    private ApiResponse<SearchResultTaskSummary> search1WithHttpInfo(
+    private ApiResponse<SearchResult<TaskSummary>> searchTasksWithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         com.squareup.okhttp.Call call =
-                search1ValidateBeforeCall(start, size, sort, freeText, query, null, null);
-        Type localVarReturnType = new TypeReference<SearchResultTaskSummary>() {}.getType();
+                searchTasksValidateBeforeCall(start, size, sort, freeText, query, null, null);
+        Type localVarReturnType = new TypeReference<SearchResult<TaskSummary>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

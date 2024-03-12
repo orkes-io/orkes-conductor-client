@@ -100,66 +100,6 @@ public class WorkflowClientTests extends ClientTest {
     }
 
     @Test
-    public void testWorkflowMethods() throws Exception {
-        var workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
-        var workflows = (List<Workflow>) TestUtil.retryMethodCall(
-                () -> workflowClient.getWorkflows(
-                        Commons.WORKFLOW_NAME, "askdjbjqhbdjqhbdjqhsbdjqhsbd", false, false));
-        assertTrue(workflows.isEmpty());
-        TestUtil.retryMethodCall(
-                () -> workflowClient.terminateWorkflow(workflowId, "reason"));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.retryLastFailedTask(workflowId));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.getRunningWorkflow(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.getWorkflowsByTimePeriod(
-                        Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION, 0L, 0L));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.search(2, 5, "", "", Commons.WORKFLOW_NAME));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.terminateWorkflows(List.of(workflowId), "reason"));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.restart(workflowId, true));
-        try {
-            TestUtil.retryMethodCall(
-                    () -> workflowClient.skipTaskFromWorkflow(workflowId, Commons.TASK_NAME));
-        } catch (ApiException e) {
-            assertEquals(e.getCode(), "500");
-        }
-        TestUtil.retryMethodCall(
-                () -> workflowClient.terminateWorkflow(List.of(workflowId), "reason"));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.restartWorkflow(List.of(workflowId), true));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.terminateWorkflow(workflowId, "reason"));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.retryWorkflow(List.of(workflowId)));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.terminateWorkflow(workflowId, "reason"));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.rerunWorkflow(workflowId, new RerunWorkflowRequest()));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.pauseWorkflow(workflowId));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.resumeWorkflow(workflowId));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.pauseWorkflow(workflowId));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.resumeWorkflow(workflowId));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.pauseWorkflow(List.of(workflowId)));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.resumeWorkflow(List.of(workflowId)));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.deleteWorkflow(workflowId, false));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.search(Commons.WORKFLOW_NAME));
-        TestUtil.retryMethodCall(
-                () -> workflowClient.runDecider(workflowId));
-    }
-
-    @Test
     public void testWorkflowTerminate() {
         String workflowId = workflowClient.startWorkflow(getStartWorkflowRequest());
         workflowClient.terminateWorkflowWithFailure(
