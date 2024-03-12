@@ -23,7 +23,6 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskExecLog;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.run.SearchResult;
-import com.netflix.conductor.common.run.TaskSummary;
 import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.ApiClient;
@@ -32,6 +31,7 @@ import io.orkes.conductor.client.grpc.GrpcTaskClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.orkes.conductor.client.model.TaskSummary;
 
 public class OrkesTaskClient extends TaskClient implements AutoCloseable {
 
