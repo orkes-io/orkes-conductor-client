@@ -1,7 +1,6 @@
 package io.orkes.conductor.client.model;
 
 import java.util.Objects;
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +9,8 @@ import java.util.List;
  */
 
 public class SearchResultTaskSummary {
-  @SerializedName("results")
   private List<TaskSummary> results = null;
 
-  @SerializedName("totalHits")
   private Long totalHits = null;
 
   public SearchResultTaskSummary results(List<TaskSummary> results) {

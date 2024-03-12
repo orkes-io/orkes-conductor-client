@@ -12,7 +12,6 @@
  */
 package io.orkes.conductor.client.model;
 
-import com.google.gson.annotations.SerializedName;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.Task.Status;
 import com.netflix.conductor.common.utils.SummaryUtil;
@@ -28,64 +27,44 @@ public class TaskSummary {
     /** The time should be stored as GMT */
     private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 
-    @SerializedName("workflowId")
     private String workflowId;
 
-    @SerializedName("workflowType")
     private String workflowType;
 
-    @SerializedName("correlationId")
     private String correlationId;
 
-    @SerializedName("scheduledTime")
     private String scheduledTime;
 
-    @SerializedName("startTime")
     private String startTime;
 
-    @SerializedName("updateTime")
     private String updateTime;
 
-    @SerializedName("endTime")
     private String endTime;
 
-    @SerializedName("status")
     private Task.Status status;
 
-    @SerializedName("reasonForIncompletion")
     private String reasonForIncompletion;
 
-    @SerializedName("executionTime")
     private long executionTime;
 
-    @SerializedName("queueWaitTime")
     private long queueWaitTime;
 
-    @SerializedName("taskDefName")
     private String taskDefName;
 
-    @SerializedName("taskType")
     private String taskType;
 
-    @SerializedName("input")
     private String input;
 
-    @SerializedName("output")
     private String output;
 
-    @SerializedName("taskId")
     private String taskId;
 
-    @SerializedName("externalInputPayloadStoragePath")
     private String externalInputPayloadStoragePath;
 
-    @SerializedName("externalOutputPayloadStoragePath")
     private String externalOutputPayloadStoragePath;
 
-    @SerializedName("workflowPriority")
     private int workflowPriority;
 
-    @SerializedName("taskReferenceName")
     private String taskReferenceName;
 
     public TaskSummary() {}
