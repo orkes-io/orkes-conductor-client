@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Authoring Workflows](#authoring-workflows)
+  - [A simple workflow](#a-simple-workflow)
+    - [Execute Workflow](#execute-workflow)
+      - [Using Workflow Executor to start previously registered workflow](#using-workflow-executor-to-start-previously-registered-workflow)
+    - [More Examples](#more-examples)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Authoring Workflows
 
 ## A simple workflow
