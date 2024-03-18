@@ -1,14 +1,36 @@
-# Orkes Conductor Client
+# Conductor Java SDK
 
-This repository provides a Java client for Orkes Conductor Server. With this client you can manage
-metadata (Workflows and tasks), run workflows, create workers and more. 
+Conductor is an open source distributed, scalable and highly available orchestration platform that allows developers to build powerful distributed applications. You can find the documentation for Conductor here: [Conductor Docs](https://orkes.io/content).
 
-## Add `orkes-conductor-client` dependency to your project
+This repository provides a Java client for Orkes Conductor Server. 
+
+## ⭐ Conductor OSS
+Show support for the Conductor OSS.  Please help spread the awareness by starring Conductor repo.
+
+[![GitHub stars](https://img.shields.io/github/stars/conductor-oss/conductor.svg?style=social&label=Star&maxAge=)](https://GitHub.com/conductor-oss/conductor/)
+
+## Content
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Set Up Conductor Java SDK
+
+Add `orkes-conductor-client` dependency to your project.
+
 ### Gradle
+
+For Gradle-based projects, modify the `build.gradle` file in the project directory by adding the following line to the dependencies block in that file:
+
 ```
 implementation 'io.orkes.conductor:orkes-conductor-client:2.0.1'
 ```
+
 ### Maven
+
+For Maven-based projects, modify the `pom.xml` file in the project directory by adding the following XML snippet within the `dependencies` section:
+
 ```
 <dependency>
   <groupId>io.orkes.conductor</groupId>
@@ -16,35 +38,150 @@ implementation 'io.orkes.conductor:orkes-conductor-client:2.0.1'
   <version>1.1.14</version>
 </dependency>
 ```
-## Examples
 
-Check out [the examples in this project](https://github.com/conductor-sdk/java-sdk-examples).
+### Conductor Server Settings
 
-## Quick Guides
-
-- [Create and run workers](docs/worker/README.md)
-- [Create workflows using code](docs/workflow/README.md)
-- [Create Kafka queue configuration using code](docs/queue/kafka.md)
-
----
-
-### Conductor server settings
 Everything related to server settings should be done within the `ApiClient` class, by setting the required parameters when initializing an object, like this:
 
 ```java
-ApiClient apiClient = new ApiClient("https://play.orkes.io/api");
+ApiClient apiClient = new ApiClient("CONDUCTOR_SERVER_URL");
 ```
 
-#### Authentication settings (optional)
-Use if your conductor server requires authentication.
+If you are using Spring Framework, we can initialize the above class as a bean that can be used across the project.
 
-#### Access Control Setup
-See [Access Control](https://orkes.io/content/docs/getting-started/concepts/access-control) for more details on role based access control with Conductor and generating API keys for your environment. 
-[Detailed example](https://github.com/conductor-sdk/java-sdk-examples/blob/16d23ce13f7c400659d4ef7435f5f5f30bc6af88/src/main/java/io/orkes/samples/quickstart/ExecuteWorkflow.java#L48-L55).
+
+(Optionally) If you are using a Conductor server that requires authentication:
+
+- [Obtain the key and secret from Conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control) 
+
+Once you have a key and secret, you can configure the app from properties or environment variables, as shown below:
 
 ```java
-ApiClient apiClient = new ApiClient("https://play.orkes.io/api", "key", "secret");
+    String key = System.getenv("KEY");
+    String secret = System.getenv("SECRET");
+    String conductorServer = System.getenv("CONDUCTOR_SERVER_URL");
+    ApiClient apiClient = new ApiClient(conductorServer, key, secret);
 ```
 
----
-### Next: [Create and run workers](docs/worker/README.md)
+## Start Conductor Server
+
+```
+docker run --init -p 8080:8080 -p 5000:5000 conductoross/conductor-standalone:3.15.0
+```
+
+After starting the server navigate to http://localhost:5000 to ensure the server has started successfully.
+
+## Simple Hello World Application using Conductor
+
+In this section, we will create a simple "Hello World" application that uses Conductor.
+
+### Step 1: Create a Workflow
+
+#### Use Code to create workflows
+
+Create `HelloWorld.java` with the following:
+
+```java
+    private WorkflowDef registerWorkflowDef() throws IOException {
+        InputStream is = ExecuteWorkflow.class.getResourceAsStream("/workflow.json");
+        WorkflowDef workflowDef = objectMapper.readValue(is, WorkflowDef.class);
+        metadataClient.registerWorkflowDef(workflowDef, true);
+        return workflowDef;
+    }
+```
+#### (Alternatively) Use JSON to create workflows
+
+Create workflow.json with the following:
+
+```json
+{
+  "name": "hello",
+  "description": "hello workflow",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "greet",
+      "taskReferenceName": "greet_ref",
+      "type": "SIMPLE",
+      "inputParameters": {
+        "name": "${workflow.input.name}"
+      }
+    }
+  ],
+  "timeoutPolicy": "TIME_OUT_WF",
+  "timeoutSeconds": 60
+}
+```
+
+Now, register this workflow with the server:
+
+```shell
+curl -X POST -H "Content-Type:application/json" \
+http://localhost:8080/api/metadata/workflow -d @workflow.json
+```
+
+### Step 2: Write Worker
+
+Create a simple worker:
+
+> [!note]
+> A single workflow application can have workers written in different languages.
+
+```java
+import com.netflix.conductor.client.worker.Worker;
+import com.netflix.conductor.common.metadata.tasks.Task;
+import com.netflix.conductor.common.metadata.tasks.TaskResult;
+
+public class HelloWorld implements Worker {
+    @Override
+    public String getTaskDefName() {
+        return "hello_world_task";
+    }
+
+    @Override
+    public TaskResult execute(Task task) {
+        TaskResult result = new TaskResult(task);
+
+        String name = (String) task.getInputData().get("name");
+        result.addOutputData("hw_response", "Hello, " + name);
+
+        result.setStatus(TaskResult.Status.COMPLETED);
+        return result;
+    }
+
+    @Override
+    public int getPollingInterval() {
+        return 1;
+    }
+}
+```
+
+### Step 3: Write *your* application
+
+```java
+    public static void main(String[] args) throws IOException {
+
+        ExecuteWorkflow workflowManagement = new ExecuteWorkflow();
+
+        //Register the workflow definition
+        workflowManagement.registerWorkflowDef();
+
+
+        //Start worker
+        workflowManagement.startWorkers();
+
+        workflowManagement.runSyncWorkflow();
+
+
+    }
+```
+
+> [!NOTE]
+> That's it - you just created your first distributed python app!
+> 
+
+## Using Conductor in your application
+There are three main ways you will use Conductor when building durable, resilient, distributed applications.
+1. Write service workers that implements business logic to accomplish a specific goal - such as initiate payment transfer, get user information from database etc. 
+2. Create Conductor workflows that implements application state - A typical workflow implements SAGA pattern
+3. Use Conductor SDK and APIs to manage workflows from your application.
