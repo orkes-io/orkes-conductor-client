@@ -100,8 +100,8 @@ Create workflow.json with the following:
   "version": 1,
   "tasks": [
     {
-      "name": "greet",
-      "taskReferenceName": "greet_ref",
+      "name": "hello_world",
+      "taskReferenceName": "hello_world",
       "type": "SIMPLE",
       "inputParameters": {
         "name": "${workflow.input.name}"
@@ -135,7 +135,7 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 public class HelloWorld implements Worker {
     @Override
     public String getTaskDefName() {
-        return "hello_world_task";
+        return "hello_world";
     }
 
     @Override
@@ -177,7 +177,7 @@ public class HelloWorld implements Worker {
 ```
 
 > [!NOTE]
-> That's it - you just created your first distributed python app!
+> That's it - you just created your first distributed Java app!
 > 
 
 ## Using Conductor in your application
