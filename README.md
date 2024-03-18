@@ -98,6 +98,7 @@ Create workflow.json with the following:
   "name": "hello",
   "description": "hello workflow",
   "version": 1,
+  "schemaVersion": 2,
   "tasks": [
     {
       "name": "hello_world",
@@ -107,9 +108,7 @@ Create workflow.json with the following:
         "name": "${workflow.input.name}"
       }
     }
-  ],
-  "timeoutPolicy": "TIME_OUT_WF",
-  "timeoutSeconds": 60
+  ]
 }
 ```
 
