@@ -82,12 +82,7 @@ In this section, we will create a simple "Hello World" application that uses Con
 Create `HelloWorld.java` with the following:
 
 ```java
-    private WorkflowDef registerWorkflowDef() throws IOException {
-        InputStream is = ExecuteWorkflow.class.getResourceAsStream("/workflow.json");
-        WorkflowDef workflowDef = objectMapper.readValue(is, WorkflowDef.class);
-        metadataClient.registerWorkflowDef(workflowDef, true);
-        return workflowDef;
-    }
+To Do
 ```
 #### (Alternatively) Use JSON to create workflows
 
@@ -98,17 +93,18 @@ Create workflow.json with the following:
   "name": "hello",
   "description": "hello workflow",
   "version": 1,
-  "schemaVersion": 2,
   "tasks": [
     {
-      "name": "hello_world",
-      "taskReferenceName": "hello_world",
+      "name": "greet",
+      "taskReferenceName": "greet_ref",
       "type": "SIMPLE",
       "inputParameters": {
         "name": "${workflow.input.name}"
       }
     }
-  ]
+  ],
+  "timeoutPolicy": "TIME_OUT_WF",
+  "timeoutSeconds": 60
 }
 ```
 
@@ -121,58 +117,19 @@ http://localhost:8080/api/metadata/workflow -d @workflow.json
 
 ### Step 2: Write Worker
 
-Create a simple worker:
+Create `greetings.java` with a simple worker and workflow function.
 
 > [!note]
 > A single workflow application can have workers written in different languages.
 
 ```java
-import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
-
-public class HelloWorld implements Worker {
-    @Override
-    public String getTaskDefName() {
-        return "hello_world";
-    }
-
-    @Override
-    public TaskResult execute(Task task) {
-        TaskResult result = new TaskResult(task);
-
-        String name = (String) task.getInputData().get("name");
-        result.addOutputData("hw_response", "Hello, " + name);
-
-        result.setStatus(TaskResult.Status.COMPLETED);
-        return result;
-    }
-
-    @Override
-    public int getPollingInterval() {
-        return 1;
-    }
-}
+To Do
 ```
 
 ### Step 3: Write *your* application
 
 ```java
-    public static void main(String[] args) throws IOException {
-
-        ExecuteWorkflow workflowManagement = new ExecuteWorkflow();
-
-        //Register the workflow definition
-        workflowManagement.registerWorkflowDef();
-
-
-        //Start worker
-        workflowManagement.startWorkers();
-
-        workflowManagement.runSyncWorkflow();
-
-
-    }
+To Do
 ```
 
 > [!NOTE]
@@ -180,7 +137,15 @@ public class HelloWorld implements Worker {
 > 
 
 ## Using Conductor in your application
+
 There are three main ways you will use Conductor when building durable, resilient, distributed applications.
+
 1. Write service workers that implements business logic to accomplish a specific goal - such as initiate payment transfer, get user information from database etc. 
 2. Create Conductor workflows that implements application state - A typical workflow implements SAGA pattern
 3. Use Conductor SDK and APIs to manage workflows from your application.
+
+### [Create and Run Conductor Workers](https://github.com/orkes-io/orkes-conductor-client/blob/main/docs/worker/README.md)
+
+### [Create Conductor Workflows](https://github.com/orkes-io/orkes-conductor-client/tree/main/docs/workflow)
+
+### Using Conductor in Your Application
