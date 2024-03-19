@@ -144,8 +144,8 @@ There are three main ways you will use Conductor when building durable, resilien
 2. Create Conductor workflows that implements application state - A typical workflow implements SAGA pattern
 3. Use Conductor SDK and APIs to manage workflows from your application.
 
-### [Create and Run Conductor Workers](https://github.com/orkes-io/orkes-conductor-client/blob/main/docs/worker/README.md)
+### [Create and Run Conductor Workers](https://github.com/RizaFarheen/orkes-conductor-client/tree/sdk-readme-update/docs/worker)
 
-### [Create Conductor Workflows](https://github.com/orkes-io/orkes-conductor-client/tree/main/docs/workflow)
+### [Create Conductor Workflows](https://github.com/RizaFarheen/orkes-conductor-client/tree/sdk-readme-update/docs/worker)
 
-### Using Conductor in Your Application
+### [Using Conductor in Your Application](https://github.com/RizaFarheen/orkes-conductor-client/blob/sdk-readme-update/docs/conductor_apps.md)
