@@ -1,6 +1,6 @@
 # Writing Workers
 
-A Workflow task represents a unit of business logic that achieves a specific goal such as check inventory, initiate payment transfer etc. Worker implements a task in the workflow. (Note: Often times worker and task are used interchangeably in various blogs, docs etc.)
+A Workflow task represents a unit of business logic that achieves a specific goal, such as checking inventory, initiating payment transfer, etc. Worker implements a task in the workflow. (Note: Often, worker and task are used interchangeably in various blogs, docs, etc.)
 
 ## Content
 
@@ -10,11 +10,11 @@ A Workflow task represents a unit of business logic that achieves a specific goa
 
 ## Implementing Workers
 
-The workers can be implemented by writing a simple java function and annotating the function with the @worker_task. Conductor workers are services (similar to microservices) that follow [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle).
+The workers can be implemented by writing a simple Java function and annotating the function with the @worker_task. Conductor workers are services (similar to microservices) that follow the [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle).
 
-Workers can be hosted along with the workflow or running a distributed environment where a single workflow uses workers that are deployed and running in different machines/vms/containers. Whether to keep all the workers in the same application or run them as distributed application is a design and architectural choice. Conductor is well suited for both kind of scenarios.
+Workers can be hosted along with the workflow or run in a distributed environment where a single workflow uses workers deployed and running in different machines/VMs/containers. Whether to keep all the workers in the same application or run them as a distributed application is a design and architectural choice. Conductor is well suited for both kinds of scenarios.
 
-You create or convert any existing java function to a distributed worker by adding @worker_task annotation to it. Here is a simple worker that takes name as input and returns greetings:
+You can create or convert any existing Java function to a distributed worker by adding @worker_task annotation to it. Here is a simple worker that takes name as input and returns greetings:
 
 ```java
 To Do
@@ -22,7 +22,7 @@ To Do
 
 ### Managing workers in your application
 
-Workers use a polling mechanism (with long-poll) to check for any available tasks periodically from server. The startup and shutdown of workers is handled by `conductor.client.automator.task_handler.TaskHandler` class.
+Workers use a polling mechanism (with a long poll) to check for any available tasks from the server periodically. The startup and shutdown of workers are handled by the  `conductor.client.automator.task_handler.TaskHandler` class.
 
 ```java
 To Do
@@ -30,23 +30,23 @@ To Do
 
 ## Design Principles for Workers
 
-Each worker embodies design pattern and follows certain basic principles:
+Each worker embodies the design pattern and follows certain basic principles:
 
-1. Workers are stateless and do not implement a workflow specific logic.
-2. Each worker executes a very specific task and produces well-defined output given specific inputs.
-3. Workers are meant to be idempotent (or should handle cases where the task that partially executed gets rescheduled due to timeouts etc.)
-4. Workers do not implement the logic to handle retries etc., that is taken care by the Conductor server.
+1. Workers are stateless and do not implement a workflow-specific logic.
+2. Each worker executes a particular task and produces well-defined output given specific inputs.
+3. Workers are meant to be idempotent (Should handle cases where the partially executed task, due to timeouts, etc, gets rescheduled).
+4. Workers do not implement the logic to handle retries, etc., that is taken care of by the Conductor server.
 
 ## System Task Workers
 
-A system task worker is a pre-built, general purpose worker that is part of your Conductor server distribution.
+A system task worker is a pre-built, general-purpose worker that is part of your Conductor server distribution.
 
-System tasks automates the repeated tasks such as calling an HTTP endpoint, executing lightweight ECMA compliant javascript code, publishing to an event broker etc.
+System tasks automate repeated tasks such as calling an HTTP endpoint, executing lightweight ECMA-compliant javascript code, publishing to an event broker, etc.
 
 ### Wait Task
 
 > [!tip]
-> Wait is a powerful way to have your system wait for a certain trigger such as an external event, certain date/time or duration such as 2 hours without having to manage threads, background processes or jobs.
+> Wait is a powerful way to have your system wait for a specific trigger, such as an external event, a particular date/time, or duration, such as 2 hours, without having to manage threads, background processes, or jobs.
 
 #### Using code to create WAIT task
 
@@ -69,7 +69,7 @@ To Do
 
 ### HTTP Task
 
-Make a request to an HTTP(S) endpoint. The task allows making GET, PUT, POST, DELETE, HEAD, PATCH requests.
+Make a request to an HTTP(S) endpoint. The task allows making GET, PUT, POST, DELETE, HEAD, and PATCH requests.
 
 #### Using code to create an HTTP task
 
@@ -91,7 +91,7 @@ To Do
 
 ### Javascript Executor Task
 
-Execute ECMA compliant Javascript code. Useful when you need to write a script to do data mapping, calculations etc.
+Execute ECMA-compliant Javascript code. It is useful when you need to write a script for data mapping, calculations, etc.
 
 ```java
 To Do 
@@ -112,9 +112,9 @@ To Do
 }
 ```
 
-### Json Processing using JQ
+### JSON Processing using JQ
 
-[jq](https://jqlang.github.io/jq/) is like sed for JSON data - you can use it to slice and filter and map and transform structured data with the same ease that sed, awk, grep and friends let you play with text.
+[jq](https://jqlang.github.io/jq/) is like sed for JSON data - you can slice, filter, map, and transform structured data with the same ease that sed, awk, grep, and friends let you play with text.
 
 ```java
 To Do
@@ -135,21 +135,20 @@ To Do
 }
 ```
 
-## Worker vs Microservice / HTTP endpoints
+## Worker vs. Microservice / HTTP endpoints
 
 > [!tip] 
-> Workers are a lightweight alternative to exposing an HTTP endpoint and orchestrating using `HTTP` task. 
+> Workers are a lightweight alternative to exposing an HTTP endpoint and orchestrating using `HTTP` tasks. 
 >  Using workers is a recommended approach if you do not need to expose the service over HTTP or gRPC endpoints.
 
 There are several advantages to this approach:
 
-1. **No need for an API management layer** : Given there are no exposed endpoints and workers are self load-balancing.
-2. **Reduced infrastructure footprint** : No need for an API gateway/load balancer.
-3. All the communication is initiated from worker using polling - avoiding need to open up any incoming TCP ports.
-4. Workers **self-regulate** when busy, they only poll as much as they can handle. Backpressure handling is done out of the box.
-5. Workers can be scale up / down easily based on the demand by increasing the no. of processes.
+1. **No need for an API management layer**: Given there are no exposed endpoints and workers are self-load-balancing.
+2. **Reduced infrastructure footprint**: No need for an API gateway/load balancer.
+3. All the communication is initiated by workers using polling - avoiding the need to open up any incoming TCP ports.
+4. Workers **self-regulate** when busy; they only poll as much as they can handle. Backpressure handling is done out of the box.
+5. Workers can be scaled up / down quickly based on the demand by increasing the number of processes.
 
 ## Deploying Workers in production
 
-Conductor workers can run in cloud-native environment or on-prem and can easily be deployed like any other python application. Workers can run a containerized environment, VMs or on bare-metal just like you would deploy your other python applications.
-
+Conductor workers can run in the cloud-native environment or on-prem and can easily be deployed like any other Java application. Workers can run a containerized environment, VMs, or bare metal like you would deploy your other Java applications.

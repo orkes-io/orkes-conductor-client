@@ -1,8 +1,8 @@
 # Conductor Workflows
 
-Workflow can be defined as the collection of tasks and operators that specifies the order and execution of the defined tasks. This orchestration occurs in a hybrid ecosystem that encircles serverless functions, microservices, and monolithic applications.
+Workflow can be defined as the collection of tasks and operators that specify the order and execution of the defined tasks. This orchestration occurs in a hybrid ecosystem that encircles serverless functions, microservices, and monolithic applications.
 
-In this section, we will dive deeper into creating and executing Conductor workflows using Java SDK.
+This section will dive deeper into creating and executing Conductor workflows using Java SDK.
 
 [![GitHub stars](https://img.shields.io/github/stars/conductor-oss/conductor.svg?style=social&label=Star&maxAge=)](https://GitHub.com/conductor-oss/conductor/)
 
@@ -14,17 +14,17 @@ In this section, we will dive deeper into creating and executing Conductor workf
 
 ## Creating Workflows
 
-Conductor lets you create the workflows either using Java or JSON as the configuration.
+Conductor lets you create the workflows using either Java or JSON as the configuration.
 
-Using Java as code to define and execute workflows let you build extremely powerful, dynamic workflows and run them on Conductor.
+Using Java as code to define and execute workflows lets you build extremely powerful, dynamic workflows and run them on Conductor.
 
-When the workflows are fairly static, they can be designed using the Orkes UI (available when using orkes.io) and using APIs or SDKs to register and run the workflows.
+When the workflows are relatively static, they can be designed using the Orkes UI (available when using Orkes Conductor) and APIs or SDKs to register and run the workflows.
 
 Both the code and configuration approaches are equally powerful and similar in nature to how you treat Infrastructure as Code.
 
 ### Execute dynamic workflows using Code
 
-For cases, where the workflows cannot be created statically ahead of the time, Conductor is a powerful dynamic workflow execution platform that lets you create very complex workflows in code and execute them. Useful when the workflow is unique for each execution.
+For cases where the workflows cannot be created statically ahead of time, Conductor is a powerful dynamic workflow execution platform that lets you create very complex workflows in code and execute them. It is useful when the workflow is unique for each execution.
 
 ```java
 To Do
@@ -32,13 +32,13 @@ To Do
 
 See `dynamic_wokflow.java` for a fully functional example.
 
-### Kitchensink Workflow
+### Kitchen-sink Workflow
 
-For more complex workflow example with all the supported features, see `kitchensink.py`.
+For a more complex workflow example with all the supported features, see `kitchensink.py`.
 
 ## Executing Workflows
 
-[WorkflowClient]() interface provides all the APIs required to work with workflow executions.
+The [WorkflowClient]() interface provides all the APIs required to work with workflow executions.
 
 ```java
 To Do 
@@ -54,7 +54,7 @@ To Do
 
 ### Execute Workflow Synchronously
 
-Useful when workflows complete very quickly - usually under 20-30 second.
+Applicable when workflows complete very quickly - usually under 20-30 seconds.
 
 ```java
 To Do
@@ -65,7 +65,7 @@ To Do
 > [!note] 
 > See [workflow_ops.java] for a fully working application that demonstrates working with the workflow executions and sending signals to the workflow to manage its state.
 
-Workflows represent te application state. With Conductor, you can query the workflow execution state anytime during its lifecycle. You can also send Signals to the workflow that determines the outcome of the workflow state.
+Workflows represent the application state. With Conductor, you can query the workflow execution state anytime during its lifecycle. You can also send signals to the workflow that determines the outcome of the workflow state.
 
 [WorkflowClient]() is the client interface used to manage workflow executions.
 
@@ -75,7 +75,7 @@ To Do
 
 ### Get the execution status
 
-The following method lets you query the status of the workflow execution given the id. When the include_tasks is set the response also includes all the completed and in progress tasks.
+The following method lets you query the status of the workflow execution given the id. When the include_tasks is set, the response also includes all the completed and in-progress tasks.
 
 ```java
 To Do
@@ -83,7 +83,7 @@ To Do
 
 ### Update workflow state variables
 
-Variables inside a workflow are the equivalent to global variables in a program.
+Variables inside a workflow are the equivalent of global variables in a program.
 
 ```java
 To Do
@@ -91,7 +91,7 @@ To Do
 
 ### Terminate running workflows
 
-Terminates a running workflow. Any pending tasks are cancelled and no further work is scheduled for this workflow upon termination. A failure workflow will be triggered, but can be avoided if `trigger_failure_workflow` is set to False.
+Used to terminate a running workflow. Any pending tasks are canceled, and no further work is scheduled for this workflow upon termination. A failure workflow will be triggered but can be avoided if `trigger_failure_workflow` is set to False.
 
 ```java
 To Do
@@ -99,7 +99,7 @@ To Do
 
 ### Retry failed workflows
 
-If the workflow has failed due to one of the task failure after exhausting the retries for the task, the workflow can still be resumed by calling the retry.
+If the workflow has failed due to one of the task failures after exhausting the retries for the task, the workflow can still be resumed by calling the retry.
 
 ```java
 To Do
@@ -112,7 +112,7 @@ When a sub-workflow inside a workflow has failed, there are two options:
 
 ### Restart workflows
 
-A workflow in the terminal state (COMPLETED, TERMINATED, FAILED) can be restarted from the beginning. Useful when retrying from the last failed task is not enough and the whole workflow needs to be started again.
+A workflow in the terminal state (COMPLETED, TERMINATED, FAILED) can be restarted from the beginning. Useful when retrying from the last failed task is insufficient, and the whole workflow must be started again.
 
 ```java
 To Do
@@ -120,18 +120,18 @@ To Do
 
 ### Rerun a workflow from a specific task
 
-In the cases where a workflow needs to be restarted from a specific task rather than from the beginning, re-run provides that option. When issuing the re-run command to the workflow, you have the ability to specify the id of the task from where the workflow should be restarted (as opposed to from the beginning) and optionally, the input of the workflow can also be changed:
+In the cases where a workflow needs to be restarted from a specific task rather than from the beginning, rerun provides that option. When issuing the rerun command to the workflow, you can specify the id of the task from where the workflow should be restarted (as opposed to from the beginning), and optionally, the input of the workflow can also be changed.
 
 ```java
 To Do
 ```
 
 > [!tip] 
-> Re-run is one of the most powerful feature Conductor has, givingin you unparalleled control over the workflow restart
+> Rerun is one of the most powerful features Conductor has, giving you unparalleled control over the workflow restart.
 
 ### Pause a running workflow
 
-A running workflow can be put to a PAUSED status. A paused workflow lets the currently running tasks complete, but does not schedule any new tasks until resumed.
+A running workflow can be put to a PAUSED status. A paused workflow lets the currently running tasks complete but does not schedule any new tasks until resumed.
 
 ```java
 To Do
@@ -147,16 +147,16 @@ To Do
 
 ## Searching for workflows
 
-Workflow executions are retained until removed from Conductor. This gives complete visibility into all the executions an application has - regardless of the number of executions. Conductor has a poewrful search API that allows you to search for workflow executions.
+Workflow executions are retained until removed from Conductor. This gives complete visibility into all the executions an application has - regardless of the number of executions. Conductor has a powerful search API that allows you to search for workflow executions.
 
 ```java
 To Do
 ```
 
 - **free_text:** Free text search to look for specific words in the workflow and task input/output
-- **query** - SQL like query to search against specific fields in the workflow.
+- **query** -  SQL-like query to search against specific fields in the workflow.
 
-Here are the supported fields for query:
+Here are the supported fields for the query:
 
 | Field |  Description |
 | ----- | ------------ |
@@ -164,23 +164,23 @@ Here are the supported fields for query:
 | correlationId | The ID to correlate the workflow execution to other executions. | 
 | workflowType | The name of the workflow. | 
 | version | The version of the workflow. | 
-| startTime	| Start time of the workflow in milliseconds. |
+| startTime	| The start time of the workflow is in milliseconds. |
 
 ## Handling Failures, Retries and Rate Limits
 
-Conductor lets you embrace failures rather than worry about failures and complexities that are introduced in the system to handle failures.
+Conductor lets you embrace failures rather than worry about the complexities introduced in the system to handle failures.
 
-All the aspect of handling failures, retries, rate limits etc. are driven by the configuration that can be updated in real-time without having to re-deploy your application.
+All the aspects of handling failures, retries, rate limits, etc., are driven by the configuration that can be updated in real-time without re-deploying your application.
 
 ### Retries
 
-Each task in Conductor workflow can be configured to handle failures with retries, along with the retry policy (linear, fixed, exponential backoff) and max. number of retry attempts allowed.
+Each task in the Conductor workflow can be configured to handle failures with retries, along with the retry policy (linear, fixed, exponential backoff) and maximum number of retry attempts allowed.
 
 See [Error Handling](https://orkes.io/content/error-handling) for more details.
 
 ### Rate Limits
 
-What happens when a task is operating on a critical resource that can only handle so many requests at a time? Tasks can be configured to have a fixed concurrency (X request at a time) or a rate (Y tasks / time window).
+What happens when a task is operating on a critical resource that can only handle few requests at a time? Tasks can be configured to have a fixed concurrency (X request at a time) or a rate (Y tasks/time window).
 
 #### Task Registration
 

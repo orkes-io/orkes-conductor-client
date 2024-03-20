@@ -1,8 +1,8 @@
 # Conductor Java SDK
 
-Conductor is an open source distributed, scalable and highly available orchestration platform that allows developers to build powerful distributed applications. You can find the documentation for Conductor here: [Conductor Docs](https://orkes.io/content).
+Conductor is thean open-source orchestration platform allowing developers to build highly scalable distributed applications. You can find the documentation for Conductor here: [Conductor Docs](https://orkes.io/content).
 
-This repository provides a Java client for Orkes Conductor Server. 
+This repository provides a Java client for the Orkes Conductor Server. 
 
 ## ⭐ Conductor OSS
 Show support for the Conductor OSS.  Please help spread the awareness by starring Conductor repo.
@@ -41,7 +41,7 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 
 ### Conductor Server Settings
 
-Everything related to server settings should be done within the `ApiClient` class, by setting the required parameters when initializing an object, like this:
+Everything related to server settings should be done within the `ApiClient` class by setting the required parameters when initializing an object, like this:
 
 ```java
 ApiClient apiClient = new ApiClient("CONDUCTOR_SERVER_URL");
@@ -52,7 +52,7 @@ If you are using Spring Framework, we can initialize the above class as a bean t
 
 (Optionally) If you are using a Conductor server that requires authentication:
 
-- [Obtain the key and secret from Conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control) 
+- [Obtain the key and secret from the Conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control) 
 
 Once you have a key and secret, you can configure the app from properties or environment variables, as shown below:
 
@@ -69,7 +69,7 @@ Once you have a key and secret, you can configure the app from properties or env
 docker run --init -p 8080:8080 -p 5000:5000 conductoross/conductor-standalone:3.15.0
 ```
 
-After starting the server navigate to http://localhost:5000 to ensure the server has started successfully.
+After starting the server, navigate to http://localhost:5000 to ensure the server has started successfully.
 
 ## Simple Hello World Application using Conductor
 
@@ -138,14 +138,14 @@ To Do
 
 ## Using Conductor in your application
 
-There are three main ways you will use Conductor when building durable, resilient, distributed applications.
+There are three main ways you can use Conductor when building durable, resilient, distributed applications.
 
-1. Write service workers that implements business logic to accomplish a specific goal - such as initiate payment transfer, get user information from database etc. 
-2. Create Conductor workflows that implements application state - A typical workflow implements SAGA pattern
+1. Write service workers that implement business logic to accomplish a specific goal - such as initiating payment transfer, getting user information from the database, etc.
+2. Create Conductor workflows that implement application state - A typical workflow implements the saga pattern.
 3. Use Conductor SDK and APIs to manage workflows from your application.
 
 ### [Create and Run Conductor Workers](https://github.com/RizaFarheen/orkes-conductor-client/tree/sdk-readme-update/docs/worker)
 
-### [Create Conductor Workflows](https://github.com/RizaFarheen/orkes-conductor-client/tree/sdk-readme-update/docs/worker)
+### [Create Conductor Workflows](https://github.com/RizaFarheen/orkes-conductor-client/blob/sdk-readme-update/docs/workflow/README.md)
 
 ### [Using Conductor in Your Application](https://github.com/RizaFarheen/orkes-conductor-client/blob/sdk-readme-update/docs/conductor_apps.md)
