@@ -1,6 +1,6 @@
 # Conductor Java SDK
 
-Conductor is thean open-source orchestration platform allowing developers to build highly scalable distributed applications. You can find the documentation for Conductor here: [Conductor Docs](https://orkes.io/content).
+Conductor is the leading open-source orchestration platform allowing developers to build highly scalable distributed applications. You can find the documentation for Conductor here: [Conductor Docs](https://orkes.io/content).
 
 This repository provides a Java client for the Orkes Conductor Server. 
 
