@@ -58,13 +58,10 @@ import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 public class WorkflowCreator {
-
     private final WorkflowExecutor executor;
-
     public WorkflowCreator(WorkflowExecutor executor) {
         this.executor = executor;
     }
-
     public ConductorWorkflow<WorkflowInput> createSimpleWorkflow() {
         ConductorWorkflow<WorkflowInput> workflow = new ConductorWorkflow<>(executor);
         workflow.setName("hello");
@@ -72,7 +69,6 @@ public class WorkflowCreator {
         SimpleTask greetingsWF = new SimpleTask("greetings", "greetings");
         greetingsWF.input("name", "${workflow.input.name}");
         workflow.add(greetingsWF);
-
         return workflow;
     }
 }
@@ -90,7 +86,6 @@ public class WorkflowInput {
     public String getName() {
             return name;
     }
-    
     public void setName(String name) {
         this.name = name;
     }
@@ -142,12 +137,10 @@ import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 
 public class ConductorWorkers {
-
     @WorkerTask("greetings")
     public void greeting(@InputParam("name") String name) {
         System.out.println("Hello my friend " + name);
     }
-
 }
 ```
 
@@ -172,7 +165,6 @@ import io.orkes.samples.quickstart.workflow.WorkflowCreator;
 import io.orkes.samples.quickstart.workflow.WorkflowInput;
 
 public class Main {
-
     public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
         SDKUtils utils = new SDKUtils();
         WorkflowCreator workflowCreator = new WorkflowCreator(utils.getWorkflowExecutor());
@@ -190,10 +182,9 @@ public class Main {
         utils.shutdown();
         System.exit(0);
     }
-
 }
 ```
-
+### Step 4: Create the SDKUtils
 Create `utils/SDKUtils.java` with the following:
 
 ```java
@@ -247,19 +238,14 @@ public class SDKUtils {
         this.metadataClient = orkesClients.getMetadataClient();
         this.workflowClient = orkesClients.getWorkflowClient();
         this.taskClient = orkesClients.getTaskClient();
-        this.workflowExecutor =
-                new WorkflowExecutor(this.taskClient, this.workflowClient, this.metadataClient, 10);
+        this.workflowExecutor = new WorkflowExecutor(this.taskClient, this.workflowClient, this.metadataClient, 10);
         this.workflowExecutor.initWorkers("io.orkes.samples.quickstart.workers");
         initWorkers(Arrays.asList());
     }
 
     private void initWorkers(List<Worker> workers) {
-
-        TaskRunnerConfigurer.Builder builder =
-                new TaskRunnerConfigurer.Builder(taskClient, workers);
-
+        TaskRunnerConfigurer.Builder builder = new TaskRunnerConfigurer.Builder(taskClient, workers);
         taskRunner = builder.withThreadCount(1).withTaskPollTimeout(5).build();
-
         // Start Polling for tasks and execute them
         taskRunner.init();  
     }
@@ -286,8 +272,9 @@ public class SDKUtils {
 }
 ```
 
-### Running your distributed workflow
-## Conductor Server Settings
+## Running your distributed workflow locally
+
+### Conductor Server Settings
 
 Everything related to server settings should be done within the `ApiClient` class by setting the required parameters when initializing an object, like this:
 
@@ -296,7 +283,7 @@ ApiClient apiClient = new ApiClient("CONDUCTOR_SERVER_URL");
 ```
 If you are using Spring Framework, we can initialize the above class as a bean that can be used across the project.
 
-## Start Conductor Server
+### Start Conductor Server
 
 ```
 docker run --init -p 8080:8080 -p 5000:5000 conductoross/conductor-standalone:3.15.0
@@ -310,7 +297,7 @@ Update the Conductor Server URL
 ```java
  export CONDUCTOR_SERVER_URL="https://[cluster-name].orkesconductor.io/api"
 ```
-## [How to obtain the key and secret from the conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control)
+### [How to obtain the key and secret from the conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control)
 
 ```
 export KEY=your_key

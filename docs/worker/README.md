@@ -14,19 +14,36 @@ The workers can be implemented by writing a simple Java function and annotating 
 
 Workers can be hosted along with the workflow or run in a distributed environment where a single workflow uses workers deployed and running in different machines/VMs/containers. Whether to keep all the workers in the same application or run them as a distributed application is a design and architectural choice. Conductor is well suited for both kinds of scenarios.
 
-You can create or convert any existing Java function to a distributed worker by adding @worker_task annotation to it. Here is a simple worker that takes name as input and returns greetings:
+You can create or convert any existing Java function to a distributed worker by adding @WorkerTask annotation to it. Here is a simple worker that takes name as input and returns greetings:
 
 ```java
-To Do
+package io.orkes.samples.quickstart.workers;
+
+import com.netflix.conductor.sdk.workflow.task.InputParam;
+import com.netflix.conductor.sdk.workflow.task.WorkerTask;
+
+public class ConductorWorkers {
+
+    @WorkerTask("greetings")
+    public void greeting(@InputParam("name") String name) {
+        System.out.println("Hello my friend " + name);
+    }
+
+}
 ```
 
 ### Managing workers in your application
 
-Workers use a polling mechanism (with a long poll) to check for any available tasks from the server periodically. The startup and shutdown of workers are handled by the  `conductor.client.automator.task_handler.TaskHandler` class.
+Workers use a polling mechanism (with a long poll) to check for any available tasks from the server periodically. The startup and shutdown of workers are handled by the  `conductor.client.automator.TaskRunnerConfigurer` class.
 
 ```java
-To Do
+WorkflowExecutor executor = new WorkflowExecutor("http://server/api/");
+/*List of packages  (comma separated) to scan for annotated workers.  
+  Please note, the worker method MUST be public and the class in which they are defined
+  MUST have a no-args constructor*/       
+executor.initWorkers("com.company.package1,com.company.package2");
 ```
+Check utils/SDKUtils.java [Line 52, Line 53]
 
 ## Design Principles for Workers
 
@@ -51,7 +68,12 @@ System tasks automate repeated tasks such as calling an HTTP endpoint, executing
 #### Using code to create WAIT task
 
 ```java
-To Do
+/* Wait for a specific duration */
+  Wait waitTask = new Wait("wait_for_2_sec",Duration.ofMillis(1000));
+ /* Wait using Datetime */
+  ZonedDateTime zone = ZonedDateTime.parse("2020-10-05T08:20:10+05:30[Asia/Kolkata]");
+  Wait waitTask = new Wait("wait_till_2days",zone);
+  workflow.add(waitTask);//workflow is an object of ConductorWorkflow<WorkflowInput>
 ```
 
 #### JSON Configuration
@@ -74,7 +96,9 @@ Make a request to an HTTP(S) endpoint. The task allows making GET, PUT, POST, DE
 #### Using code to create an HTTP task
 
 ```java
-To Do
+Http httptask = new Http("mytask");
+httptask.url("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
+workflow.add(httptask);//workflow is an object of ConductorWorkflow<WorkflowInput>
 ```
 
 #### JSON Configuration
