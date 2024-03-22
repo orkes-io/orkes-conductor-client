@@ -15,6 +15,30 @@ Show support for the Conductor OSS.  Please help spread the awareness by starrin
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## Set Up Conductor Java SDK
+
+Add `orkes-conductor-client` dependency to your project.
+
+### Gradle
+
+For Gradle-based projects, modify the `build.gradle` file in the project directory by adding the following line to the dependencies block in that file:
+
+```
+implementation 'io.orkes.conductor:orkes-conductor-client:2.0.1'
+```
+
+### Maven
+
+For Maven-based projects, modify the `pom.xml` file in the project directory by adding the following XML snippet within the `dependencies` section:
+
+```
+<dependency>
+  <groupId>io.orkes.conductor</groupId>
+  <artifactId>orkes-conductor-client</artifactId>
+  <version>1.1.14</version>
+</dependency>
+```
+
 ## Simple Hello World Application using Conductor
 
 In this section, we will create a simple "Hello World" application that uses Conductor.
@@ -54,8 +78,10 @@ public class WorkflowCreator {
 }
 ```
 Create `workflow/WorkflowInput.java` with the following:
+
 ```java
 package io.orkes.samples.quickstart.workflow;
+
 public class WorkflowInput {
     private String name;
     public WorkflowInput(String name) {
@@ -70,6 +96,7 @@ public class WorkflowInput {
     }
 }
 ```
+
 #### (Alternatively) Use JSON to create workflows
 
 Create workflow.json with the following:
@@ -260,31 +287,7 @@ public class SDKUtils {
 ```
 
 ### Running your distributed workflow
-
-## Set Up Conductor Java SDK
-
-Add `orkes-conductor-client` dependency to your project.
-
-### Gradle
-
-For Gradle-based projects, modify the `build.gradle` file in the project directory by adding the following line to the dependencies block in that file:
-
-```
-implementation 'io.orkes.conductor:orkes-conductor-client:2.0.1'
-```
-
-### Maven
-
-For Maven-based projects, modify the `pom.xml` file in the project directory by adding the following XML snippet within the `dependencies` section:
-
-```
-<dependency>
-  <groupId>io.orkes.conductor</groupId>
-  <artifactId>orkes-conductor-client</artifactId>
-  <version>1.1.14</version>
-</dependency>
-```
-### Conductor Server Settings
+## Conductor Server Settings
 
 Everything related to server settings should be done within the `ApiClient` class by setting the required parameters when initializing an object, like this:
 
