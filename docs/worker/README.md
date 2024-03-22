@@ -23,12 +23,10 @@ import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 
 public class ConductorWorkers {
-
     @WorkerTask("greetings")
     public void greeting(@InputParam("name") String name) {
         System.out.println("Hello my friend " + name);
     }
-
 }
 ```
 
@@ -118,7 +116,14 @@ workflow.add(httptask);//workflow is an object of ConductorWorkflow<WorkflowInpu
 Execute ECMA-compliant Javascript code. It is useful when you need to write a script for data mapping, calculations, etc.
 
 ```java
-To Do 
+ Javascript jstask = new Javascript("hello_script",
+                  """function greetings(name) {
+                     return {
+                        "text": "hello " + name
+                            }
+                      }
+                    greetings("Orkes");""");
+  workflow.add(jstask);
 ```
 
 #### JSON Configuration
