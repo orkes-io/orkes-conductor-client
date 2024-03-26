@@ -37,7 +37,7 @@ Workers use a polling mechanism (with a long poll) to check for any available ta
 ```java
 WorkflowExecutor executor = new WorkflowExecutor("http://server/api/");
 /*List of packages  (comma separated) to scan for annotated workers.  
-  Please note, the worker method MUST be public and the class in which they are defined
+  Please note the worker method MUST be public, and the class in which they are defined
   MUST have a no-args constructor*/       
 executor.initWorkers("com.company.package1,com.company.package2");
 ```
@@ -54,7 +54,7 @@ Each worker embodies the design pattern and follows certain basic principles:
 
 ## System Task Workers
 
-A system task worker is a pre-built, general-purpose worker that is part of your Conductor server distribution.
+A system task worker is a pre-built, general-purpose worker in your Conductor server distribution.
 
 System tasks automate repeated tasks such as calling an HTTP endpoint, executing lightweight ECMA-compliant javascript code, publishing to an event broker, etc.
 
@@ -89,7 +89,7 @@ System tasks automate repeated tasks such as calling an HTTP endpoint, executing
 
 ### HTTP Task
 
-Make a request to an HTTP(S) endpoint. The task allows making GET, PUT, POST, DELETE, HEAD, and PATCH requests.
+Make a request to an HTTP(S) endpoint. The task allows for GET, PUT, POST, DELETE, HEAD, and PATCH requests.
 
 #### Using code to create an HTTP task
 
@@ -113,7 +113,7 @@ workflow.add(httptask);//workflow is an object of ConductorWorkflow<WorkflowInpu
 
 ### Javascript Executor Task
 
-Execute ECMA-compliant Javascript code. It is useful when you need to write a script for data mapping, calculations, etc.
+Execute ECMA-compliant Javascript code. It is useful when writing a script for data mapping, calculations, etc.
 
 ```java
  Javascript jstask = new Javascript("hello_script",
