@@ -53,6 +53,28 @@ Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
 String status = String.valueOf(workflowRun.getStatus());
 assertEquals(status,"COMPLETED");
 ```
+You can add the JUnit dependency by adding the following to your project
+### Gradle
+
+For Gradle-based projects, modify the `build.gradle` file in the project directory by adding the following line to the dependencies block in that file:
+
+```
+testImplementation "org.junit.jupiter:junit-jupiter-api:{{VERSION}}"
+testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:{{VERSION}}"
+```
+
+### Maven
+
+For Maven-based projects, modify the `pom.xml` file in the project directory by adding the following XML snippet within the `dependencies` section:
+
+```
+<dependency>
+  <groupId>junit</groupId>
+  <artifactId>junit</artifactId>
+  <version>{{VERSION}}</version>
+  <scope>test</scope>
+</dependency>
+```
 
 >[!note]
 >Workflow workers are your regular Java functions and can be tested with any of the available testing frameworks.
