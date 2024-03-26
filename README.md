@@ -1,6 +1,8 @@
 # Conductor Java SDK
 
-Conductor is the leading open-source orchestration platform allowing developers to build highly scalable distributed applications. You can find the documentation for Conductor here: [Conductor Docs](https://orkes.io/content).
+Conductor is the leading open-source orchestration platform allowing developers to build highly scalable distributed applications. 
+
+Check out the [official documentation for Conductor](https://orkes.io/content).
 
 This repository provides a Java client for the Orkes Conductor Server. 
 
@@ -95,7 +97,7 @@ public class WorkflowInput {
 
 #### (Alternatively) Use JSON to Create Workflows
 
-Create workflow.json with the following:
+Create `workflow.json` with the following:
 
 ```json
 {
@@ -145,7 +147,7 @@ public class ConductorWorkers {
 }
 ```
 
-### Step 3: Write *your* application
+### Step 3: Write *Your* Application
 
 Create `Main.java` with the following:
 
@@ -185,7 +187,7 @@ public class Main {
     }
 }
 ```
-### Step 4: Create the SDKUtils
+### Step 4: Create SDKUtils
 Create `utils/SDKUtils.java` with the following:
 
 ```java
@@ -291,31 +293,31 @@ docker run --init -p 8080:8080 -p 5000:5000 conductoross/conductor-standalone:3.
 ```
 After starting the server, navigate to http://localhost:5000 to ensure the server has started successfully. 
 
-Run the application from your IDE, open your Web Browser and check the **Executions** tab.
+Run the application from your IDE, open Conductor UI and check the **Executions** tab.
 
 ## Running Workflow in Orkes Conductor
 
 For running the workflow in Orkes Conductor, 
 
-- Update the Conductor server URL to your cluster name:
+- Update the Conductor server URL to your cluster name.
 
 ```java
  export CONDUCTOR_SERVER_URL="https://[your-cluster-name].orkesconductor.io/api"
 ```
 
-- [Obtain the key and secret from Conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control) and replace with your values
+- [Obtain the key and secret from the Conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control) and replace them with your values.
 
 ```
 export KEY=your_key
 export SECRET=your_secret
 ```
-Now run the application from IDE and view the results in Web Browser.
+Now, run the application from IDE and view the results from Conductor UI.
 
 > [!NOTE]
 > That's it - you just created and executed your first distributed Java app!
 > 
 
-## Using Conductor in your application
+## Using Conductor in Your Application
 
 There are three main ways you can use Conductor when building durable, resilient, distributed applications.
 
