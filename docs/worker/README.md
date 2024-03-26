@@ -1,6 +1,6 @@
 # Writing Workers
 
-A Workflow task represents a unit of business logic that achieves a specific goal, such as checking inventory, initiating payment transfer, etc. Worker implements a task in the workflow. (Note: Often, worker and task are used interchangeably in various blogs, docs, etc.)
+A Workflow task represents a unit of business logic that achieves a specific goal, such as checking inventory, initiating payment transfer, etc. A worker implements a task in the workflow. 
 
 ## Content
 
@@ -41,7 +41,7 @@ WorkflowExecutor executor = new WorkflowExecutor("http://server/api/");
   MUST have a no-args constructor*/       
 executor.initWorkers("com.company.package1,com.company.package2");
 ```
-Check utils/SDKUtils.java [Line 52, Line 53]
+Check [utils/SDKUtils.java](https://github.com/RizaFarheen/orkes-conductor-client/blob/sdk-readme-update/example/HelloWorld/utils/SDKUtils.java#L52C10-L53C82).
 
 ## Design Principles for Workers
 

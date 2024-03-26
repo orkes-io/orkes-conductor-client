@@ -305,7 +305,7 @@ For running the workflow in Orkes Conductor,
  export CONDUCTOR_SERVER_URL="https://[your-cluster-name].orkesconductor.io/api"
 ```
 
-- [Obtain the key and secret from the Conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control) and replace them with your values.
+- [Obtain the key and secret from the Conductor server](https://orkes.io/content/how-to-videos/access-key-and-secret) and replace them with your values.
 
 ```
 export KEY=your_key
