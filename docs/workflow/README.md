@@ -90,7 +90,7 @@ public class ConductorWorkers {
 
 See `dynamic_wokflow.java` for a fully functional example.
 
-### Kitchen-sink Workflow
+### Kitchen-Sink Workflow
 
 For a more complex workflow example with all the supported features, see `kitchensink.py`.
 

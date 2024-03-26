@@ -63,7 +63,7 @@ System tasks automate repeated tasks such as calling an HTTP endpoint, executing
 > [!tip]
 > Wait is a powerful way to have your system wait for a specific trigger, such as an external event, a particular date/time, or duration, such as 2 hours, without having to manage threads, background processes, or jobs.
 
-#### Using Code to Create WAIT Task
+#### Using Code to Create Wait Task
 
 ```java
 /* Wait for a specific duration */
@@ -91,7 +91,7 @@ System tasks automate repeated tasks such as calling an HTTP endpoint, executing
 
 Make a request to an HTTP(S) endpoint. The task allows for GET, PUT, POST, DELETE, HEAD, and PATCH requests.
 
-#### Using Code to Create an HTTP Task
+#### Using Code to Create HTTP Task
 
 ```java
 Http httptask = new Http("mytask");
@@ -143,7 +143,7 @@ Execute ECMA-compliant Javascript code. It is useful when writing a script for d
 
 ### JSON Processing using JQ
 
-[jq](https://jqlang.github.io/jq/) is like sed for JSON data - you can slice, filter, map, and transform structured data with the same ease that sed, awk, grep, and friends let you play with text.
+[Jq](https://jqlang.github.io/jq/) is like sed for JSON data - you can slice, filter, map, and transform structured data with the same ease that sed, awk, grep, and friends let you play with text.
 
 ```java
 To Do
@@ -164,7 +164,7 @@ To Do
 }
 ```
 
-## Worker vs. Microservice/HTTP endpoints
+## Worker vs. Microservice/HTTP Endpoints
 
 > [!tip] 
 > Workers are a lightweight alternative to exposing an HTTP endpoint and orchestrating using `HTTP` tasks. 

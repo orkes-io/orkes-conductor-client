@@ -42,7 +42,7 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 </dependency>
 ```
 
-## Simple Hello World Application using Conductor
+## Simple Hello World Application Using Conductor
 
 In this section, we will create a simple "Hello World" application that uses Conductor.
 

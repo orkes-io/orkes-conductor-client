@@ -8,7 +8,7 @@ Conductor SDKs are very lightweight and can easily be added to your existing or 
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Adding Conductor SDK to your application
+## Adding Conductor SDK to Your Application
 
 Add `orkes-conductor-client` dependency to your project.
 
@@ -83,7 +83,7 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 
 See `test_workflows.java` for a fully functional example of how to test a moderately complex workflow with branches.
 
-## Workflow Deployments using CI/CD
+## Workflow Deployments Using CI/CD
 
 >[!tip]
 >Treat your workflow definitions just like your code. Suppose you are defining the workflows using UI. In that case, we recommend checking the JSON configuration into the version control and using your development workflow for CI/CD to promote the workflow definitions across various environments such as Dev, Test, and Prod.
