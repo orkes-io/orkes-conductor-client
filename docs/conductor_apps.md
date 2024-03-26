@@ -1,6 +1,6 @@
 # Using Conductor in Your Application
 
-Conductor SDKs are very lightweight and can easily be added to your existing or new Java app. In this section, we will dive deeper into integrating Conductor in your application.
+Conductor SDKs are lightweight and can easily be added to your existing or new Java app. This section will dive deeper into integrating Conductor in your application.
 
 ## Content
 
@@ -34,14 +34,14 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 
 ## Testing Workflows
 
-Conductor SDK for Java provides a full feature testing framework for your workflow-based applications. The framework works well with any testing framework you prefer to use without imposing any specific framework.
+Conductor SDK for Java provides a complete feature testing framework for your workflow-based applications. The framework works well with any testing framework you prefer without imposing any specific framework.
 
-The Conductor server provide a test endpoint `POST /api/workflow/test` that allows you to post a workflow along with the test execution data to evaluate the workflow.
+The Conductor server provides a test endpoint `POST /api/workflow/test` that allows you to post a workflow along with the test execution data to evaluate the workflow.
 
 The goal of the test framework is as follows:
 
 1. Ability to test the various branches of the workflow.
-2. Confirm the execution of the workflow and tasks given a fixed set of inputs and outputs.
+2. Confirm the workflow execution and tasks given a fixed set of inputs and outputs.
 3. Validate that the workflow completes or fails given specific inputs.
 
 Here are example assertions from the test:
@@ -53,7 +53,8 @@ Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
 String status = String.valueOf(workflowRun.getStatus());
 assertEquals(status,"COMPLETED");
 ```
-You can add the JUnit dependency by adding the following to your project
+You can add the JUnit dependency by adding the following to your project.
+
 ### Gradle
 
 For Gradle-based projects, modify the `build.gradle` file in the project directory by adding the following line to the dependencies block in that file:
@@ -77,7 +78,7 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 ```
 
 >[!note]
->Workflow workers are your regular Java functions and can be tested with any of the available testing frameworks.
+>Workflow workers are your regular Java functions and can be tested with any available testing framework.
 
 ### Example Unit Testing Application
 

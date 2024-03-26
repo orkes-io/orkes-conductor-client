@@ -182,7 +182,7 @@ To Do
 
 ### Rerun Workflow from a Specific Task
 
-In the cases where a workflow needs to be restarted from a specific task rather than from the beginning, rerun provides that option. When issuing the rerun command to the workflow, you can specify the id of the task from where the workflow should be restarted (as opposed to from the beginning), and optionally, the input of the workflow can also be changed.
+In the cases where a workflow needs to be restarted from a specific task rather than from the beginning, rerun provides that option. When issuing the rerun command to the workflow, you can specify the task ID from where the workflow should be restarted (as opposed to from the beginning), and optionally, the workflow's input can also be changed.
 
 ```java
 To Do
@@ -193,7 +193,7 @@ To Do
 
 ### Pause Running Workflow
 
-A running workflow can be put to a PAUSED status. A paused workflow lets the currently running tasks complete but does not schedule any new tasks until resumed.
+A running workflow can be put to a **PAUSED** status. A paused workflow lets the currently running tasks complete but does not schedule any new tasks until resumed.
 
 ```java
 To Do
@@ -209,7 +209,7 @@ To Do
 
 ## Searching for Workflows
 
-Workflow executions are retained until removed from Conductor. This gives complete visibility into all the executions an application has - regardless of the number of executions. Conductor has a powerful search API that allows you to search for workflow executions.
+Workflow executions are retained until removed from the Conductor. This gives complete visibility into all the executions an application has - regardless of the number of executions. Conductor has a powerful search API that allows you to search for workflow executions.
 
 ```java
 To Do
@@ -232,7 +232,7 @@ Here are the supported fields for the query:
 
 Conductor lets you embrace failures rather than worry about the complexities introduced in the system to handle failures.
 
-All the aspects of handling failures, retries, rate limits, etc., are driven by the configuration that can be updated in real-time without re-deploying your application.
+All the aspects of handling failures, retries, rate limits, etc., are driven by the configuration that can be updated in real time without re-deploying your application.
 
 ### Retries
 
@@ -242,7 +242,7 @@ See [Error Handling](https://orkes.io/content/error-handling) for more details.
 
 ### Rate Limits
 
-What happens when a task is operating on a critical resource that can only handle few requests at a time? Tasks can be configured to have a fixed concurrency (X request at a time) or a rate (Y tasks/time window).
+What happens when a task is operating on a critical resource that can only handle a few requests at a time? Tasks can be configured to have a fixed concurrency (X request at a time) or a rate (Y tasks/time window).
 
 #### Task Registration
 
