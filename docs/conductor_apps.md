@@ -10,8 +10,26 @@ Conductor SDKs are very lightweight and can easily be added to your existing or 
 
 ## Adding Conductor SDK to your application
 
-```java
-To Do
+Add `orkes-conductor-client` dependency to your project.
+
+### Gradle
+
+For Gradle-based projects, modify the `build.gradle` file in the project directory by adding the following line to the dependencies block in that file:
+
+```
+implementation 'io.orkes.conductor:orkes-conductor-client:2.0.1'
+```
+
+### Maven
+
+For Maven-based projects, modify the `pom.xml` file in the project directory by adding the following XML snippet within the `dependencies` section:
+
+```
+<dependency>
+  <groupId>io.orkes.conductor</groupId>
+  <artifactId>orkes-conductor-client</artifactId>
+  <version>1.1.14</version>
+</dependency>
 ```
 
 ## Testing your workflows
