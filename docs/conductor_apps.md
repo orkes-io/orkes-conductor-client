@@ -53,7 +53,7 @@ Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
 String status = String.valueOf(workflowRun.getStatus());
 assertEquals(status,"COMPLETED");
 ```
-You can add the JUnit dependency by adding the following to your project.
+You can add the JUnit dependency by adding the following to your project:
 
 ### Gradle
 

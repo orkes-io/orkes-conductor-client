@@ -26,7 +26,8 @@ Both the code and configuration approaches are equally powerful and similar in n
 
 For cases where the workflows cannot be created statically ahead of time, Conductor is a powerful dynamic workflow execution platform that lets you create very complex workflows in code and execute them. It is useful when the workflow is unique for each execution.
 
-WorkflowCreator.java
+`WorkflowCreator.java`
+
 ```java
 import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
 import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
@@ -64,7 +65,9 @@ public class WorkflowCreator {
     
 }
 ```
-ConductorWorkers.java
+
+`ConductorWorkers.java`
+
 ```java
 package io.orkes.samples.quickstart.workers;
 
@@ -92,11 +95,11 @@ See `dynamic_wokflow.java` for a fully functional example.
 
 ### Kitchen-Sink Workflow
 
-For a more complex workflow example with all the supported features, see `kitchensink.py`.
+For a more complex workflow example with all the supported features, see `kitchensink.java`.
 
 ## Executing Workflows
 
-The [WorkflowClient]() interface provides all the APIs required to work with workflow executions.
+The [WorkflowClient] interface provides all the APIs required to work with workflow executions.
 
 ```java
 import com.netflix.conductor.client.http.WorkflowClient;
@@ -129,7 +132,7 @@ Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
 
 Workflows represent the application state. With Conductor, you can query the workflow execution state anytime during its lifecycle. You can also send signals to the workflow that determines the outcome of the workflow state.
 
-[WorkflowClient]() is the client interface used to manage workflow executions.
+[WorkflowClient] is the client interface used to manage workflow executions.
 
 ```java
 To Do 
@@ -170,7 +173,7 @@ To Do
 When a sub-workflow inside a workflow has failed, there are two options:
 
 1. Re-trigger the sub-workflow from the start (Default behavior).
-2. Resume the `sub-workflow` from the failed task (set `resume_subworkflow_tasks` to True)
+2. Resume the `sub-workflow` from the failed task (set `resume_subworkflow_tasks` to True).
 
 ### Restart Workflows
 
