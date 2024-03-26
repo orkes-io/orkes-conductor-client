@@ -47,7 +47,11 @@ The goal of the test framework is as follows:
 Here are example assertions from the test:
 
 ```java
-To Do
+import static org.junit.Assert.*;
+
+Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
+String status = String.valueOf(workflowRun.getStatus());
+assertEquals(status,"COMPLETED");
 ```
 
 >[!note]
