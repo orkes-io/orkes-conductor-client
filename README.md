@@ -5,6 +5,7 @@ Conductor is the leading open-source orchestration platform allowing developers 
 This repository provides a Java client for the Orkes Conductor Server. 
 
 ## ⭐ Conductor OSS
+
 Show support for the Conductor OSS.  Please help spread the awareness by starring Conductor repo.
 
 [![GitHub stars](https://img.shields.io/github/stars/conductor-oss/conductor.svg?style=social&label=Star&maxAge=)](https://GitHub.com/conductor-oss/conductor/)
@@ -45,7 +46,7 @@ In this section, we will create a simple "Hello World" application that uses Con
 
 ### Step 1: Create a Workflow
 
-#### Use Code to create workflows
+#### Use Code to Create Workflows
 
 Create `workflow/WorkflowCreator.java` with the following:
 
@@ -92,7 +93,7 @@ public class WorkflowInput {
 }
 ```
 
-#### (Alternatively) Use JSON to create workflows
+#### (Alternatively) Use JSON to Create Workflows
 
 Create workflow.json with the following:
 
@@ -272,7 +273,7 @@ public class SDKUtils {
 }
 ```
 
-## Running your distributed workflow locally
+## Running Workflow Locally
 
 ### Conductor Server Settings
 
@@ -281,33 +282,39 @@ Everything related to server settings should be done within the `ApiClient` clas
 ```java
 ApiClient apiClient = new ApiClient("CONDUCTOR_SERVER_URL");
 ```
-If you are using Spring Framework, we can initialize the above class as a bean that can be used across the project.
+If you are using Spring Framework, you can initialize the above class as a bean that can be used across the project.
 
 ### Start Conductor Server
 
 ```
 docker run --init -p 8080:8080 -p 5000:5000 conductoross/conductor-standalone:3.15.0
 ```
-After starting the server, navigate to http://localhost:5000 to ensure the server has started successfully. Run the application from your IDE, open your Web Browser and observe the Executions tab.
+After starting the server, navigate to http://localhost:5000 to ensure the server has started successfully. 
 
-## Run the workflow on Orkes
+Run the application from your IDE, open your Web Browser and check the **Executions** tab.
 
-Update the Conductor Server URL 
+## Running Workflow in Orkes Conductor
+
+For running the workflow in Orkes Conductor, 
+
+- Update the Conductor server URL to your cluster name:
 
 ```java
- export CONDUCTOR_SERVER_URL="https://[cluster-name].orkesconductor.io/api"
+ export CONDUCTOR_SERVER_URL="https://[your-cluster-name].orkesconductor.io/api"
 ```
-### [How to obtain the key and secret from the conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control)
+
+- [Obtain the key and secret from Conductor server](https://orkes.io/content/docs/getting-started/concepts/access-control) and replace with your values
 
 ```
 export KEY=your_key
 export SECRET=your_secret
 ```
-Now run the application from your IDE and view the results in your Web Browser.
+Now run the application from IDE and view the results in Web Browser.
 
 > [!NOTE]
 > That's it - you just created and executed your first distributed Java app!
 > 
+
 ## Using Conductor in your application
 
 There are three main ways you can use Conductor when building durable, resilient, distributed applications.
