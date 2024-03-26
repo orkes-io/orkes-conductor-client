@@ -19,6 +19,27 @@ A Workflow task represents a unit of business logic that achieves a specific goa
     - [Using Code to Create HTTP Task](#using-code-to-create-http-task)
     - [JSON Configuration](#json-configuration-1)
   - [Javascript Executor Task](#javascript-executor-task)
+    - [Using Code to Inline Task](#using-code-to-inline-task)
+    - [JSON Configuration](#json-configuration-2)
+  - [JSON Processing using JQ](#json-processing-using-jq)
+    - [Using Code to Create JSON JQ Transform Task](#using-code-to-create-json-jq-transform-task)
+    - [JSON Configuration](#json-configuration-3)
+- [Worker vs. Microservice/HTTP Endpoints](#worker-vs-microservicehttp-endpoints)
+- [Deploying Workers in Production](#deploying-workers-in-production)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+- [Implementing Workers](#implementing-workers)
+  - [Managing Workers in Application](#managing-workers-in-application)
+- [Design Principles for Workers](#design-principles-for-workers)
+- [System Task Workers](#system-task-workers)
+  - [Wait Task](#wait-task)
+    - [Using Code to Create Wait Task](#using-code-to-create-wait-task)
+    - [JSON Configuration](#json-configuration)
+  - [HTTP Task](#http-task)
+    - [Using Code to Create HTTP Task](#using-code-to-create-http-task)
+    - [JSON Configuration](#json-configuration-1)
+  - [Javascript Executor Task](#javascript-executor-task)
     - [JSON Configuration](#json-configuration-2)
   - [JSON Processing using JQ](#json-processing-using-jq)
   - [JSON Configuration](#json-configuration-3)
@@ -134,6 +155,8 @@ workflow.add(httptask);//workflow is an object of ConductorWorkflow<WorkflowInpu
 
 Execute ECMA-compliant Javascript code. It is useful when writing a script for data mapping, calculations, etc.
 
+#### Using Code to Inline Task
+
 ```java
  Javascript jstask = new Javascript("hello_script",
                   """function greetings(name) {
@@ -164,11 +187,13 @@ Execute ECMA-compliant Javascript code. It is useful when writing a script for d
 
 [Jq](https://jqlang.github.io/jq/) is like sed for JSON data - you can slice, filter, map, and transform structured data with the same ease that sed, awk, grep, and friends let you play with text.
 
+#### Using Code to Create JSON JQ Transform Task
+
 ```java
 To Do
 ```
 
-### JSON Configuration
+#### JSON Configuration
 
 ```json
 {
