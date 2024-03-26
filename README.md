@@ -46,7 +46,7 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 
 In this section, we will create a simple "Hello World" application that uses Conductor.
 
-### Step 1: Create a Workflow
+### Step 1: Create Workflow
 
 #### Use Code to Create Workflows
 
