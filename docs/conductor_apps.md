@@ -8,6 +8,18 @@ Conductor SDKs are lightweight and can easily be added to your existing or new J
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+- [Adding Conductor SDK to Your Application](#adding-conductor-sdk-to-your-application)
+  - [Gradle](#gradle)
+  - [Maven](#maven)
+- [Testing Workflows](#testing-workflows)
+  - [Gradle](#gradle-1)
+  - [Maven](#maven-1)
+  - [Example Unit Testing Application](#example-unit-testing-application)
+- [Workflow Deployments Using CI/CD](#workflow-deployments-using-cicd)
+- [Versioning Workflows](#versioning-workflows)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Adding Conductor SDK to Your Application
 
 Add `orkes-conductor-client` dependency to your project.

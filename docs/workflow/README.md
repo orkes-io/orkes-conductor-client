@@ -12,6 +12,30 @@ This section will dive deeper into creating and executing Conductor workflows us
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+- [Creating Workflows](#creating-workflows)
+  - [Execute Dynamic Workflows Using Code](#execute-dynamic-workflows-using-code)
+  - [Kitchen-Sink Workflow](#kitchen-sink-workflow)
+- [Executing Workflows](#executing-workflows)
+  - [Execute Workflow Asynchronously](#execute-workflow-asynchronously)
+  - [Execute Workflow Synchronously](#execute-workflow-synchronously)
+- [Managing Workflow Executions](#managing-workflow-executions)
+  - [Get Execution Status](#get-execution-status)
+  - [Update Workflow State Variables](#update-workflow-state-variables)
+  - [Terminate Running Workflows](#terminate-running-workflows)
+  - [Retry Failed Workflows](#retry-failed-workflows)
+  - [Restart Workflows](#restart-workflows)
+  - [Rerun Workflow from a Specific Task](#rerun-workflow-from-a-specific-task)
+  - [Pause Running Workflow](#pause-running-workflow)
+  - [Resume Paused Workflow](#resume-paused-workflow)
+- [Searching for Workflows](#searching-for-workflows)
+- [Handling Failures, Retries and Rate Limits](#handling-failures-retries-and-rate-limits)
+  - [Retries](#retries)
+  - [Rate Limits](#rate-limits)
+    - [Task Registration](#task-registration)
+  - [Update Task Definition:](#update-task-definition)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Creating Workflows
 
 Conductor lets you create the workflows using either Java or JSON as the configuration.
