@@ -30,7 +30,7 @@ public class ConductorWorkers {
 }
 ```
 
-### Managing workers in your application
+### Managing Workers in Application
 
 Workers use a polling mechanism (with a long poll) to check for any available tasks from the server periodically. The startup and shutdown of workers are handled by the  `conductor.client.automator.TaskRunnerConfigurer` class.
 
@@ -63,7 +63,7 @@ System tasks automate repeated tasks such as calling an HTTP endpoint, executing
 > [!tip]
 > Wait is a powerful way to have your system wait for a specific trigger, such as an external event, a particular date/time, or duration, such as 2 hours, without having to manage threads, background processes, or jobs.
 
-#### Using code to create WAIT task
+#### Using Code to Create WAIT Task
 
 ```java
 /* Wait for a specific duration */
@@ -91,7 +91,7 @@ System tasks automate repeated tasks such as calling an HTTP endpoint, executing
 
 Make a request to an HTTP(S) endpoint. The task allows for GET, PUT, POST, DELETE, HEAD, and PATCH requests.
 
-#### Using code to create an HTTP task
+#### Using Code to Create an HTTP Task
 
 ```java
 Http httptask = new Http("mytask");
@@ -164,7 +164,7 @@ To Do
 }
 ```
 
-## Worker vs. Microservice / HTTP endpoints
+## Worker vs. Microservice/HTTP endpoints
 
 > [!tip] 
 > Workers are a lightweight alternative to exposing an HTTP endpoint and orchestrating using `HTTP` tasks. 
@@ -178,6 +178,6 @@ There are several advantages to this approach:
 4. Workers **self-regulate** when busy; they only poll as much as they can handle. Backpressure handling is done out of the box.
 5. Workers can be scaled up / down quickly based on the demand by increasing the number of processes.
 
-## Deploying Workers in production
+## Deploying Workers in Production
 
 Conductor workers can run in the cloud-native environment or on-prem and can easily be deployed like any other Java application. Workers can run a containerized environment, VMs, or bare metal like you would deploy your other Java applications.

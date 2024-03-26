@@ -22,7 +22,7 @@ When the workflows are relatively static, they can be designed using the Orkes U
 
 Both the code and configuration approaches are equally powerful and similar in nature to how you treat Infrastructure as Code.
 
-### Execute dynamic workflows using Code
+### Execute Dynamic Workflows Using Code
 
 For cases where the workflows cannot be created statically ahead of time, Conductor is a powerful dynamic workflow execution platform that lets you create very complex workflows in code and execute them. It is useful when the workflow is unique for each execution.
 
@@ -135,7 +135,7 @@ Workflows represent the application state. With Conductor, you can query the wor
 To Do 
 ```
 
-### Get the execution status
+### Get Execution Status
 
 The following method lets you query the status of the workflow execution given the id. When the include_tasks is set, the response also includes all the completed and in-progress tasks.
 
@@ -143,7 +143,7 @@ The following method lets you query the status of the workflow execution given t
 To Do
 ```
 
-### Update workflow state variables
+### Update Workflow State Variables
 
 Variables inside a workflow are the equivalent of global variables in a program.
 
@@ -151,7 +151,7 @@ Variables inside a workflow are the equivalent of global variables in a program.
 To Do
 ```
 
-### Terminate running workflows
+### Terminate Running Workflows
 
 Used to terminate a running workflow. Any pending tasks are canceled, and no further work is scheduled for this workflow upon termination. A failure workflow will be triggered but can be avoided if `trigger_failure_workflow` is set to False.
 
@@ -159,7 +159,7 @@ Used to terminate a running workflow. Any pending tasks are canceled, and no fur
 To Do
 ```
 
-### Retry failed workflows
+### Retry Failed Workflows
 
 If the workflow has failed due to one of the task failures after exhausting the retries for the task, the workflow can still be resumed by calling the retry.
 
@@ -172,7 +172,7 @@ When a sub-workflow inside a workflow has failed, there are two options:
 1. Re-trigger the sub-workflow from the start (Default behavior).
 2. Resume the `sub-workflow` from the failed task (set `resume_subworkflow_tasks` to True)
 
-### Restart workflows
+### Restart Workflows
 
 A workflow in the terminal state (COMPLETED, TERMINATED, FAILED) can be restarted from the beginning. Useful when retrying from the last failed task is insufficient, and the whole workflow must be started again.
 
@@ -180,7 +180,7 @@ A workflow in the terminal state (COMPLETED, TERMINATED, FAILED) can be restarte
 To Do
 ```
 
-### Rerun a workflow from a specific task
+### Rerun Workflow from a Specific Task
 
 In the cases where a workflow needs to be restarted from a specific task rather than from the beginning, rerun provides that option. When issuing the rerun command to the workflow, you can specify the id of the task from where the workflow should be restarted (as opposed to from the beginning), and optionally, the input of the workflow can also be changed.
 
@@ -191,7 +191,7 @@ To Do
 > [!tip] 
 > Rerun is one of the most powerful features Conductor has, giving you unparalleled control over the workflow restart.
 
-### Pause a running workflow
+### Pause Running Workflow
 
 A running workflow can be put to a PAUSED status. A paused workflow lets the currently running tasks complete but does not schedule any new tasks until resumed.
 
@@ -199,7 +199,7 @@ A running workflow can be put to a PAUSED status. A paused workflow lets the cur
 To Do
 ```
 
-### Resume paused workflow
+### Resume Paused Workflow
 
 Resume operation resumes the currently paused workflow, immediately evaluating its state and scheduling the next set of tasks.
 
@@ -207,7 +207,7 @@ Resume operation resumes the currently paused workflow, immediately evaluating i
 To Do
 ```
 
-## Searching for workflows
+## Searching for Workflows
 
 Workflow executions are retained until removed from Conductor. This gives complete visibility into all the executions an application has - regardless of the number of executions. Conductor has a powerful search API that allows you to search for workflow executions.
 
@@ -271,7 +271,7 @@ To Do
 }
 ```
 
-### Update the task definition:
+### Update Task Definition:
 
 ```shell
 POST /api/metadata/taskdef -d @task_def.json

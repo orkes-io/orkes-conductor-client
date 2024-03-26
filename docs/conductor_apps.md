@@ -32,7 +32,7 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 </dependency>
 ```
 
-## Testing your workflows
+## Testing Workflows
 
 Conductor SDK for Java provides a full feature testing framework for your workflow-based applications. The framework works well with any testing framework you prefer to use without imposing any specific framework.
 
@@ -79,11 +79,11 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 >[!note]
 >Workflow workers are your regular Java functions and can be tested with any of the available testing frameworks.
 
-### Example Unit Testing application
+### Example Unit Testing Application
 
 See `test_workflows.java` for a fully functional example of how to test a moderately complex workflow with branches.
 
-## Workflow deployments using CI/CD
+## Workflow Deployments using CI/CD
 
 >[!tip]
 >Treat your workflow definitions just like your code. Suppose you are defining the workflows using UI. In that case, we recommend checking the JSON configuration into the version control and using your development workflow for CI/CD to promote the workflow definitions across various environments such as Dev, Test, and Prod.
@@ -95,7 +95,7 @@ Here is a recommended approach when defining workflows using JSON:
 - Use `POST /api/metadata/* endpoints` or `To Do` to register/update workflows as part of the deployment process.
 - Version your workflows. If there is a significant change, change the version field of the workflow. See versioning workflows below for more details.
 
-## Versioning workflows
+## Versioning Workflows
 
 A powerful feature of Conductor is the ability to version workflows. You should increment the version of the workflow when there is a significant change to the definition. You can run multiple versions of the workflow at the same time. When starting a new workflow execution, use the `version` field to specify which version to use. When omitted, the latest (highest-numbered) version is used.
 
