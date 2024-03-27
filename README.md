@@ -149,7 +149,6 @@ curl -X POST -H "Content-Type:application/json" \
 http://localhost:8080/api/metadata/workflow -d @workflow.json
 ```
 
-[!note]
 > [!note]
 > To use the Conductor API, the Conductor server must be up and running (see [Running over Conductor standalone (installed locally)](#running-over-conductor-standalone-installed-locally))
 
