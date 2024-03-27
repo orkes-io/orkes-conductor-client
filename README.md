@@ -18,27 +18,6 @@ Show support for the Conductor OSS.  Please help spread the awareness by starrin
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-- [Set Up Conductor Java SDK](#set-up-conductor-java-sdk)
-  - [Gradle](#gradle)
-  - [Maven](#maven)
-- [Simple Hello World Application Using Conductor](#simple-hello-world-application-using-conductor)
-  - [Step 1: Create Workflow](#step-1-create-workflow)
-    - [Use Code to Create Workflows](#use-code-to-create-workflows)
-    - [(Alternatively) Use JSON to Create Workflows](#alternatively-use-json-to-create-workflows)
-  - [Step 2: Write Worker](#step-2-write-worker)
-  - [Step 3: Write *Your* Application](#step-3-write-your-application)
-  - [Step 4: Create SDKUtils](#step-4-create-sdkutils)
-- [Running Workflow Locally](#running-workflow-locally)
-  - [Conductor Server Settings](#conductor-server-settings)
-  - [Start Conductor Server](#start-conductor-server)
-- [Running Workflow in Orkes Conductor](#running-workflow-in-orkes-conductor)
-- [Using Conductor in Your Application](#using-conductor-in-your-application)
-  - [Create and Run Conductor Workers](#create-and-run-conductor-workers)
-  - [Create Conductor Workflows](#create-conductor-workflows)
-  - [Using Conductor in Your Application](#using-conductor-in-your-application-1)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ## Set Up Conductor Java SDK
 
 Add `orkes-conductor-client` dependency to your project.
@@ -63,13 +42,13 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 </dependency>
 ```
 
-## Simple Hello World Application Using Conductor
+## Hello World Application Using Conductor
 
-In this section, we will create a simple "Hello World" application that uses Conductor.
+In this section, we will create a simple "Hello World" application that executes a "greetings" workflow managed by Conductor.
 
 ### Step 1: Create Workflow
 
-#### Use Code to Create Workflows
+#### Creating Workflows by Code
 
 Create `workflow/WorkflowCreator.java` with the following:
 
@@ -116,7 +95,7 @@ public class WorkflowInput {
 }
 ```
 
-#### (Alternatively) Use JSON to Create Workflows
+#### (Alternatively) Creating Workflows in JSON
 
 Create `workflow.json` with the following:
 
@@ -140,19 +119,24 @@ Create `workflow.json` with the following:
 }
 ```
 
-Now, register this workflow with the server:
+Workflows must be registered to the Conductor server. Use the API to register the greetings workflow from the JSON file above:
+
 
 ```shell
 curl -X POST -H "Content-Type:application/json" \
 http://localhost:8080/api/metadata/workflow -d @workflow.json
 ```
 
+[!note]
+> [!note]
+> To use the Conductor API, the Conductor server must be up and running (see [Running over Conductor standalone (installed locally)](#running-over-conductor-standalone-installed-locally))
+
 ### Step 2: Write Worker
 
 Create `workers/ConductorWorkers.java` with a simple worker and workflow function.
 
 > [!note]
-> A single workflow application can have workers written in different languages.
+> A single workflow can have task workers written in different languages and deployed anywhere, making your workflow polyglot and distributed!
 
 ```java
 package io.orkes.samples.quickstart.workers;
@@ -168,9 +152,12 @@ public class ConductorWorkers {
 }
 ```
 
-### Step 3: Write *Your* Application
+Now, we are ready to write our main application, which will execute our workflow.
 
-Create `Main.java` with the following:
+
+### Step 3: Write *Hello World* Application
+
+Let's add `helloworld.java` with a `main` method:
 
 ```java
 package io.orkes.samples.quickstart;
@@ -296,7 +283,7 @@ public class SDKUtils {
 }
 ```
 
-## Running Workflow Locally
+## Running Workflows on Conductor Standalone (Installed Locally)
 
 ### Conductor Server Settings
 
@@ -305,18 +292,42 @@ Everything related to server settings should be done within the `ApiClient` clas
 ```java
 ApiClient apiClient = new ApiClient("CONDUCTOR_SERVER_URL");
 ```
+
 If you are using Spring Framework, you can initialize the above class as a bean that can be used across the project.
 
 ### Start Conductor Server
 
+To start the Conductor server in a standalone mode from a Docker image, type the command below:
+
 ```
 docker run --init -p 8080:8080 -p 5000:5000 conductoross/conductor-standalone:3.15.0
 ```
-After starting the server, navigate to http://localhost:5000 to ensure the server has started successfully. 
 
-Run the application from your IDE, open Conductor UI and check the **Executions** tab.
+To ensure the server has started successfully, open Conductor UI on http://localhost:5000.
 
-## Running Workflow in Orkes Conductor
+### Execute Hello World Application
+
+To run the application, type the following command:
+
+```java
+To Do
+```
+
+Now, the workflow is executed, and its execution status can be viewed from Conductor UI (http://localhost:5000).
+
+Navigate to the **Executions** tab to view the workflow execution.
+
+Open the Workbench tab and try running the 'greetings' workflow. You will notice that the workflow execution fails. This is because the task_handler.stop_processes() [helloworld.java] function is called and stops all workers included in the app, and therefore, there is no worker up and running to execute the tasks.
+
+Now, let's update the app `helloworld.java`
+
+```java
+To Do
+```
+
+By commenting the lines that execute the workflow and stop the task polling mechanism, we can re-run the app and run the workflow from the Conductor UI. The task is executed successfully.
+
+## Running Workflows on Orkes Conductor
 
 For running the workflow in Orkes Conductor, 
 
@@ -326,19 +337,25 @@ For running the workflow in Orkes Conductor,
  export CONDUCTOR_SERVER_URL="https://[your-cluster-name].orkesconductor.io/api"
 ```
 
-- [Obtain the key and secret from the Conductor server](https://orkes.io/content/how-to-videos/access-key-and-secret) and replace them with your values.
+- If you want to run the workflow on the Orkes Conductor Playground, set the Conductor Server variable as follows:
+
+```java
+export CONDUCTOR_SERVER_URL=https://play.orkes.io/api
+```
+
+- Orkes Conductor requires authentication. [Obtain the key and secret from the Conductor server](https://orkes.io/content/how-to-videos/access-key-and-secret) and set the following environment variables.
 
 ```
 export KEY=your_key
 export SECRET=your_secret
 ```
-Now, run the application from IDE and view the results from Conductor UI.
+Run the application and view the execution status from Conductor's UI Console.
 
 > [!NOTE]
 > That's it - you just created and executed your first distributed Java app!
 > 
 
-## Using Conductor in Your Application
+## Learn More about Conductor Java SDK
 
 There are three main ways you can use Conductor when building durable, resilient, distributed applications.
 
@@ -346,7 +363,7 @@ There are three main ways you can use Conductor when building durable, resilient
 2. Create Conductor workflows that implement application state - A typical workflow implements the saga pattern.
 3. Use Conductor SDK and APIs to manage workflows from your application.
 
-### [Create and Run Conductor Workers](https://github.com/RizaFarheen/orkes-conductor-client/tree/sdk-readme-update/docs/worker)
+### [Create and Run Conductor Workers](worker.md)
 
 ### [Create Conductor Workflows](https://github.com/RizaFarheen/orkes-conductor-client/blob/sdk-readme-update/docs/workflow/README.md)
 
