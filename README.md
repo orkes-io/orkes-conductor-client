@@ -18,6 +18,28 @@ Show support for the Conductor OSS.  Please help spread the awareness by starrin
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+- [Set Up Conductor Java SDK](#set-up-conductor-java-sdk)
+  - [Gradle](#gradle)
+  - [Maven](#maven)
+- [Hello World Application Using Conductor](#hello-world-application-using-conductor)
+  - [Step 1: Create Workflow](#step-1-create-workflow)
+    - [Creating Workflows by Code](#creating-workflows-by-code)
+    - [(Alternatively) Creating Workflows in JSON](#alternatively-creating-workflows-in-json)
+  - [Step 2: Write Worker](#step-2-write-worker)
+  - [Step 3: Write *Hello World* Application](#step-3-write-hello-world-application)
+  - [Step 4: Create SDKUtils](#step-4-create-sdkutils)
+- [Running Workflows on Conductor Standalone (Installed Locally)](#running-workflows-on-conductor-standalone-installed-locally)
+  - [Conductor Server Settings](#conductor-server-settings)
+  - [Start Conductor Server](#start-conductor-server)
+  - [Execute Hello World Application](#execute-hello-world-application)
+- [Running Workflows on Orkes Conductor](#running-workflows-on-orkes-conductor)
+- [Learn More about Conductor Java SDK](#learn-more-about-conductor-java-sdk)
+  - [Create and Run Conductor Workers](#create-and-run-conductor-workers)
+  - [Create Conductor Workflows](#create-conductor-workflows)
+  - [Using Conductor in Your Application](#using-conductor-in-your-application)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Set Up Conductor Java SDK
 
 Add `orkes-conductor-client` dependency to your project.
