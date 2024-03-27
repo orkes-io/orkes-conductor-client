@@ -6,7 +6,6 @@ A Workflow task represents a unit of business logic that achieves a specific goa
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 - [Implementing Workers](#implementing-workers)
   - [Managing Workers in Application](#managing-workers-in-application)
@@ -19,7 +18,7 @@ A Workflow task represents a unit of business logic that achieves a specific goa
     - [Using Code to Create HTTP Task](#using-code-to-create-http-task)
     - [JSON Configuration](#json-configuration-1)
   - [Javascript Executor Task](#javascript-executor-task)
-    - [Using Code to Inline Task](#using-code-to-inline-task)
+    - [Using Code to Create Inline Task](#using-code-to-create-inline-task)
     - [JSON Configuration](#json-configuration-2)
   - [JSON Processing using JQ](#json-processing-using-jq)
     - [Using Code to Create JSON JQ Transform Task](#using-code-to-create-json-jq-transform-task)
