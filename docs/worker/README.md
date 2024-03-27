@@ -136,7 +136,7 @@ workflow.add(httptask);//workflow is an object of ConductorWorkflow<WorkflowInpu
 
 Execute ECMA-compliant Javascript code. It is useful when writing a script for data mapping, calculations, etc.
 
-#### Using Code to Inline Task
+#### Using Code to Create Inline Task
 
 ```java
  Javascript jstask = new Javascript("hello_script",
