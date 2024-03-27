@@ -365,6 +365,6 @@ There are three main ways you can use Conductor when building durable, resilient
 
 ### [Create and Run Conductor Workers](docs/worker/README.md)
 
-### [Create Conductor Workflows](https://github.com/RizaFarheen/orkes-conductor-client/blob/sdk-readme-update/docs/workflow/README.md)
+### [Create Conductor Workflows](docs/workflow/README.md)
 
-### [Using Conductor in Your Application](https://github.com/RizaFarheen/orkes-conductor-client/blob/sdk-readme-update/docs/conductor_apps.md)
+### [Using Conductor in Your Application](docs/conductor_apps.md)
