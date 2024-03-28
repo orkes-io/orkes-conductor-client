@@ -170,7 +170,9 @@ Execute ECMA-compliant Javascript code. It is useful when writing a script for d
 #### Using Code to Create JSON JQ Transform Task
 
 ```java
-To Do
+import com.netflix.conductor.sdk.workflow.def.tasks.JQ;
+JQ jqtask = new JQ("jq_task", "{ key3: (.key1.value1 + .key2.value2) }");
+workflow.add(jqtask);
 ```
 
 #### JSON Configuration
