@@ -171,6 +171,7 @@ Execute ECMA-compliant Javascript code. It is useful when writing a script for d
 
 ```java
 import com.netflix.conductor.sdk.workflow.def.tasks.JQ;
+
 JQ jqtask = new JQ("jq_task", "{ key3: (.key1.value1 + .key2.value2) }");
 workflow.add(jqtask);
 ```
