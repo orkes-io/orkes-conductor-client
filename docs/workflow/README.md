@@ -159,7 +159,9 @@ Workflows represent the application state. With Conductor, you can query the wor
 [WorkflowClient] is the client interface used to manage workflow executions.
 
 ```java
-To Do 
+import io.orkes.conductor.client.OrkesClients;
+OrkesClients orkesClients = ApiUtil.getOrkesClient();
+WorkflowClient workflowClient = orkesClients.getWorkflowClient();
 ```
 
 ### Get Execution Status
@@ -167,7 +169,7 @@ To Do
 The following method lets you query the status of the workflow execution given the id. When the include_tasks is set, the response also includes all the completed and in-progress tasks.
 
 ```java
-To Do
+getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables)
 ```
 
 ### Update Workflow State Variables
@@ -175,15 +177,15 @@ To Do
 Variables inside a workflow are the equivalent of global variables in a program.
 
 ```java
-To Do
+setVariables(Map<String, Object> variables)
 ```
 
 ### Terminate Running Workflows
 
-Used to terminate a running workflow. Any pending tasks are canceled, and no further work is scheduled for this workflow upon termination. A failure workflow will be triggered but can be avoided if `trigger_failure_workflow` is set to False.
+Used to terminate a running workflow. Any pending tasks are canceled, and no further work is scheduled for this workflow upon termination. 
 
 ```java
-To Do
+terminateWorkflow(List<String> workflowIds, String reason)
 ```
 
 ### Retry Failed Workflows
@@ -191,7 +193,7 @@ To Do
 If the workflow has failed due to one of the task failures after exhausting the retries for the task, the workflow can still be resumed by calling the retry.
 
 ```java
-To Do
+retryWorkflow(List<String> workflowIds)
 ```
 
 When a sub-workflow inside a workflow has failed, there are two options:
@@ -204,7 +206,7 @@ When a sub-workflow inside a workflow has failed, there are two options:
 A workflow in the terminal state (COMPLETED, TERMINATED, FAILED) can be restarted from the beginning. Useful when retrying from the last failed task is insufficient, and the whole workflow must be started again.
 
 ```java
-To Do
+restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
 ```
 
 ### Rerun Workflow from a Specific Task
@@ -212,7 +214,7 @@ To Do
 In the cases where a workflow needs to be restarted from a specific task rather than from the beginning, rerun provides that option. When issuing the rerun command to the workflow, you can specify the task ID from where the workflow should be restarted (as opposed to from the beginning), and optionally, the workflow's input can also be changed.
 
 ```java
-To Do
+setReRunFromTaskId(String reRunFromTaskId)
 ```
 
 > [!tip] 
@@ -223,7 +225,7 @@ To Do
 A running workflow can be put to a **PAUSED** status. A paused workflow lets the currently running tasks complete but does not schedule any new tasks until resumed.
 
 ```java
-To Do
+pauseWorkflow(List<String> workflowIds)
 ```
 
 ### Resume Paused Workflow
@@ -231,7 +233,7 @@ To Do
 Resume operation resumes the currently paused workflow, immediately evaluating its state and scheduling the next set of tasks.
 
 ```java
-To Do
+resumeWorkflow(List<String> workflowIds)
 ```
 
 ## Searching for Workflows
