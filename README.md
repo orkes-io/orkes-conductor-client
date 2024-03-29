@@ -72,7 +72,7 @@ In this section, we will create a simple "Hello World" application that executes
 
 #### Creating Workflows by Code
 
-Create `workflow/WorkflowCreator.java` with the following:
+Create `workflow/CreateWorkflow.java` with the following:
 
 ```java
 package io.orkes.samples.quickstart.workflow;
@@ -82,16 +82,16 @@ import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
 
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
-public class WorkflowCreator {
+public class CreateWorkflow {
     private final WorkflowExecutor executor;
-    public WorkflowCreator(WorkflowExecutor executor) {
+    public CreateWorkflow(WorkflowExecutor executor) {
         this.executor = executor;
     }
     public ConductorWorkflow<WorkflowInput> createSimpleWorkflow() {
         ConductorWorkflow<WorkflowInput> workflow = new ConductorWorkflow<>(executor);
-        workflow.setName("hello");
+        workflow.setName("greetings");
         workflow.setVersion(1);
-        SimpleTask greetingsWF = new SimpleTask("greetings", "greetings");
+        SimpleTask greetingsWF = new SimpleTask("greet", "greet_ref");
         greetingsWF.input("name", "${workflow.input.name}");
         workflow.add(greetingsWF);
         return workflow;
@@ -164,13 +164,12 @@ package io.orkes.samples.quickstart.workers;
 
 import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
-
-public class ConductorWorkers {
-    @WorkerTask("greetings")
-    public void greeting(@InputParam("name") String name) {
-        System.out.println("Hello my friend " + name);
+    public class ConductorWorkers {
+        @WorkerTask("greet")
+        public String greet(@InputParam("name") String name) {
+            return "Hello " + name;
+        }
     }
-}
 ```
 
 Now, we are ready to write our main application, which will execute our workflow.
@@ -178,129 +177,99 @@ Now, we are ready to write our main application, which will execute our workflow
 
 ### Step 3: Write *Hello World* Application
 
-Let's add `helloworld.java` with a `main` method:
+Let's add `Main.java` with a `main` method:
 
 ```java
 package io.orkes.samples.quickstart;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+
+import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
 
-import io.orkes.samples.quickstart.utils.SDKUtils;
-import io.orkes.samples.quickstart.workflow.WorkflowCreator;
+import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.client.MetadataClient;
+import io.orkes.conductor.client.OrkesClients;
+import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
+import io.orkes.samples.quickstart.utils.ApiUtil;
+import io.orkes.samples.quickstart.workflow.CreateWorkflow;
 import io.orkes.samples.quickstart.workflow.WorkflowInput;
 
 public class Main {
+
     public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
-        SDKUtils utils = new SDKUtils();
-        WorkflowCreator workflowCreator = new WorkflowCreator(utils.getWorkflowExecutor());
-        System.out.print("Workflow Result: ");
+        OrkesClients orkesClients = ApiUtil.getOrkesClient();
+        TaskClient taskClient = orkesClients.getTaskClient();
+        WorkflowClient workflowClient = orkesClients.getWorkflowClient();
+        MetadataClient metadataClient = orkesClients.getMetadataClient();
+
+        WorkflowExecutor workflowExecutor = new WorkflowExecutor(taskClient, workflowClient, metadataClient, 10);
+        workflowExecutor.initWorkers("io.orkes.samples.quickstart.workers");
+        TaskRunnerConfigurer taskrunner = initWorkers(Arrays.asList(),taskClient);
+        CreateWorkflow workflowCreator = new CreateWorkflow(workflowExecutor);
         ConductorWorkflow<WorkflowInput> simpleWorkflow = workflowCreator.createSimpleWorkflow();
         simpleWorkflow.setVariables(new HashMap<>());
 
         WorkflowInput input = new WorkflowInput("Orkes");
         CompletableFuture<Workflow> workflowExecution = simpleWorkflow.executeDynamic(input);
         Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
-        String url = utils.getUIPath() + workflowRun.getWorkflowId();
-        System.out.println("See the workflow execution here: " + url);
 
-        // Shutdown any background threads
-        utils.shutdown();
+        
+        taskrunner.shutdown();
+        workflowClient.shutdown();
         System.exit(0);
+    }
+
+    private static TaskRunnerConfigurer initWorkers(List<Worker> workers, TaskClient taskClient) {
+        TaskRunnerConfigurer.Builder builder = new TaskRunnerConfigurer.Builder(taskClient, workers);
+        TaskRunnerConfigurer taskRunner = builder.withThreadCount(1).withTaskPollTimeout(5).build();
+        // Start Polling for tasks and execute them
+        taskRunner.init();
+        return taskRunner;
     }
 }
 ```
 ### Step 4: Create SDKUtils
-Create `utils/SDKUtils.java` with the following:
+Create `utils/ApiUtil.java` with the following:
 
 ```java
 package io.orkes.samples.quickstart.utils;
 
-import java.util.Arrays;
-import java.util.List;
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.OrkesClients;
 
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.base.Preconditions;
 
-import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+public class ApiUtil {
+    private static final String ENV_ROOT_URI = "CONDUCTOR_SERVER_URL";
+    private static final String ENV_KEY_ID = "CONDUCTOR_AUTH_KEY";
+    private static final String ENV_SECRET = "CONDUCTOR_AUTH_SECRET";
 
-import io.orkes.conductor.client.*;
-import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-
-
-public class SDKUtils {
-    private final WorkflowExecutor workflowExecutor;
-    private final MetadataClient metadataClient;
-    private final WorkflowClient workflowClient;
-    private final TaskClient taskClient;
-    private ApiClient apiClient;
-    private TaskRunnerConfigurer taskRunner;
-
-    public SDKUtils() {
-
-        String CONDUCTOR_SERVER_URL = System.getenv("CONDUCTOR_SERVER_URL");
-        String key = System.getenv("KEY");
-        String secret = System.getenv("SECRET");
-        String conductorServer = System.getenv("CONDUCTOR_SERVER_URL");
-        if (conductorServer == null) {
-            conductorServer = CONDUCTOR_SERVER_URL;
-        }
-        if (StringUtils.isNotBlank(key)) {
-            apiClient = new ApiClient(conductorServer, key, secret);
-        } else {
-            apiClient = new ApiClient(conductorServer);
-        }
-        apiClient.setReadTimeout(30_000);
-
-        if (StringUtils.isBlank(key) || StringUtils.isBlank(secret)) {
-            System.out.println(
-                    "\n\nMissing KEY and|or SECRET.  Attempting to connect to "
-                            + conductorServer
-                            + " without authentication\n\n");
-            apiClient = new ApiClient(conductorServer);
-        }
-
-        OrkesClients orkesClients = new OrkesClients(apiClient);
-        this.metadataClient = orkesClients.getMetadataClient();
-        this.workflowClient = orkesClients.getWorkflowClient();
-        this.taskClient = orkesClients.getTaskClient();
-        this.workflowExecutor = new WorkflowExecutor(this.taskClient, this.workflowClient, this.metadataClient, 10);
-        this.workflowExecutor.initWorkers("io.orkes.samples.quickstart.workers");
-        initWorkers(Arrays.asList());
+    public static OrkesClients getOrkesClient() {
+        String basePath = getEnv(ENV_ROOT_URI);
+        Preconditions.checkNotNull(basePath, ENV_ROOT_URI + " env not set");
+        String keyId = getEnv(ENV_KEY_ID);
+        Preconditions.checkNotNull(keyId, ENV_KEY_ID + " env not set");
+        String keySecret = getEnv(ENV_SECRET);
+        Preconditions.checkNotNull(keyId, ENV_SECRET + " env not set");
+        ApiClient apiClient = new ApiClient(basePath, keyId, keySecret);
+        return new OrkesClients(apiClient);
     }
 
-    private void initWorkers(List<Worker> workers) {
-        TaskRunnerConfigurer.Builder builder = new TaskRunnerConfigurer.Builder(taskClient, workers);
-        taskRunner = builder.withThreadCount(1).withTaskPollTimeout(5).build();
-        // Start Polling for tasks and execute them
-        taskRunner.init();  
+    static String getEnv(String key) {
+        return System.getenv(key);
     }
 
-    public WorkflowExecutor getWorkflowExecutor() {
-        return workflowExecutor;
-    }
-
-    public WorkflowClient getWorkflowClient() {
-        return workflowClient;
-    }
-
-    public String getUIPath() {
-        return apiClient.getBasePath().replaceAll("api", "").replaceAll("8080", "5000")
-                + "execution/";
-    }
-
-    // Clean up resources
-    public void shutdown() {
-        this.apiClient.shutdown();
-        this.workflowClient.shutdown();
-        this.taskRunner.shutdown();
-    }
 }
 ```
 
@@ -328,19 +297,13 @@ To ensure the server has started successfully, open Conductor UI on http://local
 
 ### Execute Hello World Application
 
-To run the application, type the following command:
-
-```java
-To Do
-```
-
-Now, the workflow is executed, and its execution status can be viewed from Conductor UI (http://localhost:5000).
+Now run the Java application, from your IDE. Now, the workflow is executed, and its execution status can be viewed from Conductor UI (http://localhost:5000).
 
 Navigate to the **Executions** tab to view the workflow execution.
 
-Open the Workbench tab and try running the 'greetings' workflow. You will notice that the workflow execution fails. This is because the task_handler.stop_processes() [helloworld.java] function is called and stops all workers included in the app, and therefore, there is no worker up and running to execute the tasks.
+Open the Workbench tab and try running the 'greetings' workflow. You will notice that the workflow execution fails. This is because the task_handler.stop_processes() [HelloWorld.java] function is called and stops all workers included in the app, and therefore, there is no worker up and running to execute the tasks.
 
-Now, let's update the app `helloworld.java`
+Now, let's update the app `HelloWorld.java`
 
 ```java
 To Do
