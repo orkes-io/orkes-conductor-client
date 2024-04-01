@@ -1,4 +1,4 @@
-package io.orkes.conductor.sdk.examples;
+package io.orkes.conductor.sdk.examples.utils;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.OrkesClients;

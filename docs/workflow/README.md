@@ -50,14 +50,14 @@ Both the code and configuration approaches are equally powerful and similar in n
 
 For cases where the workflows cannot be created statically ahead of time, Conductor is a powerful dynamic workflow execution platform that lets you create very complex workflows in code and execute them. It is useful when the workflow is unique for each execution.
 
-`WorkflowCreator.java`
+`CreateWorkflow.java`
 
 ```java
 import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
 import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
-public class WorkflowCreator {
+public class CreateWorkflow {
 
     private final WorkflowExecutor executor;
 
@@ -69,10 +69,7 @@ public class WorkflowCreator {
         ConductorWorkflow<WorkflowInput> workflow = new ConductorWorkflow<>(executor);
         workflow.setName("email_send_workflow");
         workflow.setVersion(1);
-
-        // Step 1, get user details
-        // The implementation is in
-        // io.orkes.samples.quickstart.workers.ConductorWorkers.getUserInfo.
+        
         SimpleTask getUserDetails = new SimpleTask("get_user_info", "get_user_info");
         getUserDetails.input("userId", "${workflow.input.userId}");
 
@@ -93,8 +90,6 @@ public class WorkflowCreator {
 `ConductorWorkers.java`
 
 ```java
-package io.orkes.samples.quickstart.workers;
-
 import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 
@@ -276,8 +271,6 @@ What happens when a task is operating on a critical resource that can only handl
 #### Task Registration
 
 ```java
-package io.orkes.samples.quickstart.utils;
-
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 import io.orkes.conductor.client.MetadataClient;
