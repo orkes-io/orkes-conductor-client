@@ -1,4 +1,4 @@
-# Conductor Java SDK
+<img width="1431" alt="Screenshot 2024-04-01 at 15 53 02" src="https://github.com/RizaFarheen/orkes-conductor-client/assets/163816773/cca44cb5-e50c-4664-9982-cc2f9b4696c9"># Conductor Java SDK
 
 Conductor is the leading open-source orchestration platform allowing developers to build highly scalable distributed applications. 
 
@@ -265,6 +265,8 @@ To ensure the server has started successfully, open Conductor UI on http://local
 Now run the Java application, from your IDE. Now, the workflow is executed, and its execution status can be viewed from Conductor UI (http://localhost:5000).
 
 Navigate to the **Executions** tab to view the workflow execution.
+<img width="1431" alt="Screenshot 2024-04-01 at 15 53 02" src="https://github.com/RizaFarheen/orkes-conductor-client/assets/163816773/e413c828-5f47-4cdc-b113-bed3fefa63a4">
+
 ## Running Workflows on Orkes Conductor
 
 For running the workflow in Orkes Conductor, 
