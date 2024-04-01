@@ -37,8 +37,6 @@ Workers can be hosted along with the workflow or run in a distributed environmen
 You can create or convert any existing Java function to a distributed worker by adding @WorkerTask annotation to it. Here is a simple worker that takes name as input and returns greetings:
 
 ```java
-package io.orkes.samples.quickstart.workers;
-
 import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 
