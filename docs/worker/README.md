@@ -84,12 +84,13 @@ System tasks automate repeated tasks such as calling an HTTP endpoint, executing
 #### Using Code to Create Wait Task
 
 ```java
+import com.netflix.conductor.sdk.workflow.def.tasks.Wait;
 /* Wait for a specific duration */
-  Wait waitTask = new Wait("wait_for_2_sec",Duration.ofMillis(1000));
- /* Wait using Datetime */
-  ZonedDateTime zone = ZonedDateTime.parse("2020-10-05T08:20:10+05:30[Asia/Kolkata]");
-  Wait waitTask = new Wait("wait_till_2days",zone);
-  workflow.add(waitTask);//workflow is an object of ConductorWorkflow<WorkflowInput>
+Wait waitTask = new Wait("wait_for_2_sec",Duration.ofMillis(1000));
+/* Wait using Datetime */
+ZonedDateTime zone = ZonedDateTime.parse("2020-10-05T08:20:10+05:30[Asia/Kolkata]");
+Wait waitTask = new Wait("wait_till_2days",zone);
+workflow.add(waitTask);//workflow is an object of ConductorWorkflow<WorkflowInput>
 ```
 
 #### JSON Configuration
@@ -112,6 +113,7 @@ Make a request to an HTTP(S) endpoint. The task allows for GET, PUT, POST, DELET
 #### Using Code to Create HTTP Task
 
 ```java
+import com.netflix.conductor.sdk.workflow.def.tasks.Http;
 Http httptask = new Http("mytask");
 httptask.url("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
 workflow.add(httptask);//workflow is an object of ConductorWorkflow<WorkflowInput>
@@ -136,14 +138,15 @@ Execute ECMA-compliant Javascript code. It is useful when writing a script for d
 #### Using Code to Create Inline Task
 
 ```java
- Javascript jstask = new Javascript("hello_script",
+import com.netflix.conductor.sdk.workflow.def.tasks.Javascript;
+Javascript jstask = new Javascript("hello_script",
                   """function greetings(name) {
                      return {
                         "text": "hello " + name
                             }
                       }
                     greetings("Orkes");""");
-  workflow.add(jstask);
+workflow.add(jstask);
 ```
 
 #### JSON Configuration
@@ -154,7 +157,7 @@ Execute ECMA-compliant Javascript code. It is useful when writing a script for d
   "taskReferenceName": "inline_task_ref",
   "type": "INLINE",
   "inputParameters": {
-    "expression": " function greetings() {\n  return {\n            \"text\": \"hello \" + $.name\n        }\n    }\n    greetings();",
+    "expression": " function greetings() {\n return {\n     \"text\": \"hello \" + $.name\n        }\n    }\n    greetings();",
     "evaluatorType": "graaljs",
     "name": "${workflow.input.name}"
   }

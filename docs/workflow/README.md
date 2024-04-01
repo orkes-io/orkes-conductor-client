@@ -69,7 +69,7 @@ public class CreateWorkflow {
         ConductorWorkflow<WorkflowInput> workflow = new ConductorWorkflow<>(executor);
         workflow.setName("email_send_workflow");
         workflow.setVersion(1);
-        
+
         SimpleTask getUserDetails = new SimpleTask("get_user_info", "get_user_info");
         getUserDetails.input("userId", "${workflow.input.userId}");
 
@@ -110,7 +110,7 @@ public class ConductorWorkers {
 }
 ```
 
-See `dynamic_wokflow.java` for a fully functional example.
+See [DynamicWorkflow](/example/java/io/orkes/conductor/sdk/examples/DynamicWorkflow/) for a fully functional example.
 
 ### Kitchen-Sink Workflow
 
@@ -118,7 +118,7 @@ For a more complex workflow example with all the supported features, see `kitche
 
 ## Executing Workflows
 
-The [WorkflowClient] interface provides all the APIs required to work with workflow executions.
+The [WorkflowClient](/src/main/java/io/orkes/conductor/client/WorkflowClient.java) interface provides all the APIs required to work with workflow executions.
 
 ```java
 import com.netflix.conductor.client.http.WorkflowClient;
