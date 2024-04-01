@@ -75,11 +75,10 @@ In this section, we will create a simple "Hello World" application that executes
 Create `workflow/CreateWorkflow.java` with the following:
 
 ```java
-package io.orkes.samples.quickstart.workflow;
+package io.orkes.conductor.sdk.examples.HelloWorld.workflow;
 
 import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
 import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
-
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 public class CreateWorkflow {
@@ -101,7 +100,7 @@ public class CreateWorkflow {
 Create `workflow/WorkflowInput.java` with the following:
 
 ```java
-package io.orkes.samples.quickstart.workflow;
+package io.orkes.conductor.sdk.examples.HelloWorld.workflow;
 
 public class WorkflowInput {
     private String name;
@@ -160,27 +159,26 @@ Create `workers/ConductorWorkers.java` with a simple worker and workflow functio
 > A single workflow can have task workers written in different languages and deployed anywhere, making your workflow polyglot and distributed!
 
 ```java
-package io.orkes.samples.quickstart.workers;
+package io.orkes.conductor.sdk.examples.HelloWorld.workflow;
 
 import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
-    public class ConductorWorkers {
-        @WorkerTask("greet")
-        public String greet(@InputParam("name") String name) {
-            return "Hello " + name;
-        }
+  public class ConductorWorkers {
+    @WorkerTask("greet")
+    public String greet(@InputParam("name") String name) {
+      return "Hello " + name;
     }
+  }
 ```
 
 Now, we are ready to write our main application, which will execute our workflow.
-
 
 ### Step 3: Write *Hello World* Application
 
 Let's add `Main.java` with a `main` method:
 
 ```java
-package io.orkes.samples.quickstart;
+package io.orkes.conductor.sdk.examples.HelloWorld;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -239,40 +237,7 @@ public class Main {
     }
 }
 ```
-### Step 4: Create SDKUtils
-Create `utils/ApiUtil.java` with the following:
-
-```java
-package io.orkes.samples.quickstart.utils;
-
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.OrkesClients;
-
-import com.google.common.base.Preconditions;
-
-public class ApiUtil {
-    private static final String ENV_ROOT_URI = "CONDUCTOR_SERVER_URL";
-    private static final String ENV_KEY_ID = "CONDUCTOR_AUTH_KEY";
-    private static final String ENV_SECRET = "CONDUCTOR_AUTH_SECRET";
-
-    public static OrkesClients getOrkesClient() {
-        String basePath = getEnv(ENV_ROOT_URI);
-        Preconditions.checkNotNull(basePath, ENV_ROOT_URI + " env not set");
-        String keyId = getEnv(ENV_KEY_ID);
-        Preconditions.checkNotNull(keyId, ENV_KEY_ID + " env not set");
-        String keySecret = getEnv(ENV_SECRET);
-        Preconditions.checkNotNull(keyId, ENV_SECRET + " env not set");
-        ApiClient apiClient = new ApiClient(basePath, keyId, keySecret);
-        return new OrkesClients(apiClient);
-    }
-
-    static String getEnv(String key) {
-        return System.getenv(key);
-    }
-
-}
-```
-
+Add the [ApiUtil.java](../ApiUtil.java) file to set the environment variables.
 ## Running Workflows on Conductor Standalone (Installed Locally)
 
 ### Conductor Server Settings
@@ -300,17 +265,6 @@ To ensure the server has started successfully, open Conductor UI on http://local
 Now run the Java application, from your IDE. Now, the workflow is executed, and its execution status can be viewed from Conductor UI (http://localhost:5000).
 
 Navigate to the **Executions** tab to view the workflow execution.
-
-Open the Workbench tab and try running the 'greetings' workflow. You will notice that the workflow execution fails. This is because the task_handler.stop_processes() [HelloWorld.java] function is called and stops all workers included in the app, and therefore, there is no worker up and running to execute the tasks.
-
-Now, let's update the app `HelloWorld.java`
-
-```java
-To Do
-```
-
-By commenting the lines that execute the workflow and stop the task polling mechanism, we can re-run the app and run the workflow from the Conductor UI. The task is executed successfully.
-
 ## Running Workflows on Orkes Conductor
 
 For running the workflow in Orkes Conductor, 

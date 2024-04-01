@@ -1,4 +1,4 @@
-package io.orkes.samples.quickstart.workers;
+package io.orkes.conductor.sdk.examples.HelloWorld.workers;
 
 import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
