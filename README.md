@@ -26,7 +26,6 @@ Show support for the Conductor OSS.  Please help spread the awareness by starrin
     - [(Alternatively) Creating Workflows in JSON](#alternatively-creating-workflows-in-json)
   - [Step 2: Write Worker](#step-2-write-worker)
   - [Step 3: Write *Hello World* Application](#step-3-write-hello-world-application)
-  - [Step 4: Create SDKUtils](#step-4-create-sdkutils)
 - [Running Workflows on Conductor Standalone (Installed Locally)](#running-workflows-on-conductor-standalone-installed-locally)
   - [Conductor Server Settings](#conductor-server-settings)
   - [Start Conductor Server](#start-conductor-server)
