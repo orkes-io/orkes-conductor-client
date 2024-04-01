@@ -1,5 +1,4 @@
-<img width="1431" alt="Screenshot 2024-04-01 at 15 53 02" src="https://github.com/RizaFarheen/orkes-conductor-client/assets/163816773/cca44cb5-e50c-4664-9982-cc2f9b4696c9"># Conductor Java SDK
-
+# Conductor Java SDK
 Conductor is the leading open-source orchestration platform allowing developers to build highly scalable distributed applications. 
 
 Check out the [official documentation for Conductor](https://orkes.io/content).
