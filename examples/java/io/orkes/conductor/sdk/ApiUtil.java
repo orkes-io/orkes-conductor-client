@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.sdk.examples;
+package io.orkes.conductor.sdk;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.OrkesClients;
@@ -18,9 +18,9 @@ import io.orkes.conductor.client.OrkesClients;
 import com.google.common.base.Preconditions;
 
 public class ApiUtil {
-    private static final String ENV_ROOT_URI = "SDK_INTEGRATION_TESTS_SERVER_API_URL";
-    private static final String ENV_KEY_ID = "SDK_INTEGRATION_TESTS_SERVER_KEY_ID";
-    private static final String ENV_SECRET = "SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET";
+    private static final String ENV_ROOT_URI = "CONDUCTOR_SERVER_URL";
+    private static final String ENV_KEY_ID = "KEY";
+    private static final String ENV_SECRET = "SECRET";
 
     public static OrkesClients getOrkesClient() {
         final ApiClient apiClient = getApiClientWithCredentials();

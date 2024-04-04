@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.sdk.examples;
+package io.orkes.conductor.sdk;
 
 import java.util.List;
 
@@ -20,8 +20,6 @@ import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.SchedulerClient;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.WorkflowSchedule;
-
-import static io.orkes.conductor.sdk.examples.MetadataManagement.workflowDef;
 
 /**
  * Examples for managing Schedules in Orkes Conductor
@@ -62,8 +60,8 @@ public class SchedulerManagement {
         saveScheduleRequest.setName(scheduleName);
         // Create start workflow request
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowDef.getName());
-        startWorkflowRequest.setVersion(workflowDef.getVersion());
+        startWorkflowRequest.setName(MetadataManagement.workflowDef.getName());
+        startWorkflowRequest.setVersion(MetadataManagement.workflowDef.getVersion());
         startWorkflowRequest.setCorrelationId("testing");
         saveScheduleRequest.setStartWorkflowRequest(startWorkflowRequest);
 

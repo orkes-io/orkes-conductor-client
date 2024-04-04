@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.sdk.examples;
+package io.orkes.conductor.sdk;
 
 import java.util.Arrays;
 
@@ -19,7 +19,7 @@ import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.WorkflowClient;
 
-import static io.orkes.conductor.sdk.examples.MetadataManagement.workflowDef;
+import static io.orkes.conductor.sdk.MetadataManagement.workflowDef;
 
 /**
  * Examples for managing Workflow operations in Conductor
