@@ -236,7 +236,7 @@ resumeWorkflow(List<String> workflowIds)
 Workflow executions are retained until removed from the Conductor. This gives complete visibility into all the executions an application has - regardless of the number of executions. Conductor has a powerful search API that allows you to search for workflow executions.
 
 ```java
-To Do
+searchWorkflows(queryId, start, size, sort, freeText, query, skipCache);
 ```
 
 - **free_text:** Free text search to look for specific words in the workflow and task input/output
