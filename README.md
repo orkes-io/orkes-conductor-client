@@ -70,7 +70,7 @@ In this section, we will create a simple "Hello World" application that executes
 
 #### Creating Workflows by Code
 
-Create `workflow/CreateWorkflow.java` with the following:
+Create `workflow/GreetingsWorkflow.java` with the following:
 
 ```java
 package io.orkes.conductor.sdk.examples.HelloWorld.workflow;
@@ -81,10 +81,10 @@ import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 public class CreateWorkflow {
     private final WorkflowExecutor executor;
-    public CreateWorkflow(WorkflowExecutor executor) {
+    public GreetingsWorkflow(WorkflowExecutor executor) {
         this.executor = executor;
     }
-    public ConductorWorkflow<WorkflowInput> createSimpleWorkflow() {
+    public ConductorWorkflow<WorkflowInput> createWorkflow() {
         ConductorWorkflow<WorkflowInput> workflow = new ConductorWorkflow<>(executor);
         workflow.setName("greetings");
         workflow.setVersion(1);
@@ -120,8 +120,8 @@ Create `workflow.json` with the following:
 
 ```json
 {
-  "name": "hello",
-  "description": "hello workflow",
+  "name": "greetings",
+  "description": "Sample greetings workflow",
   "version": 1,
   "tasks": [
     {
@@ -157,7 +157,7 @@ Create `workers/ConductorWorkers.java` with a simple worker and workflow functio
 > A single workflow can have task workers written in different languages and deployed anywhere, making your workflow polyglot and distributed!
 
 ```java
-package io.orkes.conductor.sdk.examples.HelloWorld.workflow;
+package io.orkes.conductor.sdk.examples.HelloWorld.worker;
 
 import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
@@ -178,50 +178,52 @@ Let's add `Main.java` with a `main` method:
 ```java
 package io.orkes.conductor.sdk.examples.HelloWorld;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-
+import com.google.common.base.Preconditions;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+
+import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
-import io.orkes.samples.quickstart.utils.ApiUtil;
-import io.orkes.samples.quickstart.workflow.CreateWorkflow;
-import io.orkes.samples.quickstart.workflow.WorkflowInput;
+import io.orkes.conductor.sdk.examples.HelloWorld.workflow.GreetingsWorkflow;
+import io.orkes.conductor.sdk.examples.HelloWorld.workflow.WorkflowInput;
 
 public class Main {
 
+    private static final String ENV_ROOT_URI = "CONDUCTOR_SERVER_URL";
+    private static final String ENV_KEY_ID = "KEY";
+    private static final String ENV_SECRET = "SECRET";
+
     public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
-        OrkesClients orkesClients = ApiUtil.getOrkesClient();
+        //Initialise Conductor Client
+        OrkesClients orkesClients = getApiClientWithCredentials();
         TaskClient taskClient = orkesClients.getTaskClient();
         WorkflowClient workflowClient = orkesClients.getWorkflowClient();
         MetadataClient metadataClient = orkesClients.getMetadataClient();
 
+        //Initialise WorkflowExecutor and Conductor Workers
         WorkflowExecutor workflowExecutor = new WorkflowExecutor(taskClient, workflowClient, metadataClient, 10);
-        workflowExecutor.initWorkers("io.orkes.samples.quickstart.workers");
-        TaskRunnerConfigurer taskrunner = initWorkers(Arrays.asList(),taskClient);
-        CreateWorkflow workflowCreator = new CreateWorkflow(workflowExecutor);
-        ConductorWorkflow<WorkflowInput> simpleWorkflow = workflowCreator.createSimpleWorkflow();
-        simpleWorkflow.setVariables(new HashMap<>());
+        workflowExecutor.initWorkers("io.orkes.conductor.sdk.examples.HelloWorld.workers");
 
+        //Create the workflow with input
+        GreetingsWorkflow workflowCreator = new GreetingsWorkflow(workflowExecutor);
+        ConductorWorkflow<WorkflowInput> simpleWorkflow = workflowCreator.createWorkflow();
         WorkflowInput input = new WorkflowInput("Orkes");
         CompletableFuture<Workflow> workflowExecution = simpleWorkflow.executeDynamic(input);
         Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
 
-        
-        taskrunner.shutdown();
+        //Shutdown workflowClient and taskrunner
         workflowClient.shutdown();
         System.exit(0);
     }
@@ -232,6 +234,20 @@ public class Main {
         // Start Polling for tasks and execute them
         taskRunner.init();
         return taskRunner;
+    }
+
+    public static OrkesClients getApiClientWithCredentials() {
+        String basePath = System.getenv(ENV_ROOT_URI);
+        Preconditions.checkNotNull(basePath, ENV_ROOT_URI + " env not set");
+        String keyId = System.getenv(ENV_KEY_ID);
+        Preconditions.checkNotNull(keyId, ENV_KEY_ID + " env not set");
+        String keySecret = System.getenv(ENV_SECRET);
+        Preconditions.checkNotNull(keyId, ENV_SECRET + " env not set");
+        ApiClient apiClient = new ApiClient(basePath,keyId,keySecret);
+        apiClient.setWriteTimeout(30_000);
+        apiClient.setReadTimeout(30_000);
+        apiClient.setConnectTimeout(30_000);
+        return new OrkesClients(apiClient);
     }
 }
 ```
