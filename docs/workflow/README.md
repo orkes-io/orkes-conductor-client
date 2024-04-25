@@ -114,7 +114,7 @@ See [DynamicWorkflow](/example/java/io/orkes/conductor/sdk/examples/DynamicWorkf
 
 ### Kitchen-Sink Workflow
 
-For a more complex workflow example with all the supported features, see `kitchensink.java`.
+For a more complex workflow example with all the supported features, see [KitchenSink.java](/example/java/io/orkes/conductor/sdk/examples/KitchenSink.java)
 
 ## Executing Workflows
 
