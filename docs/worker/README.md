@@ -30,11 +30,11 @@ A Workflow task represents a unit of business logic that achieves a specific goa
 
 ## Implementing Workers
 
-The workers can be implemented by writing a simple Java function and annotating the function with the @worker_task. Conductor workers are services (similar to microservices) that follow the [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle).
+The workers can be implemented by writing a simple Java function and annotating the function with the `@worker_task`. Conductor workers are services (similar to microservices) that follow the [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle).
 
 Workers can be hosted along with the workflow or run in a distributed environment where a single workflow uses workers deployed and running in different machines/VMs/containers. Whether to keep all the workers in the same application or run them as a distributed application is a design and architectural choice. Conductor is well suited for both kinds of scenarios.
 
-You can create or convert any existing Java function to a distributed worker by adding @WorkerTask annotation to it. Here is a simple worker that takes name as input and returns greetings:
+You can create or convert any existing Java function to a distributed worker by adding `@WorkerTask` annotation to it. Here is a simple worker that takes name as input and returns greetings:
 
 ```java
 import com.netflix.conductor.sdk.workflow.task.InputParam;
@@ -195,8 +195,7 @@ workflow.add(jqtask);
 ## Worker vs. Microservice/HTTP Endpoints
 
 > [!tip] 
-> Workers are a lightweight alternative to exposing an HTTP endpoint and orchestrating using `HTTP` tasks. 
->  Using workers is a recommended approach if you do not need to expose the service over HTTP or gRPC endpoints.
+> Workers are a lightweight alternative to exposing an HTTP endpoint and orchestrating using `HTTP` tasks. Using workers is a recommended approach if you do not need to expose the service over HTTP or gRPC endpoints.
 
 There are several advantages to this approach:
 
