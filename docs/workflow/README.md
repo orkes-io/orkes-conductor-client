@@ -155,7 +155,8 @@ Workflows represent the application state. With Conductor, you can query the wor
 
 ```java
 import io.orkes.conductor.client.OrkesClients;
-OrkesClients orkesClients = ApiUtil.getOrkesClient();
+import io.orkes.conductor.client.ApiClient;
+OrkesClients orkesClients = OrkesClients(getApiClientWithCredentials());
 WorkflowClient workflowClient = orkesClients.getWorkflowClient();
 ```
 
@@ -287,7 +288,7 @@ import java.util.concurrent.TimeoutException;
 public class TaskDefinitionTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
-        OrkesClients orkesClients = ApiUtil.getOrkesClient();
+        OrkesClients orkesClients = OrkesClients(getApiClientWithCredentials());
         TaskClient taskClient = orkesClients.getTaskClient();
         WorkflowClient workflowClient = orkesClients.getWorkflowClient();
         MetadataClient metadataClient = orkesClients.getMetadataClient();
@@ -343,4 +344,4 @@ public class TaskDefinitionTest {
 POST /api/metadata/taskdef -d @task_def.json
 ```
 
-See `task_configure.java` for a detailed working app.
+See [TaskConfigure.java]((/example/java/io/orkes/conductor/sdk/examples/TaskConfigure.java) ) for a detailed working app.
