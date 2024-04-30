@@ -252,7 +252,7 @@ public class Main {
     }
 }
 ```
-Add the [ApiUtil.java](example/java/io/orkes/conductor/sdk/examples/ApiUtil.java) file to set the environment variables.
+Add the [ApiUtil.java](examples/java/io/orkes/conductor/sdk/ApiUtil.java) file to set the environment variables.
 ## Running Workflows on Conductor Standalone (Installed Locally)
 
 ### Conductor Server Settings
