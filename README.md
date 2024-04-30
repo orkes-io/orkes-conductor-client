@@ -91,7 +91,7 @@ public class CreateWorkflow {
         workflow.setVersion(1);
         SimpleTask greetingsTask = new SimpleTask("greet", "greet_ref");
         greetingsTask.input("name", "${workflow.input.name}");
-        workflow.add(greetingsWF);
+        workflow.add(greetingsTask);
         return workflow;
     }
 }
