@@ -89,9 +89,9 @@ public class CreateWorkflow {
         ConductorWorkflow<WorkflowInput> workflow = new ConductorWorkflow<>(executor);
         workflow.setName("greetings");
         workflow.setVersion(1);
-        SimpleTask greetingsWF = new SimpleTask("greet", "greet_ref");
-        greetingsWF.input("name", "${workflow.input.name}");
-        workflow.add(greetingsWF);
+        SimpleTask greetingsTask = new SimpleTask("greet", "greet_ref");
+        greetingsTask.input("name", "${workflow.input.name}");
+        workflow.add(greetingsTask);
         return workflow;
     }
 }
@@ -238,13 +238,7 @@ public class Main {
     }
 
     public static OrkesClients getApiClientWithCredentials() {
-        String basePath = System.getenv(ENV_ROOT_URI);
-        Preconditions.checkNotNull(basePath, ENV_ROOT_URI + " env not set");
-        String keyId = System.getenv(ENV_KEY_ID);
-        Preconditions.checkNotNull(keyId, ENV_KEY_ID + " env not set");
-        String keySecret = System.getenv(ENV_SECRET);
-        Preconditions.checkNotNull(keyId, ENV_SECRET + " env not set");
-        ApiClient apiClient = new ApiClient(basePath,keyId,keySecret);
+        ApiClient apiClient = new ApiClient(ENV_ROOT_URI,ENV_KEY_ID,ENV_SECRET);
         apiClient.setWriteTimeout(30_000);
         apiClient.setReadTimeout(30_000);
         apiClient.setConnectTimeout(30_000);
@@ -252,7 +246,7 @@ public class Main {
     }
 }
 ```
-Add the [ApiUtil.java](example/java/io/orkes/conductor/sdk/examples/ApiUtil.java) file to set the environment variables.
+Add the [ApiUtil.java](examples/java/io/orkes/conductor/sdk/ApiUtil.java) file to set the environment variables.
 ## Running Workflows on Conductor Standalone (Installed Locally)
 
 ### Conductor Server Settings
