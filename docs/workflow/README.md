@@ -114,7 +114,7 @@ See [DynamicWorkflow](/example/java/io/orkes/conductor/sdk/examples/DynamicWorkf
 
 ### Kitchen-Sink Workflow
 
-For a more complex workflow example with all the supported features, see `kitchensink.java`.
+For a more complex workflow example with all the supported features, see [KitchenSink.java](/example/java/io/orkes/conductor/sdk/examples/KitchenSink.java)
 
 ## Executing Workflows
 
@@ -147,15 +147,16 @@ Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
 ## Managing Workflow Executions
 
 > [!note] 
-> See [workflow_ops.java] for a fully working application that demonstrates working with the workflow executions and sending signals to the workflow to manage its state.
+> See `workflow_ops.java` for a fully working application that demonstrates working with the workflow executions and sending signals to the workflow to manage its state.
 
 Workflows represent the application state. With Conductor, you can query the workflow execution state anytime during its lifecycle. You can also send signals to the workflow that determines the outcome of the workflow state.
 
-[WorkflowClient] is the client interface used to manage workflow executions.
+`WorkflowClient` is the client interface used to manage workflow executions.
 
 ```java
 import io.orkes.conductor.client.OrkesClients;
-OrkesClients orkesClients = ApiUtil.getOrkesClient();
+import io.orkes.conductor.client.ApiClient;
+OrkesClients orkesClients = OrkesClients(getApiClientWithCredentials());
 WorkflowClient workflowClient = orkesClients.getWorkflowClient();
 ```
 
@@ -287,7 +288,7 @@ import java.util.concurrent.TimeoutException;
 public class TaskDefinitionTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
-        OrkesClients orkesClients = ApiUtil.getOrkesClient();
+        OrkesClients orkesClients = OrkesClients(getApiClientWithCredentials());
         TaskClient taskClient = orkesClients.getTaskClient();
         WorkflowClient workflowClient = orkesClients.getWorkflowClient();
         MetadataClient metadataClient = orkesClients.getMetadataClient();
@@ -343,4 +344,4 @@ public class TaskDefinitionTest {
 POST /api/metadata/taskdef -d @task_def.json
 ```
 
-See [task_configure.java] for a detailed working app.
+See [TaskConfigure.java]((/example/java/io/orkes/conductor/sdk/examples/TaskConfigure.java) ) for a detailed working app.
