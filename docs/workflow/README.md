@@ -114,7 +114,7 @@ See [DynamicWorkflow](../../examples/java/io/orkes/conductor/sdk/DynamicWorkflow
 
 ### Kitchen-Sink Workflow
 
-For a more complex workflow example with all the supported features, see [KitchenSink.java](../../example/java/io/orkes/conductor/sdk/examples/KitchenSink.java)
+For a more complex workflow example with all the supported features, see [KitchenSink.java](../../examples/java/io/orkes/conductor/sdk/KitchenSink.java)
 
 ## Executing Workflows
 
@@ -344,4 +344,4 @@ public class TaskDefinitionTest {
 POST /api/metadata/taskdef -d @task_def.json
 ```
 
-See [TaskConfigure.java]((../../example/java/io/orkes/conductor/sdk/examples/TaskConfigure.java) ) for a detailed working app.
+See [TaskConfigure.java]((../../examples/java/io/orkes/conductor/sdk/TaskConfigure.java) for a detailed working app.
