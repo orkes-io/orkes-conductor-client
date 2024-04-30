@@ -59,7 +59,6 @@ WorkflowExecutor executor = new WorkflowExecutor("http://server/api/");
   MUST have a no-args constructor*/       
 executor.initWorkers("com.company.package1,com.company.package2");
 ```
-Check [utils/SDKUtils.java](https://github.com/RizaFarheen/orkes-conductor-client/blob/sdk-readme-update/example/HelloWorld/utils/SDKUtils.java#L52C10-L53C82).
 
 ## Design Principles for Workers
 
