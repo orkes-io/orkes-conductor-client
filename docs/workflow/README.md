@@ -344,4 +344,4 @@ public class TaskDefinitionTest {
 POST /api/metadata/taskdef -d @task_def.json
 ```
 
-See [TaskConfigure.java]((../../examples/java/io/orkes/conductor/sdk/TaskConfigure.java) for a detailed working app.
+See [TaskConfigure.java](../../examples/java/io/orkes/conductor/sdk/TaskConfigure.java) for a detailed working app.
