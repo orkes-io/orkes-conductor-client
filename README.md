@@ -89,8 +89,8 @@ public class CreateWorkflow {
         ConductorWorkflow<WorkflowInput> workflow = new ConductorWorkflow<>(executor);
         workflow.setName("greetings");
         workflow.setVersion(1);
-        SimpleTask greetingsWF = new SimpleTask("greet", "greet_ref");
-        greetingsWF.input("name", "${workflow.input.name}");
+        SimpleTask greetingsTask = new SimpleTask("greet", "greet_ref");
+        greetingsTask.input("name", "${workflow.input.name}");
         workflow.add(greetingsWF);
         return workflow;
     }
