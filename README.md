@@ -238,13 +238,7 @@ public class Main {
     }
 
     public static OrkesClients getApiClientWithCredentials() {
-        String basePath = System.getenv(ENV_ROOT_URI);
-        Preconditions.checkNotNull(basePath, ENV_ROOT_URI + " env not set");
-        String keyId = System.getenv(ENV_KEY_ID);
-        Preconditions.checkNotNull(keyId, ENV_KEY_ID + " env not set");
-        String keySecret = System.getenv(ENV_SECRET);
-        Preconditions.checkNotNull(keyId, ENV_SECRET + " env not set");
-        ApiClient apiClient = new ApiClient(basePath,keyId,keySecret);
+        ApiClient apiClient = new ApiClient(ENV_ROOT_URI,ENV_KEY_ID,ENV_SECRET);
         apiClient.setWriteTimeout(30_000);
         apiClient.setReadTimeout(30_000);
         apiClient.setConnectTimeout(30_000);
