@@ -80,12 +80,12 @@ import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
 import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
-public class CreateWorkflow {
+public class GreetingsWorkflow {
     private final WorkflowExecutor executor;
     public GreetingsWorkflow(WorkflowExecutor executor) {
         this.executor = executor;
     }
-    public ConductorWorkflow<WorkflowInput> createWorkflow() {
+    public ConductorWorkflow<WorkflowInput> GreetingsWorkflow() {
         ConductorWorkflow<WorkflowInput> workflow = new ConductorWorkflow<>(executor);
         workflow.setName("greetings");
         workflow.setVersion(1);

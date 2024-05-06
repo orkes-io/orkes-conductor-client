@@ -94,7 +94,7 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 
 ### Example Unit Testing Application
 
-See `test_workflows.java` for a fully functional example of how to test a moderately complex workflow with branches.
+See [WorkflowTest.java](../examples/java/io/orkes/conductor/sdk/WorkflowTest.java) for a fully functional example of how to test a moderately complex workflow with branches.
 
 ## Workflow Deployments Using CI/CD
 
@@ -105,7 +105,7 @@ Here is a recommended approach when defining workflows using JSON:
 
 - Treat your workflow metadata as code.
 - Check in the workflow and task definitions along with the application code.
-- Use `POST /api/metadata/* endpoints` or `To Do` to register/update workflows as part of the deployment process.
+- Use `POST /api/metadata/* endpoints` or MetadataClient(com.conductor.client.MetadataClient) to register/update workflows as part of the deployment process.
 - Version your workflows. If there is a significant change, change the version field of the workflow. See versioning workflows below for more details.
 
 ## Versioning Workflows
