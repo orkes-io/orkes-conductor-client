@@ -147,7 +147,7 @@ Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
 ## Managing Workflow Executions
 
 > [!note] 
-> See `workflow_ops.java` for a fully working application that demonstrates working with the workflow executions and sending signals to the workflow to manage its state.
+> See [WorkflowOps.java](../../examples/java/io/orkes/conductor/sdk/WorkflowOps.java) for a fully working application that demonstrates working with the workflow executions and sending signals to the workflow to manage its state.
 
 Workflows represent the application state. With Conductor, you can query the workflow execution state anytime during its lifecycle. You can also send signals to the workflow that determines the outcome of the workflow state.
 
