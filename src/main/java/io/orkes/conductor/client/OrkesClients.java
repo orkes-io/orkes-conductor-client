@@ -46,6 +46,10 @@ public class OrkesClients {
         return new OrkesSecretClient(apiClient);
     }
 
+    public SchemaClient getSchemaClient() {
+        return new OrkesSchemaClient(apiClient);
+    }
+
     public TaskClient getTaskClient() {
         return new OrkesTaskClient(apiClient);
     }
