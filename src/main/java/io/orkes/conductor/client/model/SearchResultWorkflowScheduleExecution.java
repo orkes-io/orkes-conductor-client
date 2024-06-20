@@ -14,8 +14,6 @@ package io.orkes.conductor.client.model;
 
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
-
 import lombok.Data;
 
 @Data
