@@ -12,6 +12,8 @@
  */
 package io.orkes.conductor.client;
 
+import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+
 import io.orkes.conductor.client.http.*;
 
 public class OrkesClients {
@@ -48,5 +50,17 @@ public class OrkesClients {
 
     public TaskClient getTaskClient() {
         return new OrkesTaskClient(apiClient);
+    }
+
+    public IntegrationClient getIntegrationClient() {
+        return new OrkesIntegrationClient(apiClient);
+    }
+
+    public PromptClient getPromptClient() {
+        return new OrkesPromptClient(apiClient);
+    }
+
+    public WorkflowExecutor getWorkflowExecutor() {
+        return new WorkflowExecutor(getTaskClient(), getWorkflowClient(), getMetadataClient(), 100);
     }
 }

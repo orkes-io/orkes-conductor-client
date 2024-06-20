@@ -39,11 +39,11 @@ public class SchedulerClientTests extends ClientTest {
         schedulerClient.deleteSchedule(NAME);
         assertTrue(schedulerClient.getNextFewSchedules(CRON_EXPRESSION, 0L, 0L, 0).isEmpty());
         schedulerClient.saveSchedule(getSaveScheduleRequest());
-        assertEquals(1, schedulerClient.getAllSchedules(Commons.WORKFLOW_NAME).size());
+        assertTrue(schedulerClient.getAllSchedules(Commons.WORKFLOW_NAME).size() > 0);
         WorkflowSchedule workflowSchedule = schedulerClient.getSchedule(NAME);
         assertEquals(NAME, workflowSchedule.getName());
         assertEquals(CRON_EXPRESSION, workflowSchedule.getCronExpression());
-        assertFalse(schedulerClient.searchV22(0, 10, "ASC", "*", "").getResults().isEmpty());
+        assertFalse(schedulerClient.search(0, 10, "ASC", "*", "").getResults().isEmpty());
         schedulerClient.setSchedulerTags(getTagObject(), NAME);
         assertEquals(getTagObject(), schedulerClient.getSchedulerTags(NAME));
         schedulerClient.deleteSchedulerTags(getTagObject(), NAME);

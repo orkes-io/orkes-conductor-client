@@ -22,6 +22,7 @@ import java.util.Map;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
+import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecution;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.WorkflowSchedule;
@@ -1331,6 +1332,13 @@ public class SchedulerResourceApi {
         return resp.getData();
     }
 
+    public SearchResultWorkflowScheduleExecution search(
+        Integer start, Integer size, String sort, String freeText, String query)
+        throws ApiException {
+        ApiResponse<SearchResultWorkflowScheduleExecution> resp = searchWithHttpInfo(start, size, sort, freeText, query);
+        return resp.getData();
+    }
+
     /**
      * Search for workflows based on payload and other parameters use sort options as
      * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
@@ -1352,6 +1360,16 @@ public class SchedulerResourceApi {
                 searchV22ValidateBeforeCall(start, size, sort, freeText, query, null, null);
         Type localVarReturnType =
                 new TypeReference<SearchResultWorkflowScheduleExecutionModel>() {}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    private ApiResponse<SearchResultWorkflowScheduleExecution> searchWithHttpInfo(
+        Integer start, Integer size, String sort, String freeText, String query)
+        throws ApiException {
+        com.squareup.okhttp.Call call =
+            searchV22ValidateBeforeCall(start, size, sort, freeText, query, null, null);
+        Type localVarReturnType =
+            new TypeReference<SearchResultWorkflowScheduleExecution>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 

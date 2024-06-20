@@ -15,21 +15,21 @@ jobs:
     name: Integration Tests
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - name: Set up Zulu JDK 11
+        uses: actions/checkout@v4
+      - name: Set up Zulu JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: "zulu"
-          java-version: "11"
+          java-version: "17"
       - name: Build and run tests
         run: |
           hostname
           echo "host is $HOSTNAME"
           ./gradlew clean test
         env:
-          SDK_INTEGRATION_TESTS_SERVER_API_URL: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_API_URL }}
-          SDK_INTEGRATION_TESTS_SERVER_KEY_ID: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_KEY_ID }}
-          SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET: ${{ secrets.SDK_INTEGRATION_TESTS_SERVER_KEY_SECRET }}
+          CONDUCTOR_SERVER_URL: ${{ secrets.CONDUCTOR_SERVER_URL }}
+          CONDUCTOR_SERVER_AUTH_KEY: ${{ secrets.CONDUCTOR_SERVER_AUTH_KEY }}
+          CONDUCTOR_SERVER_AUTH_SECRET: ${{ secrets.CONDUCTOR_SERVER_AUTH_SECRET }}
           USER1_APPLICATION_ID: ${{ secrets.USER1_APPLICATION_ID }}
           USER1_KEY_ID: ${{ secrets.USER1_KEY_ID }}
           USER1_SECRET: ${{ secrets.USER1_SECRET }}
