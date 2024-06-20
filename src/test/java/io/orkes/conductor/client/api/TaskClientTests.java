@@ -90,10 +90,10 @@ public class TaskClientTests extends ClientTest {
         int maxLoop = 10;
         int count = 0;
         while (!workflow.getStatus().isTerminal() && count < maxLoop) {
-            workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal()).forEach(running -> {
+            workflow.getTasks().stream().filter(t -> !t.getStatus().isTerminal() && t.getTaskType().equals("SIMPLE")).forEach(running -> {
                 String referenceName = running.getReferenceTaskName();
-                System.out.println("Updating " + referenceName);
-                taskClient.updateTask(workflowId, referenceName, TaskResult.Status.COMPLETED, Map.of("k", "value"));
+                System.out.println("Updating " + referenceName + ", and its status is " + running.getStatus());
+                taskClient.updateTaskSync(workflowId, referenceName, TaskResult.Status.COMPLETED, Map.of("k", "value"));
             });
             count++;
             Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
