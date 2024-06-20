@@ -10,19 +10,25 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.model.integration;
+package io.orkes.conductor.client.model.integration.ai;
 
-import java.util.Map;
+import java.util.List;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class IntegrationUpdate {
+@EqualsAndHashCode(callSuper = true)
+public class ChatCompletion extends LLMWorkerInput {
+    private List<ChatMessage> messages;
 
-    private Category category;
-    private Map<String, String> configuration;
-    private String description;
-    private Boolean enabled;
-    private String type;
-
+    //Starting template
+    //e.g. start by saying:
+    // you are a helpful assistant, who does not deviate from the goals"
+    //You do not respond to questions that are not related to the topic
+    //Any answer you give - should be related to the following topic: weather
+    //
+    //
+    private String instructions;
+    private boolean jsonOutput;
 }

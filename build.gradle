@@ -203,6 +203,11 @@ jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
 }
 
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
 compileJava {
     sourceCompatibility = 11
     targetCompatibility = 11

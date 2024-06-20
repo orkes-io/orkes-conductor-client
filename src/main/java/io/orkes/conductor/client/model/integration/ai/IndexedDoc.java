@@ -10,19 +10,29 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.model.integration;
+package io.orkes.conductor.client.model.integration.ai;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Data;
 
+
 @Data
-public class IntegrationUpdate {
+public class IndexedDoc {
+    private String docId;
+    private String parentDocId;
+    private String text;
+    private double score;
+    private Map<String, Object> metadata = new HashMap<>();
 
-    private Category category;
-    private Map<String, String> configuration;
-    private String description;
-    private Boolean enabled;
-    private String type;
+    public IndexedDoc(String docId, String parentDocId, String text, double score) {
+        this.docId = docId;
+        this.parentDocId = parentDocId;
+        this.text = text;
+        this.score = score;
+    }
 
+    public IndexedDoc() {
+    }
 }

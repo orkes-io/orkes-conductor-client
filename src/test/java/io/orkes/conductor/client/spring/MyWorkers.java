@@ -18,13 +18,25 @@ import org.springframework.stereotype.Component;
 
 import com.netflix.conductor.sdk.workflow.executor.task.TaskContext;
 import com.netflix.conductor.sdk.workflow.task.InputParam;
+import com.netflix.conductor.sdk.workflow.task.OutputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 
 @Component
-public class Workers {
+public class MyWorkers {
 
-    @WorkerTask(value = "hello", threadCount = 1, pollingInterval = 99)
-    public String helloWorld(@InputParam("name") String name) {
+    @WorkerTask("hello")
+    /**
+     * for the below method, the workflow task input should be like:
+     * {
+     *     "name": "orkes",
+     *     "age": 23
+     * }
+     * output:
+     * {
+     *     "greetings": "hello, Orkes"
+     * }
+     */
+    public @OutputParam("greetings") String helloWorld(String name) {
         TaskContext context = TaskContext.get();
         System.out.println(new Date() + ":: Poll count: " + context.getPollCount());
         if (context.getPollCount() < 5) {
@@ -37,7 +49,9 @@ public class Workers {
 
     @WorkerTask(value = "hello_again", pollingInterval = 333)
     public String helloAgain(@InputParam("name") String name) {
+
         TaskContext context = TaskContext.get();
+
         System.out.println(new Date() + ":: Poll count: " + context.getPollCount());
         if (context.getPollCount() < 5) {
             context.addLog("Not ready yet, poll count is only " + context.getPollCount());

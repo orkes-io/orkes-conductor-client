@@ -10,19 +10,21 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.model.integration;
+package io.orkes.conductor.client.model.integration.ai;
 
-import java.util.Map;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class IntegrationUpdate {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ChatMessage {
 
-    private Category category;
-    private Map<String, String> configuration;
-    private String description;
-    private Boolean enabled;
-    private String type;
+    public enum Actor {
+        user, assistant, system, human, chatbot
+    }
 
+    String role;
+    String message;
 }

@@ -29,9 +29,9 @@ import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.grpc.GrpcTaskClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
+import io.orkes.conductor.client.model.TaskSummary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.orkes.conductor.client.model.TaskSummary;
 
 public class OrkesTaskClient extends TaskClient implements AutoCloseable {
 

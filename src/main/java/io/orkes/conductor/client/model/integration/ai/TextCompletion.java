@@ -10,19 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.model.integration;
-
-import java.util.Map;
+package io.orkes.conductor.client.model.integration.ai;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
-public class IntegrationUpdate {
-
-    private Category category;
-    private Map<String, String> configuration;
-    private String description;
-    private Boolean enabled;
-    private String type;
+@ToString
+@EqualsAndHashCode(callSuper = true)
+public class TextCompletion extends LLMWorkerInput {
 
 }

@@ -10,19 +10,24 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.model.integration;
+package io.orkes.conductor.client.model.integration.ai;
 
-import java.util.Map;
+import java.util.List;
 
 import lombok.Data;
 
 @Data
-public class IntegrationUpdate {
+public class LLMWorkerInput {
 
-    private Category category;
-    private Map<String, String> configuration;
-    private String description;
-    private Boolean enabled;
-    private String type;
+    private String llmProvider;
+    private String model;
+    private String embeddingModel;
+    private String embeddingModelProvider;
+    private String prompt;
+    private double temperature = 0.1;
+    private double topP = 0.9;
+    private List<String> stopWords;
+    private int maxTokens;
+    private int maxResults = 1;
 
 }

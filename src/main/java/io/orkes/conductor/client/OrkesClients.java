@@ -60,5 +60,7 @@ public class OrkesClients {
         return new OrkesPromptClient(apiClient);
     }
 
-
+    public WorkflowExecutor getWorkflowExecutor() {
+        return new WorkflowExecutor(getTaskClient(), getWorkflowClient(), getMetadataClient(), 100);
+    }
 }
