@@ -30,9 +30,8 @@ ext {
             azureIdentity   : '1.3.7',
             eureka          : '1.10.17',
             wiremock        : '2.33.2',
-            ioGRPC          : '1.49.0',
-            ioGRPC          : '1.49.0',
-            protoBuf        : '3.19.4',
+            ioGRPC          : '1.63.1',
+            protoBuf        : '3.25.3',
             lombok          : '1.18.24',
             revJAXRS        : '2.1.1',
             log4j           : '2.17.1',
@@ -209,8 +208,8 @@ allprojects {
     }
 }
 compileJava {
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    sourceCompatibility = 17
+    targetCompatibility = 17
 }
 
 configurations.implementation {
