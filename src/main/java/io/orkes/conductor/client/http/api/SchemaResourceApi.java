@@ -13,19 +13,10 @@
 package io.orkes.conductor.client.http.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.orkes.conductor.client.model.SchemaDef;
 import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.Configuration;
-import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
 
 import java.io.IOException;
-
-
-import io.orkes.conductor.client.model.Schema;
-import io.orkes.conductor.client.model.Tag;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -89,7 +80,7 @@ public class SchemaResourceApi {
         if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
                     com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
@@ -111,6 +102,11 @@ public class SchemaResourceApi {
         
         com.squareup.okhttp.Call call = deleteSchemaByNameCall(name, progressListener, progressRequestListener);
         return call;
+
+        
+        
+        
+        
     }
 
     /**
@@ -130,10 +126,11 @@ public class SchemaResourceApi {
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    private ApiResponse<Void> deleteSchemaByNameWithHttpInfo(String name) throws ApiException {
+    public ApiResponse<Void> deleteSchemaByNameWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = deleteSchemaByNameValidateBeforeCall(name, null, null);
         return apiClient.execute(call);
     }
+
 
     /**
      * Build call for deleteSchemaByNameAndVersion
@@ -144,7 +141,7 @@ public class SchemaResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call deleteSchemaByNameAndVersionCall(String name, Integer version, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call deleteSchemaByNameAndVersionCall(String name, Integer version, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
@@ -174,7 +171,7 @@ public class SchemaResourceApi {
         if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
                     com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
@@ -200,6 +197,11 @@ public class SchemaResourceApi {
         
         com.squareup.okhttp.Call call = deleteSchemaByNameAndVersionCall(name, version, progressListener, progressRequestListener);
         return call;
+
+        
+        
+        
+        
     }
 
     /**
@@ -221,190 +223,13 @@ public class SchemaResourceApi {
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    private ApiResponse<Void> deleteSchemaByNameAndVersionWithHttpInfo(String name, Integer version) throws ApiException {
+    public ApiResponse<Void> deleteSchemaByNameAndVersionWithHttpInfo(String name, Integer version) throws ApiException {
         com.squareup.okhttp.Call call = deleteSchemaByNameAndVersionValidateBeforeCall(name, version, null, null);
         return apiClient.execute(call);
     }
 
     /**
-     * Build call for deleteTagForSchema
-     * @param body  (required)
-     * @param name  (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
-    private com.squareup.okhttp.Call deleteTagForSchemaCall(List<Tag> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = body;
-        
-        // create path and map variables
-        String localVarPath = "/schema/{name}/tags"
-            .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        final String[] localVarAccepts = {
-            
-        };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {
-            "application/json"
-        };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
-                @Override
-                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                    .build();
-                }
-            });
-        }
-
-        String[] localVarAuthNames = new String[] { "api_key" };
-        return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
-    }
-    
-    @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call deleteTagForSchemaValidateBeforeCall(List<Tag> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        // verify the required parameter 'body' is set
-        if (body == null) {
-            throw new ApiException("Missing the required parameter 'body' when calling deleteTagForSchema(Async)");
-        }
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException("Missing the required parameter 'name' when calling deleteTagForSchema(Async)");
-        }
-        
-        com.squareup.okhttp.Call call = deleteTagForSchemaCall(body, name, progressListener, progressRequestListener);
-        return call;
-    }
-
-    /**
-     * Delete a tag for schema name
-     * 
-     * @param body  (required)
-     * @param name  (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public void deleteTagForSchema(List<Tag> body, String name) throws ApiException {
-        deleteTagForSchemaWithHttpInfo(body, name);
-    }
-
-    /**
-     * Delete a tag for schema name
-     * 
-     * @param body  (required)
-     * @param name  (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    private ApiResponse<Void> deleteTagForSchemaWithHttpInfo(List<Tag> body, String name) throws ApiException {
-        com.squareup.okhttp.Call call = deleteTagForSchemaValidateBeforeCall(body, name, null, null);
-        return apiClient.execute(call);
-    }
-
-    /**
-     * Build call for getAllSchemas
-     * @param name  (optional)
-     * @param version  (optional)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
-    private com.squareup.okhttp.Call getAllSchemasCall(String name, Integer version, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = null;
-        
-        // create path and map variables
-        String localVarPath = "/schema";
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        if (name != null)
-        localVarQueryParams.addAll(apiClient.parameterToPair("name", name));
-        if (version != null)
-        localVarQueryParams.addAll(apiClient.parameterToPair("version", version));
-
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        final String[] localVarAccepts = {
-            "application/json"
-        };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {
-            
-        };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
-                @Override
-                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                    .build();
-                }
-            });
-        }
-
-        String[] localVarAuthNames = new String[] { "api_key" };
-        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
-    }
-    
-    @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getAllSchemasValidateBeforeCall(String name, Integer version, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        
-        com.squareup.okhttp.Call call = getAllSchemasCall(name, version, progressListener, progressRequestListener);
-        return call;
-    }
-
-    /**
-     * List all schemas or get schemas by name, or a schema by name and version
-     * 
-     * @param name  (optional)
-     * @param version  (optional)
-     * @return List&lt;Schema&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public List<Schema> getAllSchemas(String name, Integer version) throws ApiException {
-        ApiResponse<List<Schema>> resp = getAllSchemasWithHttpInfo(name, version);
-        return resp.getData();
-    }
-
-    /**
-     * List all schemas or get schemas by name, or a schema by name and version
-     * 
-     * @param name  (optional)
-     * @param version  (optional)
-     * @return ApiResponse&lt;List&lt;Schema&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    private ApiResponse<List<Schema>> getAllSchemasWithHttpInfo(String name, Integer version) throws ApiException {
-        com.squareup.okhttp.Call call = getAllSchemasValidateBeforeCall(name, version, null, null);
-        Type localVarReturnType = new TypeReference<List<Schema>>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
-    }
-
-    /**
+       /**
      * Build call for getSchemaByNameAndVersion
      * @param name  (required)
      * @param version  (required)
@@ -413,7 +238,7 @@ public class SchemaResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call getSchemaByNameAndVersionCall(String name, Integer version, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call getSchemaByNameAndVersionCall(String name, Integer version, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
@@ -443,7 +268,7 @@ public class SchemaResourceApi {
         if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
                     com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
@@ -469,6 +294,11 @@ public class SchemaResourceApi {
         
         com.squareup.okhttp.Call call = getSchemaByNameAndVersionCall(name, version, progressListener, progressRequestListener);
         return call;
+
+        
+        
+        
+        
     }
 
     /**
@@ -476,11 +306,11 @@ public class SchemaResourceApi {
      * 
      * @param name  (required)
      * @param version  (required)
-     * @return Schema
+     * @return SchemaDef
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Schema getSchemaByNameAndVersion(String name, Integer version) throws ApiException {
-        ApiResponse<Schema> resp = getSchemaByNameAndVersionWithHttpInfo(name, version);
+    public SchemaDef getSchemaByNameAndVersion(String name, Integer version) throws ApiException {
+        ApiResponse<SchemaDef> resp = getSchemaByNameAndVersionWithHttpInfo(name, version);
         return resp.getData();
     }
 
@@ -489,189 +319,13 @@ public class SchemaResourceApi {
      * 
      * @param name  (required)
      * @param version  (required)
-     * @return ApiResponse&lt;Schema&gt;
+     * @return ApiResponse&lt;SchemaDef&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    private ApiResponse<Schema> getSchemaByNameAndVersionWithHttpInfo(String name, Integer version) throws ApiException {
+    public ApiResponse<SchemaDef> getSchemaByNameAndVersionWithHttpInfo(String name, Integer version) throws ApiException {
         com.squareup.okhttp.Call call = getSchemaByNameAndVersionValidateBeforeCall(name, version, null, null);
-        Type localVarReturnType = new TypeReference<Schema>(){}.getType();
+        Type localVarReturnType = new TypeReference<SchemaDef>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
-    }
-
-    /**
-     * Build call for getTagsForSchema
-     * @param name  (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
-    private com.squareup.okhttp.Call getTagsForSchemaCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = null;
-        
-        // create path and map variables
-        String localVarPath = "/schema/{name}/tags"
-            .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        final String[] localVarAccepts = {
-            "application/json"
-        };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {
-            
-        };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
-                @Override
-                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                    .build();
-                }
-            });
-        }
-
-        String[] localVarAuthNames = new String[] { "api_key" };
-        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
-    }
-    
-    @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getTagsForSchemaValidateBeforeCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException("Missing the required parameter 'name' when calling getTagsForSchema(Async)");
-        }
-        
-        com.squareup.okhttp.Call call = getTagsForSchemaCall(name, progressListener, progressRequestListener);
-        return call;
-    }
-
-    /**
-     * Get tags by schema name
-     * 
-     * @param name  (required)
-     * @return List&lt;Tag&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public List<Tag> getTagsForSchema(String name) throws ApiException {
-        ApiResponse<List<Tag>> resp = getTagsForSchemaWithHttpInfo(name);
-        return resp.getData();
-    }
-
-    /**
-     * Get tags by schema name
-     * 
-     * @param name  (required)
-     * @return ApiResponse&lt;List&lt;Tag&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    private ApiResponse<List<Tag>> getTagsForSchemaWithHttpInfo(String name) throws ApiException {
-        com.squareup.okhttp.Call call = getTagsForSchemaValidateBeforeCall(name, null, null);
-        Type localVarReturnType = new TypeReference<List<Tag>>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
-    }
-
-    /**
-     * Build call for putTagForSchema
-     * @param body  (required)
-     * @param name  (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
-    private com.squareup.okhttp.Call putTagForSchemaCall(List<Tag> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = body;
-        
-        // create path and map variables
-        String localVarPath = "/schema/{name}/tags"
-            .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        final String[] localVarAccepts = {
-            
-        };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {
-            "application/json"
-        };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
-                @Override
-                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                    .build();
-                }
-            });
-        }
-
-        String[] localVarAuthNames = new String[] { "api_key" };
-        return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
-    }
-    
-    @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call putTagForSchemaValidateBeforeCall(List<Tag> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        // verify the required parameter 'body' is set
-        if (body == null) {
-            throw new ApiException("Missing the required parameter 'body' when calling putTagForSchema(Async)");
-        }
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException("Missing the required parameter 'name' when calling putTagForSchema(Async)");
-        }
-        
-        com.squareup.okhttp.Call call = putTagForSchemaCall(body, name, progressListener, progressRequestListener);
-        return call;
-    }
-
-    /**
-     * Put a tag to schema name
-     * 
-     * @param body  (required)
-     * @param name  (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public void putTagForSchema(List<Tag> body, String name) throws ApiException {
-        putTagForSchemaWithHttpInfo(body, name);
-    }
-
-    /**
-     * Put a tag to schema name
-     * 
-     * @param body  (required)
-     * @param name  (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    private ApiResponse<Void> putTagForSchemaWithHttpInfo(List<Tag> body, String name) throws ApiException {
-        com.squareup.okhttp.Call call = putTagForSchemaValidateBeforeCall(body, name, null, null);
-        return apiClient.execute(call);
     }
 
     /**
@@ -683,7 +337,7 @@ public class SchemaResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call saveSchemaCall(Schema body, Boolean newVersion, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call saveSchemaCall(SchemaDef body, Boolean newVersion, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
         
         // create path and map variables
@@ -710,27 +364,16 @@ public class SchemaResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new com.squareup.okhttp.Interceptor() {
-                                @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
-                                        throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                    .build();
+                }
+            });
         }
 
         String[] localVarAuthNames = new String[] { "api_key" };
@@ -738,7 +381,7 @@ public class SchemaResourceApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call saveSchemaValidateBeforeCall(Schema body, Boolean newVersion, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call saveSchemaValidateBeforeCall(SchemaDef body, Boolean newVersion, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling saveSchema(Async)");
@@ -746,6 +389,11 @@ public class SchemaResourceApi {
         
         com.squareup.okhttp.Call call = saveSchemaCall(body, newVersion, progressListener, progressRequestListener);
         return call;
+
+        
+        
+        
+        
     }
 
     /**
@@ -753,11 +401,11 @@ public class SchemaResourceApi {
      * 
      * @param body  (required)
      * @param newVersion  (optional, default to false)
-     * @return Schema
+     * @return SchemaDef
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Schema saveSchema(Schema body, Boolean newVersion) throws ApiException {
-        ApiResponse<Schema> resp = saveSchemaWithHttpInfo(body, newVersion);
+    public SchemaDef saveSchema(SchemaDef body, Boolean newVersion) throws ApiException {
+        ApiResponse<SchemaDef> resp = saveSchemaWithHttpInfo(body, newVersion);
         return resp.getData();
     }
 
@@ -766,12 +414,12 @@ public class SchemaResourceApi {
      * 
      * @param body  (required)
      * @param newVersion  (optional, default to false)
-     * @return ApiResponse&lt;Schema&gt;
+     * @return ApiResponse&lt;SchemaDef&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    private ApiResponse<Schema> saveSchemaWithHttpInfo(Schema body, Boolean newVersion) throws ApiException {
+    public ApiResponse<SchemaDef> saveSchemaWithHttpInfo(SchemaDef body, Boolean newVersion) throws ApiException {
         com.squareup.okhttp.Call call = saveSchemaValidateBeforeCall(body, newVersion, null, null);
-        Type localVarReturnType = new TypeReference<Schema>(){}.getType();
+        Type localVarReturnType = new TypeReference<SchemaDef>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -784,7 +432,7 @@ public class SchemaResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call saveSchemasCall(List<Schema> body, Boolean newVersion, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call saveSchemasCall(List<SchemaDef> body, Boolean newVersion, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
         
         // create path and map variables
@@ -814,7 +462,7 @@ public class SchemaResourceApi {
         if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
                     com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
@@ -828,7 +476,7 @@ public class SchemaResourceApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call saveSchemasValidateBeforeCall(List<Schema> body, Boolean newVersion, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call saveSchemasValidateBeforeCall(List<SchemaDef> body, Boolean newVersion, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling saveSchemas(Async)");
@@ -836,6 +484,11 @@ public class SchemaResourceApi {
         
         com.squareup.okhttp.Call call = saveSchemasCall(body, newVersion, progressListener, progressRequestListener);
         return call;
+
+        
+        
+        
+        
     }
 
     /**
@@ -843,11 +496,11 @@ public class SchemaResourceApi {
      * 
      * @param body  (required)
      * @param newVersion  (optional, default to false)
-     * @return List&lt;Schema&gt;
+     * @return List&lt;SchemaDef&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public List<Schema> saveSchemas(List<Schema> body, Boolean newVersion) throws ApiException {
-        ApiResponse<List<Schema>> resp = saveSchemasWithHttpInfo(body, newVersion);
+    public List<SchemaDef> saveSchemas(List<SchemaDef> body, Boolean newVersion) throws ApiException {
+        ApiResponse<List<SchemaDef>> resp = saveSchemasWithHttpInfo(body, newVersion);
         return resp.getData();
     }
 
@@ -856,13 +509,12 @@ public class SchemaResourceApi {
      * 
      * @param body  (required)
      * @param newVersion  (optional, default to false)
-     * @return ApiResponse&lt;List&lt;Schema&gt;&gt;
+     * @return ApiResponse&lt;List&lt;SchemaDef&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    private ApiResponse<List<Schema>> saveSchemasWithHttpInfo(List<Schema> body, Boolean newVersion) throws ApiException {
+    private ApiResponse<List<SchemaDef>> saveSchemasWithHttpInfo(List<SchemaDef> body, Boolean newVersion) throws ApiException {
         com.squareup.okhttp.Call call = saveSchemasValidateBeforeCall(body, newVersion, null, null);
-        Type localVarReturnType = new TypeReference<List<Schema>>(){}.getType();
+        Type localVarReturnType = new TypeReference<List<SchemaDef>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
-
 }

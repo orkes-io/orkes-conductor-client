@@ -15,8 +15,7 @@ package io.orkes.conductor.client.http;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.SchemaClient;
 import io.orkes.conductor.client.http.api.SchemaResourceApi;
-import io.orkes.conductor.client.model.Schema;
-import io.orkes.conductor.client.model.Tag;
+import io.orkes.conductor.client.model.SchemaDef;
 
 import java.util.List;
 import java.util.concurrent.*;
@@ -65,13 +64,13 @@ public class OrkesSchemaClient extends SchemaClient implements AutoCloseable {
     }
 
     @Override
-    public Schema getSchema(String name, Integer version) {
+    public SchemaDef getSchema(String name, Integer version) {
         // Provide your implementation here
         return httpClient.getSchemaByNameAndVersion(name, version);
     }
 
     @Override
-    public Schema createSchema(Schema inputOutputSchema, boolean newVersion) {
+    public SchemaDef createSchema(SchemaDef inputOutputSchema, boolean newVersion) {
         // Provide your implementation here
         return httpClient.saveSchema(inputOutputSchema, newVersion);
     }
@@ -86,30 +85,6 @@ public class OrkesSchemaClient extends SchemaClient implements AutoCloseable {
     public void deleteSchema(String name, Integer version) {
         // Provide your implementation here
         schemaResourceApi.deleteSchemaByNameAndVersion(name, version);
-    }
-
-    @Override
-    public void putTag(String name, List<Tag> tag) {
-        // Provide your implementation here
-        schemaResourceApi.putTagForSchema(tag, name);
-    }
-
-    @Override
-    public void deleteTag(String name, List<Tag> tag) {
-        // Provide your implementation here
-        schemaResourceApi.deleteTagForSchema(tag, name);
-    }
-
-    @Override
-    public List<Tag> getTags(String name) {
-        // Provide your implementation here
-        return schemaResourceApi.getTagsForSchema(name);
-    }
-
-    @Override
-    public List<Schema> getAllSchemas(String name, Integer version) {
-        // Provide your implementation here
-        return schemaResourceApi.getAllSchemas(name, version);
     }
 
 

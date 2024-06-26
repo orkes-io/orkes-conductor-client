@@ -14,8 +14,7 @@ package io.orkes.conductor.client;
 
 
 import io.orkes.conductor.client.http.api.SchemaResourceApi;
-import io.orkes.conductor.client.model.Schema;
-import io.orkes.conductor.client.model.Tag;
+import io.orkes.conductor.client.model.SchemaDef;
 
 import java.util.List;
 
@@ -31,11 +30,11 @@ public abstract class SchemaClient  {
         this.schemaResourceApi = schemaResourceApi;
     }
 
-    public Schema getSchema(String name, Integer version) {
+    public SchemaDef getSchema(String name, Integer version) {
         return schemaResourceApi.getSchemaByNameAndVersion(name, version);
     }
 
-    public Schema createSchema(Schema inputOutputSchema, boolean newVersion) {
+    public SchemaDef createSchema(SchemaDef inputOutputSchema, boolean newVersion) {
         return schemaResourceApi.saveSchema(inputOutputSchema, newVersion);
     }
 
@@ -47,19 +46,7 @@ public abstract class SchemaClient  {
         schemaResourceApi.deleteSchemaByNameAndVersion(name, version);
     }
 
-    public void putTag(String name, List<Tag> tag) {
-        schemaResourceApi.putTagForSchema(tag, name);
-    }
-
-    public void deleteTag(String name, List<Tag> tag) {
-        schemaResourceApi.deleteTagForSchema(tag, name);
-    }
-
-    public List<Tag> getTags(String name) {
-        return schemaResourceApi.getTagsForSchema(name);
-    }
-
-    public List<Schema> getAllSchemas(String name, Integer version) {
+    public List<SchemaDef> getAllSchemas(String name, Integer version) {
         return schemaResourceApi.getAllSchemas(name, version);
     }
 }

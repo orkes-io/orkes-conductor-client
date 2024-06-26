@@ -9,7 +9,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Schema {
+public class SchemaDef {
 
     public enum Type {
         JSON, AVRO, PROTOBUF
@@ -23,5 +23,6 @@ public class Schema {
 
     private Map<String, Object> data;
 
-    private List<Tag> tags;
+    private String externalRef;
+
 }
