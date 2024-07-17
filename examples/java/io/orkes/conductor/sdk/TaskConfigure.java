@@ -1,6 +1,6 @@
 package io.orkes.conductor.sdk;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
+import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;

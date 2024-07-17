@@ -12,9 +12,12 @@
  */
 package io.orkes.conductor.client.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** Group */
@@ -52,16 +55,12 @@ public class Group {
         }
     }
 
-    @SerializedName("defaultAccess")
     private Map<String, List<String>> defaultAccess = null;
 
-    @SerializedName("description")
     private String description = null;
 
-    @SerializedName("id")
     private String id = null;
 
-    @SerializedName("roles")
     private List<Role> roles = null;
 
     public Group defaultAccess(Map<String, List<String>> defaultAccess) {

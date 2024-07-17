@@ -15,15 +15,14 @@ package io.orkes.conductor.client.model;
 import java.util.List;
 import java.util.Objects;
 
-import com.netflix.conductor.common.run.SearchResult;
-import com.netflix.conductor.common.run.WorkflowSummary;
+import io.orkes.conductor.client.model.run.SearchResult;
+import io.orkes.conductor.client.model.run.WorkflowSummary;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** ScrollableSearchResultWorkflowSummary */
 public class ScrollableSearchResultWorkflowSummary extends SearchResult<WorkflowSummary> {
-    @SerializedName("queryId")
+
     private String queryId = null;
 
     public ScrollableSearchResultWorkflowSummary queryId(String queryId) {

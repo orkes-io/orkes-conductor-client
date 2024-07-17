@@ -14,16 +14,34 @@ package io.orkes.conductor.client;
 
 import java.util.List;
 
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
+import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
-public abstract class MetadataClient extends com.netflix.conductor.client.http.MetadataClient {
+public abstract class MetadataClient {
+
+    public abstract void registerWorkflowDef(WorkflowDef workflowDef);
 
     public abstract void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite);
 
+    public abstract void updateWorkflowDefs(List<WorkflowDef> workflowDefs);
+
     public abstract void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite);
+
+    public abstract WorkflowDef getWorkflowDef(String name, Integer version);
+
+    public abstract void unregisterWorkflowDef(String name, Integer version);
+
+    public abstract List<TaskDef> getAllTaskDefs();
+
+    public abstract void registerTaskDefs(List<TaskDef> taskDefs);
+
+    public abstract void updateTaskDef(TaskDef taskDef);
+
+    public abstract TaskDef getTaskDef(String taskType);
+
+    public abstract void unregisterTaskDef(String taskType);
 
     public abstract void addTaskTag(TagObject tagObject, String taskName);
 

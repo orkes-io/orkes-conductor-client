@@ -36,7 +36,7 @@ public class TokenResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public static com.squareup.okhttp.Call generateTokenCall(
+    public static okhttp3.Call generateTokenCall(
             ApiClient apiClient,
             GenerateTokenRequest generateTokenRequest,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -67,12 +67,12 @@ public class TokenResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -98,7 +98,7 @@ public class TokenResourceApi {
                 progressRequestListener);
     }
 
-    private static com.squareup.okhttp.Call generateTokenValidateBeforeCall(
+    private static okhttp3.Call generateTokenValidateBeforeCall(
             ApiClient apiClient,
             GenerateTokenRequest generateTokenRequest,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -110,7 +110,7 @@ public class TokenResourceApi {
                     "Missing the required parameter 'generateTokenRequest' when calling generateToken(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 generateTokenCall(
                         apiClient, generateTokenRequest, progressListener, progressRequestListener);
         return call;
@@ -127,7 +127,7 @@ public class TokenResourceApi {
      */
     public static ApiResponse<Map<String, String>> generateTokenWithHttpInfo(
             ApiClient apiClient, GenerateTokenRequest generateTokenRequest) throws ApiException {
-        com.squareup.okhttp.Call call = generateTokenValidateBeforeCall(apiClient, generateTokenRequest, null, null);
+        okhttp3.Call call = generateTokenValidateBeforeCall(apiClient, generateTokenRequest, null, null);
         Type localVarReturnType = new TypeReference<Map<String, String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -141,7 +141,7 @@ public class TokenResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public static com.squareup.okhttp.Call getUserInfoCall(
+    public static okhttp3.Call getUserInfoCall(
             ApiClient apiClient,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -172,12 +172,12 @@ public class TokenResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -203,12 +203,12 @@ public class TokenResourceApi {
                 progressRequestListener);
     }
 
-    private static com.squareup.okhttp.Call getUserInfoValidateBeforeCall(
+    private static okhttp3.Call getUserInfoValidateBeforeCall(
             ApiClient apiClient,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getUserInfoCall(apiClient, progressListener, progressRequestListener);
         return call;
     }
@@ -223,7 +223,7 @@ public class TokenResourceApi {
      */
     public static ApiResponse<Object> getUserInfoWithHttpInfo(ApiClient apiClient)
             throws ApiException {
-        com.squareup.okhttp.Call call = getUserInfoValidateBeforeCall(apiClient, null, null);
+        okhttp3.Call call = getUserInfoValidateBeforeCall(apiClient, null, null);
         Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

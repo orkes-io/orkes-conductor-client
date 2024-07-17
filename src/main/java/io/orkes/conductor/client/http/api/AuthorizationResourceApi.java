@@ -55,7 +55,7 @@ public class AuthorizationResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getPermissionsCall(
+    public okhttp3.Call getPermissionsCall(
             String type,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -90,12 +90,12 @@ public class AuthorizationResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -121,7 +121,7 @@ public class AuthorizationResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getPermissionsValidateBeforeCall(
+    private okhttp3.Call getPermissionsValidateBeforeCall(
             String type,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -138,7 +138,7 @@ public class AuthorizationResourceApi {
                     "Missing the required parameter 'id' when calling getPermissions(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getPermissionsCall(type, id, progressListener, progressRequestListener);
         return call;
     }
@@ -168,7 +168,7 @@ public class AuthorizationResourceApi {
      */
     private ApiResponse<Map<String, List<Subject>>> getPermissionsWithHttpInfo(
             String type, String id) throws ApiException {
-        com.squareup.okhttp.Call call = getPermissionsValidateBeforeCall(type, id, null, null);
+        okhttp3.Call call = getPermissionsValidateBeforeCall(type, id, null, null);
         Type localVarReturnType = new TypeReference<Map<String, List<Subject>>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -182,7 +182,7 @@ public class AuthorizationResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call grantPermissionsCall(
+    public okhttp3.Call grantPermissionsCall(
             AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -213,12 +213,12 @@ public class AuthorizationResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -244,7 +244,7 @@ public class AuthorizationResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call grantPermissionsValidateBeforeCall(
+    private okhttp3.Call grantPermissionsValidateBeforeCall(
             AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -255,7 +255,7 @@ public class AuthorizationResourceApi {
                     "Missing the required parameter 'authorizationRequest' when calling grantPermissions(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 grantPermissionsCall(
                         authorizationRequest, progressListener, progressRequestListener);
         return call;
@@ -282,7 +282,7 @@ public class AuthorizationResourceApi {
      */
     private ApiResponse<Void> grantPermissionsWithHttpInfo(
             AuthorizationRequest authorizationRequest) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 grantPermissionsValidateBeforeCall(authorizationRequest, null, null);
         return apiClient.execute(call);
     }
@@ -296,7 +296,7 @@ public class AuthorizationResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call removePermissionsCall(
+    public okhttp3.Call removePermissionsCall(
             AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -327,12 +327,12 @@ public class AuthorizationResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -358,7 +358,7 @@ public class AuthorizationResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call removePermissionsValidateBeforeCall(
+    private okhttp3.Call removePermissionsValidateBeforeCall(
             AuthorizationRequest authorizationRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -369,7 +369,7 @@ public class AuthorizationResourceApi {
                     "Missing the required parameter 'authorizationRequest' when calling removePermissions(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 removePermissionsCall(
                         authorizationRequest, progressListener, progressRequestListener);
         return call;
@@ -396,7 +396,7 @@ public class AuthorizationResourceApi {
      */
     private ApiResponse<Void> removePermissionsWithHttpInfo(
             AuthorizationRequest authorizationRequest) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 removePermissionsValidateBeforeCall(authorizationRequest, null, null);
         return apiClient.execute(call);
     }

@@ -13,8 +13,9 @@
 package io.orkes.conductor.client.util;
 
 import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
+
+import io.orkes.conductor.client.model.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 
 public class SimpleWorker implements Worker {
     @Override

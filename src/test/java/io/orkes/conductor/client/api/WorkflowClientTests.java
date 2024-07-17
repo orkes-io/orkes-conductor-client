@@ -19,9 +19,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
 import com.netflix.conductor.sdk.workflow.def.tasks.Http;
@@ -30,6 +27,9 @@ import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.TestUtil;
 

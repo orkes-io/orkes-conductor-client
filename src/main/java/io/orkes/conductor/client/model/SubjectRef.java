@@ -14,13 +14,12 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** User, group or role which is granted/removed access */
 @Schema(description = "User, group or role which is granted/removed access")
 public class SubjectRef {
-    @SerializedName("id")
+
     private String id = null;
 
     /** User, role or group */
@@ -55,7 +54,7 @@ public class SubjectRef {
         }
     }
 
-    @SerializedName("type")
+
     private TypeEnum type = null;
 
     public SubjectRef id(String id) {

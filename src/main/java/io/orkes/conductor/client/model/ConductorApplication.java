@@ -14,18 +14,15 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** ConductorApplication */
 public class ConductorApplication {
-    @SerializedName("createdBy")
+
     private String createdBy = null;
 
-    @SerializedName("id")
     private String id = null;
 
-    @SerializedName("name")
     private String name = null;
 
     public ConductorApplication createdBy(String createdBy) {

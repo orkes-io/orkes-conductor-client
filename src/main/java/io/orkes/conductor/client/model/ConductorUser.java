@@ -16,27 +16,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/** ConductorUser */
+/**
+ * ConductorUser
+ */
 public class ConductorUser {
-    @SerializedName("applicationUser")
+
     private Boolean applicationUser = null;
 
-    @SerializedName("groups")
     private List<Group> groups = null;
 
-    @SerializedName("id")
     private String id = null;
 
-    @SerializedName("name")
     private String name = null;
 
-    @SerializedName("roles")
+
     private List<Role> roles = null;
 
-    @SerializedName("uuid")
     private String uuid = null;
 
     public ConductorUser applicationUser(Boolean applicationUser) {

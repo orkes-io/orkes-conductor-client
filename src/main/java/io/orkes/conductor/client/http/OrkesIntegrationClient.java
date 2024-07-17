@@ -26,7 +26,7 @@ import io.orkes.conductor.client.model.integration.IntegrationUpdate;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
 
 public class OrkesIntegrationClient extends OrkesClient implements IntegrationClient {
-    private IntegrationResourceApi integrationApi;
+    private final IntegrationResourceApi integrationApi;
 
     public OrkesIntegrationClient(ApiClient apiClient) {
         super(apiClient);

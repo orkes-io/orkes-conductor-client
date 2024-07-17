@@ -14,44 +14,43 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** WorkflowSchedule */
 public class WorkflowSchedule {
-    @SerializedName("createTime")
+
     private Long createTime = null;
 
-    @SerializedName("createdBy")
+
     private String createdBy = null;
 
-    @SerializedName("cronExpression")
+
     private String cronExpression = null;
 
-    @SerializedName("name")
+
     private String name = null;
 
-    @SerializedName("paused")
+
     private Boolean paused = null;
 
-    @SerializedName("runCatchupScheduleInstances")
+
     private Boolean runCatchupScheduleInstances = null;
 
-    @SerializedName("scheduleEndTime")
+
     private Long scheduleEndTime = null;
 
-    @SerializedName("scheduleStartTime")
+
     private Long scheduleStartTime = null;
 
-    @SerializedName("startWorkflowRequest")
+
     private StartWorkflowRequest startWorkflowRequest = null;
 
-    @SerializedName("updatedBy")
+
     private String updatedBy = null;
 
-    @SerializedName("updatedTime")
+
     private Long updatedTime = null;
 
     public WorkflowSchedule createTime(Long createTime) {

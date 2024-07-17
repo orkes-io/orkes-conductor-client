@@ -16,23 +16,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** SubWorkflowParams */
 public class SubWorkflowParams {
-    @SerializedName("name")
+
     private String name = null;
 
-    @SerializedName("taskToDomain")
+
     private Map<String, String> taskToDomain = null;
 
-    @SerializedName("version")
+
     private Integer version = null;
 
-    @SerializedName("workflowDefinition")
+
     private WorkflowDef workflowDefinition = null;
 
     public SubWorkflowParams name(String name) {

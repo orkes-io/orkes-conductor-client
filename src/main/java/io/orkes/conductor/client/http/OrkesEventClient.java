@@ -12,44 +12,22 @@
  */
 package io.orkes.conductor.client.http;
 
+
 import java.util.List;
 import java.util.Map;
-
-import com.netflix.conductor.common.metadata.events.EventHandler;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.EventClient;
 import io.orkes.conductor.client.http.api.EventResourceApi;
 import io.orkes.conductor.client.model.event.QueueConfiguration;
+import io.orkes.conductor.client.model.metadata.events.EventHandler;
 
 public class OrkesEventClient extends EventClient {
 
-    private EventResourceApi eventResourceApi;
-
-    protected ApiClient apiClient;
+    private final EventResourceApi eventResourceApi;
 
     public OrkesEventClient(ApiClient apiClient) {
-        this.apiClient = apiClient;
         this.eventResourceApi = new EventResourceApi(apiClient);
-    }
-
-    public EventClient withReadTimeout(int readTimeout) {
-        apiClient.setReadTimeout(readTimeout);
-        return this;
-    }
-
-    public EventClient setWriteTimeout(int writeTimeout) {
-        apiClient.setWriteTimeout(writeTimeout);
-        return this;
-    }
-
-    public EventClient withConnectTimeout(int connectTimeout) {
-        apiClient.setConnectTimeout(connectTimeout);
-        return this;
-    }
-
-    public ApiClient getApiClient() {
-        return apiClient;
     }
 
     @Override

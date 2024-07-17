@@ -14,15 +14,14 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/** GenerateTokenRequest */
+/**
+ * GenerateTokenRequest
+ */
 public class GenerateTokenRequest {
-    @SerializedName("keyId")
     private String keyId = null;
 
-    @SerializedName("keySecret")
     private String keySecret = null;
 
     public GenerateTokenRequest keyId(String keyId) {

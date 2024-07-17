@@ -17,13 +17,13 @@ import java.util.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.common.run.Workflow;
 
+import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 

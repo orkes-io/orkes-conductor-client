@@ -12,9 +12,8 @@
  */
 package io.orkes.conductor.client;
 
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
-
 import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 public class OrkesClients {
 

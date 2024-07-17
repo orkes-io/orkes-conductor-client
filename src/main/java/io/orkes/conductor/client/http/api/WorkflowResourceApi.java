@@ -19,18 +19,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.netflix.conductor.common.metadata.workflow.*;
-import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.common.run.WorkflowTestRequest;
-
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.*;
-import io.orkes.conductor.common.model.WorkflowRun;
+import io.orkes.conductor.client.model.metadata.workflow.*;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.client.model.run.WorkflowTestRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.reflect.TypeToken;
-import com.squareup.okhttp.Call;
+import okhttp3.Call;
 
 public class WorkflowResourceApi {
     private ApiClient apiClient;
@@ -122,14 +120,14 @@ public class WorkflowResourceApi {
             String requestId,
             Integer waitForSeconds)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 executeWorkflowValidateBeforeCall(
                         body, name, version, waitUntilTaskRef, requestId, waitForSeconds,null, null);
         Type localVarReturnType = new TypeReference<WorkflowRun>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
-    private com.squareup.okhttp.Call executeWorkflowValidateBeforeCall(
+    private okhttp3.Call executeWorkflowValidateBeforeCall(
             StartWorkflowRequest body,
             String name,
             Integer version,
@@ -155,7 +153,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'version' when calling executeWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 executeWorkflowCall(
                         body,
                         name,
@@ -187,14 +185,14 @@ public class WorkflowResourceApi {
             String waitUntilTaskRef,
             String requestId)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 executeWorkflowValidateBeforeCall(
                         body, name, version, waitUntilTaskRef, requestId, null, null);
         Type localVarReturnType = new TypeReference<WorkflowRun>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
-    private com.squareup.okhttp.Call executeWorkflowValidateBeforeCall(
+    private okhttp3.Call executeWorkflowValidateBeforeCall(
             StartWorkflowRequest body,
             String name,
             Integer version,
@@ -219,7 +217,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'version' when calling executeWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 executeWorkflowCall(
                         body,
                         name,
@@ -231,7 +229,7 @@ public class WorkflowResourceApi {
         return call;
     }
 
-    public com.squareup.okhttp.Call executeWorkflowCall(
+    public okhttp3.Call executeWorkflowCall(
             StartWorkflowRequest body,
             String name,
             Integer version,
@@ -276,12 +274,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -307,7 +305,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    public com.squareup.okhttp.Call executeWorkflowCall(
+    public okhttp3.Call executeWorkflowCall(
             StartWorkflowRequest body,
             String name,
             Integer version,
@@ -357,12 +355,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -401,7 +399,7 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to process the API call, e.g. serializing the request body
      *     object
      */
-    public com.squareup.okhttp.Call executeWorkflowAsync(
+    public okhttp3.Call executeWorkflowAsync(
             StartWorkflowRequest body,
             String name,
             Integer version,
@@ -432,7 +430,7 @@ public class WorkflowResourceApi {
                     };
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 executeWorkflowValidateBeforeCall(
                         body,
                         name,
@@ -456,7 +454,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call decideCall(
+    public okhttp3.Call decideCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -492,12 +490,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -523,7 +521,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call decideValidateBeforeCall(
+    private okhttp3.Call decideValidateBeforeCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -534,7 +532,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling decide(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 decideCall(workflowId, progressListener, progressRequestListener);
         return call;
     }
@@ -559,7 +557,7 @@ public class WorkflowResourceApi {
      *     response body
      */
     private ApiResponse<Void> decideWithHttpInfo(String workflowId) throws ApiException {
-        com.squareup.okhttp.Call call = decideValidateBeforeCall(workflowId, null, null);
+        okhttp3.Call call = decideValidateBeforeCall(workflowId, null, null);
         return apiClient.execute(call);
     }
 
@@ -573,7 +571,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteCall(
+    public okhttp3.Call deleteCall(
             String workflowId,
             Boolean archiveWorkflow,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -613,12 +611,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -644,7 +642,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call deleteValidateBeforeCall(
+    private okhttp3.Call deleteValidateBeforeCall(
             String workflowId,
             Boolean archiveWorkflow,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -656,7 +654,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling delete(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteCall(workflowId, archiveWorkflow, progressListener, progressRequestListener);
         return call;
     }
@@ -684,7 +682,7 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<Void> deleteWithHttpInfo(String workflowId, Boolean archiveWorkflow)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteValidateBeforeCall(workflowId, archiveWorkflow, null, null);
         return apiClient.execute(call);
     }
@@ -699,7 +697,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getExecutionStatusCall(
+    public okhttp3.Call getExecutionStatusCall(
             String workflowId,
             Boolean includeTasks,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -737,12 +735,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -768,7 +766,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getExecutionStatusValidateBeforeCall(
+    private okhttp3.Call getExecutionStatusValidateBeforeCall(
             String workflowId,
             Boolean includeTasks,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -780,7 +778,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling getExecutionStatus(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getExecutionStatusCall(
                         workflowId, includeTasks, progressListener, progressRequestListener);
         return call;
@@ -812,7 +810,7 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<Workflow> getExecutionStatusWithHttpInfo(
             String workflowId, Boolean includeTasks) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getExecutionStatusValidateBeforeCall(workflowId, includeTasks, null, null);
         Type localVarReturnType = new TypeReference<Workflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -829,7 +827,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getExternalStorageLocationCall(
+    public okhttp3.Call getExternalStorageLocationCall(
             String path,
             String operation,
             String payloadType,
@@ -867,12 +865,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -898,7 +896,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getExternalStorageLocationValidateBeforeCall(
+    private okhttp3.Call getExternalStorageLocationValidateBeforeCall(
             String path,
             String operation,
             String payloadType,
@@ -921,7 +919,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'payloadType' when calling getExternalStorageLocation(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getExternalStorageLocationCall(
                         path, operation, payloadType, progressListener, progressRequestListener);
         return call;
@@ -956,7 +954,7 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<ExternalStorageLocation> getExternalStorageLocationWithHttpInfo(
             String path, String operation, String payloadType) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getExternalStorageLocationValidateBeforeCall(
                         path, operation, payloadType, null, null);
         Type localVarReturnType = new TypeReference<ExternalStorageLocation>() {}.getType();
@@ -975,7 +973,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getRunningWorkflowCall(
+    public okhttp3.Call getRunningWorkflowCall(
             String name,
             Integer version,
             Long startTime,
@@ -1018,12 +1016,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1049,7 +1047,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getRunningWorkflowValidateBeforeCall(
+    private okhttp3.Call getRunningWorkflowValidateBeforeCall(
             String name,
             Integer version,
             Long startTime,
@@ -1063,7 +1061,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'name' when calling getRunningWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getRunningWorkflowCall(
                         name,
                         version,
@@ -1105,7 +1103,7 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<List<String>> getRunningWorkflowWithHttpInfo(
             String name, Integer version, Long startTime, Long endTime) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getRunningWorkflowValidateBeforeCall(name, version, startTime, endTime, null, null);
         Type localVarReturnType = new TypeReference<List<String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1122,7 +1120,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getWorkflowStatusSummaryCall(
+    public okhttp3.Call getWorkflowStatusSummaryCall(
             String workflowId,
             Boolean includeOutput,
             Boolean includeVariables,
@@ -1164,12 +1162,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1195,7 +1193,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getWorkflowStatusSummaryValidateBeforeCall(
+    private okhttp3.Call getWorkflowStatusSummaryValidateBeforeCall(
             String workflowId,
             Boolean includeOutput,
             Boolean includeVariables,
@@ -1208,7 +1206,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling getWorkflowStatusSummary(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getWorkflowStatusSummaryCall(
                         workflowId,
                         includeOutput,
@@ -1249,7 +1247,7 @@ public class WorkflowResourceApi {
     private ApiResponse<WorkflowStatus> getWorkflowStatusSummaryWithHttpInfo(
             String workflowId, Boolean includeOutput, Boolean includeVariables)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getWorkflowStatusSummaryValidateBeforeCall(
                         workflowId, includeOutput, includeVariables, null, null);
         Type localVarReturnType = new TypeReference<WorkflowStatus>() {}.getType();
@@ -1268,7 +1266,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getWorkflowsCall(
+    public okhttp3.Call getWorkflowsCall(
             List<String> body,
             String name,
             Boolean includeClosed,
@@ -1308,12 +1306,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1339,7 +1337,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getWorkflowsValidateBeforeCall(
+    private okhttp3.Call getWorkflowsValidateBeforeCall(
             List<String> body,
             String name,
             Boolean includeClosed,
@@ -1358,7 +1356,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'name' when calling getWorkflows(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getWorkflowsCall(
                         body,
                         name,
@@ -1402,7 +1400,7 @@ public class WorkflowResourceApi {
     private ApiResponse<Map<String, List<Workflow>>> getWorkflowsWithHttpInfo(
             List<String> body, String name, Boolean includeClosed, Boolean includeTasks)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getWorkflowsValidateBeforeCall(body, name, includeClosed, includeTasks, null, null);
         Type localVarReturnType = new TypeReference<Map<String, List<Workflow>>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1420,7 +1418,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getWorkflows1Call(
+    public okhttp3.Call getWorkflows1Call(
             String name,
             String correlationId,
             Boolean includeClosed,
@@ -1463,12 +1461,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1504,18 +1502,18 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks) throws ApiException {
-        com.squareup.okhttp.Call call = getWorkflowsByNamesAndCorrelationIdsBeforeCall(request, includeClosed, includeTasks, null, null);
+        okhttp3.Call call = getWorkflowsByNamesAndCorrelationIdsBeforeCall(request, includeClosed, includeTasks, null, null);
         Type localVarReturnType = new TypeReference<Map<String, List<Workflow>>>(){}.getType();
         ApiResponse<Map<String, List<Workflow>>> response = apiClient.execute(call, localVarReturnType);
         return response.getData();
     }
 
-    private com.squareup.okhttp.Call getWorkflowsByNamesAndCorrelationIdsBeforeCall(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call getWorkflowsByNamesAndCorrelationIdsBeforeCall(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (request == null) {
             throw new ApiException("Missing the required parameter 'body' when calling getWorkflows1(Async)");
         }
-        com.squareup.okhttp.Call call = getWorkflowsByNamesAndCorrelationIdsCall(request, includeClosed, includeTasks, progressListener, progressRequestListener);
+        okhttp3.Call call = getWorkflowsByNamesAndCorrelationIdsCall(request, includeClosed, includeTasks, progressListener, progressRequestListener);
         return call;
     }
 
@@ -1529,7 +1527,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call getWorkflowsByNamesAndCorrelationIdsCall(CorrelationIdsSearchRequest body, Boolean includeClosed, Boolean includeTasks, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call getWorkflowsByNamesAndCorrelationIdsCall(CorrelationIdsSearchRequest body, Boolean includeClosed, Boolean includeTasks, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -1559,10 +1557,10 @@ public class WorkflowResourceApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                    okhttp3.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1574,7 +1572,7 @@ public class WorkflowResourceApi {
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getWorkflows1ValidateBeforeCall(
+    private okhttp3.Call getWorkflows1ValidateBeforeCall(
             String name,
             String correlationId,
             Boolean includeClosed,
@@ -1593,7 +1591,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'correlationId' when calling getWorkflows1(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getWorkflows1Call(
                         name,
                         correlationId,
@@ -1637,7 +1635,7 @@ public class WorkflowResourceApi {
     private ApiResponse<List<Workflow>> getWorkflows1WithHttpInfo(
             String name, String correlationId, Boolean includeClosed, Boolean includeTasks)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getWorkflows1ValidateBeforeCall(
                         name, correlationId, includeClosed, includeTasks, null, null);
         Type localVarReturnType = new TypeReference<List<Workflow>>() {}.getType();
@@ -1653,7 +1651,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call pauseWorkflowCall(
+    public okhttp3.Call pauseWorkflowCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1689,12 +1687,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1720,7 +1718,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call pauseWorkflowValidateBeforeCall(
+    private okhttp3.Call pauseWorkflowValidateBeforeCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1731,7 +1729,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling pauseWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 pauseWorkflowCall(workflowId, progressListener, progressRequestListener);
         return call;
     }
@@ -1756,7 +1754,7 @@ public class WorkflowResourceApi {
      *     response body
      */
     private ApiResponse<Void> pauseWorkflowWithHttpInfo(String workflowId) throws ApiException {
-        com.squareup.okhttp.Call call = pauseWorkflowValidateBeforeCall(workflowId, null, null);
+        okhttp3.Call call = pauseWorkflowValidateBeforeCall(workflowId, null, null);
         return apiClient.execute(call);
     }
 
@@ -1770,7 +1768,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call rerunCall(
+    public okhttp3.Call rerunCall(
             RerunWorkflowRequest rerunWorkflowRequest,
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1805,12 +1803,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1836,7 +1834,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call rerunValidateBeforeCall(
+    private okhttp3.Call rerunValidateBeforeCall(
             RerunWorkflowRequest rerunWorkflowRequest,
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1853,7 +1851,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling rerun(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 rerunCall(
                         rerunWorkflowRequest,
                         workflowId,
@@ -1888,7 +1886,7 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<String> rerunWithHttpInfo(
             RerunWorkflowRequest rerunWorkflowRequest, String workflowId) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 rerunValidateBeforeCall(rerunWorkflowRequest, workflowId, null, null);
         Type localVarReturnType = new TypeReference<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1903,7 +1901,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call resetWorkflowCall(
+    public okhttp3.Call resetWorkflowCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1939,12 +1937,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1970,7 +1968,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call resetWorkflowValidateBeforeCall(
+    private okhttp3.Call resetWorkflowValidateBeforeCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1981,7 +1979,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling resetWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 resetWorkflowCall(workflowId, progressListener, progressRequestListener);
         return call;
     }
@@ -2006,7 +2004,7 @@ public class WorkflowResourceApi {
      *     response body
      */
     private ApiResponse<Void> resetWorkflowWithHttpInfo(String workflowId) throws ApiException {
-        com.squareup.okhttp.Call call = resetWorkflowValidateBeforeCall(workflowId, null, null);
+        okhttp3.Call call = resetWorkflowValidateBeforeCall(workflowId, null, null);
         return apiClient.execute(call);
     }
 
@@ -2020,7 +2018,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call restartCall(
+    public okhttp3.Call restartCall(
             String workflowId,
             Boolean useLatestDefinitions,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -2060,12 +2058,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -2091,7 +2089,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call restartValidateBeforeCall(
+    private okhttp3.Call restartValidateBeforeCall(
             String workflowId,
             Boolean useLatestDefinitions,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -2103,7 +2101,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling restart(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 restartCall(
                         workflowId,
                         useLatestDefinitions,
@@ -2135,7 +2133,7 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<Void> restartWithHttpInfo(String workflowId, Boolean useLatestDefinitions)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 restartValidateBeforeCall(workflowId, useLatestDefinitions, null, null);
         return apiClient.execute(call);
     }
@@ -2149,7 +2147,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call resumeWorkflowCall(
+    public okhttp3.Call resumeWorkflowCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -2185,12 +2183,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -2216,7 +2214,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call resumeWorkflowValidateBeforeCall(
+    private okhttp3.Call resumeWorkflowValidateBeforeCall(
             String workflowId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -2227,7 +2225,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling resumeWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 resumeWorkflowCall(workflowId, progressListener, progressRequestListener);
         return call;
     }
@@ -2252,7 +2250,7 @@ public class WorkflowResourceApi {
      *     response body
      */
     private ApiResponse<Void> resumeWorkflowWithHttpInfo(String workflowId) throws ApiException {
-        com.squareup.okhttp.Call call = resumeWorkflowValidateBeforeCall(workflowId, null, null);
+        okhttp3.Call call = resumeWorkflowValidateBeforeCall(workflowId, null, null);
         return apiClient.execute(call);
     }
 
@@ -2266,7 +2264,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call retryCall(
+    public okhttp3.Call retryCall(
             String workflowId,
             Boolean resumeSubworkflowTasks,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -2306,12 +2304,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -2337,7 +2335,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call retryValidateBeforeCall(
+    private okhttp3.Call retryValidateBeforeCall(
             String workflowId,
             Boolean resumeSubworkflowTasks,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -2349,7 +2347,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling retry(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 retryCall(
                         workflowId,
                         resumeSubworkflowTasks,
@@ -2381,7 +2379,7 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<Void> retryWithHttpInfo(String workflowId, Boolean resumeSubworkflowTasks)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 retryValidateBeforeCall(workflowId, resumeSubworkflowTasks, null, null);
         return apiClient.execute(call);
     }
@@ -2401,7 +2399,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call searchCall(
+    public okhttp3.Call searchCall(
             String queryId,
             Integer start,
             Integer size,
@@ -2448,12 +2446,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -2479,7 +2477,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call searchValidateBeforeCall(
+    private okhttp3.Call searchValidateBeforeCall(
             String queryId,
             Integer start,
             Integer size,
@@ -2491,7 +2489,7 @@ public class WorkflowResourceApi {
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchCall(
                         queryId,
                         start,
@@ -2560,7 +2558,7 @@ public class WorkflowResourceApi {
             String query,
             Boolean skipCache)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchValidateBeforeCall(
                         queryId, start, size, sort, freeText, query, skipCache, null, null);
         Type localVarReturnType =
@@ -2581,7 +2579,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call searchV2Call(
+    public okhttp3.Call searchV2Call(
             Integer start,
             Integer size,
             String sort,
@@ -2622,12 +2620,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -2653,7 +2651,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call searchV2ValidateBeforeCall(
+    private okhttp3.Call searchV2ValidateBeforeCall(
             Integer start,
             Integer size,
             String sort,
@@ -2663,7 +2661,7 @@ public class WorkflowResourceApi {
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchV2Call(
                         start,
                         size,
@@ -2714,7 +2712,7 @@ public class WorkflowResourceApi {
     private ApiResponse<SearchResultWorkflow> searchV2WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchV2ValidateBeforeCall(start, size, sort, freeText, query, null, null);
         Type localVarReturnType = new TypeReference<SearchResultWorkflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -2733,7 +2731,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call searchWorkflowsByTasksCall(
+    public okhttp3.Call searchWorkflowsByTasksCall(
             Integer start,
             Integer size,
             String sort,
@@ -2774,12 +2772,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -2805,7 +2803,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call searchWorkflowsByTasksValidateBeforeCall(
+    private okhttp3.Call searchWorkflowsByTasksValidateBeforeCall(
             Integer start,
             Integer size,
             String sort,
@@ -2815,7 +2813,7 @@ public class WorkflowResourceApi {
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchWorkflowsByTasksCall(
                         start,
                         size,
@@ -2866,7 +2864,7 @@ public class WorkflowResourceApi {
     private ApiResponse<SearchResultWorkflowSummary> searchWorkflowsByTasksWithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchWorkflowsByTasksValidateBeforeCall(
                         start, size, sort, freeText, query, null, null);
         Type localVarReturnType = new TypeReference<SearchResultWorkflowSummary>() {}.getType();
@@ -2886,7 +2884,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call searchWorkflowsByTasksV2Call(
+    public okhttp3.Call searchWorkflowsByTasksV2Call(
             Integer start,
             Integer size,
             String sort,
@@ -2927,12 +2925,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -2958,7 +2956,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call searchWorkflowsByTasksV2ValidateBeforeCall(
+    private okhttp3.Call searchWorkflowsByTasksV2ValidateBeforeCall(
             Integer start,
             Integer size,
             String sort,
@@ -2968,7 +2966,7 @@ public class WorkflowResourceApi {
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchWorkflowsByTasksV2Call(
                         start,
                         size,
@@ -3019,7 +3017,7 @@ public class WorkflowResourceApi {
     private ApiResponse<SearchResultWorkflow> searchWorkflowsByTasksV2WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchWorkflowsByTasksV2ValidateBeforeCall(
                         start, size, sort, freeText, query, null, null);
         Type localVarReturnType = new TypeReference<SearchResultWorkflow>() {}.getType();
@@ -3037,7 +3035,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call skipTaskFromWorkflowCall(
+    public okhttp3.Call skipTaskFromWorkflowCall(
             String workflowId,
             String taskReferenceName,
             SkipTaskRequest skipTaskRequest,
@@ -3081,12 +3079,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -3112,7 +3110,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call skipTaskFromWorkflowValidateBeforeCall(
+    private okhttp3.Call skipTaskFromWorkflowValidateBeforeCall(
             String workflowId,
             String taskReferenceName,
             SkipTaskRequest skipTaskRequest,
@@ -3135,7 +3133,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'skipTaskRequest' when calling skipTaskFromWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 skipTaskFromWorkflowCall(
                         workflowId,
                         taskReferenceName,
@@ -3173,7 +3171,7 @@ public class WorkflowResourceApi {
     private ApiResponse<Void> skipTaskFromWorkflowWithHttpInfo(
             String workflowId, String taskReferenceName, SkipTaskRequest skipTaskRequest)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 skipTaskFromWorkflowValidateBeforeCall(
                         workflowId, taskReferenceName, skipTaskRequest, null, null);
         return apiClient.execute(call);
@@ -3188,7 +3186,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call startWorkflowCall(
+    public okhttp3.Call startWorkflowCall(
             StartWorkflowRequest startWorkflowRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -3218,12 +3216,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -3250,7 +3248,7 @@ public class WorkflowResourceApi {
     }
 
 
-    public com.squareup.okhttp.Call testWorkflowCall(
+    public okhttp3.Call testWorkflowCall(
             WorkflowTestRequest testRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -3280,12 +3278,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -3311,7 +3309,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call startWorkflowValidateBeforeCall(
+    private okhttp3.Call startWorkflowValidateBeforeCall(
             StartWorkflowRequest startWorkflowRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -3322,12 +3320,12 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'startWorkflowRequest' when calling startWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 startWorkflowCall(startWorkflowRequest, progressListener, progressRequestListener);
         return call;
     }
 
-    private com.squareup.okhttp.Call testWorkflowValidateBeforeCall(
+    private okhttp3.Call testWorkflowValidateBeforeCall(
             WorkflowTestRequest testRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -3337,7 +3335,7 @@ public class WorkflowResourceApi {
             throw new ApiException("Missing the required parameter 'testRequest' when calling testWorkflow");
         }
 
-        com.squareup.okhttp.Call call = testWorkflowCall(testRequest, progressListener, progressRequestListener);
+        okhttp3.Call call = testWorkflowCall(testRequest, progressListener, progressRequestListener);
         return call;
     }
 
@@ -3377,14 +3375,14 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<String> startWorkflowWithHttpInfo(StartWorkflowRequest startWorkflowRequest)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 startWorkflowValidateBeforeCall(startWorkflowRequest, null, null);
         Type localVarReturnType = new TypeReference<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     private ApiResponse<Workflow> testWorkflowWithHttpInfo(WorkflowTestRequest testRequest) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 testWorkflowValidateBeforeCall(testRequest, null, null);
         Type localVarReturnType = new TypeReference<Workflow>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -3403,7 +3401,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call startWorkflow1Call(
+    public okhttp3.Call startWorkflow1Call(
             Map<String, Object> body,
             String name,
             Integer version,
@@ -3446,12 +3444,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -3477,7 +3475,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call startWorkflow1ValidateBeforeCall(
+    private okhttp3.Call startWorkflow1ValidateBeforeCall(
             Map<String, Object> body,
             String name,
             Integer version,
@@ -3497,7 +3495,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'name' when calling startWorkflow1(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 startWorkflow1Call(
                         body,
                         name,
@@ -3554,7 +3552,7 @@ public class WorkflowResourceApi {
             String correlationId,
             Integer priority)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 startWorkflow1ValidateBeforeCall(
                         body, name, version, correlationId, priority, null, null);
         Type localVarReturnType = new TypeReference<String>() {}.getType();
@@ -3572,7 +3570,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call terminate1Call(
+    public okhttp3.Call terminate1Call(
             String workflowId,
             String reason,
             boolean triggerFailureWorkflow,
@@ -3612,12 +3610,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -3643,7 +3641,7 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call terminate1ValidateBeforeCall(
+    private okhttp3.Call terminate1ValidateBeforeCall(
             String workflowId,
             String reason,
             boolean triggerFailureWorkflow,
@@ -3656,7 +3654,7 @@ public class WorkflowResourceApi {
                     "Missing the required parameter 'workflowId' when calling terminate1(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 terminate1Call(workflowId, reason, triggerFailureWorkflow, progressListener, progressRequestListener);
         return call;
     }
@@ -3685,7 +3683,7 @@ public class WorkflowResourceApi {
      */
     private ApiResponse<Void> terminate1WithHttpInfo(String workflowId, String reason, boolean triggerFailureWorkflow)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 terminate1ValidateBeforeCall(workflowId, reason, triggerFailureWorkflow, null, null);
         return apiClient.execute(call);
     }
@@ -3698,7 +3696,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call uploadCompletedWorkflowsCall(
+    public okhttp3.Call uploadCompletedWorkflowsCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -3728,12 +3726,12 @@ public class WorkflowResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -3759,12 +3757,12 @@ public class WorkflowResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call uploadCompletedWorkflowsValidateBeforeCall(
+    private okhttp3.Call uploadCompletedWorkflowsValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 uploadCompletedWorkflowsCall(progressListener, progressRequestListener);
         return call;
     }
@@ -3789,13 +3787,13 @@ public class WorkflowResourceApi {
      *     response body
      */
     private ApiResponse<Object> uploadCompletedWorkflowsWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = uploadCompletedWorkflowsValidateBeforeCall(null, null);
+        okhttp3.Call call = uploadCompletedWorkflowsValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     public Workflow updateVariables(String workflowId, Map<String, Object> variables) {
-        com.squareup.okhttp.Call call = updateVariablesCall(workflowId, variables);
+        okhttp3.Call call = updateVariablesCall(workflowId, variables);
         Type returnType = new TypeReference<Workflow>() {}.getType();
         ApiResponse<Workflow> response = apiClient.execute(call, returnType);
         return response.getData();
@@ -3854,12 +3852,12 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<Void> upgradeRunningWorkflowWithHttpInfo(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
-        com.squareup.okhttp.Call call = upgradeRunningWorkflowValidateBeforeCall(body, workflowId, null, null);
+        okhttp3.Call call = upgradeRunningWorkflowValidateBeforeCall(body, workflowId, null, null);
         return apiClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call upgradeRunningWorkflowValidateBeforeCall(UpgradeWorkflowRequest body, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call upgradeRunningWorkflowValidateBeforeCall(UpgradeWorkflowRequest body, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling upgradeRunningWorkflow(Async)");
@@ -3869,7 +3867,7 @@ public class WorkflowResourceApi {
             throw new ApiException("Missing the required parameter 'workflowId' when calling upgradeRunningWorkflow(Async)");
         }
 
-        com.squareup.okhttp.Call call = upgradeRunningWorkflowCall(body, workflowId, progressListener, progressRequestListener);
+        okhttp3.Call call = upgradeRunningWorkflowCall(body, workflowId, progressListener, progressRequestListener);
         return call;
     }
 
@@ -3882,7 +3880,7 @@ public class WorkflowResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call upgradeRunningWorkflowCall(UpgradeWorkflowRequest body, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public okhttp3.Call upgradeRunningWorkflowCall(UpgradeWorkflowRequest body, String workflowId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -3909,10 +3907,10 @@ public class WorkflowResourceApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                    okhttp3.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -3954,13 +3952,13 @@ public class WorkflowResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<WorkflowRun> updateWorkflowAndTaskStateWithHttpInfo(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
-        com.squareup.okhttp.Call call = updateWorkflowAndTaskStateValidateBeforeCall(body, requestId, workflowId, waitUntilTaskRef, waitForSeconds, null, null);
+        okhttp3.Call call = updateWorkflowAndTaskStateValidateBeforeCall(body, requestId, workflowId, waitUntilTaskRef, waitForSeconds, null, null);
         Type localVarReturnType = new TypeToken<WorkflowRun>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
 
-    public com.squareup.okhttp.Call updateWorkflowAndTaskStateCall(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public okhttp3.Call updateWorkflowAndTaskStateCall(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -3993,10 +3991,10 @@ public class WorkflowResourceApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                    okhttp3.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                         .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                         .build();
@@ -4009,7 +4007,7 @@ public class WorkflowResourceApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call updateWorkflowAndTaskStateValidateBeforeCall(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call updateWorkflowAndTaskStateValidateBeforeCall(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling updateWorkflowAndTaskState(Async)");
@@ -4023,7 +4021,7 @@ public class WorkflowResourceApi {
             throw new ApiException("Missing the required parameter 'workflowId' when calling updateWorkflowAndTaskState(Async)");
         }
 
-        com.squareup.okhttp.Call call = updateWorkflowAndTaskStateCall(body, requestId, workflowId, waitUntilTaskRef, waitForSeconds, progressListener, progressRequestListener);
+        okhttp3.Call call = updateWorkflowAndTaskStateCall(body, requestId, workflowId, waitUntilTaskRef, waitForSeconds, progressListener, progressRequestListener);
         return call;
     }
 }

@@ -58,7 +58,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteScheduleCall(
+    public okhttp3.Call deleteScheduleCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -93,12 +93,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -124,7 +124,7 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call deleteScheduleValidateBeforeCall(
+    private okhttp3.Call deleteScheduleValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -135,7 +135,7 @@ public class SchedulerResourceApi {
                     "Missing the required parameter 'name' when calling deleteSchedule(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteScheduleCall(name, progressListener, progressRequestListener);
         return call;
     }
@@ -160,7 +160,7 @@ public class SchedulerResourceApi {
      *     response body
      */
     private ApiResponse<Void> deleteScheduleWithHttpInfo(String name) throws ApiException {
-        com.squareup.okhttp.Call call = deleteScheduleValidateBeforeCall(name, null, null);
+        okhttp3.Call call = deleteScheduleValidateBeforeCall(name, null, null);
         return apiClient.execute(call);
     }
 
@@ -173,7 +173,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getAllSchedulesCall(
+    public okhttp3.Call getAllSchedulesCall(
             String workflowName,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -206,12 +206,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -237,13 +237,13 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getAllSchedulesValidateBeforeCall(
+    private okhttp3.Call getAllSchedulesValidateBeforeCall(
             String workflowName,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getAllSchedulesCall(workflowName, progressListener, progressRequestListener);
         return call;
     }
@@ -271,7 +271,7 @@ public class SchedulerResourceApi {
      */
     private ApiResponse<List<WorkflowSchedule>> getAllSchedulesWithHttpInfo(String workflowName)
             throws ApiException {
-        com.squareup.okhttp.Call call = getAllSchedulesValidateBeforeCall(workflowName, null, null);
+        okhttp3.Call call = getAllSchedulesValidateBeforeCall(workflowName, null, null);
         Type localVarReturnType = new TypeReference<List<WorkflowSchedule>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -288,7 +288,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getNextFewSchedulesCall(
+    public okhttp3.Call getNextFewSchedulesCall(
             String cronExpression,
             Long scheduleStartTime,
             Long scheduleEndTime,
@@ -331,12 +331,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -362,7 +362,7 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getNextFewSchedulesValidateBeforeCall(
+    private okhttp3.Call getNextFewSchedulesValidateBeforeCall(
             String cronExpression,
             Long scheduleStartTime,
             Long scheduleEndTime,
@@ -376,7 +376,7 @@ public class SchedulerResourceApi {
                     "Missing the required parameter 'cronExpression' when calling getNextFewSchedules(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getNextFewSchedulesCall(
                         cronExpression,
                         scheduleStartTime,
@@ -421,7 +421,7 @@ public class SchedulerResourceApi {
     private ApiResponse<List<Long>> getNextFewSchedulesWithHttpInfo(
             String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getNextFewSchedulesValidateBeforeCall(
                         cronExpression, scheduleStartTime, scheduleEndTime, limit, null, null);
         Type localVarReturnType = new TypeReference<List<Long>>() {}.getType();
@@ -437,7 +437,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getScheduleCall(
+    public okhttp3.Call getScheduleCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -471,12 +471,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -502,7 +502,7 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getScheduleValidateBeforeCall(
+    private okhttp3.Call getScheduleValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -513,7 +513,7 @@ public class SchedulerResourceApi {
                     "Missing the required parameter 'name' when calling getSchedule(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getScheduleCall(name, progressListener, progressRequestListener);
         return call;
     }
@@ -540,7 +540,7 @@ public class SchedulerResourceApi {
      *     response body
      */
     private ApiResponse<WorkflowSchedule> getScheduleWithHttpInfo(String name) throws ApiException {
-        com.squareup.okhttp.Call call = getScheduleValidateBeforeCall(name, null, null);
+        okhttp3.Call call = getScheduleValidateBeforeCall(name, null, null);
         Type localVarReturnType = new TypeReference<WorkflowSchedule>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -553,7 +553,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call pauseAllSchedulesCall(
+    public okhttp3.Call pauseAllSchedulesCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -583,12 +583,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -614,12 +614,12 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call pauseAllSchedulesValidateBeforeCall(
+    private okhttp3.Call pauseAllSchedulesValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 pauseAllSchedulesCall(progressListener, progressRequestListener);
         return call;
     }
@@ -644,7 +644,7 @@ public class SchedulerResourceApi {
      *     response body
      */
     private ApiResponse<Map<String, Object>> pauseAllSchedulesWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = pauseAllSchedulesValidateBeforeCall(null, null);
+        okhttp3.Call call = pauseAllSchedulesValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -658,7 +658,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call pauseScheduleCall(
+    public okhttp3.Call pauseScheduleCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -693,12 +693,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -724,7 +724,7 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call pauseScheduleValidateBeforeCall(
+    private okhttp3.Call pauseScheduleValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -735,7 +735,7 @@ public class SchedulerResourceApi {
                     "Missing the required parameter 'name' when calling pauseSchedule(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 pauseScheduleCall(name, progressListener, progressRequestListener);
         return call;
     }
@@ -760,7 +760,7 @@ public class SchedulerResourceApi {
      *     response body
      */
     private ApiResponse<Void> pauseScheduleWithHttpInfo(String name) throws ApiException {
-        com.squareup.okhttp.Call call = pauseScheduleValidateBeforeCall(name, null, null);
+        okhttp3.Call call = pauseScheduleValidateBeforeCall(name, null, null);
         return apiClient.execute(call);
     }
 
@@ -772,7 +772,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call requeueAllExecutionRecordsCall(
+    public okhttp3.Call requeueAllExecutionRecordsCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -802,12 +802,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -833,12 +833,12 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call requeueAllExecutionRecordsValidateBeforeCall(
+    private okhttp3.Call requeueAllExecutionRecordsValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 requeueAllExecutionRecordsCall(progressListener, progressRequestListener);
         return call;
     }
@@ -864,7 +864,7 @@ public class SchedulerResourceApi {
      */
     private ApiResponse<Map<String, Object>> requeueAllExecutionRecordsWithHttpInfo()
             throws ApiException {
-        com.squareup.okhttp.Call call = requeueAllExecutionRecordsValidateBeforeCall(null, null);
+        okhttp3.Call call = requeueAllExecutionRecordsValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -877,7 +877,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call resumeAllSchedulesCall(
+    public okhttp3.Call resumeAllSchedulesCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -907,12 +907,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -938,12 +938,12 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call resumeAllSchedulesValidateBeforeCall(
+    private okhttp3.Call resumeAllSchedulesValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 resumeAllSchedulesCall(progressListener, progressRequestListener);
         return call;
     }
@@ -968,7 +968,7 @@ public class SchedulerResourceApi {
      *     response body
      */
     private ApiResponse<Map<String, Object>> resumeAllSchedulesWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = resumeAllSchedulesValidateBeforeCall(null, null);
+        okhttp3.Call call = resumeAllSchedulesValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -982,7 +982,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call resumeScheduleCall(
+    public okhttp3.Call resumeScheduleCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1017,12 +1017,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1048,7 +1048,7 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call resumeScheduleValidateBeforeCall(
+    private okhttp3.Call resumeScheduleValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1059,7 +1059,7 @@ public class SchedulerResourceApi {
                     "Missing the required parameter 'name' when calling resumeSchedule(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 resumeScheduleCall(name, progressListener, progressRequestListener);
         return call;
     }
@@ -1084,7 +1084,7 @@ public class SchedulerResourceApi {
      *     response body
      */
     private ApiResponse<Void> resumeScheduleWithHttpInfo(String name) throws ApiException {
-        com.squareup.okhttp.Call call = resumeScheduleValidateBeforeCall(name, null, null);
+        okhttp3.Call call = resumeScheduleValidateBeforeCall(name, null, null);
         return apiClient.execute(call);
     }
 
@@ -1097,7 +1097,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call saveScheduleCall(
+    public okhttp3.Call saveScheduleCall(
             SaveScheduleRequest saveScheduleRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1128,12 +1128,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1159,7 +1159,7 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call saveScheduleValidateBeforeCall(
+    private okhttp3.Call saveScheduleValidateBeforeCall(
             SaveScheduleRequest saveScheduleRequest,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1170,7 +1170,7 @@ public class SchedulerResourceApi {
                     "Missing the required parameter 'saveScheduleRequest' when calling saveSchedule(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 saveScheduleCall(saveScheduleRequest, progressListener, progressRequestListener);
         return call;
     }
@@ -1198,7 +1198,7 @@ public class SchedulerResourceApi {
      */
     private ApiResponse<Void> saveScheduleWithHttpInfo(SaveScheduleRequest saveScheduleRequest)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 saveScheduleValidateBeforeCall(saveScheduleRequest, null, null);
         return apiClient.execute(call);
     }
@@ -1216,7 +1216,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call searchV22Call(
+    public okhttp3.Call searchV22Call(
             Integer start,
             Integer size,
             String sort,
@@ -1257,12 +1257,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1288,7 +1288,7 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call searchV22ValidateBeforeCall(
+    private okhttp3.Call searchV22ValidateBeforeCall(
             Integer start,
             Integer size,
             String sort,
@@ -1298,7 +1298,7 @@ public class SchedulerResourceApi {
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchV22Call(
                         start,
                         size,
@@ -1356,7 +1356,7 @@ public class SchedulerResourceApi {
     private ApiResponse<SearchResultWorkflowScheduleExecutionModel> searchV22WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 searchV22ValidateBeforeCall(start, size, sort, freeText, query, null, null);
         Type localVarReturnType =
                 new TypeReference<SearchResultWorkflowScheduleExecutionModel>() {}.getType();
@@ -1366,7 +1366,7 @@ public class SchedulerResourceApi {
     private ApiResponse<SearchResultWorkflowScheduleExecution> searchWithHttpInfo(
         Integer start, Integer size, String sort, String freeText, String query)
         throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
             searchV22ValidateBeforeCall(start, size, sort, freeText, query, null, null);
         Type localVarReturnType =
             new TypeReference<SearchResultWorkflowScheduleExecution>() {}.getType();
@@ -1381,7 +1381,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call testTimeoutCall(
+    public okhttp3.Call testTimeoutCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -1412,12 +1412,12 @@ public class SchedulerResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1443,12 +1443,12 @@ public class SchedulerResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call testTimeoutValidateBeforeCall(
+    private okhttp3.Call testTimeoutValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call = testTimeoutCall(progressListener, progressRequestListener);
+        okhttp3.Call call = testTimeoutCall(progressListener, progressRequestListener);
         return call;
     }
 
@@ -1470,7 +1470,7 @@ public class SchedulerResourceApi {
      *     response body
      */
     private ApiResponse<Void> testTimeoutWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = testTimeoutValidateBeforeCall(null, null);
+        okhttp3.Call call = testTimeoutValidateBeforeCall(null, null);
         return apiClient.execute(call);
     }
 
@@ -1494,12 +1494,12 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     private ApiResponse<Void> deleteTagForScheduleWithHttpInfo(List<TagObject> body, String name) throws ApiException {
-        com.squareup.okhttp.Call call = deleteTagForScheduleValidateBeforeCall(body, name, null, null);
+        okhttp3.Call call = deleteTagForScheduleValidateBeforeCall(body, name, null, null);
         return apiClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call deleteTagForScheduleValidateBeforeCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call deleteTagForScheduleValidateBeforeCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling deleteTagForSchedule(Async)");
@@ -1509,7 +1509,7 @@ public class SchedulerResourceApi {
             throw new ApiException("Missing the required parameter 'name' when calling deleteTagForSchedule(Async)");
         }
 
-        com.squareup.okhttp.Call call = deleteTagForScheduleCall(body, name, progressListener, progressRequestListener);
+        okhttp3.Call call = deleteTagForScheduleCall(body, name, progressListener, progressRequestListener);
         return call;
     }
 
@@ -1522,7 +1522,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call deleteTagForScheduleCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call deleteTagForScheduleCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -1549,10 +1549,10 @@ public class SchedulerResourceApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                    okhttp3.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1584,12 +1584,12 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     private ApiResponse<Void> putTagForScheduleWithHttpInfo(List<TagObject> body, String name) throws ApiException {
-        com.squareup.okhttp.Call call = putTagForScheduleValidateBeforeCall(body, name, null, null);
+        okhttp3.Call call = putTagForScheduleValidateBeforeCall(body, name, null, null);
         return apiClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call putTagForScheduleValidateBeforeCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call putTagForScheduleValidateBeforeCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling putTagForSchedule(Async)");
@@ -1599,7 +1599,7 @@ public class SchedulerResourceApi {
             throw new ApiException("Missing the required parameter 'name' when calling putTagForSchedule(Async)");
         }
 
-        com.squareup.okhttp.Call call = putTagForScheduleCall(body, name, progressListener, progressRequestListener);
+        okhttp3.Call call = putTagForScheduleCall(body, name, progressListener, progressRequestListener);
         return call;
     }
 
@@ -1612,7 +1612,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call putTagForScheduleCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call putTagForScheduleCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -1639,10 +1639,10 @@ public class SchedulerResourceApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                    okhttp3.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1674,19 +1674,19 @@ public class SchedulerResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<List<TagObject>> getTagsForScheduleWithHttpInfo(String name) throws ApiException {
-        com.squareup.okhttp.Call call = getTagsForScheduleValidateBeforeCall(name, null, null);
+        okhttp3.Call call = getTagsForScheduleValidateBeforeCall(name, null, null);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getTagsForScheduleValidateBeforeCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call getTagsForScheduleValidateBeforeCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException("Missing the required parameter 'name' when calling getTagsForSchedule(Async)");
         }
 
-        com.squareup.okhttp.Call call = getTagsForScheduleCall(name, progressListener, progressRequestListener);
+        okhttp3.Call call = getTagsForScheduleCall(name, progressListener, progressRequestListener);
         return call;
     }
 
@@ -1698,7 +1698,7 @@ public class SchedulerResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getTagsForScheduleCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public okhttp3.Call getTagsForScheduleCall(String name, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1725,10 +1725,10 @@ public class SchedulerResourceApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                    okhttp3.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();

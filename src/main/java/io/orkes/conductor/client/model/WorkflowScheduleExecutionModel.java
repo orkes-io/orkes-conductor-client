@@ -14,32 +14,31 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** WorkflowScheduleExecutionModel */
 public class WorkflowScheduleExecutionModel {
-    @SerializedName("executionId")
+
     private String executionId = null;
 
-    @SerializedName("executionTime")
+
     private Long executionTime = null;
 
-    @SerializedName("reason")
+
     private String reason = null;
 
-    @SerializedName("scheduleName")
+
     private String scheduleName = null;
 
-    @SerializedName("scheduledTime")
+
     private Long scheduledTime = null;
 
-    @SerializedName("stackTrace")
+
     private String stackTrace = null;
 
-    @SerializedName("startWorkflowRequest")
+
     private StartWorkflowRequest startWorkflowRequest = null;
 
     /** Gets or Sets state */
@@ -73,13 +72,13 @@ public class WorkflowScheduleExecutionModel {
         }
     }
 
-    @SerializedName("state")
+
     private StateEnum state = null;
 
-    @SerializedName("workflowId")
+
     private String workflowId = null;
 
-    @SerializedName("workflowName")
+
     private String workflowName = null;
 
     public WorkflowScheduleExecutionModel executionId(String executionId) {

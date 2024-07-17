@@ -23,7 +23,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.OrkesClients;
@@ -31,6 +30,7 @@ import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.model.WorkflowStatus;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 import io.orkes.conductor.client.util.SimpleWorker;

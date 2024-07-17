@@ -14,38 +14,31 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/** SaveScheduleRequest */
+/**
+ * SaveScheduleRequest
+ */
 public class SaveScheduleRequest {
-    @SerializedName("createdBy")
+
     private String createdBy = null;
 
-    @SerializedName("cronExpression")
     private String cronExpression = null;
 
-    @SerializedName("name")
     private String name = null;
 
-    @SerializedName("paused")
     private Boolean paused = null;
 
-    @SerializedName("runCatchupScheduleInstances")
     private Boolean runCatchupScheduleInstances = null;
 
-    @SerializedName("scheduleEndTime")
     private Long scheduleEndTime = null;
 
-    @SerializedName("scheduleStartTime")
     private Long scheduleStartTime = null;
 
-    @SerializedName("startWorkflowRequest")
     private StartWorkflowRequest startWorkflowRequest = null;
 
-    @SerializedName("updatedBy")
     private String updatedBy = null;
 
     public SaveScheduleRequest createdBy(String createdBy) {
@@ -233,12 +226,12 @@ public class SaveScheduleRequest {
                 && Objects.equals(this.name, saveScheduleRequest.name)
                 && Objects.equals(this.paused, saveScheduleRequest.paused)
                 && Objects.equals(
-                        this.runCatchupScheduleInstances,
-                        saveScheduleRequest.runCatchupScheduleInstances)
+                this.runCatchupScheduleInstances,
+                saveScheduleRequest.runCatchupScheduleInstances)
                 && Objects.equals(this.scheduleEndTime, saveScheduleRequest.scheduleEndTime)
                 && Objects.equals(this.scheduleStartTime, saveScheduleRequest.scheduleStartTime)
                 && Objects.equals(
-                        this.startWorkflowRequest, saveScheduleRequest.startWorkflowRequest)
+                this.startWorkflowRequest, saveScheduleRequest.startWorkflowRequest)
                 && Objects.equals(this.updatedBy, saveScheduleRequest.updatedBy);
     }
 

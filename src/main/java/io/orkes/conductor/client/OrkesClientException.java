@@ -12,11 +12,22 @@
  */
 package io.orkes.conductor.client;
 
-import com.netflix.conductor.client.exception.ConductorClientException;
+import java.util.List;
 
-public abstract class OrkesClientException extends ConductorClientException {
+import io.orkes.conductor.client.model.validation.ErrorResponse;
+import io.orkes.conductor.client.model.validation.ValidationError;
 
-    public OrkesClientException() {}
+public abstract class OrkesClientException extends RuntimeException {
+
+    private int status;
+    private String instance;
+    private String code;
+    private boolean retryable;
+    private List<ValidationError> validationErrors;
+
+
+    public OrkesClientException() {
+    }
 
     public OrkesClientException(String message) {
         super(message);
@@ -27,8 +38,89 @@ public abstract class OrkesClientException extends ConductorClientException {
     }
 
     public OrkesClientException(int status, String message) {
-        super(status, message);
+        super(message);
+        this.status = status;
+    }
+
+    public OrkesClientException(int status, ErrorResponse errorResponse) {
+        super(errorResponse.getMessage());
+        this.status = status;
+        this.retryable = errorResponse.isRetryable();
+        this.code = errorResponse.getCode();
+        this.instance = errorResponse.getInstance();
+        this.validationErrors = errorResponse.getValidationErrors();
     }
 
     public abstract boolean isClientError();
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public void setInstance(String instance) {
+        this.instance = instance;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean isRetryable() {
+        return retryable;
+    }
+
+    public void setRetryable(boolean retryable) {
+        this.retryable = retryable;
+    }
+
+    public List<ValidationError> getValidationErrors() {
+        return validationErrors;
+    }
+
+    public void setValidationErrors(List<ValidationError> validationErrors) {
+        this.validationErrors = validationErrors;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(getClass().getName()).append(": ");
+
+        if (this.getMessage() != null) {
+            builder.append(this.getMessage());
+        }
+
+        if (status > 0) {
+            builder.append(" {status=").append(status);
+            if (this.code != null) {
+                builder.append(", code='").append(code).append("'");
+            }
+
+            builder.append(", retryable: ").append(retryable);
+        }
+
+        if (this.instance != null) {
+            builder.append(", instance: ").append(instance);
+        }
+
+        if (this.validationErrors != null) {
+            builder.append(", validationErrors: ").append(validationErrors.toString());
+        }
+
+        builder.append("}");
+        return builder.toString();
+    }
 }

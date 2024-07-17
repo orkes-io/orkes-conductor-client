@@ -56,7 +56,7 @@ public class UserResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteUserCall(
+    public okhttp3.Call deleteUserCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -89,12 +89,12 @@ public class UserResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -120,7 +120,7 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call deleteUserValidateBeforeCall(
+    private okhttp3.Call deleteUserValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -131,7 +131,7 @@ public class UserResourceApi {
                     "Missing the required parameter 'id' when calling deleteUser(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteUserCall(id, progressListener, progressRequestListener);
         return call;
     }
@@ -156,7 +156,7 @@ public class UserResourceApi {
      *     response body
      */
     private ApiResponse<Response> deleteUserWithHttpInfo(String id) throws ApiException {
-        com.squareup.okhttp.Call call = deleteUserValidateBeforeCall(id, null, null);
+        okhttp3.Call call = deleteUserValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeReference<Response>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -170,7 +170,7 @@ public class UserResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getGrantedPermissionsCall(
+    public okhttp3.Call getGrantedPermissionsCall(
             String userId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -205,12 +205,12 @@ public class UserResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -236,7 +236,7 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getGrantedPermissionsValidateBeforeCall(
+    private okhttp3.Call getGrantedPermissionsValidateBeforeCall(
             String userId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -247,7 +247,7 @@ public class UserResourceApi {
                     "Missing the required parameter 'userId' when calling getGrantedPermissions(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getGrantedPermissionsCall(userId, progressListener, progressRequestListener);
         return call;
     }
@@ -275,7 +275,7 @@ public class UserResourceApi {
      */
     private ApiResponse<GrantedAccessResponse> getGrantedPermissionsWithHttpInfo(String userId)
             throws ApiException {
-        com.squareup.okhttp.Call call = getGrantedPermissionsValidateBeforeCall(userId, null, null);
+        okhttp3.Call call = getGrantedPermissionsValidateBeforeCall(userId, null, null);
         Type localVarReturnType = new TypeReference<GrantedAccessResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -289,7 +289,7 @@ public class UserResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getUserCall(
+    public okhttp3.Call getUserCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -322,12 +322,12 @@ public class UserResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -353,7 +353,7 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getUserValidateBeforeCall(
+    private okhttp3.Call getUserValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -364,7 +364,7 @@ public class UserResourceApi {
                     "Missing the required parameter 'id' when calling getUser(Async)");
         }
 
-        com.squareup.okhttp.Call call = getUserCall(id, progressListener, progressRequestListener);
+        okhttp3.Call call = getUserCall(id, progressListener, progressRequestListener);
         return call;
     }
 
@@ -390,7 +390,7 @@ public class UserResourceApi {
      *     response body
      */
     private ApiResponse<ConductorUser> getUserWithHttpInfo(String id) throws ApiException {
-        com.squareup.okhttp.Call call = getUserValidateBeforeCall(id, null, null);
+        okhttp3.Call call = getUserValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -404,7 +404,7 @@ public class UserResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call listUsersCall(
+    public okhttp3.Call listUsersCall(
             Boolean apps,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -436,12 +436,12 @@ public class UserResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -467,13 +467,13 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call listUsersValidateBeforeCall(
+    private okhttp3.Call listUsersValidateBeforeCall(
             Boolean apps,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 listUsersCall(apps, progressListener, progressRequestListener);
         return call;
     }
@@ -501,7 +501,7 @@ public class UserResourceApi {
      */
     private ApiResponse<List<ConductorUser>> listUsersWithHttpInfo(Boolean apps)
             throws ApiException {
-        com.squareup.okhttp.Call call = listUsersValidateBeforeCall(apps, null, null);
+        okhttp3.Call call = listUsersValidateBeforeCall(apps, null, null);
         Type localVarReturnType = new TypeReference<List<ConductorUser>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -516,7 +516,7 @@ public class UserResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call sendInviteEmailCall(
+    public okhttp3.Call sendInviteEmailCall(
             String id,
             ConductorUser conductorUser,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -549,12 +549,12 @@ public class UserResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -580,7 +580,7 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call sendInviteEmailValidateBeforeCall(
+    private okhttp3.Call sendInviteEmailValidateBeforeCall(
             String id,
             ConductorUser conductorUser,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -592,7 +592,7 @@ public class UserResourceApi {
                     "Missing the required parameter 'id' when calling sendInviteEmail(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 sendInviteEmailCall(id, conductorUser, progressListener, progressRequestListener);
         return call;
     }
@@ -620,7 +620,7 @@ public class UserResourceApi {
      */
     private ApiResponse<Object> sendInviteEmailWithHttpInfo(String id, ConductorUser conductorUser)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 sendInviteEmailValidateBeforeCall(id, conductorUser, null, null);
         Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -636,7 +636,7 @@ public class UserResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call upsertUserCall(
+    public okhttp3.Call upsertUserCall(
             UpsertUserRequest upsertUserRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -669,12 +669,12 @@ public class UserResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -700,7 +700,7 @@ public class UserResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call upsertUserValidateBeforeCall(
+    private okhttp3.Call upsertUserValidateBeforeCall(
             UpsertUserRequest upsertUserRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -717,7 +717,7 @@ public class UserResourceApi {
                     "Missing the required parameter 'id' when calling upsertUser(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 upsertUserCall(upsertUserRequest, id, progressListener, progressRequestListener);
         return call;
     }
@@ -748,7 +748,7 @@ public class UserResourceApi {
      */
     private ApiResponse<ConductorUser> upsertUserWithHttpInfo(
             UpsertUserRequest upsertUserRequest, String id) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 upsertUserValidateBeforeCall(upsertUserRequest, id, null, null);
         Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);

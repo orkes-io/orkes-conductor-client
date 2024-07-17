@@ -18,11 +18,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
-
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
+import io.orkes.conductor.client.model.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.worker.Worker;
 
 public class Workers {
 
@@ -87,7 +86,11 @@ public class Workers {
             LOGGER.info("Starting workers : {}", workers);
 
             if (this.apiClient != null) {
-                this.apiClient = new ApiClient(rootUri, keyId, secret);
+                this.apiClient =  new ApiClient.Builder()
+                        .basePath(rootUri)
+                        .keyId(keyId)
+                        .keySecret(secret)
+                        .build();
             }
             TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
 

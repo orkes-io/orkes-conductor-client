@@ -12,35 +12,27 @@
  */
 package io.orkes.conductor.client.automator;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.netflix.conductor.client.config.ConductorClientConfiguration;
-import com.netflix.conductor.client.config.PropertyFactory;
-import com.netflix.conductor.client.worker.Worker;
-import com.netflix.discovery.EurekaClient;
-
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.grpc.PooledPoller;
-import io.orkes.conductor.client.http.OrkesTaskClient;
+import io.orkes.conductor.client.config.ConductorClientConfiguration;
+import io.orkes.conductor.client.worker.Worker;
 
 import com.google.common.base.Preconditions;
-
-import static io.orkes.conductor.client.automator.TaskRunner.ALL_WORKERS;
-import static io.orkes.conductor.client.automator.TaskRunner.DOMAIN;
 
 public class TaskRunnerConfigurer {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunnerConfigurer.class);
 
-    private final EurekaClient eurekaClient;
     private final TaskClient taskClient;
 
-    private final ApiClient apiClient;
     private final List<Worker> workers;
     private final int sleepWhenRetry;
     private final int updateRetryCount;
@@ -52,8 +44,7 @@ public class TaskRunnerConfigurer {
 
     private final Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollCount;
 
-    private Integer defaultPollTimeout;
-    private Integer defaultPollCount;
+    private final Integer defaultPollTimeout;
     private final int threadCount;
 
     private final List<TaskRunner> taskRunners;
@@ -65,9 +56,7 @@ public class TaskRunnerConfigurer {
      * @see TaskRunnerConfigurer#init()
      */
     private TaskRunnerConfigurer(TaskRunnerConfigurer.Builder builder) {
-        this.eurekaClient = builder.eurekaClient;
         this.taskClient = builder.taskClient;
-        this.apiClient = ((OrkesTaskClient) builder.taskClient).getApiClient();
         this.sleepWhenRetry = builder.sleepWhenRetry;
         this.updateRetryCount = builder.updateRetryCount;
         this.workerNamePrefix = builder.workerNamePrefix;
@@ -76,7 +65,7 @@ public class TaskRunnerConfigurer {
         this.taskPollTimeout = builder.taskPollTimeout;
         this.taskPollCount = builder.taskPollCount;
         this.defaultPollTimeout = builder.defaultPollTimeout;
-        this.defaultPollCount = builder.defaultPollCount;
+        Integer defaultPollCount = builder.defaultPollCount;
         this.shutdownGracePeriodSeconds = builder.shutdownGracePeriodSeconds;
         this.workers = new LinkedList<>();
         this.threadCount = builder.threadCount;
@@ -84,7 +73,9 @@ public class TaskRunnerConfigurer {
         taskRunners = new LinkedList<>();
     }
 
-    /** Builder used to create the instances of TaskRunnerConfigurer */
+    /**
+     * Builder used to create the instances of TaskRunnerConfigurer
+     */
     public static class Builder {
         private String workerNamePrefix = "workflow-worker-%d";
         private int sleepWhenRetry = 500;
@@ -95,12 +86,11 @@ public class TaskRunnerConfigurer {
 
         private int defaultPollCount = 20;
         private final Iterable<Worker> workers;
-        private EurekaClient eurekaClient;
         private final TaskClient taskClient;
         private Map<String /* taskType */, String /* domain */> taskToDomain = new HashMap<>();
         private Map<String /* taskType */, Integer /* threadCount */> taskToThreadCount =
                 new HashMap<>();
-        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout =  new HashMap<>();
+        private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollTimeout = new HashMap<>();
 
         private Map<String /* taskType */, Integer /* timeoutInMillisecond */> taskPollCount = new HashMap<>();
 
@@ -113,7 +103,7 @@ public class TaskRunnerConfigurer {
 
         /**
          * @param workerNamePrefix prefix to be used for worker names, defaults to workflow-worker-
-         *     if not supplied.
+         *                         if not supplied.
          * @return Returns the current instance.
          */
         public TaskRunnerConfigurer.Builder withWorkerNamePrefix(String workerNamePrefix) {
@@ -123,7 +113,7 @@ public class TaskRunnerConfigurer {
 
         /**
          * @param sleepWhenRetry time in milliseconds, for which the thread should sleep when task
-         *     update call fails, before retrying the operation.
+         *                       update call fails, before retrying the operation.
          * @return Returns the current instance.
          */
         public TaskRunnerConfigurer.Builder withSleepWhenRetry(int sleepWhenRetry) {
@@ -161,17 +151,6 @@ public class TaskRunnerConfigurer {
                         "Seconds of shutdownGracePeriod cannot be less than 1");
             }
             this.shutdownGracePeriodSeconds = shutdownGracePeriodSeconds;
-            return this;
-        }
-
-        /**
-         * @param eurekaClient Eureka client - used to identify if the server is in discovery or
-         *     not. When the server goes out of discovery, the polling is terminated. If passed
-         *     null, discovery check is not done.
-         * @return Builder instance
-         */
-        public TaskRunnerConfigurer.Builder withEurekaClient(EurekaClient eurekaClient) {
-            this.eurekaClient = eurekaClient;
             return this;
         }
 
@@ -227,7 +206,7 @@ public class TaskRunnerConfigurer {
 
         /**
          * @param threadCount # of threads assigned to the workers. Should be at-least the size of
-         *     taskWorkers to avoid starvation in a busy system.
+         *                    taskWorkers to avoid starvation in a busy system.
          * @return Builder instance
          */
         public Builder withThreadCount(int threadCount) {
@@ -248,7 +227,7 @@ public class TaskRunnerConfigurer {
 
     /**
      * @return sleep time in millisecond before task update retry is done when receiving error from
-     *     the Conductor server
+     * the Conductor server
      */
     public int getSleepWhenRetry() {
         return sleepWhenRetry;
@@ -256,7 +235,7 @@ public class TaskRunnerConfigurer {
 
     /**
      * @return Number of times updateTask should be retried when receiving error from Conductor
-     *     server
+     * server
      */
     public int getUpdateRetryCount() {
         return updateRetryCount;
@@ -274,12 +253,7 @@ public class TaskRunnerConfigurer {
      */
     public synchronized void init() {
         this.scheduledExecutorService = Executors.newScheduledThreadPool(workers.size());
-        if (apiClient.isUseGRPC()) {
-            LOGGER.info("Using gRPC for task poll/update for ", workers.stream().map(worker -> worker.getTaskDefName()).collect(Collectors.toList()));
-            workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startPooledGRPCWorker(worker)));
-        } else {
-            workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startWorker(worker)));
-        }
+        workers.forEach(worker -> scheduledExecutorService.submit(() -> this.startWorker(worker)));
     }
 
     /**
@@ -300,7 +274,6 @@ public class TaskRunnerConfigurer {
         final TaskRunner taskRunner =
                 new TaskRunner(
                         worker,
-                        eurekaClient,
                         taskClient,
                         updateRetryCount,
                         taskToDomain,
@@ -309,20 +282,5 @@ public class TaskRunnerConfigurer {
                         taskPollTimeout);
         this.taskRunners.add(taskRunner);
         taskRunner.pollAndExecute();
-    }
-
-    private void startPooledGRPCWorker(Worker worker) {
-
-        final Integer threadCountForTask = this.taskToThreadCount.getOrDefault(worker.getTaskDefName(), threadCount);
-        final Integer taskPollTimeout = this.taskPollTimeout.getOrDefault(worker.getTaskDefName(), defaultPollTimeout);
-        String taskType = worker.getTaskDefName();
-        String domain =
-                Optional.ofNullable(PropertyFactory.getString(taskType, DOMAIN, null))
-                        .orElseGet(() -> Optional.ofNullable(PropertyFactory.getString(ALL_WORKERS, DOMAIN, null)).orElse(taskToDomain.get(taskType)));
-        LOGGER.info("Starting gRPC worker: {} with {} threads", worker.getTaskDefName(), threadCountForTask);
-
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCountForTask, threadCountForTask, 1, TimeUnit.MINUTES, new ArrayBlockingQueue<>(threadCountForTask * 100));
-        PooledPoller pooledPoller = new PooledPoller(apiClient, worker, domain, threadCountForTask, taskPollTimeout, executor, threadCountForTask);
-        pooledPoller.start();
     }
 }

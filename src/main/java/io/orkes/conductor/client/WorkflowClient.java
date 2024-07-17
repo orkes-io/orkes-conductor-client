@@ -19,18 +19,23 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-import com.netflix.conductor.common.metadata.workflow.UpgradeWorkflowRequest;
-import com.netflix.conductor.common.model.BulkResponse;
-import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.common.run.WorkflowTestRequest;
-
 import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ConflictException;
+import io.orkes.conductor.client.model.BulkResponse;
+import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStateUpdate;
 import io.orkes.conductor.client.model.WorkflowStatus;
-import io.orkes.conductor.common.model.WorkflowRun;
+import io.orkes.conductor.client.model.metadata.workflow.RerunWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.UpgradeWorkflowRequest;
+import io.orkes.conductor.client.model.run.SearchResult;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.client.model.run.WorkflowSummary;
+import io.orkes.conductor.client.model.run.WorkflowTestRequest;
 
-public abstract class WorkflowClient extends com.netflix.conductor.client.http.WorkflowClient {
+public abstract class WorkflowClient  {
+
+    public abstract String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ConflictException;
 
     @Deprecated
     public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask);
@@ -38,6 +43,16 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
     public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds);
 
     public abstract WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException;
+
+    public abstract SearchResult<WorkflowSummary> search(String query);
+
+    public abstract SearchResult<Workflow> searchV2(String query);
+
+    public abstract SearchResult<WorkflowSummary> search(
+            Integer start, Integer size, String sort, String freeText, String query);
+
+    public abstract SearchResult<Workflow> searchV2(
+            Integer start, Integer size, String sort, String freeText, String query);
 
     public abstract BulkResponse pauseWorkflow(List<String> workflowIds) throws ApiException;
 
@@ -50,6 +65,38 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
 
     public abstract BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
             throws ApiException;
+
+    public abstract Workflow getWorkflow(String workflowId, boolean includeTasks);
+
+    public abstract List<Workflow> getWorkflows(
+            String name, String correlationId, boolean includeClosed, boolean includeTasks);
+
+    public abstract void deleteWorkflow(String workflowId, boolean archiveWorkflow);
+
+    public abstract BulkResponse terminateWorkflows(List<String> workflowIds, String reason);
+
+    public abstract List<String> getRunningWorkflow(String workflowName, Integer version);
+
+    public abstract List<String> getWorkflowsByTimePeriod(
+            String workflowName, int version, Long startTime, Long endTime);
+
+    public abstract void runDecider(String workflowId);
+
+    public abstract void pauseWorkflow(String workflowId);
+
+    public abstract void resumeWorkflow(String workflowId);
+
+    public abstract void skipTaskFromWorkflow(String workflowId, String taskReferenceName);
+
+    public abstract String rerunWorkflow(String workflowId, RerunWorkflowRequest rerunWorkflowRequest);
+
+    public abstract void restart(String workflowId, boolean useLatestDefinitions);
+
+    public abstract void retryLastFailedTask(String workflowId);
+
+    public abstract void resetCallbacksForInProgressTasks(String workflowId);
+
+    public abstract void terminateWorkflow(String workflowId, String reason);
 
     public abstract void terminateWorkflowWithFailure(String workflowId, String reason, boolean triggerWorkflowFailure)
             throws ApiException;

@@ -26,10 +26,10 @@ import io.orkes.conductor.client.model.*;
 
 public class OrkesAuthorizationClient extends OrkesClient implements AuthorizationClient {
 
-    private AuthorizationResourceApi authorizationResourceApi;
-    private ApplicationResourceApi applicationResourceApi;
-    private GroupResourceApi groupResourceApi;
-    private UserResourceApi userResourceApi;
+    private final AuthorizationResourceApi authorizationResourceApi;
+    private final ApplicationResourceApi applicationResourceApi;
+    private final GroupResourceApi groupResourceApi;
+    private final UserResourceApi userResourceApi;
 
     public OrkesAuthorizationClient(ApiClient apiClient) {
         super(apiClient);

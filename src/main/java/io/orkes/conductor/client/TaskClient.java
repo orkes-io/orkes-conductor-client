@@ -13,10 +13,29 @@
 package io.orkes.conductor.client;
 
 
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.common.run.Workflow;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-public abstract class TaskClient extends com.netflix.conductor.client.http.TaskClient {
+import io.orkes.conductor.client.model.TaskSummary;
+import io.orkes.conductor.client.model.metadata.tasks.PollData;
+import io.orkes.conductor.client.model.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.model.run.SearchResult;
+import io.orkes.conductor.client.model.run.Workflow;
+
+public abstract class TaskClient  {
+
+    public abstract Task pollTask(String taskType, String workerId, String domain);
+
+    public abstract List<Task> batchPollTasksByTaskType(
+            String taskType, String workerId, int count, int timeoutInMillisecond);
+
+    public abstract List<Task> batchPollTasksInDomain(
+            String taskType, String domain, String workerId, int count, int timeoutInMillisecond);
+
+    public abstract void updateTask(TaskResult taskResult);
 
     /**
      * Update the task status and output based given workflow id and task reference name
@@ -37,4 +56,37 @@ public abstract class TaskClient extends com.netflix.conductor.client.http.TaskC
      */
     public abstract Workflow updateTaskSync(String workflowId, String taskReferenceName, TaskResult.Status status, Object output);
 
+    public abstract Optional<String> evaluateAndUploadLargePayload(
+            Map<String, Object> taskOutputData, String taskType);
+
+    public abstract Boolean ack(String taskId, String workerId);
+
+    public abstract void logMessageForTask(String taskId, String logMessage);
+
+    public abstract List<TaskExecLog> getTaskLogs(String taskId);
+
+    public abstract Task getTaskDetails(String taskId);
+
+    public abstract void removeTaskFromQueue(String taskType, String taskId);
+
+    public abstract int getQueueSizeForTask(String taskType);
+
+    public abstract int getQueueSizeForTask(
+            String taskType, String domain, String isolationGroupId, String executionNamespace);
+
+    public abstract List<PollData> getPollData(String taskType);
+
+    public abstract List<PollData> getAllPollData();
+
+    public abstract String requeueAllPendingTasks();
+
+    public abstract String requeuePendingTasksByTaskType(String taskType);
+
+    public abstract SearchResult<TaskSummary> search(String query);
+
+    public abstract SearchResult<Task> searchV2(String query);
+
+    public abstract SearchResult<TaskSummary> search(Integer start, Integer size, String sort, String freeText, String query);
+
+    public abstract SearchResult<Task> searchV2(Integer start, Integer size, String sort, String freeText, String query);
 }

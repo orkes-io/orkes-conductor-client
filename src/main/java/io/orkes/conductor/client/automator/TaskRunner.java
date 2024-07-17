@@ -25,26 +25,17 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.netflix.appinfo.InstanceInfo;
-import com.netflix.conductor.client.config.PropertyFactory;
-import com.netflix.conductor.client.telemetry.MetricsContainer;
-import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.discovery.EurekaClient;
-import com.netflix.spectator.api.Registry;
-import com.netflix.spectator.api.Spectator;
-import com.netflix.spectator.api.patterns.ThreadPoolMonitor;
-
 import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.config.PropertyFactory;
+import io.orkes.conductor.client.model.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.worker.Worker;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 class TaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunner.class);
-    private static final Registry REGISTRY = Spectator.globalRegistry();
-    private final EurekaClient eurekaClient;
     private final TaskClient taskClient;
     private final int updateRetryCount;
     private final ThreadPoolExecutor executorService;
@@ -70,7 +61,6 @@ class TaskRunner {
 
     TaskRunner(
             Worker worker,
-            EurekaClient eurekaClient,
             TaskClient taskClient,
             int updateRetryCount,
             Map<String, String> taskToDomain,
@@ -78,7 +68,6 @@ class TaskRunner {
             int threadCount,
             int taskPollTimeout) {
         this.worker = worker;
-        this.eurekaClient = eurekaClient;
         this.taskClient = taskClient;
         this.updateRetryCount = updateRetryCount;
         this.taskToDomain = taskToDomain;
@@ -89,21 +78,21 @@ class TaskRunner {
 
         //1. Is there a worker level override?
         this.domain = PropertyFactory.getString(taskType, DOMAIN, null);
-        if(this.domain == null) {
+        if (this.domain == null) {
             //2. If not, is there a blanket override?
             this.domain = PropertyFactory.getString(ALL_WORKERS, DOMAIN, null);
         }
-        if(this.domain == null) {
+        if (this.domain == null) {
             //3. was it supplied as part of the config?
             this.domain = taskToDomain.get(taskType);
         }
 
         int defaultLoggingInterval = 100;
         int errorInterval = PropertyFactory.getInteger(taskType, "LOG_INTERVAL", 0);
-        if(errorInterval == 0) {
+        if (errorInterval == 0) {
             errorInterval = PropertyFactory.getInteger(ALL_WORKERS, "LOG_INTERVAL", 0);
         }
-        if(errorInterval == 0) {
+        if (errorInterval == 0) {
             errorInterval = defaultLoggingInterval;
         }
         this.errorAt = errorInterval;
@@ -116,7 +105,6 @@ class TaskRunner {
                                         .namingPattern(workerNamePrefix)
                                         .uncaughtExceptionHandler(uncaughtExceptionHandler)
                                         .build());
-        ThreadPoolMonitor.attach(REGISTRY, (ThreadPoolExecutor) executorService, workerNamePrefix);
         LOGGER.info(
                 "Starting Worker for taskType '{}' with {} threads, {} ms polling interval and domain {}",
                 taskType,
@@ -170,58 +158,40 @@ class TaskRunner {
     private List<Task> pollTasksForWorker() {
         List<Task> tasks = new LinkedList<>();
 
-        Boolean discoveryOverride =
-                Optional.ofNullable(
-                                PropertyFactory.getBoolean(
-                                        taskType, OVERRIDE_DISCOVERY, null))
-                        .orElseGet(
-                                () ->
-                                        PropertyFactory.getBoolean(
-                                                ALL_WORKERS, OVERRIDE_DISCOVERY, false));
-        if (eurekaClient != null
-                && !eurekaClient.getInstanceRemoteStatus().equals(InstanceInfo.InstanceStatus.UP)
-                && !discoveryOverride) {
-            LOGGER.trace("Instance is NOT UP in discovery - will not poll");
-            return tasks;
-        }
         if (worker.paused()) {
-            MetricsContainer.incrementTaskPausedCount(taskType);
             LOGGER.trace("Worker {} has been paused. Not polling anymore!", worker.getClass());
             return tasks;
         }
         int pollCount = 0;
-        while(permits.tryAcquire()){
+        while (permits.tryAcquire()) {
             pollCount++;
         }
-        if(pollCount == 0) {
+        if (pollCount == 0) {
             return tasks;
         }
 
         try {
-
-
             LOGGER.trace("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
             Stopwatch stopwatch = Stopwatch.createStarted();
-            int tasksToPoll = pollCount;
-            tasks = MetricsContainer.getPollTimer(taskType).record(() -> pollTask(domain, tasksToPoll));
+            tasks =  pollTask(domain, pollCount);
             stopwatch.stop();
             permits.release(pollCount - tasks.size());        //release extra permits
             LOGGER.debug("Time taken to poll {} task with a batch size of {} is {} ms", taskType, tasks.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
-        }  catch (Throwable e) {
+        } catch (Throwable e) {
             permits.release(pollCount - tasks.size());
 
             //For the first 100 errors, just print them as is...
             boolean printError = false;
-            if(pollingErrorCount < 100 || pollingErrorCount % errorAt == 0) {
+            if (pollingErrorCount < 100 || pollingErrorCount % errorAt == 0) {
                 printError = true;
             }
             pollingErrorCount++;
-            if(pollingErrorCount > 10_000_000) {
+            if (pollingErrorCount > 10_000_000) {
                 //Reset after 10 million errors
                 pollingErrorCount = 0;
             }
-            if(printError) {
+            if (printError) {
                 LOGGER.error("Error polling for taskType: {}, error = {}", taskType, e.getMessage(), e);
             }
         }
@@ -242,13 +212,12 @@ class TaskRunner {
     private final Thread.UncaughtExceptionHandler uncaughtExceptionHandler =
             (thread, error) -> {
                 // JVM may be in unstable state, try to send metrics then exit
-                MetricsContainer.incrementUncaughtExceptionCount();
                 LOGGER.error("Uncaught exception. Thread {} will exit now", thread, error);
             };
 
     private void processTask(Task task) {
         LOGGER.trace("Executing task: {} of type: {} in worker: {} at {}", task.getTaskId(), taskType, worker.getClass().getSimpleName(), worker.getIdentity());
-        LOGGER.trace("task {} is getting executed after {} ms of getting polled", task.getTaskId(), (System.currentTimeMillis()-task.getStartTime()));
+        LOGGER.trace("task {} is getting executed after {} ms of getting polled", task.getTaskId(), (System.currentTimeMillis() - task.getStartTime()));
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
             executeTask(worker, task);
@@ -289,7 +258,6 @@ class TaskRunner {
                     task.getTaskId(),
                     task.getTaskDefName(),
                     e);
-            MetricsContainer.incrementTaskExecutionErrorCount(task.getTaskType(), e);
             if (result == null) {
                 task.setStatus(Task.Status.FAILED);
                 result = new TaskResult(task);
@@ -297,8 +265,6 @@ class TaskRunner {
             handleException(e, result, worker, task);
         } finally {
             stopwatch.stop();
-            MetricsContainer.getExecutionTimer(worker.getTaskDefName())
-                    .record(stopwatch.elapsed(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
         }
         LOGGER.trace(
                 "Task: {} executed by worker: {} at {} with status: {}",
@@ -340,7 +306,6 @@ class TaskRunner {
                     "updateTask");
         } catch (Exception e) {
             worker.onErrorUpdate(task);
-            MetricsContainer.incrementTaskUpdateErrorCount(worker.getTaskDefName(), e);
             LOGGER.error(
                     String.format(
                             "Failed to update result: %s for task: %s in worker: %s",
@@ -362,7 +327,7 @@ class TaskRunner {
             } catch (Exception e) {
                 LOGGER.error("Error executing {}", opName, e);
                 index++;
-                Uninterruptibles.sleepUninterruptibly(500L * (count+1), TimeUnit.MILLISECONDS);
+                Uninterruptibles.sleepUninterruptibly(500L * (count + 1), TimeUnit.MILLISECONDS);
             }
         }
         throw new RuntimeException("Exhausted retries performing " + opName);
@@ -370,7 +335,6 @@ class TaskRunner {
 
     private void handleException(Throwable t, TaskResult result, Worker worker, Task task) {
         LOGGER.error(String.format("Error while executing task %s", task.toString()), t);
-        MetricsContainer.incrementTaskExecutionErrorCount(taskType, t);
         result.setStatus(TaskResult.Status.FAILED);
         result.setReasonForIncompletion("Error while executing the task: " + t);
         StringWriter stringWriter = new StringWriter();

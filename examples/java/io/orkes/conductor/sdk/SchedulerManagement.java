@@ -14,7 +14,7 @@ package io.orkes.conductor.sdk;
 
 import java.util.List;
 
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.SchedulerClient;

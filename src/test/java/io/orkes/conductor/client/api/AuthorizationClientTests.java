@@ -19,9 +19,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
-
 import io.orkes.conductor.client.AuthorizationClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
@@ -29,6 +26,8 @@ import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.model.TargetRef.TypeEnum;
 import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 

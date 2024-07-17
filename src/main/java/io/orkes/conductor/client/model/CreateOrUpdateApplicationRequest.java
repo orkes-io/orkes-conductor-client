@@ -14,12 +14,12 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/** CreateOrUpdateApplicationRequest */
+/**
+ * CreateOrUpdateApplicationRequest
+ */
 public class CreateOrUpdateApplicationRequest {
-    @SerializedName("name")
     private String name = null;
 
     public CreateOrUpdateApplicationRequest name(String name) {

@@ -14,7 +14,7 @@ package io.orkes.conductor.client.http;
 
 import java.io.IOException;
 
-import com.squareup.okhttp.*;
+import okhttp3.*;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.GzipSink;

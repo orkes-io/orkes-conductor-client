@@ -16,24 +16,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** StartWorkflow */
 public class StartWorkflow {
-    @SerializedName("correlationId")
+
     private String correlationId = null;
 
-    @SerializedName("input")
+
     private Map<String, Object> input = null;
 
-    @SerializedName("name")
+
     private String name = null;
 
-    @SerializedName("taskToDomain")
+
     private Map<String, String> taskToDomain = null;
 
-    @SerializedName("version")
+
     private Integer version = null;
 
     public StartWorkflow correlationId(String correlationId) {

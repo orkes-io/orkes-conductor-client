@@ -14,7 +14,6 @@ package io.orkes.conductor.client.model;
 
 import java.util.*;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** UpsertGroupRequest */
@@ -56,10 +55,10 @@ public class UpsertGroupRequest {
 
     }
 
-    @SerializedName("defaultAccess")
+
     private Map<String, List<String>> defaultAccess = null;
 
-    @SerializedName("description")
+
     private String description = null;
 
     /** Gets or Sets roles */
@@ -96,7 +95,7 @@ public class UpsertGroupRequest {
 
     }
 
-    @SerializedName("roles")
+
     private List<RolesEnum> roles = null;
 
     public UpsertGroupRequest defaultAccess(Map<String, List<String>> defaultAccess) {

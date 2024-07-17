@@ -12,11 +12,10 @@
  */
 package io.orkes.conductor.client.util;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
-
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
+import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 
 public class Commons {
     public static String WORKFLOW_NAME = "test-sdk-java-workflow";

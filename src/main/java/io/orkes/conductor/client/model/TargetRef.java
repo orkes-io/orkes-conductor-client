@@ -14,7 +14,6 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -22,7 +21,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Schema(description = "The object over which access is being granted or removed")
 public class TargetRef {
-    @SerializedName("id")
+
     private String id = null;
 
     /**
@@ -62,7 +61,7 @@ public class TargetRef {
         }
     }
 
-    @SerializedName("type")
+
     private TypeEnum type = null;
 
     public TargetRef id(String id) {

@@ -21,12 +21,9 @@ import io.orkes.conductor.client.OrkesClientException;
 
 public class ConflictException extends OrkesClientException {
 
+    private final Map<String, List<String>> responseHeaders;
     private int code;
-    private Map<String, List<String>> responseHeaders;
-
     private String responseBody;
-
-    private String message;
 
     public ConflictException(
             String message,
@@ -40,21 +37,17 @@ public class ConflictException extends OrkesClientException {
         this.code = code;
         this.responseHeaders = responseHeaders;
         this.responseBody = responseBody;
-        this.message = message;
     }
 
     public ConflictException(String message, int code, Map<String, List<String>> responseHeaders, String responseBody) {
         this(message, null, code, responseHeaders, responseBody);
         super.setCode(String.valueOf(code));
         super.setStatus(code);
-        super.setMessage(message);
         this.code = code;
-        this.message = message;
         this.responseBody = responseBody;
     }
 
     /**
-     *
      * @return HTTP status code
      */
     public int getStatusCode() {

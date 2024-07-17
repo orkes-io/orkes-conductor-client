@@ -19,12 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.netflix.conductor.common.model.BulkResponse;
-
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.model.BulkResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+
 
 public class WorkflowBulkResourceApi {
     private ApiClient apiClient;
@@ -54,7 +54,7 @@ public class WorkflowBulkResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call pauseWorkflow1Call(
+    public okhttp3.Call pauseWorkflow1Call(
             List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -84,12 +84,12 @@ public class WorkflowBulkResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -115,7 +115,7 @@ public class WorkflowBulkResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call pauseWorkflow1ValidateBeforeCall(
+    private okhttp3.Call pauseWorkflow1ValidateBeforeCall(
             List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -126,7 +126,7 @@ public class WorkflowBulkResourceApi {
                     "Missing the required parameter 'body' when calling pauseWorkflow1(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 pauseWorkflow1Call(workflowIds, progressListener, progressRequestListener);
         return call;
     }
@@ -154,7 +154,7 @@ public class WorkflowBulkResourceApi {
      */
     private ApiResponse<BulkResponse> pauseWorkflow1WithHttpInfo(List<String> workflowIds)
             throws ApiException {
-        com.squareup.okhttp.Call call = pauseWorkflow1ValidateBeforeCall(workflowIds, null, null);
+        okhttp3.Call call = pauseWorkflow1ValidateBeforeCall(workflowIds, null, null);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -168,7 +168,7 @@ public class WorkflowBulkResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call restart1Call(
+    public okhttp3.Call restart1Call(
             List<String> workflowIds,
             Boolean useLatestDefinitions,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -202,12 +202,12 @@ public class WorkflowBulkResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -233,7 +233,7 @@ public class WorkflowBulkResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call restart1ValidateBeforeCall(
+    private okhttp3.Call restart1ValidateBeforeCall(
             List<String> workflowIds,
             Boolean useLatestDefinitions,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -245,7 +245,7 @@ public class WorkflowBulkResourceApi {
                     "Missing the required parameter 'body' when calling restart1(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 restart1Call(
                         workflowIds,
                         useLatestDefinitions,
@@ -280,7 +280,7 @@ public class WorkflowBulkResourceApi {
      */
     private ApiResponse<BulkResponse> restart1WithHttpInfo(
             List<String> workflowIds, Boolean useLatestDefinitions) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 restart1ValidateBeforeCall(workflowIds, useLatestDefinitions, null, null);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -295,7 +295,7 @@ public class WorkflowBulkResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call resumeWorkflow1Call(
+    public okhttp3.Call resumeWorkflow1Call(
             List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -325,12 +325,12 @@ public class WorkflowBulkResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -356,7 +356,7 @@ public class WorkflowBulkResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call resumeWorkflow1ValidateBeforeCall(
+    private okhttp3.Call resumeWorkflow1ValidateBeforeCall(
             List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -367,7 +367,7 @@ public class WorkflowBulkResourceApi {
                     "Missing the required parameter 'body' when calling resumeWorkflow1(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 resumeWorkflow1Call(workflowIds, progressListener, progressRequestListener);
         return call;
     }
@@ -395,7 +395,7 @@ public class WorkflowBulkResourceApi {
      */
     private ApiResponse<BulkResponse> resumeWorkflow1WithHttpInfo(List<String> workflowIds)
             throws ApiException {
-        com.squareup.okhttp.Call call = resumeWorkflow1ValidateBeforeCall(workflowIds, null, null);
+        okhttp3.Call call = resumeWorkflow1ValidateBeforeCall(workflowIds, null, null);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -409,7 +409,7 @@ public class WorkflowBulkResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call retry1Call(
+    public okhttp3.Call retry1Call(
             List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -439,12 +439,12 @@ public class WorkflowBulkResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -470,7 +470,7 @@ public class WorkflowBulkResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call retry1ValidateBeforeCall(
+    private okhttp3.Call retry1ValidateBeforeCall(
             List<String> workflowIds,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -481,7 +481,7 @@ public class WorkflowBulkResourceApi {
                     "Missing the required parameter 'body' when calling retry1(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 retry1Call(workflowIds, progressListener, progressRequestListener);
         return call;
     }
@@ -509,7 +509,7 @@ public class WorkflowBulkResourceApi {
      */
     private ApiResponse<BulkResponse> retry1WithHttpInfo(List<String> workflowIds)
             throws ApiException {
-        com.squareup.okhttp.Call call = retry1ValidateBeforeCall(workflowIds, null, null);
+        okhttp3.Call call = retry1ValidateBeforeCall(workflowIds, null, null);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -525,7 +525,7 @@ public class WorkflowBulkResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call terminateCall(
+    public okhttp3.Call terminateCall(
             List<String> workflowIds,
             String reason,
             boolean triggerFailureWorkflow,
@@ -559,12 +559,12 @@ public class WorkflowBulkResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -590,7 +590,7 @@ public class WorkflowBulkResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call terminateValidateBeforeCall(
+    private okhttp3.Call terminateValidateBeforeCall(
             List<String> workflowIds,
             String reason,
             boolean triggerFailureWorkflow,
@@ -603,7 +603,7 @@ public class WorkflowBulkResourceApi {
                     "Missing the required parameter 'body' when calling terminate(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 terminateCall(workflowIds, reason, triggerFailureWorkflow, progressListener, progressRequestListener);
         return call;
     }
@@ -634,7 +634,7 @@ public class WorkflowBulkResourceApi {
      */
     private ApiResponse<BulkResponse> terminateWithHttpInfo(List<String> workflowIds, String reason, boolean triggerFailureWorkflow)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 terminateValidateBeforeCall(workflowIds, reason, triggerFailureWorkflow, null, null);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);

@@ -16,18 +16,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** UpdateWorkflowVariables */
 public class UpdateWorkflowVariables {
-    @SerializedName("appendArray")
+
     private Boolean appendArray = null;
 
-    @SerializedName("variables")
+
     private Map<String, Object> variables = null;
 
-    @SerializedName("workflowId")
+
     private String workflowId = null;
 
     public UpdateWorkflowVariables appendArray(Boolean appendArray) {

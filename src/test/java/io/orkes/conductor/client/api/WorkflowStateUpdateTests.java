@@ -22,15 +22,15 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.common.metadata.workflow.IdempotencyStrategy;
-import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import com.netflix.conductor.common.run.Workflow;
 
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.model.WorkflowStateUpdate;
+import io.orkes.conductor.client.model.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.model.metadata.workflow.IdempotencyStrategy;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 import io.orkes.conductor.common.model.WorkflowRun;
 
 import lombok.SneakyThrows;

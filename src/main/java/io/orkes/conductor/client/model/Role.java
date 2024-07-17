@@ -16,15 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** Role */
 public class Role {
-    @SerializedName("name")
+
     private String name = null;
 
-    @SerializedName("permissions")
     private List<Permission> permissions = null;
 
     public Role name(String name) {

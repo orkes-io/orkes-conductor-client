@@ -14,12 +14,11 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** Permission */
 public class Permission {
-    @SerializedName("name")
+
     private String name = null;
 
     public Permission name(String name) {

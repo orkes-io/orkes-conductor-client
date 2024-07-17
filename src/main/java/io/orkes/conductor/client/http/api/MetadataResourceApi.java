@@ -19,11 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -57,7 +56,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call createCall(
+    public okhttp3.Call createCall(
             WorkflowDef workflowDef,
             Boolean overwrite,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -91,12 +90,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -122,7 +121,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call createValidateBeforeCall(
+    private okhttp3.Call createValidateBeforeCall(
             WorkflowDef workflowDef,
             Boolean overwrite,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -134,7 +133,7 @@ public class MetadataResourceApi {
                     "Missing the required parameter 'workflowDef' when calling create(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 createCall(workflowDef, overwrite, progressListener, progressRequestListener);
         return call;
     }
@@ -162,7 +161,7 @@ public class MetadataResourceApi {
      */
     private ApiResponse<Void> createWithHttpInfo(WorkflowDef workflowDef, Boolean overwrite)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 createValidateBeforeCall(workflowDef, overwrite, null, null);
         return apiClient.execute(call);
     }
@@ -178,7 +177,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getCall(
+    public okhttp3.Call getCall(
             String name,
             Integer version,
             Boolean metadata,
@@ -218,12 +217,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -249,7 +248,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getValidateBeforeCall(
+    private okhttp3.Call getValidateBeforeCall(
             String name,
             Integer version,
             Boolean metadata,
@@ -261,7 +260,7 @@ public class MetadataResourceApi {
             throw new ApiException("Missing the required parameter 'name' when calling get(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getCall(name, version, metadata, progressListener, progressRequestListener);
         return call;
     }
@@ -293,7 +292,7 @@ public class MetadataResourceApi {
      */
     private ApiResponse<WorkflowDef> getWithHttpInfo(String name, Integer version, Boolean metadata)
             throws ApiException {
-        com.squareup.okhttp.Call call = getValidateBeforeCall(name, version, metadata, null, null);
+        okhttp3.Call call = getValidateBeforeCall(name, version, metadata, null, null);
         return apiClient.execute(call, WorkflowDef.class);
     }
 
@@ -309,7 +308,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getAllWorkflowsCall(
+    public okhttp3.Call getAllWorkflowsCall(
             String access,
             Boolean metadata,
             String tagKey,
@@ -349,12 +348,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -380,7 +379,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getAllWorkflowsValidateBeforeCall(
+    private okhttp3.Call getAllWorkflowsValidateBeforeCall(
             String access,
             Boolean metadata,
             String tagKey,
@@ -389,7 +388,7 @@ public class MetadataResourceApi {
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getAllWorkflowsCall(
                         access,
                         metadata,
@@ -431,7 +430,7 @@ public class MetadataResourceApi {
      */
     private ApiResponse<List<WorkflowDef>> getAllWorkflowsWithHttpInfo(
             String access, Boolean metadata, String tagKey, String tagValue) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getAllWorkflowsValidateBeforeCall(access, metadata, tagKey, tagValue, null, null);
         Type localVarReturnType = new TypeReference<List<WorkflowDef>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -447,7 +446,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getTaskDefCall(
+    public okhttp3.Call getTaskDefCall(
             String tasktype,
             Boolean metadata,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -485,12 +484,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -516,7 +515,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getTaskDefValidateBeforeCall(
+    private okhttp3.Call getTaskDefValidateBeforeCall(
             String tasktype,
             Boolean metadata,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -528,7 +527,7 @@ public class MetadataResourceApi {
                     "Missing the required parameter 'tasktype' when calling getTaskDef(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getTaskDefCall(tasktype, metadata, progressListener, progressRequestListener);
         return call;
     }
@@ -558,7 +557,7 @@ public class MetadataResourceApi {
      */
     private ApiResponse<TaskDef> getTaskDefWithHttpInfo(String tasktype, Boolean metadata)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getTaskDefValidateBeforeCall(tasktype, metadata, null, null);
         Type localVarReturnType = new TypeReference<TaskDef>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -576,7 +575,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getTaskDefsCall(
+    public okhttp3.Call getTaskDefsCall(
             String access,
             Boolean metadata,
             String tagKey,
@@ -616,12 +615,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -647,7 +646,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getTaskDefsValidateBeforeCall(
+    private okhttp3.Call getTaskDefsValidateBeforeCall(
             String access,
             Boolean metadata,
             String tagKey,
@@ -656,7 +655,7 @@ public class MetadataResourceApi {
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getTaskDefsCall(
                         access,
                         metadata,
@@ -698,7 +697,7 @@ public class MetadataResourceApi {
      */
     private ApiResponse<List<TaskDef>> getTaskDefsWithHttpInfo(
             String access, Boolean metadata, String tagKey, String tagValue) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getTaskDefsValidateBeforeCall(access, metadata, tagKey, tagValue, null, null);
         Type localVarReturnType = new TypeReference<List<TaskDef>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -713,7 +712,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call registerTaskDefCall(
+    public okhttp3.Call registerTaskDefCall(
             List<TaskDef> taskDefs,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -744,12 +743,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -775,7 +774,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call registerTaskDefValidateBeforeCall(
+    private okhttp3.Call registerTaskDefValidateBeforeCall(
             List<TaskDef> taskDefs,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -786,7 +785,7 @@ public class MetadataResourceApi {
                     "Missing the required parameter 'taskDefs' when calling registerTaskDef(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 registerTaskDefCall(taskDefs, progressListener, progressRequestListener);
         return call;
     }
@@ -812,7 +811,7 @@ public class MetadataResourceApi {
      */
     private ApiResponse<Void> registerTaskDefWithHttpInfo(List<TaskDef> taskDefs)
             throws ApiException {
-        com.squareup.okhttp.Call call = registerTaskDefValidateBeforeCall(taskDefs, null, null);
+        okhttp3.Call call = registerTaskDefValidateBeforeCall(taskDefs, null, null);
         return apiClient.execute(call);
     }
 
@@ -825,7 +824,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call unregisterTaskDefCall(
+    public okhttp3.Call unregisterTaskDefCall(
             String tasktype,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -861,12 +860,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -892,7 +891,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call unregisterTaskDefValidateBeforeCall(
+    private okhttp3.Call unregisterTaskDefValidateBeforeCall(
             String tasktype,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -903,7 +902,7 @@ public class MetadataResourceApi {
                     "Missing the required parameter 'tasktype' when calling unregisterTaskDef(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 unregisterTaskDefCall(tasktype, progressListener, progressRequestListener);
         return call;
     }
@@ -928,7 +927,7 @@ public class MetadataResourceApi {
      *     response body
      */
     private ApiResponse<Void> unregisterTaskDefWithHttpInfo(String tasktype) throws ApiException {
-        com.squareup.okhttp.Call call = unregisterTaskDefValidateBeforeCall(tasktype, null, null);
+        okhttp3.Call call = unregisterTaskDefValidateBeforeCall(tasktype, null, null);
         return apiClient.execute(call);
     }
 
@@ -942,7 +941,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call unregisterWorkflowDefCall(
+    public okhttp3.Call unregisterWorkflowDefCall(
             String name,
             Integer version,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -980,12 +979,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1011,7 +1010,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call unregisterWorkflowDefValidateBeforeCall(
+    private okhttp3.Call unregisterWorkflowDefValidateBeforeCall(
             String name,
             Integer version,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1028,7 +1027,7 @@ public class MetadataResourceApi {
                     "Missing the required parameter 'version' when calling unregisterWorkflowDef(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 unregisterWorkflowDefCall(name, version, progressListener, progressRequestListener);
         return call;
     }
@@ -1056,7 +1055,7 @@ public class MetadataResourceApi {
      */
     private ApiResponse<Void> unregisterWorkflowDefWithHttpInfo(String name, Integer version)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 unregisterWorkflowDefValidateBeforeCall(name, version, null, null);
         return apiClient.execute(call);
     }
@@ -1071,7 +1070,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call updateCall(
+    public okhttp3.Call updateCall(
             List<WorkflowDef> workflowDefs,
             Boolean overwrite,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1105,12 +1104,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1136,7 +1135,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call updateValidateBeforeCall(
+    private okhttp3.Call updateValidateBeforeCall(
             List<WorkflowDef> workflowDefs,
             Boolean overwrite,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1148,7 +1147,7 @@ public class MetadataResourceApi {
                     "Missing the required parameter 'workflowDefs' when calling update(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 updateCall(workflowDefs, overwrite, progressListener, progressRequestListener);
         return call;
     }
@@ -1176,7 +1175,7 @@ public class MetadataResourceApi {
      */
     private ApiResponse<Void> updateWithHttpInfo(List<WorkflowDef> workflowDefs, Boolean overwrite)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 updateValidateBeforeCall(workflowDefs, overwrite, null, null);
         return apiClient.execute(call);
     }
@@ -1190,7 +1189,7 @@ public class MetadataResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call updateTaskDefCall(
+    public okhttp3.Call updateTaskDefCall(
             TaskDef taskDef,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1221,12 +1220,12 @@ public class MetadataResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1252,7 +1251,7 @@ public class MetadataResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call updateTaskDefValidateBeforeCall(
+    private okhttp3.Call updateTaskDefValidateBeforeCall(
             TaskDef taskDef,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1263,7 +1262,7 @@ public class MetadataResourceApi {
                     "Missing the required parameter 'taskDef' when calling updateTaskDef(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 updateTaskDefCall(taskDef, progressListener, progressRequestListener);
         return call;
     }
@@ -1288,7 +1287,7 @@ public class MetadataResourceApi {
      *     response body
      */
     private ApiResponse<Void> updateTaskDefWithHttpInfo(TaskDef taskDef) throws ApiException {
-        com.squareup.okhttp.Call call = updateTaskDefValidateBeforeCall(taskDef, null, null);
+        okhttp3.Call call = updateTaskDefValidateBeforeCall(taskDef, null, null);
         return apiClient.execute(call);
     }
 }

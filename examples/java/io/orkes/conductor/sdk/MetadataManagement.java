@@ -15,10 +15,10 @@ package io.orkes.conductor.sdk;
 import java.util.Arrays;
 import java.util.Map;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.tasks.TaskType;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
+import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
+import io.orkes.conductor.client.model.metadata.tasks.TaskType;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
 
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;

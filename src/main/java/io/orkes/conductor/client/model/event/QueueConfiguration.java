@@ -17,10 +17,11 @@ import java.util.Map;
 import io.orkes.conductor.client.http.JSON;
 
 public abstract class QueueConfiguration {
-    private static final JSON json = new JSON();
 
     private final String queueName;
     private final String queueType;
+
+    private final JSON json = new JSON();
 
     private QueueWorkerConfiguration consumer;
     private QueueWorkerConfiguration producer;

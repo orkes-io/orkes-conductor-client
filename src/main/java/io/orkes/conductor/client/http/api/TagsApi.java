@@ -56,7 +56,7 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call addTaskTagCall(
+    public okhttp3.Call addTaskTagCall(
             TagObject tagObject,
             String taskName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -92,12 +92,12 @@ public class TagsApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -123,7 +123,7 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call addTaskTagValidateBeforeCall(
+    private okhttp3.Call addTaskTagValidateBeforeCall(
             TagObject tagObject,
             String taskName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -140,7 +140,7 @@ public class TagsApi {
                     "Missing the required parameter 'taskName' when calling addTaskTag(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 addTaskTagCall(tagObject, taskName, progressListener, progressRequestListener);
         return call;
     }
@@ -168,7 +168,7 @@ public class TagsApi {
      */
     private ApiResponse<Void> addTaskTagWithHttpInfo(TagObject tagObject, String taskName)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 addTaskTagValidateBeforeCall(tagObject, taskName, null, null);
         return apiClient.execute(call);
     }
@@ -183,7 +183,7 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call addWorkflowTagCall(
+    public okhttp3.Call addWorkflowTagCall(
             TagObject tagObject,
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -218,12 +218,12 @@ public class TagsApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -249,7 +249,7 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call addWorkflowTagValidateBeforeCall(
+    private okhttp3.Call addWorkflowTagValidateBeforeCall(
             TagObject tagObject,
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -266,7 +266,7 @@ public class TagsApi {
                     "Missing the required parameter 'name' when calling addWorkflowTag(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 addWorkflowTagCall(tagObject, name, progressListener, progressRequestListener);
         return call;
     }
@@ -294,7 +294,7 @@ public class TagsApi {
      */
     private ApiResponse<Void> addWorkflowTagWithHttpInfo(TagObject tagObject, String name)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 addWorkflowTagValidateBeforeCall(tagObject, name, null, null);
         return apiClient.execute(call);
     }
@@ -309,7 +309,7 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteTaskTagCall(
+    public okhttp3.Call deleteTaskTagCall(
             TagString tagString,
             String taskName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -345,12 +345,12 @@ public class TagsApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -376,7 +376,7 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call deleteTaskTagValidateBeforeCall(
+    private okhttp3.Call deleteTaskTagValidateBeforeCall(
             TagString tagString,
             String taskName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -393,7 +393,7 @@ public class TagsApi {
                     "Missing the required parameter 'taskName' when calling deleteTaskTag(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteTaskTagCall(tagString, taskName, progressListener, progressRequestListener);
         return call;
     }
@@ -421,7 +421,7 @@ public class TagsApi {
      */
     private ApiResponse<Void> deleteTaskTagWithHttpInfo(TagString tagString, String taskName)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteTaskTagValidateBeforeCall(tagString, taskName, null, null);
         return apiClient.execute(call);
     }
@@ -436,7 +436,7 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteWorkflowTagCall(
+    public okhttp3.Call deleteWorkflowTagCall(
             TagObject tagObject,
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -471,12 +471,12 @@ public class TagsApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -502,7 +502,7 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call deleteWorkflowTagValidateBeforeCall(
+    private okhttp3.Call deleteWorkflowTagValidateBeforeCall(
             TagObject tagObject,
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -519,7 +519,7 @@ public class TagsApi {
                     "Missing the required parameter 'name' when calling deleteWorkflowTag(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteWorkflowTagCall(tagObject, name, progressListener, progressRequestListener);
         return call;
     }
@@ -547,7 +547,7 @@ public class TagsApi {
      */
     private ApiResponse<Void> deleteWorkflowTagWithHttpInfo(TagObject tagObject, String name)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteWorkflowTagValidateBeforeCall(tagObject, name, null, null);
         return apiClient.execute(call);
     }
@@ -560,7 +560,7 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getTagsCall(
+    public okhttp3.Call getTagsCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -590,12 +590,12 @@ public class TagsApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -621,12 +621,12 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getTagsValidateBeforeCall(
+    private okhttp3.Call getTagsValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call = getTagsCall(progressListener, progressRequestListener);
+        okhttp3.Call call = getTagsCall(progressListener, progressRequestListener);
         return call;
     }
 
@@ -650,7 +650,7 @@ public class TagsApi {
      *     response body
      */
     private ApiResponse<List<TagObject>> getTagsWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = getTagsValidateBeforeCall(null, null);
+        okhttp3.Call call = getTagsValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -664,7 +664,7 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getTaskTagsCall(
+    public okhttp3.Call getTaskTagsCall(
             String taskName,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -699,12 +699,12 @@ public class TagsApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -730,7 +730,7 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getTaskTagsValidateBeforeCall(
+    private okhttp3.Call getTaskTagsValidateBeforeCall(
             String taskName,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -741,7 +741,7 @@ public class TagsApi {
                     "Missing the required parameter 'taskName' when calling getTaskTags(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getTaskTagsCall(taskName, progressListener, progressRequestListener);
         return call;
     }
@@ -769,7 +769,7 @@ public class TagsApi {
      */
     private ApiResponse<List<TagObject>> getTaskTagsWithHttpInfo(String taskName)
             throws ApiException {
-        com.squareup.okhttp.Call call = getTaskTagsValidateBeforeCall(taskName, null, null);
+        okhttp3.Call call = getTaskTagsValidateBeforeCall(taskName, null, null);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -783,7 +783,7 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getWorkflowTagsCall(
+    public okhttp3.Call getWorkflowTagsCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -817,12 +817,12 @@ public class TagsApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -848,7 +848,7 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getWorkflowTagsValidateBeforeCall(
+    private okhttp3.Call getWorkflowTagsValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -859,7 +859,7 @@ public class TagsApi {
                     "Missing the required parameter 'name' when calling getWorkflowTags(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getWorkflowTagsCall(name, progressListener, progressRequestListener);
         return call;
     }
@@ -887,7 +887,7 @@ public class TagsApi {
      */
     private ApiResponse<List<TagObject>> getWorkflowTagsWithHttpInfo(String name)
             throws ApiException {
-        com.squareup.okhttp.Call call = getWorkflowTagsValidateBeforeCall(name, null, null);
+        okhttp3.Call call = getWorkflowTagsValidateBeforeCall(name, null, null);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -902,7 +902,7 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call setTaskTagsCall(
+    public okhttp3.Call setTaskTagsCall(
             List<TagObject> tagObjects,
             String taskName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -938,12 +938,12 @@ public class TagsApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -969,7 +969,7 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call setTaskTagsValidateBeforeCall(
+    private okhttp3.Call setTaskTagsValidateBeforeCall(
             List<TagObject> tagObjects,
             String taskName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -986,7 +986,7 @@ public class TagsApi {
                     "Missing the required parameter 'taskName' when calling setTaskTags(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 setTaskTagsCall(tagObjects, taskName, progressListener, progressRequestListener);
         return call;
     }
@@ -1014,7 +1014,7 @@ public class TagsApi {
      */
     private ApiResponse<Void> setTaskTagsWithHttpInfo(List<TagObject> tagObjects, String taskName)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 setTaskTagsValidateBeforeCall(tagObjects, taskName, null, null);
         return apiClient.execute(call);
     }
@@ -1029,7 +1029,7 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call setWorkflowTagsCall(
+    public okhttp3.Call setWorkflowTagsCall(
             List<TagObject> tagObjects,
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1064,12 +1064,12 @@ public class TagsApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1095,7 +1095,7 @@ public class TagsApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call setWorkflowTagsValidateBeforeCall(
+    private okhttp3.Call setWorkflowTagsValidateBeforeCall(
             List<TagObject> tagObjects,
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -1112,7 +1112,7 @@ public class TagsApi {
                     "Missing the required parameter 'name' when calling setWorkflowTags(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 setWorkflowTagsCall(tagObjects, name, progressListener, progressRequestListener);
         return call;
     }
@@ -1140,7 +1140,7 @@ public class TagsApi {
      */
     private ApiResponse<Void> setWorkflowTagsWithHttpInfo(List<TagObject> tagObjects, String name)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 setWorkflowTagsValidateBeforeCall(tagObjects, name, null, null);
         return apiClient.execute(call);
     }

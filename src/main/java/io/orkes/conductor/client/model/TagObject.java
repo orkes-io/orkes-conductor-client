@@ -14,12 +14,11 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** TagObject */
 public class TagObject {
-    @SerializedName("key")
+
     private String key = null;
 
     /** Gets or Sets type */
@@ -54,12 +53,12 @@ public class TagObject {
 
     }
 
-    @SerializedName("type")
+
     @Deprecated
     // This is not required anymore. Type has been moved to WorkflowDef.RateLimitConfig as METADATA type
     private TypeEnum type = null;
 
-    @SerializedName("value")
+
     private Object value = null;
 
     public TagObject key(String key) {

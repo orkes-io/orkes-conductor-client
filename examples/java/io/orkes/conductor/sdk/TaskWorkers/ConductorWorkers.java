@@ -1,6 +1,6 @@
 package io.orkes.conductor.sdk.TaskWorkers;
 
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
 import com.netflix.conductor.sdk.workflow.def.tasks.Task;
 import com.netflix.conductor.sdk.workflow.task.InputParam;

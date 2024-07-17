@@ -17,26 +17,32 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.netflix.conductor.common.metadata.workflow.*;
-import com.netflix.conductor.common.model.BulkResponse;
-import com.netflix.conductor.common.run.SearchResult;
-import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.common.run.WorkflowSummary;
-import com.netflix.conductor.common.run.WorkflowTestRequest;
+import org.apache.commons.lang3.StringUtils;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.WorkflowClient;
-import io.orkes.conductor.client.grpc.workflow.GrpcWorkflowClient;
 import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
 import io.orkes.conductor.client.http.api.WorkflowResourceApi;
+import io.orkes.conductor.client.model.BulkResponse;
 import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
+import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStateUpdate;
 import io.orkes.conductor.client.model.WorkflowStatus;
-import io.orkes.conductor.common.model.WorkflowRun;
+import io.orkes.conductor.client.model.metadata.workflow.RerunWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.SkipTaskRequest;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.UpgradeWorkflowRequest;
+import io.orkes.conductor.client.model.run.SearchResult;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.client.model.run.WorkflowSummary;
+import io.orkes.conductor.client.model.run.WorkflowTestRequest;
 
 import com.google.common.base.Preconditions;
 
@@ -48,42 +54,19 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
 
     private final WorkflowBulkResourceApi bulkResourceApi;
 
-    private final GrpcWorkflowClient grpcWorkflowClient;
-
     private ExecutorService executorService;
 
     public OrkesWorkflowClient(ApiClient apiClient) {
         this.apiClient = apiClient;
         this.httpClient = new WorkflowResourceApi(apiClient);
         this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
-        if(apiClient.isUseGRPC()) {
-            this.grpcWorkflowClient = new GrpcWorkflowClient(apiClient);
+
+        int threadCount = apiClient.getExecutorThreadCount();
+        if (threadCount < 1) {
+            this.executorService = Executors.newCachedThreadPool();
         } else {
-            this.grpcWorkflowClient = null;
+            this.executorService = Executors.newFixedThreadPool(threadCount);
         }
-        if(!apiClient.isUseGRPC()) {
-            int threadCount = apiClient.getExecutorThreadCount();
-            if(threadCount < 1) {
-                this.executorService = Executors.newCachedThreadPool();
-            } else {
-                this.executorService = Executors.newFixedThreadPool(threadCount);
-            }
-        }
-    }
-
-    public WorkflowClient withReadTimeout(int readTimeout) {
-        apiClient.setReadTimeout(readTimeout);
-        return this;
-    }
-
-    public WorkflowClient setWriteTimeout(int writeTimeout) {
-        apiClient.setWriteTimeout(writeTimeout);
-        return this;
-    }
-
-    public WorkflowClient withConnectTimeout(int connectTimeout) {
-        apiClient.setConnectTimeout(connectTimeout);
-        return this;
     }
 
     @Override
@@ -93,20 +76,12 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
 
     @Override
     public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask) throws ConflictException {
-        if(apiClient.isUseGRPC()) {
-            return grpcWorkflowClient.executeWorkflow(request, waitUntilTask);
-        } else {
-            return executeWorkflowHttp(request, waitUntilTask);
-        }
+        return executeWorkflowHttp(request, waitUntilTask);
     }
 
     @Override
     public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds) throws ConflictException {
-        if(apiClient.isUseGRPC()) {
-            return grpcWorkflowClient.executeWorkflow(request, waitUntilTask, waitForSeconds);
-        } else {
-            return executeWorkflowHttp(request, waitUntilTask, waitForSeconds);
-        }
+        return executeWorkflowHttp(request, waitUntilTask, waitForSeconds);
     }
 
     @Override
@@ -189,8 +164,7 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
-    public List<String> getWorkflowsByTimePeriod(
-            String workflowName, int version, Long startTime, Long endTime) {
+    public List<String> getWorkflowsByTimePeriod(String workflowName, int version, Long startTime, Long endTime) {
         return httpClient.getRunningWorkflow(workflowName, version, startTime, endTime);
     }
 
@@ -309,6 +283,7 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
             String workflowId, Boolean includeOutput, Boolean includeVariables) {
         return httpClient.getWorkflowStatusSummary(workflowId, includeOutput, includeVariables);
     }
+
     @Override
     public void uploadCompletedWorkflows() {
         httpClient.uploadCompletedWorkflows();
@@ -330,20 +305,16 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     public Workflow updateVariables(String workflowId, Map<String, Object> variables) {
         return httpClient.updateVariables(workflowId, variables);
     }
+
     @Override
     public void shutdown() {
-        if(apiClient.isUseGRPC()) {
-            if(grpcWorkflowClient != null) {
-                grpcWorkflowClient.shutdown();
-            }
-        }
-        if(executorService != null) {
+        if (executorService != null) {
             executorService.shutdown();
         }
     }
 
     @Override
-    public void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest upgradeWorkflowRequest ) {
+    public void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest upgradeWorkflowRequest) {
         httpClient.upgradeRunningWorkflow(upgradeWorkflowRequest, workflowId);
     }
 

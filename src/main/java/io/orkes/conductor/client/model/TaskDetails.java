@@ -16,21 +16,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** TaskDetails */
 public class TaskDetails {
-    @SerializedName("output")
+
     private Map<String, Object> output = null;
 
-    @SerializedName("taskId")
+
     private String taskId = null;
 
-    @SerializedName("taskRefName")
+
     private String taskRefName = null;
 
-    @SerializedName("workflowId")
+
     private String workflowId = null;
 
     public TaskDetails output(Map<String, Object> output) {

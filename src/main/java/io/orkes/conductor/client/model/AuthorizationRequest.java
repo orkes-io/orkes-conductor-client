@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** AuthorizationRequest */
@@ -54,13 +53,10 @@ public class AuthorizationRequest {
         }
     }
 
-    @SerializedName("access")
     private List<AccessEnum> access = new ArrayList<AccessEnum>();
 
-    @SerializedName("subject")
     private SubjectRef subject = null;
 
-    @SerializedName("target")
     private TargetRef target = null;
 
     public AuthorizationRequest access(List<AccessEnum> access) {

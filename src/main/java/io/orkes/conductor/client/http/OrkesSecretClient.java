@@ -22,8 +22,7 @@ import io.orkes.conductor.client.model.TagObject;
 
 public class OrkesSecretClient extends OrkesClient implements SecretClient {
 
-
-    private SecretResourceApi secretResourceApi;
+    private final SecretResourceApi secretResourceApi;
 
     public OrkesSecretClient(ApiClient apiClient) {
         super(apiClient);

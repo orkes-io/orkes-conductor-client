@@ -16,17 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.netflix.conductor.common.run.WorkflowSummary;
+import io.orkes.conductor.client.model.run.WorkflowSummary;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** SearchResultWorkflowSummary */
 public class SearchResultWorkflowSummary {
-    @SerializedName("results")
+
     private List<WorkflowSummary> results = null;
 
-    @SerializedName("totalHits")
+
     private Long totalHits = null;
 
     public SearchResultWorkflowSummary results(List<WorkflowSummary> results) {

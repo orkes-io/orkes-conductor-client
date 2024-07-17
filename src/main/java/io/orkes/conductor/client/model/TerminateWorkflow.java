@@ -14,15 +14,14 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** TerminateWorkflow */
 public class TerminateWorkflow {
-    @SerializedName("terminationReason")
+
     private String terminationReason = null;
 
-    @SerializedName("workflowId")
+
     private String workflowId = null;
 
     public TerminateWorkflow terminationReason(String terminationReason) {

@@ -16,12 +16,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.netflix.conductor.common.metadata.events.EventHandler;
-import com.netflix.conductor.common.metadata.events.EventHandler.Action;
-import com.netflix.conductor.common.metadata.events.EventHandler.StartWorkflow;
-
 import io.orkes.conductor.client.EventClient;
 import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.model.metadata.events.EventHandler;
 import io.orkes.conductor.client.util.Commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

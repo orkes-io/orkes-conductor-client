@@ -16,12 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/** GrantedAccess */
+/**
+ * GrantedAccess
+ */
 public class GrantedAccess {
-    /** Gets or Sets access */
+    /**
+     * Gets or Sets access
+     */
     public enum AccessEnum {
         CREATE("CREATE"),
         READ("READ"),
@@ -54,10 +57,8 @@ public class GrantedAccess {
         }
     }
 
-    @SerializedName("access")
     private List<AccessEnum> access = null;
 
-    @SerializedName("target")
     private TargetRef target = null;
 
     public GrantedAccess access(List<AccessEnum> access) {

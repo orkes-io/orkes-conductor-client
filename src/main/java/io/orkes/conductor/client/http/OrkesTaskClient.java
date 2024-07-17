@@ -17,70 +17,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.netflix.conductor.common.config.ObjectMapperProvider;
-import com.netflix.conductor.common.metadata.tasks.PollData;
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskExecLog;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
-import com.netflix.conductor.common.run.SearchResult;
-import com.netflix.conductor.common.run.Workflow;
-
 import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.ObjectMapperProvider;
 import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.grpc.GrpcTaskClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
 import io.orkes.conductor.client.model.TaskSummary;
+import io.orkes.conductor.client.model.metadata.tasks.PollData;
+import io.orkes.conductor.client.model.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.model.run.SearchResult;
+import io.orkes.conductor.client.model.run.Workflow;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class OrkesTaskClient extends TaskClient implements AutoCloseable {
+public class OrkesTaskClient extends TaskClient {
 
-    protected ApiClient apiClient;
+    private final TaskResourceApi taskResourceApi;
 
-    private TaskResourceApi taskResourceApi;
-
-    private GrpcTaskClient grpcTaskClient;
-
-    private ObjectMapper objectMapper = new ObjectMapperProvider().getObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapperProvider().getObjectMapper();
 
     public OrkesTaskClient(ApiClient apiClient) {
-        this.apiClient = apiClient;
         this.taskResourceApi = new TaskResourceApi(apiClient);
-        if(apiClient.isUseGRPC()) {
-            this.grpcTaskClient = new GrpcTaskClient(apiClient);
-        }
-    }
-
-    public OrkesTaskClient withReadTimeout(int readTimeout) {
-        apiClient.setReadTimeout(readTimeout);
-        return this;
-    }
-
-    public OrkesTaskClient setWriteTimeout(int writeTimeout) {
-        apiClient.setWriteTimeout(writeTimeout);
-        return this;
-    }
-
-    public OrkesTaskClient withWriteTimeout(int writeTimeout) {
-        apiClient.setWriteTimeout(writeTimeout);
-        return this;
-    }
-
-    public OrkesTaskClient withConnectTimeout(int connectTimeout) {
-        apiClient.setConnectTimeout(connectTimeout);
-        return this;
-    }
-
-    public ApiClient getApiClient() {
-        return apiClient;
-    }
-
-    /**
-     *
-     * @return ObjectMapper used to serialize objects - can be modified to add additional modules.
-     */
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
     }
 
 
@@ -107,25 +65,22 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable {
 
     @Override
     public void updateTask(TaskResult taskResult) {
-        if(apiClient.isUseGRPC()) {
-            grpcTaskClient.updateTask(taskResult);
-        } else {
-            taskResourceApi.updateTask(taskResult);
-        }
+        taskResourceApi.updateTask(taskResult);
     }
 
 
     /**
      * Update the task status and output based given workflow id and task reference name
-     * @param workflowId Workflow Id
+     *
+     * @param workflowId        Workflow Id
      * @param taskReferenceName Reference name of the task to be updated
-     * @param status Status of the task
-     * @param output Output for the task
+     * @param status            Status of the task
+     * @param output            Output for the task
      */
     public void updateTask(String workflowId, String taskReferenceName, TaskResult.Status status, Object output) {
         Map<String, Object> outputMap = new HashMap<>();
         try {
-            outputMap = objectMapper.convertValue(output, Map.class);;
+            outputMap = objectMapper.convertValue(output, Map.class);
         } catch (Exception e) {
             outputMap.put("result", output);
         }
@@ -134,16 +89,18 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable {
 
     /**
      * Update the task status and output based given workflow id and task reference name and return back the updated workflow status
-     * @param workflowId Workflow Id
+     *
+     * @param workflowId        Workflow Id
      * @param taskReferenceName Reference name of the task to be updated
-     * @param status Status of the task
-     * @param output Output for the task
+     * @param status            Status of the task
+     * @param output            Output for the task
      * @return Status of the workflow after updating the task
      */
     public Workflow updateTaskSync(String workflowId, String taskReferenceName, TaskResult.Status status, Object output) {
         Map<String, Object> outputMap = new HashMap<>();
         try {
-            outputMap = objectMapper.convertValue(output, Map.class);;
+            outputMap = objectMapper.convertValue(output, Map.class);
+            ;
         } catch (Exception e) {
             outputMap.put("result", output);
         }
@@ -187,8 +144,7 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable {
     }
 
     @Override
-    public int getQueueSizeForTask(
-            String taskType, String domain, String isolationGroupId, String executionNamespace) {
+    public int getQueueSizeForTask(String taskType, String domain, String isolationGroupId, String executionNamespace) {
         return taskResourceApi.size(List.of(taskType)).get(taskType);
     }
 
@@ -230,12 +186,5 @@ public class OrkesTaskClient extends TaskClient implements AutoCloseable {
     @Override
     public SearchResult<Task> searchV2(Integer start, Integer size, String sort, String freeText, String query) {
         throw new UnsupportedOperationException("search operation on tasks is not supported");
-    }
-
-    @Override
-    public void close() throws Exception {
-        if(this.grpcTaskClient != null) {
-            this.grpcTaskClient.close();
-        }
     }
 }

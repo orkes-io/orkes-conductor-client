@@ -50,7 +50,7 @@ public class SecretResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteSecretCall(
+    public okhttp3.Call deleteSecretCall(
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -83,12 +83,12 @@ public class SecretResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -114,7 +114,7 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call deleteSecretValidateBeforeCall(
+    private okhttp3.Call deleteSecretValidateBeforeCall(
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -125,7 +125,7 @@ public class SecretResourceApi {
                     "Missing the required parameter 'key' when calling deleteSecret(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteSecretCall(key, progressListener, progressRequestListener);
         return call;
     }
@@ -150,7 +150,7 @@ public class SecretResourceApi {
      *     response body
      */
     private ApiResponse<Object> deleteSecretWithHttpInfo(String key) throws ApiException {
-        com.squareup.okhttp.Call call = deleteSecretValidateBeforeCall(key, null, null);
+        okhttp3.Call call = deleteSecretValidateBeforeCall(key, null, null);
         Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -164,7 +164,7 @@ public class SecretResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getSecretCall(
+    public okhttp3.Call getSecretCall(
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -197,12 +197,12 @@ public class SecretResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -228,7 +228,7 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getSecretValidateBeforeCall(
+    private okhttp3.Call getSecretValidateBeforeCall(
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -239,7 +239,7 @@ public class SecretResourceApi {
                     "Missing the required parameter 'key' when calling getSecret(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getSecretCall(key, progressListener, progressRequestListener);
         return call;
     }
@@ -266,7 +266,7 @@ public class SecretResourceApi {
      *     response body
      */
     private ApiResponse<String> getSecretWithHttpInfo(String key) throws ApiException {
-        com.squareup.okhttp.Call call = getSecretValidateBeforeCall(key, null, null);
+        okhttp3.Call call = getSecretValidateBeforeCall(key, null, null);
         Type localVarReturnType = new TypeReference<String>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -279,7 +279,7 @@ public class SecretResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call listAllSecretNamesCall(
+    public okhttp3.Call listAllSecretNamesCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -309,12 +309,12 @@ public class SecretResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -340,12 +340,12 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call listAllSecretNamesValidateBeforeCall(
+    private okhttp3.Call listAllSecretNamesValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 listAllSecretNamesCall(progressListener, progressRequestListener);
         return call;
     }
@@ -370,7 +370,7 @@ public class SecretResourceApi {
      *     response body
      */
     private ApiResponse<Set<String>> listAllSecretNamesWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = listAllSecretNamesValidateBeforeCall(null, null);
+        okhttp3.Call call = listAllSecretNamesValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<Set<String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -383,7 +383,7 @@ public class SecretResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call listSecretsThatUserCanGrantAccessToCall(
+    public okhttp3.Call listSecretsThatUserCanGrantAccessToCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -413,12 +413,12 @@ public class SecretResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -444,12 +444,12 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call listSecretsThatUserCanGrantAccessToValidateBeforeCall(
+    private okhttp3.Call listSecretsThatUserCanGrantAccessToValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 listSecretsThatUserCanGrantAccessToCall(progressListener, progressRequestListener);
         return call;
     }
@@ -475,7 +475,7 @@ public class SecretResourceApi {
      */
     private ApiResponse<List<String>> listSecretsThatUserCanGrantAccessToWithHttpInfo()
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 listSecretsThatUserCanGrantAccessToValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<List<String>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -491,7 +491,7 @@ public class SecretResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call putSecretCall(
+    public okhttp3.Call putSecretCall(
             String body,
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -524,12 +524,12 @@ public class SecretResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -555,7 +555,7 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call putSecretValidateBeforeCall(
+    private okhttp3.Call putSecretValidateBeforeCall(
             String body,
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -572,7 +572,7 @@ public class SecretResourceApi {
                     "Missing the required parameter 'key' when calling putSecret(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 putSecretCall(body, key, progressListener, progressRequestListener);
         return call;
     }
@@ -599,7 +599,7 @@ public class SecretResourceApi {
      *     response body
      */
     private ApiResponse<Object> putSecretWithHttpInfo(String body, String key) throws ApiException {
-        com.squareup.okhttp.Call call = putSecretValidateBeforeCall(body, key, null, null);
+        okhttp3.Call call = putSecretValidateBeforeCall(body, key, null, null);
         Type localVarReturnType = new TypeReference<Object>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -613,7 +613,7 @@ public class SecretResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call secretExistsCall(
+    public okhttp3.Call secretExistsCall(
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -646,12 +646,12 @@ public class SecretResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -677,7 +677,7 @@ public class SecretResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call secretExistsValidateBeforeCall(
+    private okhttp3.Call secretExistsValidateBeforeCall(
             String key,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -688,7 +688,7 @@ public class SecretResourceApi {
                     "Missing the required parameter 'key' when calling secretExists(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 secretExistsCall(key, progressListener, progressRequestListener);
         return call;
     }
@@ -715,7 +715,7 @@ public class SecretResourceApi {
      *     response body
      */
     private ApiResponse<Boolean> secretExistsWithHttpInfo(String key) throws ApiException {
-        com.squareup.okhttp.Call call = secretExistsValidateBeforeCall(key, null, null);
+        okhttp3.Call call = secretExistsValidateBeforeCall(key, null, null);
         Type localVarReturnType = new TypeReference<Boolean>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -740,11 +740,11 @@ public class SecretResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     private ApiResponse<Void> putTagForSecretWithHttpInfo(List<TagObject> body, String key) throws ApiException {
-        com.squareup.okhttp.Call call = putTagForSecretValidateBeforeCall(body, key, null, null);
+        okhttp3.Call call = putTagForSecretValidateBeforeCall(body, key, null, null);
         return apiClient.execute(call);
     }
 
-    private com.squareup.okhttp.Call putTagForSecretValidateBeforeCall(List<TagObject> body, String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call putTagForSecretValidateBeforeCall(List<TagObject> body, String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling putTagForSecret(Async)");
@@ -754,7 +754,7 @@ public class SecretResourceApi {
             throw new ApiException("Missing the required parameter 'key' when calling putTagForSecret(Async)");
         }
 
-        com.squareup.okhttp.Call call = putTagForSecretCall(body, key, progressListener, progressRequestListener);
+        okhttp3.Call call = putTagForSecretCall(body, key, progressListener, progressRequestListener);
         return call;
     }
     /**
@@ -766,7 +766,7 @@ public class SecretResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call putTagForSecretCall(List<TagObject> body, String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call putTagForSecretCall(List<TagObject> body, String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -793,10 +793,10 @@ public class SecretResourceApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                    okhttp3.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -828,12 +828,12 @@ public class SecretResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     private ApiResponse<Void> deleteTagForSecretWithHttpInfo(List<TagObject> body, String key) throws ApiException {
-        com.squareup.okhttp.Call call = deleteTagForSecretValidateBeforeCall(body, key, null, null);
+        okhttp3.Call call = deleteTagForSecretValidateBeforeCall(body, key, null, null);
         return apiClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call deleteTagForSecretValidateBeforeCall(List<TagObject> body, String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call deleteTagForSecretValidateBeforeCall(List<TagObject> body, String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling deleteTagForSecret(Async)");
@@ -843,7 +843,7 @@ public class SecretResourceApi {
             throw new ApiException("Missing the required parameter 'key' when calling deleteTagForSecret(Async)");
         }
 
-        com.squareup.okhttp.Call call = deleteTagForSecretCall(body, key, progressListener, progressRequestListener);
+        okhttp3.Call call = deleteTagForSecretCall(body, key, progressListener, progressRequestListener);
         return call;
     }
     /**
@@ -855,7 +855,7 @@ public class SecretResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call deleteTagForSecretCall(List<TagObject> body, String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call deleteTagForSecretCall(List<TagObject> body, String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -882,10 +882,10 @@ public class SecretResourceApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                    okhttp3.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -917,19 +917,19 @@ public class SecretResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     private ApiResponse<List<TagObject>> getTagsWithHttpInfo(String key) throws ApiException {
-        com.squareup.okhttp.Call call = getTagsValidateBeforeCall(key, null, null);
+        okhttp3.Call call = getTagsValidateBeforeCall(key, null, null);
         Type localVarReturnType = new TypeReference<List<TagObject>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getTagsValidateBeforeCall(String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call getTagsValidateBeforeCall(String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'key' is set
         if (key == null) {
             throw new ApiException("Missing the required parameter 'key' when calling getTags(Async)");
         }
 
-        com.squareup.okhttp.Call call = getTagsCall(key, progressListener, progressRequestListener);
+        okhttp3.Call call = getTagsCall(key, progressListener, progressRequestListener);
         return call;
     }
 
@@ -941,7 +941,7 @@ public class SecretResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private com.squareup.okhttp.Call getTagsCall(String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private okhttp3.Call getTagsCall(String key, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -968,10 +968,10 @@ public class SecretResourceApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                    okhttp3.Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();

@@ -16,15 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** WorkflowStatus */
 public class WorkflowStatus {
-    @SerializedName("correlationId")
+
     private String correlationId = null;
 
-    @SerializedName("output")
     private Map<String, Object> output = null;
 
     /** Gets or Sets status */
@@ -61,13 +59,13 @@ public class WorkflowStatus {
         }
     }
 
-    @SerializedName("status")
+
     private StatusEnum status = null;
 
-    @SerializedName("variables")
+
     private Map<String, Object> variables = null;
 
-    @SerializedName("workflowId")
+
     private String workflowId = null;
 
     public WorkflowStatus correlationId(String correlationId) {

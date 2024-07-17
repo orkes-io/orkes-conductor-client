@@ -35,7 +35,7 @@ import io.orkes.conductor.client.model.integration.IntegrationUpdate;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.squareup.okhttp.Call;
+import okhttp3.Call;
 
 public class IntegrationResourceApi {
 
@@ -100,10 +100,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -245,10 +245,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -376,10 +376,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -503,10 +503,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -641,10 +641,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -774,10 +774,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -913,10 +913,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1044,10 +1044,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1172,10 +1172,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1299,10 +1299,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1427,10 +1427,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1557,10 +1557,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1701,10 +1701,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1831,10 +1831,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -1966,10 +1966,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -2097,10 +2097,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -2233,10 +2233,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -2366,10 +2366,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -2504,10 +2504,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -2637,10 +2637,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -2779,10 +2779,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();
@@ -2917,10 +2917,10 @@ public class IntegrationResourceApi {
         if (progressListener != null) {
             apiClient.getHttpClient()
                 .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
+                .add(new okhttp3.Interceptor() {
                     @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response originalResponse = chain.proceed(chain.request());
                         return originalResponse.newBuilder()
                             .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                             .build();

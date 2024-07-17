@@ -14,7 +14,7 @@ package io.orkes.conductor.client.model;
 
 import java.util.Map;
 
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 
 import lombok.Data;
 

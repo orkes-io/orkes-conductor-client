@@ -14,38 +14,18 @@ package io.orkes.conductor.client.http;
 
 import java.util.List;
 
-import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.api.MetadataResourceApi;
 import io.orkes.conductor.client.http.api.TagsApi;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
+import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
+import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
 public class OrkesMetadataClient extends MetadataClient  {
 
     protected ApiClient apiClient;
-
-    public OrkesMetadataClient withReadTimeout(int readTimeout) {
-        apiClient.setReadTimeout(readTimeout);
-        return this;
-    }
-
-    public OrkesMetadataClient setWriteTimeout(int writeTimeout) {
-        apiClient.setWriteTimeout(writeTimeout);
-        return this;
-    }
-
-    public OrkesMetadataClient withConnectTimeout(int connectTimeout) {
-        apiClient.setConnectTimeout(connectTimeout);
-        return this;
-    }
-
-    public ApiClient getApiClient() {
-        return apiClient;
-    }
 
     private final MetadataResourceApi metadataResourceApi;
     private final TagsApi tagsApi;

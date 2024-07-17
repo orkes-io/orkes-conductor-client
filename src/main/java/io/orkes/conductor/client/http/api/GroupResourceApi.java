@@ -57,7 +57,7 @@ public class GroupResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call addUserToGroupCall(
+    public okhttp3.Call addUserToGroupCall(
             String groupId,
             String userId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -97,12 +97,12 @@ public class GroupResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -128,7 +128,7 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call addUserToGroupValidateBeforeCall(
+    private okhttp3.Call addUserToGroupValidateBeforeCall(
             String groupId,
             String userId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -145,7 +145,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'userId' when calling addUserToGroup(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 addUserToGroupCall(groupId, userId, progressListener, progressRequestListener);
         return call;
     }
@@ -173,7 +173,7 @@ public class GroupResourceApi {
      */
     private ApiResponse<Void> addUserToGroupWithHttpInfo(String groupId, String userId)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 addUserToGroupValidateBeforeCall(groupId, userId, null, null);
         return apiClient.execute(call);
     }
@@ -187,7 +187,7 @@ public class GroupResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteGroupCall(
+    public okhttp3.Call deleteGroupCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -221,12 +221,12 @@ public class GroupResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -252,7 +252,7 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call deleteGroupValidateBeforeCall(
+    private okhttp3.Call deleteGroupValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -263,7 +263,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'id' when calling deleteGroup(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteGroupCall(id, progressListener, progressRequestListener);
         return call;
     }
@@ -288,7 +288,7 @@ public class GroupResourceApi {
      *     response body
      */
     private ApiResponse<Void> deleteGroupWithHttpInfo(String id) throws ApiException {
-        com.squareup.okhttp.Call call = deleteGroupValidateBeforeCall(id, null, null);
+        okhttp3.Call call = deleteGroupValidateBeforeCall(id, null, null);
         return apiClient.execute(call);
     }
 
@@ -301,7 +301,7 @@ public class GroupResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getGrantedPermissions1Call(
+    public okhttp3.Call getGrantedPermissions1Call(
             String groupId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -336,12 +336,12 @@ public class GroupResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -367,7 +367,7 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getGrantedPermissions1ValidateBeforeCall(
+    private okhttp3.Call getGrantedPermissions1ValidateBeforeCall(
             String groupId,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -378,7 +378,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'groupId' when calling getGrantedPermissions1(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getGrantedPermissions1Call(groupId, progressListener, progressRequestListener);
         return call;
     }
@@ -406,7 +406,7 @@ public class GroupResourceApi {
      */
     private ApiResponse<GrantedAccessResponse> getGrantedPermissions1WithHttpInfo(String groupId)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getGrantedPermissions1ValidateBeforeCall(groupId, null, null);
         Type localVarReturnType = new TypeReference<GrantedAccessResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -421,7 +421,7 @@ public class GroupResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getGroupCall(
+    public okhttp3.Call getGroupCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -454,12 +454,12 @@ public class GroupResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -485,7 +485,7 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getGroupValidateBeforeCall(
+    private okhttp3.Call getGroupValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -496,7 +496,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'id' when calling getGroup(Async)");
         }
 
-        com.squareup.okhttp.Call call = getGroupCall(id, progressListener, progressRequestListener);
+        okhttp3.Call call = getGroupCall(id, progressListener, progressRequestListener);
         return call;
     }
 
@@ -522,7 +522,7 @@ public class GroupResourceApi {
      *     response body
      */
     private ApiResponse<Group> getGroupWithHttpInfo(String id) throws ApiException {
-        com.squareup.okhttp.Call call = getGroupValidateBeforeCall(id, null, null);
+        okhttp3.Call call = getGroupValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeReference<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -536,7 +536,7 @@ public class GroupResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getUsersInGroupCall(
+    public okhttp3.Call getUsersInGroupCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -569,12 +569,12 @@ public class GroupResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -600,7 +600,7 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getUsersInGroupValidateBeforeCall(
+    private okhttp3.Call getUsersInGroupValidateBeforeCall(
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -611,7 +611,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'id' when calling getUsersInGroup(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getUsersInGroupCall(id, progressListener, progressRequestListener);
         return call;
     }
@@ -639,7 +639,7 @@ public class GroupResourceApi {
      */
     private ApiResponse<List<ConductorUser>> getUsersInGroupWithHttpInfo(String id)
             throws ApiException {
-        com.squareup.okhttp.Call call = getUsersInGroupValidateBeforeCall(id, null, null);
+        okhttp3.Call call = getUsersInGroupValidateBeforeCall(id, null, null);
         Type localVarReturnType = new TypeReference<List<ConductorUser>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -652,7 +652,7 @@ public class GroupResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call listGroupsCall(
+    public okhttp3.Call listGroupsCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -682,12 +682,12 @@ public class GroupResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -713,12 +713,12 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call listGroupsValidateBeforeCall(
+    private okhttp3.Call listGroupsValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call = listGroupsCall(progressListener, progressRequestListener);
+        okhttp3.Call call = listGroupsCall(progressListener, progressRequestListener);
         return call;
     }
 
@@ -742,7 +742,7 @@ public class GroupResourceApi {
      *     response body
      */
     private ApiResponse<List<Group>> listGroupsWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = listGroupsValidateBeforeCall(null, null);
+        okhttp3.Call call = listGroupsValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<List<Group>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -757,7 +757,7 @@ public class GroupResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call removeUserFromGroupCall(
+    public okhttp3.Call removeUserFromGroupCall(
             String groupId,
             String userId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -797,12 +797,12 @@ public class GroupResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -828,7 +828,7 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call removeUserFromGroupValidateBeforeCall(
+    private okhttp3.Call removeUserFromGroupValidateBeforeCall(
             String groupId,
             String userId,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -845,7 +845,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'userId' when calling removeUserFromGroup(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 removeUserFromGroupCall(groupId, userId, progressListener, progressRequestListener);
         return call;
     }
@@ -873,7 +873,7 @@ public class GroupResourceApi {
      */
     private ApiResponse<Void> removeUserFromGroupWithHttpInfo(String groupId, String userId)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 removeUserFromGroupValidateBeforeCall(groupId, userId, null, null);
         return apiClient.execute(call);
     }
@@ -888,7 +888,7 @@ public class GroupResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call upsertGroupCall(
+    public okhttp3.Call upsertGroupCall(
             UpsertGroupRequest upsertGroupRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -921,12 +921,12 @@ public class GroupResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -952,7 +952,7 @@ public class GroupResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call upsertGroupValidateBeforeCall(
+    private okhttp3.Call upsertGroupValidateBeforeCall(
             UpsertGroupRequest upsertGroupRequest,
             String id,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -969,7 +969,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'id' when calling upsertGroup(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 upsertGroupCall(upsertGroupRequest, id, progressListener, progressRequestListener);
         return call;
     }
@@ -999,7 +999,7 @@ public class GroupResourceApi {
      */
     private ApiResponse<Group> upsertGroupWithHttpInfo(
             UpsertGroupRequest upsertGroupRequest, String id) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 upsertGroupValidateBeforeCall(upsertGroupRequest, id, null, null);
         Type localVarReturnType = new TypeReference<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);

@@ -16,12 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** GrantedAccessResponse */
 public class GrantedAccessResponse {
-    @SerializedName("grantedAccess")
     private List<GrantedAccess> grantedAccess = null;
 
     public GrantedAccessResponse grantedAccess(List<GrantedAccess> grantedAccess) {

@@ -12,8 +12,8 @@
  */
 package io.orkes.conductor.client;
 
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.model.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 
 @FunctionalInterface
 public interface WorkerFn {

@@ -17,9 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.netflix.conductor.client.worker.Worker;
-
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
+import io.orkes.conductor.client.worker.Worker;
 
 public class LocalWorkerTest {
 

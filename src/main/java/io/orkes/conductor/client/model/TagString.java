@@ -14,12 +14,11 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** TagString */
 public class TagString {
-    @SerializedName("key")
+
     private String key = null;
 
     /** Gets or Sets type */
@@ -53,10 +52,10 @@ public class TagString {
 
     }
 
-    @SerializedName("type")
+
     private TypeEnum type = null;
 
-    @SerializedName("value")
+
     private String value = null;
 
     public TagString key(String key) {

@@ -16,15 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** UpsertUserRequest */
 public class UpsertUserRequest {
-    @SerializedName("groups")
+
     private List<String> groups = null;
 
-    @SerializedName("name")
+
     private String name = null;
 
     /** Gets or Sets roles */
@@ -60,7 +59,7 @@ public class UpsertUserRequest {
         }
     }
 
-    @SerializedName("roles")
+
     private List<RolesEnum> roles = null;
 
     public UpsertUserRequest groups(List<String> groups) {

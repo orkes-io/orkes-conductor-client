@@ -7,118 +7,69 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'application'
     id 'maven-publish'
     id 'signing'
     id 'java-library'
     id "com.diffplug.spotless" version "5.0.0"
     id 'jacoco'
     id 'idea'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 ext {
     versions = [
-            awaitility      : '4.2.0',
-            commonsLang     : '3.12.0',
-            conductor       : '3.9.30-orkes',
-            jackson         : '2.11.4!!',
-            junit           : '5.9.0',
-            slf4j           : '1.7.36',
-            spectator       : '1.3.7',
-            awsSsm          : '1.12.300',
-            azureSsm        : '4.2.3',
-            azureIdentity   : '1.3.7',
-            eureka          : '1.10.17',
-            wiremock        : '2.33.2',
-            ioGRPC          : '1.63.1',
-            protoBuf        : '3.25.3',
-            lombok          : '1.18.30',
-            revJAXRS        : '2.1.1',
-            log4j           : '2.17.1',
-            netty           : '4.1.77.Final'
-
+            okHttp        : '4.12.0',
+            guava         : '32.1.2-jre',
+            jackson       : '2.17.1',
+            slf4j         : '1.7.36',
+            log4j         : '2.23.1',
+            lombok        : '1.18.30',
+            commonsLang   : '3.12.0',
+            swagger       : '2.2.2',
+            junit         : '5.10.3',
+            awaitility    : '4.2.0',
+            wiremock      : '2.33.2',
+            mockito       : '5.12.0',
+            testContainers: '1.19.8',
     ]
 }
 
 group = 'io.orkes.conductor'
 
 dependencies {
-
-    api ("io.orkes.conductor:conductor-common:${versions.conductor}")
-    api ("io.orkes.conductor:conductor-grpc:${versions.conductor}")
-    api ("io.orkes.conductor:conductor-java-sdk:${versions.conductor}") {
-        exclude group: 'com.netflix.conductor'
-    }
-    implementation 'javax.annotation:javax.annotation-api:1.3.2'
-
+    // implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    implementation "com.netflix.archaius:archaius-core:0.7.6"
+    implementation "com.google.guava:guava:${versions.guava}"
     implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
-    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
-    api 'io.orkes.conductor:orkes-conductor-common-protos:0.9.2'
-
-    //gRPC dependencies
-    implementation ("io.grpc:grpc-netty:${versions.ioGRPC}") {
-        exclude module: "netty-common"
-    }
-    implementation "io.grpc:grpc-stub:${versions.ioGRPC}"
-    implementation "com.google.protobuf:protobuf-java:${versions.protoBuf}"
-    implementation "io.grpc:grpc-protobuf:${versions.ioGRPC}"
-    implementation "io.grpc:grpc-stub:${versions.ioGRPC}"
-    implementation "io.netty:netty-tcnative-boringssl-static:2.0.51.Final"
-
-    //Kafka
-    implementation 'org.apache.kafka:kafka-clients:3.3.1'
-
-    //Misc
     annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
     compileOnly "org.projectlombok:lombok:${versions.lombok}"
 
-    implementation "com.netflix.spectator:spectator-api:${versions.spectator}"
-    implementation("com.netflix.eureka:eureka-client:${versions.eureka}") {
-        exclude group: "javax.servlet", module: "servlet-api"
-    }
+    // Oh my, 2.7.5 is from Feb 26, 2016 and brings okio 1.6.0
+    // which has a vulnerability https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-3635
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:${versions.okHttp}"))
+    implementation 'com.squareup.okhttp3:okhttp'
+    implementation 'com.squareup.okhttp3:logging-interceptor'
 
-    implementation 'com.squareup.okhttp:okhttp:2.7.5'
-    implementation 'com.squareup.okhttp:logging-interceptor:2.7.5'
-
-    implementation 'io.swagger.core.v3:swagger-annotations:2.2.2'
-
+    implementation "io.swagger.core.v3:swagger-annotations:${versions.swagger}"
     implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
 
-    implementation 'org.threeten:threetenbp:1.6.1'
-
-    //Integrations
-    implementation "com.amazonaws:aws-java-sdk-ssm:${versions.awsSsm}"
-    implementation "com.azure:azure-security-keyvault-secrets:${versions.azureSsm}"
-    implementation "com.azure:azure-identity:${versions.azureIdentity}"
-
     //logging
-    implementation "org.apache.logging.log4j:log4j-core:${versions.log4j}!!"
-    implementation "org.apache.logging.log4j:log4j-api:${versions.log4j}!!"
-    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}!!"
-    implementation "org.apache.logging.log4j:log4j-jul:${versions.log4j}!!"
-    implementation "org.apache.logging.log4j:log4j-web:${versions.log4j}!!"
-
-    //spring
-    implementation "org.springframework:spring-context:5.3.24"
-
-    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
-    testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+    implementation "org.apache.logging.log4j:log4j-core:${versions.log4j}"
+    implementation "org.apache.logging.log4j:log4j-api:${versions.log4j}"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}"
 
     // test dependencies
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
-    testImplementation 'org.mockito:mockito-all:1.10.19'
-    testImplementation 'org.testcontainers:localstack:1.17.1'
-    testImplementation 'org.testcontainers:testcontainers:1.17.1'
-    testImplementation 'com.amazonaws:aws-java-sdk-core:1.12.138'
+    testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
     testCompileOnly "org.projectlombok:lombok:${versions.lombok}"
 
-    //Spring
-    testImplementation 'org.springframework.boot:spring-boot-starters:2.2.13.RELEASE'
-    testImplementation 'org.springframework.boot:spring-boot-autoconfigure:2.7.8'
-    testImplementation 'org.springframework.boot:spring-boot-test:2.7.8'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+    testImplementation "org.mockito:mockito-core:${versions.mockito}"
+    testImplementation "org.testcontainers:localstack:${versions.testContainers}"
+    testImplementation "org.testcontainers:testcontainers:${versions.testContainers}"
 }
 
 repositories {
@@ -167,6 +118,10 @@ publishing {
                 }
             }
         }
+        shadow(MavenPublication) {
+            from components.java
+            artifact shadowJar
+        }
     }
 
     repositories {
@@ -213,7 +168,7 @@ compileJava {
 }
 
 configurations.implementation {
-    exclude(group : "com.netflix.conductor")
+    exclude(group: "com.netflix.conductor")
 }
 
 configurations {
@@ -228,7 +183,7 @@ configurations {
 spotless {
     java {
         removeUnusedImports()
-        importOrder('java', 'javax', 'org', 'com.netflix', 'io.orkes','', '\\#com.netflix', '\\#')
+        importOrder('java', 'javax', 'org', 'com.netflix', 'io.orkes', '', '\\#com.netflix', '\\#')
         licenseHeaderFile("$rootDir/licenseheader.txt")
     }
 }
@@ -248,8 +203,19 @@ signing {
         }
     }
 }
-tasks.withType(Test)  {
+
+tasks.withType(Test) {
     maxParallelForks = 1
 }
+
 sourceSets.main.java.srcDirs += ['example/java', 'example/resources']
+
+shadowJar {
+    archiveFileName = "orkes-conductor-client-$version-all.jar"
+    mergeServiceFiles()
+}
+
+tasks.build {
+    dependsOn shadowJar
+}
 

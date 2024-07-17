@@ -14,7 +14,7 @@ package io.orkes.conductor.client.http;
 
 import java.lang.reflect.Type;
 
-import com.netflix.conductor.common.config.ObjectMapperProvider;
+import io.orkes.conductor.client.ObjectMapperProvider;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,13 +22,11 @@ import lombok.SneakyThrows;
 
 public class JSON {
     private final ObjectMapper objectMapper;
+
     public JSON() {
         objectMapper = new ObjectMapperProvider().getObjectMapper();
     }
 
-    public JSON setLenientOnJson(boolean lenientOnJson) {
-        return this;
-    }
 
     /**
      * Serialize the given Java object into JSON string.

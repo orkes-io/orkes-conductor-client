@@ -14,15 +14,12 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** ExternalStorageLocation */
 public class ExternalStorageLocation {
-    @SerializedName("path")
     private String path = null;
 
-    @SerializedName("uri")
     private String uri = null;
 
     public ExternalStorageLocation path(String path) {

@@ -31,7 +31,7 @@ import io.orkes.conductor.client.model.integration.PromptTemplateTestRequest;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.squareup.okhttp.Call;
+import okhttp3.Call;
 
 public class PromptResourceApi {
 
@@ -51,14 +51,15 @@ public class PromptResourceApi {
 
     /**
      * Build call for deletePromptTemplate
-     * @param name  (required)
-     * @param progressListener Progress listener
+     *
+     * @param name                    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public Call deletePromptTemplateCall(String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                         final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -87,26 +88,26 @@ public class PromptResourceApi {
 
         if (progressListener != null) {
             apiClient.getHttpClient()
-                .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
-                    @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                    }
-                });
+                    .networkInterceptors()
+                    .add(new okhttp3.Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(Chain chain) throws IOException {
+                            okhttp3.Response originalResponse = chain.proceed(chain.request());
+                            return originalResponse.newBuilder()
+                                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                                    .build();
+                        }
+                    });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-            localVarFormParams, localVarAuthNames, progressRequestListener);
+                localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     @SuppressWarnings("rawtypes")
     private Call deletePromptTemplateValidateBeforeCall(String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                                        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException("Missing the required parameter 'name' when calling deletePromptTemplate(Async)");
@@ -120,7 +121,7 @@ public class PromptResourceApi {
     /**
      * Delete Template
      *
-     * @param name  (required)
+     * @param name (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void deletePromptTemplate(String name) throws ApiException {
@@ -130,7 +131,7 @@ public class PromptResourceApi {
     /**
      * Delete Template
      *
-     * @param name  (required)
+     * @param name (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -142,7 +143,7 @@ public class PromptResourceApi {
     /**
      * Delete Template (asynchronously)
      *
-     * @param name  (required)
+     * @param name     (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -175,15 +176,16 @@ public class PromptResourceApi {
 
     /**
      * Build call for deleteTagForPromptTemplate
-     * @param body  (required)
-     * @param name  (required)
-     * @param progressListener Progress listener
+     *
+     * @param body                    (required)
+     * @param name                    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public Call deleteTagForPromptTemplateCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                               final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -204,32 +206,32 @@ public class PromptResourceApi {
             localVarHeaderParams.put("Accept", localVarAccept);
         }
 
-        final String[] localVarContentTypes = { "application/json" };
+        final String[] localVarContentTypes = {"application/json"};
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if (progressListener != null) {
             apiClient.getHttpClient()
-                .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
-                    @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                    }
-                });
+                    .networkInterceptors()
+                    .add(new okhttp3.Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(Chain chain) throws IOException {
+                            okhttp3.Response originalResponse = chain.proceed(chain.request());
+                            return originalResponse.newBuilder()
+                                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                                    .build();
+                        }
+                    });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-            localVarFormParams, localVarAuthNames, progressRequestListener);
+                localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     @SuppressWarnings("rawtypes")
     private Call deleteTagForPromptTemplateValidateBeforeCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                                              final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling deleteTagForPromptTemplate(Async)");
@@ -247,8 +249,8 @@ public class PromptResourceApi {
     /**
      * Delete a tag for Prompt Template
      *
-     * @param body  (required)
-     * @param name  (required)
+     * @param body (required)
+     * @param name (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void deleteTagForPromptTemplate(List<TagObject> body, String name) throws ApiException {
@@ -258,8 +260,8 @@ public class PromptResourceApi {
     /**
      * Delete a tag for Prompt Template
      *
-     * @param body  (required)
-     * @param name  (required)
+     * @param body (required)
+     * @param name (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -271,8 +273,8 @@ public class PromptResourceApi {
     /**
      * Delete a tag for Prompt Template (asynchronously)
      *
-     * @param body  (required)
-     * @param name  (required)
+     * @param body     (required)
+     * @param name     (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -305,14 +307,15 @@ public class PromptResourceApi {
 
     /**
      * Build call for getPromptTemplate
-     * @param name  (required)
-     * @param progressListener Progress listener
+     *
+     * @param name                    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public Call getPromptTemplateCall(String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                      final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -325,7 +328,7 @@ public class PromptResourceApi {
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-        final String[] localVarAccepts = { "application/json" };
+        final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) {
             localVarHeaderParams.put("Accept", localVarAccept);
@@ -339,26 +342,26 @@ public class PromptResourceApi {
 
         if (progressListener != null) {
             apiClient.getHttpClient()
-                .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
-                    @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                    }
-                });
+                    .networkInterceptors()
+                    .add(new okhttp3.Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(Chain chain) throws IOException {
+                            okhttp3.Response originalResponse = chain.proceed(chain.request());
+                            return originalResponse.newBuilder()
+                                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                                    .build();
+                        }
+                    });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-            localVarFormParams, localVarAuthNames, progressRequestListener);
+                localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     @SuppressWarnings("rawtypes")
     private Call getPromptTemplateValidateBeforeCall(String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                                     final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException("Missing the required parameter 'name' when calling getPromptTemplate(Async)");
@@ -372,7 +375,7 @@ public class PromptResourceApi {
     /**
      * Get Template
      *
-     * @param name  (required)
+     * @param name (required)
      * @return PromptTemplate
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -384,7 +387,7 @@ public class PromptResourceApi {
     /**
      * Get Template
      *
-     * @param name  (required)
+     * @param name (required)
      * @return ApiResponse&lt;PromptTemplate&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -398,7 +401,7 @@ public class PromptResourceApi {
     /**
      * Get Template (asynchronously)
      *
-     * @param name  (required)
+     * @param name     (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -433,13 +436,14 @@ public class PromptResourceApi {
 
     /**
      * Build call for getPromptTemplates
-     * @param progressListener Progress listener
+     *
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public Call getPromptTemplatesCall(final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                       final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -452,7 +456,7 @@ public class PromptResourceApi {
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-        final String[] localVarAccepts = { "application/json" };
+        final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) {
             localVarHeaderParams.put("Accept", localVarAccept);
@@ -466,26 +470,26 @@ public class PromptResourceApi {
 
         if (progressListener != null) {
             apiClient.getHttpClient()
-                .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
-                    @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                    }
-                });
+                    .networkInterceptors()
+                    .add(new okhttp3.Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(Chain chain) throws IOException {
+                            okhttp3.Response originalResponse = chain.proceed(chain.request());
+                            return originalResponse.newBuilder()
+                                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                                    .build();
+                        }
+                    });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-            localVarFormParams, localVarAuthNames, progressRequestListener);
+                localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     @SuppressWarnings("rawtypes")
     private Call getPromptTemplatesValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                                      final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
 
         Call call = getPromptTemplatesCall(progressListener, progressRequestListener);
         return call;
@@ -553,14 +557,15 @@ public class PromptResourceApi {
 
     /**
      * Build call for getTagsForPromptTemplate
-     * @param name  (required)
-     * @param progressListener Progress listener
+     *
+     * @param name                    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public Call getTagsForPromptTemplateCall(String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                             final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -573,7 +578,7 @@ public class PromptResourceApi {
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-        final String[] localVarAccepts = { "application/json" };
+        final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) {
             localVarHeaderParams.put("Accept", localVarAccept);
@@ -587,26 +592,26 @@ public class PromptResourceApi {
 
         if (progressListener != null) {
             apiClient.getHttpClient()
-                .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
-                    @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                    }
-                });
+                    .networkInterceptors()
+                    .add(new okhttp3.Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(Chain chain) throws IOException {
+                            okhttp3.Response originalResponse = chain.proceed(chain.request());
+                            return originalResponse.newBuilder()
+                                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                                    .build();
+                        }
+                    });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-            localVarFormParams, localVarAuthNames, progressRequestListener);
+                localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     @SuppressWarnings("rawtypes")
     private Call getTagsForPromptTemplateValidateBeforeCall(String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                                            final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException("Missing the required parameter 'name' when calling getTagsForPromptTemplate(Async)");
@@ -620,7 +625,7 @@ public class PromptResourceApi {
     /**
      * Get tags by Prompt Template
      *
-     * @param name  (required)
+     * @param name (required)
      * @return List&lt;Tag&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -632,7 +637,7 @@ public class PromptResourceApi {
     /**
      * Get tags by Prompt Template
      *
-     * @param name  (required)
+     * @param name (required)
      * @return ApiResponse&lt;List&lt;Tag&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -646,7 +651,7 @@ public class PromptResourceApi {
     /**
      * Get tags by Prompt Template (asynchronously)
      *
-     * @param name  (required)
+     * @param name     (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -681,15 +686,16 @@ public class PromptResourceApi {
 
     /**
      * Build call for putTagForPromptTemplate
-     * @param body  (required)
-     * @param name  (required)
-     * @param progressListener Progress listener
+     *
+     * @param body                    (required)
+     * @param name                    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public Call putTagForPromptTemplateCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                            final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -710,32 +716,32 @@ public class PromptResourceApi {
             localVarHeaderParams.put("Accept", localVarAccept);
         }
 
-        final String[] localVarContentTypes = { "application/json" };
+        final String[] localVarContentTypes = {"application/json"};
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if (progressListener != null) {
             apiClient.getHttpClient()
-                .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
-                    @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                    }
-                });
+                    .networkInterceptors()
+                    .add(new okhttp3.Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(Chain chain) throws IOException {
+                            okhttp3.Response originalResponse = chain.proceed(chain.request());
+                            return originalResponse.newBuilder()
+                                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                                    .build();
+                        }
+                    });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-            localVarFormParams, localVarAuthNames, progressRequestListener);
+                localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     @SuppressWarnings("rawtypes")
     private Call putTagForPromptTemplateValidateBeforeCall(List<TagObject> body, String name, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                                           final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling putTagForPromptTemplate(Async)");
@@ -753,8 +759,8 @@ public class PromptResourceApi {
     /**
      * Put a tag to Prompt Template
      *
-     * @param body  (required)
-     * @param name  (required)
+     * @param body (required)
+     * @param name (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void putTagForPromptTemplate(List<TagObject> body, String name) throws ApiException {
@@ -764,8 +770,8 @@ public class PromptResourceApi {
     /**
      * Put a tag to Prompt Template
      *
-     * @param body  (required)
-     * @param name  (required)
+     * @param body (required)
+     * @param name (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -777,8 +783,8 @@ public class PromptResourceApi {
     /**
      * Put a tag to Prompt Template (asynchronously)
      *
-     * @param body  (required)
-     * @param name  (required)
+     * @param body     (required)
+     * @param name     (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -811,18 +817,19 @@ public class PromptResourceApi {
 
     /**
      * Build call for savePromptTemplate
-     * @param body  (required)
-     * @param description  (required)
-     * @param name  (required)
-     * @param models  (optional)
-     * @param progressListener Progress listener
+     *
+     * @param body                    (required)
+     * @param description             (required)
+     * @param name                    (required)
+     * @param models                  (optional)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public Call savePromptTemplateCall(String body, String description, String name, List<String> models,
-        final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener)
-        throws ApiException {
+                                       final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -849,33 +856,33 @@ public class PromptResourceApi {
             localVarHeaderParams.put("Accept", localVarAccept);
         }
 
-        final String[] localVarContentTypes = { "application/json" };
+        final String[] localVarContentTypes = {"application/json"};
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if (progressListener != null) {
             apiClient.getHttpClient()
-                .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
-                    @Override
-                    public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                    }
-                });
+                    .networkInterceptors()
+                    .add(new okhttp3.Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(Chain chain) throws IOException {
+                            okhttp3.Response originalResponse = chain.proceed(chain.request());
+                            return originalResponse.newBuilder()
+                                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                                    .build();
+                        }
+                    });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-            localVarFormParams, localVarAuthNames, progressRequestListener);
+                localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     @SuppressWarnings("rawtypes")
     private Call savePromptTemplateValidateBeforeCall(String body, String description, String name, List<String> models,
-        final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener)
-        throws ApiException {
+                                                      final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling savePromptTemplate(Async)");
@@ -897,10 +904,10 @@ public class PromptResourceApi {
     /**
      * Create or Update Template
      *
-     * @param body  (required)
-     * @param description  (required)
-     * @param name  (required)
-     * @param models  (optional)
+     * @param body        (required)
+     * @param description (required)
+     * @param name        (required)
+     * @param models      (optional)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void savePromptTemplate(String body, String description, String name, List<String> models) throws ApiException {
@@ -910,10 +917,10 @@ public class PromptResourceApi {
     /**
      * Create or Update Template
      *
-     * @param body  (required)
-     * @param description  (required)
-     * @param name  (required)
-     * @param models  (optional)
+     * @param body        (required)
+     * @param description (required)
+     * @param name        (required)
+     * @param models      (optional)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -925,16 +932,16 @@ public class PromptResourceApi {
     /**
      * Create or Update Template (asynchronously)
      *
-     * @param body  (required)
-     * @param description  (required)
-     * @param name  (required)
-     * @param models  (optional)
-     * @param callback The callback to be executed when the API call finishes
+     * @param body        (required)
+     * @param description (required)
+     * @param name        (required)
+     * @param models      (optional)
+     * @param callback    The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
     public Call savePromptTemplateAsync(String body, String description, String name, List<String> models, final ApiCallback<Void> callback)
-        throws ApiException {
+            throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -962,7 +969,7 @@ public class PromptResourceApi {
 
     @SuppressWarnings("rawtypes")
     private Call testMessageTemplateValidateBeforeCall(PromptTemplateTestRequest body, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                                       final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling testMessageTemplate(Async)");
@@ -974,7 +981,7 @@ public class PromptResourceApi {
     }
 
     public Call testMessageTemplateCall(PromptTemplateTestRequest body, final ProgressResponseBody.ProgressListener progressListener,
-        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+                                        final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = body;
 
         // create path and map variables
@@ -987,39 +994,39 @@ public class PromptResourceApi {
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-        final String[] localVarAccepts = { "application/json" };
+        final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) {
             localVarHeaderParams.put("Accept", localVarAccept);
         }
 
-        final String[] localVarContentTypes = { "application/json" };
+        final String[] localVarContentTypes = {"application/json"};
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if (progressListener != null) {
             apiClient.getHttpClient()
-                .networkInterceptors()
-                .add(new com.squareup.okhttp.Interceptor() {
-                    @Override
-                    public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                        com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                    }
-                });
+                    .networkInterceptors()
+                    .add(new okhttp3.Interceptor() {
+                        @Override
+                        public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
+                            okhttp3.Response originalResponse = chain.proceed(chain.request());
+                            return originalResponse.newBuilder()
+                                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                                    .build();
+                        }
+                    });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-            localVarFormParams, localVarAuthNames, progressRequestListener);
+                localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     /**
      * Test Prompt Template
      *
-     * @param body  (required)
+     * @param body (required)
      * @return String
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1031,7 +1038,7 @@ public class PromptResourceApi {
     /**
      * Test Prompt Template
      *
-     * @param body  (required)
+     * @param body (required)
      * @return ApiResponse&lt;String&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */

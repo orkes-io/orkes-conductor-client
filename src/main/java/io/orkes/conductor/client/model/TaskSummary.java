@@ -19,9 +19,9 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.netflix.conductor.common.metadata.tasks.Task;
-import com.netflix.conductor.common.metadata.tasks.Task.Status;
-import com.netflix.conductor.common.utils.SummaryUtil;
+import io.orkes.conductor.client.http.JSON;
+import io.orkes.conductor.client.model.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.Task.Status;
 
 public class TaskSummary {
 
@@ -71,7 +71,7 @@ public class TaskSummary {
     public TaskSummary() {}
 
     public TaskSummary(Task task) {
-
+        JSON json = new JSON();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         sdf.setTimeZone(GMT);
 
@@ -91,11 +91,11 @@ public class TaskSummary {
         this.queueWaitTime = task.getQueueWaitTime();
         this.taskReferenceName = task.getReferenceTaskName();
         if (task.getInputData() != null) {
-            this.input = SummaryUtil.serializeInputOutput(task.getInputData());
+            this.input = json.serialize(task.getInputData());
         }
 
         if (task.getOutputData() != null) {
-            this.output = SummaryUtil.serializeInputOutput(task.getOutputData());
+            this.output = json.serialize(task.getOutputData());
         }
 
         if (task.getEndTime() > 0) {

@@ -25,7 +25,7 @@ import io.orkes.conductor.client.model.WorkflowSchedule;
 
 public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient {
 
-    private SchedulerResourceApi schedulerResourceApi;
+    private final SchedulerResourceApi schedulerResourceApi;
 
     public OrkesSchedulerClient(ApiClient apiClient) {
         super(apiClient);

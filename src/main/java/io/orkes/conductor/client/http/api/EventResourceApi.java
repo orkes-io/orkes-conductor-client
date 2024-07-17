@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.netflix.conductor.common.metadata.events.EventHandler;
-
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
@@ -28,6 +26,7 @@ import io.orkes.conductor.client.http.Configuration;
 import io.orkes.conductor.client.http.Pair;
 import io.orkes.conductor.client.http.ProgressRequestBody;
 import io.orkes.conductor.client.http.ProgressResponseBody;
+import io.orkes.conductor.client.model.metadata.events.EventHandler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -59,7 +58,7 @@ public class EventResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call addEventHandlerCall(
+    public okhttp3.Call addEventHandlerCall(
             EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -90,12 +89,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -121,7 +120,7 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call addEventHandlerValidateBeforeCall(
+    private okhttp3.Call addEventHandlerValidateBeforeCall(
             EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -132,7 +131,7 @@ public class EventResourceApi {
                     "Missing the required parameter 'eventHandler' when calling addEventHandler(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 addEventHandlerCall(eventHandler, progressListener, progressRequestListener);
         return call;
     }
@@ -158,7 +157,7 @@ public class EventResourceApi {
      */
     private ApiResponse<Void> addEventHandlerWithHttpInfo(EventHandler eventHandler)
             throws ApiException {
-        com.squareup.okhttp.Call call = addEventHandlerValidateBeforeCall(eventHandler, null, null);
+        okhttp3.Call call = addEventHandlerValidateBeforeCall(eventHandler, null, null);
         return apiClient.execute(call);
     }
 
@@ -172,7 +171,7 @@ public class EventResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteQueueConfigCall(
+    public okhttp3.Call deleteQueueConfigCall(
             String queueType,
             String queueName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -211,12 +210,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -242,7 +241,7 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call deleteQueueConfigValidateBeforeCall(
+    private okhttp3.Call deleteQueueConfigValidateBeforeCall(
             String queueType,
             String queueName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -259,7 +258,7 @@ public class EventResourceApi {
                     "Missing the required parameter 'queueName' when calling deleteQueueConfig(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteQueueConfigCall(
                         queueType, queueName, progressListener, progressRequestListener);
         return call;
@@ -290,7 +289,7 @@ public class EventResourceApi {
      */
     private ApiResponse<Object> deleteQueueConfigWithHttpInfo(String queueType, String queueName)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 deleteQueueConfigValidateBeforeCall(queueType, queueName, null, null);
         Type localVarReturnType = new TypeReference<Object>() {
         }.getType();
@@ -305,7 +304,7 @@ public class EventResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getEventHandlersCall(
+    public okhttp3.Call getEventHandlersCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -335,12 +334,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -366,12 +365,12 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getEventHandlersValidateBeforeCall(
+    private okhttp3.Call getEventHandlersValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getEventHandlersCall(progressListener, progressRequestListener);
         return call;
     }
@@ -396,7 +395,7 @@ public class EventResourceApi {
      *                      response body
      */
     private ApiResponse<List<EventHandler>> getEventHandlersWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = getEventHandlersValidateBeforeCall(null, null);
+        okhttp3.Call call = getEventHandlersValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<List<EventHandler>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -412,7 +411,7 @@ public class EventResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getEventHandlersForEventCall(
+    public okhttp3.Call getEventHandlersForEventCall(
             String event,
             Boolean activeOnly,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -449,12 +448,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -480,7 +479,7 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getEventHandlersForEventValidateBeforeCall(
+    private okhttp3.Call getEventHandlersForEventValidateBeforeCall(
             String event,
             Boolean activeOnly,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -492,7 +491,7 @@ public class EventResourceApi {
                     "Missing the required parameter 'event' when calling getEventHandlersForEvent(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getEventHandlersForEventCall(
                         event, activeOnly, progressListener, progressRequestListener);
         return call;
@@ -525,7 +524,7 @@ public class EventResourceApi {
      */
     private ApiResponse<List<EventHandler>> getEventHandlersForEventWithHttpInfo(
             String event, Boolean activeOnly) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getEventHandlersForEventValidateBeforeCall(event, activeOnly, null, null);
         Type localVarReturnType = new TypeReference<List<EventHandler>>() {
         }.getType();
@@ -542,7 +541,7 @@ public class EventResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getQueueConfigCall(
+    public okhttp3.Call getQueueConfigCall(
             String queueType,
             String queueName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -581,12 +580,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -612,7 +611,7 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getQueueConfigValidateBeforeCall(
+    private okhttp3.Call getQueueConfigValidateBeforeCall(
             String queueType,
             String queueName,
             final ProgressResponseBody.ProgressListener progressListener,
@@ -629,7 +628,7 @@ public class EventResourceApi {
                     "Missing the required parameter 'queueName' when calling getQueueConfig(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getQueueConfigCall(queueType, queueName, progressListener, progressRequestListener);
         return call;
     }
@@ -659,7 +658,7 @@ public class EventResourceApi {
      */
     private ApiResponse<Map<String, Object>> getQueueConfigWithHttpInfo(String queueType, String queueName)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getQueueConfigValidateBeforeCall(queueType, queueName, null, null);
         Type localVarReturnType = new TypeReference<Map<String, Object>>() {
         }.getType();
@@ -674,7 +673,7 @@ public class EventResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getQueueNamesCall(
+    public okhttp3.Call getQueueNamesCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
@@ -704,12 +703,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -735,12 +734,12 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call getQueueNamesValidateBeforeCall(
+    private okhttp3.Call getQueueNamesValidateBeforeCall(
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
             throws ApiException {
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 getQueueNamesCall(progressListener, progressRequestListener);
         return call;
     }
@@ -765,7 +764,7 @@ public class EventResourceApi {
      *                      response body
      */
     private ApiResponse<Object> getQueueNamesWithHttpInfo() throws ApiException {
-        com.squareup.okhttp.Call call = getQueueNamesValidateBeforeCall(null, null);
+        okhttp3.Call call = getQueueNamesValidateBeforeCall(null, null);
         Type localVarReturnType = new TypeReference<Object>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -782,7 +781,7 @@ public class EventResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call putQueueConfigCall(
+    public okhttp3.Call putQueueConfigCall(
             String body,
             String queueType,
             String queueName,
@@ -821,12 +820,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -852,7 +851,7 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call putQueueConfigValidateBeforeCall(
+    private okhttp3.Call putQueueConfigValidateBeforeCall(
             String body,
             String queueType,
             String queueName,
@@ -875,7 +874,7 @@ public class EventResourceApi {
                     "Missing the required parameter 'queueName' when calling putQueueConfig(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 putQueueConfigCall(
                         body, queueType, queueName, progressListener, progressRequestListener);
         return call;
@@ -909,7 +908,7 @@ public class EventResourceApi {
      */
     private ApiResponse<Object> putQueueConfigWithHttpInfo(
             String body, String queueType, String queueName) throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 putQueueConfigValidateBeforeCall(body, queueType, queueName, null, null);
         Type localVarReturnType = new TypeReference<Object>() {
         }.getType();
@@ -925,7 +924,7 @@ public class EventResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call removeEventHandlerStatusCall(
+    public okhttp3.Call removeEventHandlerStatusCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -960,12 +959,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -991,7 +990,7 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call removeEventHandlerStatusValidateBeforeCall(
+    private okhttp3.Call removeEventHandlerStatusValidateBeforeCall(
             String name,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1002,7 +1001,7 @@ public class EventResourceApi {
                     "Missing the required parameter 'name' when calling removeEventHandlerStatus(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 removeEventHandlerStatusCall(name, progressListener, progressRequestListener);
         return call;
     }
@@ -1028,7 +1027,7 @@ public class EventResourceApi {
      */
     private ApiResponse<Void> removeEventHandlerStatusWithHttpInfo(String name)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 removeEventHandlerStatusValidateBeforeCall(name, null, null);
         return apiClient.execute(call);
     }
@@ -1042,7 +1041,7 @@ public class EventResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call updateEventHandlerCall(
+    public okhttp3.Call updateEventHandlerCall(
             EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1073,12 +1072,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()
@@ -1104,7 +1103,7 @@ public class EventResourceApi {
                 progressRequestListener);
     }
 
-    private com.squareup.okhttp.Call updateEventHandlerValidateBeforeCall(
+    private okhttp3.Call updateEventHandlerValidateBeforeCall(
             EventHandler eventHandler,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener)
@@ -1115,7 +1114,7 @@ public class EventResourceApi {
                     "Missing the required parameter 'eventHandler' when calling updateEventHandler(Async)");
         }
 
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 updateEventHandlerCall(eventHandler, progressListener, progressRequestListener);
         return call;
     }
@@ -1147,18 +1146,18 @@ public class EventResourceApi {
      */
     private ApiResponse<Void> updateEventHandlerWithHttpInfo(EventHandler eventHandler)
             throws ApiException {
-        com.squareup.okhttp.Call call =
+        okhttp3.Call call =
                 updateEventHandlerValidateBeforeCall(eventHandler, null, null);
         return apiClient.execute(call);
     }
 
     private ApiResponse<Void> handleIncomingEventWithHttpInfo(Map<String, Object> payload)
             throws ApiException {
-        com.squareup.okhttp.Call call = handleIncomingEventValidateBeforeCall(payload, null, null);
+        okhttp3.Call call = handleIncomingEventValidateBeforeCall(payload, null, null);
         return apiClient.execute(call);
     }
 
-    private com.squareup.okhttp.Call handleIncomingEventValidateBeforeCall(
+    private okhttp3.Call handleIncomingEventValidateBeforeCall(
             Map<String, Object> payload,
             final ProgressResponseBody.ProgressListener progressListener,
             final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
@@ -1188,12 +1187,12 @@ public class EventResourceApi {
                     .getHttpClient()
                     .networkInterceptors()
                     .add(
-                            new com.squareup.okhttp.Interceptor() {
+                            new okhttp3.Interceptor() {
                                 @Override
-                                public com.squareup.okhttp.Response intercept(
-                                        com.squareup.okhttp.Interceptor.Chain chain)
+                                public okhttp3.Response intercept(
+                                        okhttp3.Interceptor.Chain chain)
                                         throws IOException {
-                                    com.squareup.okhttp.Response originalResponse =
+                                    okhttp3.Response originalResponse =
                                             chain.proceed(chain.request());
                                     return originalResponse
                                             .newBuilder()

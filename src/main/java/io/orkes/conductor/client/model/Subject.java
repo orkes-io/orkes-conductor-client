@@ -14,12 +14,11 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** Subject */
 public class Subject {
-    @SerializedName("id")
+
     private String id = null;
 
     /** Gets or Sets type */
@@ -53,7 +52,7 @@ public class Subject {
         }
     }
 
-    @SerializedName("type")
+
     private TypeEnum type = null;
 
     public Subject id(String id) {

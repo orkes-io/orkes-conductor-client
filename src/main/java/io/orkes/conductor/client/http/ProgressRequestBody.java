@@ -14,8 +14,8 @@ package io.orkes.conductor.client.http;
 
 import java.io.IOException;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okio.*;
 
 public class ProgressRequestBody extends RequestBody {

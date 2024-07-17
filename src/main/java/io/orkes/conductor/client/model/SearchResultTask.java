@@ -16,17 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.netflix.conductor.common.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.Task;
 
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /** SearchResultTask */
 public class SearchResultTask {
-    @SerializedName("results")
+
     private List<Task> results = null;
 
-    @SerializedName("totalHits")
+
     private Long totalHits = null;
 
     public SearchResultTask results(List<Task> results) {
