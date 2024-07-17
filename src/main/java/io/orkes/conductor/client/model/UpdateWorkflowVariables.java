@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** UpdateWorkflowVariables */
 public class UpdateWorkflowVariables {
@@ -39,7 +39,7 @@ public class UpdateWorkflowVariables {
      *
      * @return appendArray
      */
-    @Schema(description = "")
+    
     public Boolean isAppendArray() {
         return appendArray;
     }
@@ -66,7 +66,7 @@ public class UpdateWorkflowVariables {
      *
      * @return variables
      */
-    @Schema(description = "")
+    
     public Map<String, Object> getVariables() {
         return variables;
     }
@@ -85,7 +85,7 @@ public class UpdateWorkflowVariables {
      *
      * @return workflowId
      */
-    @Schema(description = "")
+    
     public String getWorkflowId() {
         return workflowId;
     }

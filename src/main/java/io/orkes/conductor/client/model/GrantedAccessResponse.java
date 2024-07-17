@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** GrantedAccessResponse */
 public class GrantedAccessResponse {
@@ -40,7 +40,7 @@ public class GrantedAccessResponse {
      *
      * @return grantedAccess
      */
-    @Schema(description = "")
+    
     public List<GrantedAccess> getGrantedAccess() {
         return grantedAccess;
     }

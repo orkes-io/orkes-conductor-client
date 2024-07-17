@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** UpsertUserRequest */
 public class UpsertUserRequest {
@@ -80,7 +80,7 @@ public class UpsertUserRequest {
      *
      * @return groups
      */
-    @Schema(description = "Ids of the groups this user belongs to")
+    
     public List<String> getGroups() {
         return groups;
     }
@@ -99,7 +99,7 @@ public class UpsertUserRequest {
      *
      * @return name
      */
-    @Schema(required = true, description = "User's full name")
+    
     public String getName() {
         return name;
     }
@@ -126,7 +126,7 @@ public class UpsertUserRequest {
      *
      * @return roles
      */
-    @Schema(description = "")
+    
     public List<RolesEnum> getRoles() {
         return roles;
     }

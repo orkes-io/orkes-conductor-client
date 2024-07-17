@@ -18,7 +18,7 @@ import java.util.Objects;
 
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** SubWorkflowParams */
 public class SubWorkflowParams {
@@ -44,7 +44,7 @@ public class SubWorkflowParams {
      *
      * @return name
      */
-    @Schema(required = true, description = "")
+    
     public String getName() {
         return name;
     }
@@ -71,7 +71,7 @@ public class SubWorkflowParams {
      *
      * @return taskToDomain
      */
-    @Schema(description = "")
+    
     public Map<String, String> getTaskToDomain() {
         return taskToDomain;
     }
@@ -90,7 +90,7 @@ public class SubWorkflowParams {
      *
      * @return version
      */
-    @Schema(description = "")
+    
     public Integer getVersion() {
         return version;
     }
@@ -109,7 +109,7 @@ public class SubWorkflowParams {
      *
      * @return workflowDefinition
      */
-    @Schema(description = "")
+    
     public WorkflowDef getWorkflowDefinition() {
         return workflowDefinition;
     }

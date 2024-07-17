@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** WorkflowStatus */
 public class WorkflowStatus {
@@ -78,7 +78,7 @@ public class WorkflowStatus {
      *
      * @return correlationId
      */
-    @Schema(description = "")
+    
     public String getCorrelationId() {
         return correlationId;
     }
@@ -105,7 +105,7 @@ public class WorkflowStatus {
      *
      * @return output
      */
-    @Schema(description = "")
+    
     public Map<String, Object> getOutput() {
         return output;
     }
@@ -124,7 +124,7 @@ public class WorkflowStatus {
      *
      * @return status
      */
-    @Schema(description = "")
+    
     public StatusEnum getStatus() {
         return status;
     }
@@ -151,7 +151,7 @@ public class WorkflowStatus {
      *
      * @return variables
      */
-    @Schema(description = "")
+    
     public Map<String, Object> getVariables() {
         return variables;
     }
@@ -170,7 +170,7 @@ public class WorkflowStatus {
      *
      * @return workflowId
      */
-    @Schema(description = "")
+    
     public String getWorkflowId() {
         return workflowId;
     }

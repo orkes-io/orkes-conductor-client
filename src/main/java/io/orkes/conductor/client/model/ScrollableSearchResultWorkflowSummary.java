@@ -18,7 +18,7 @@ import java.util.Objects;
 import io.orkes.conductor.client.model.run.SearchResult;
 import io.orkes.conductor.client.model.run.WorkflowSummary;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** ScrollableSearchResultWorkflowSummary */
 public class ScrollableSearchResultWorkflowSummary extends SearchResult<WorkflowSummary> {
@@ -35,7 +35,7 @@ public class ScrollableSearchResultWorkflowSummary extends SearchResult<Workflow
      *
      * @return queryId
      */
-    @Schema(description = "")
+    
     public String getQueryId() {
         return queryId;
     }

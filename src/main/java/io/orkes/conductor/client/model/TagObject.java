@@ -14,7 +14,7 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** TagObject */
 public class TagObject {
@@ -71,7 +71,7 @@ public class TagObject {
      *
      * @return key
      */
-    @Schema(description = "")
+    
     public String getKey() {
         return key;
     }
@@ -90,7 +90,7 @@ public class TagObject {
      *
      * @return type
      */
-    @Schema(description = "")
+    
     public TypeEnum getType() {
         return type;
     }
@@ -109,7 +109,7 @@ public class TagObject {
      *
      * @return value
      */
-    @Schema(description = "")
+    
     public Object getValue() {
         return value;
     }

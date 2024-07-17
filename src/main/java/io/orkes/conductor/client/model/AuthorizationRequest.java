@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** AuthorizationRequest */
 public class AuthorizationRequest {
@@ -74,7 +74,7 @@ public class AuthorizationRequest {
      *
      * @return access
      */
-    @Schema(required = true, description = "The set of access which is granted or removed")
+    
     public List<AccessEnum> getAccess() {
         return access;
     }
@@ -93,7 +93,7 @@ public class AuthorizationRequest {
      *
      * @return subject
      */
-    @Schema(required = true, description = "")
+    
     public SubjectRef getSubject() {
         return subject;
     }
@@ -112,7 +112,7 @@ public class AuthorizationRequest {
      *
      * @return target
      */
-    @Schema(required = true, description = "")
+    
     public TargetRef getTarget() {
         return target;
     }

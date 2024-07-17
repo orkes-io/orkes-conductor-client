@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** StartWorkflow */
 public class StartWorkflow {
@@ -45,7 +45,7 @@ public class StartWorkflow {
      *
      * @return correlationId
      */
-    @Schema(description = "")
+    
     public String getCorrelationId() {
         return correlationId;
     }
@@ -72,7 +72,7 @@ public class StartWorkflow {
      *
      * @return input
      */
-    @Schema(description = "")
+    
     public Map<String, Object> getInput() {
         return input;
     }
@@ -91,7 +91,7 @@ public class StartWorkflow {
      *
      * @return name
      */
-    @Schema(description = "")
+    
     public String getName() {
         return name;
     }
@@ -118,7 +118,7 @@ public class StartWorkflow {
      *
      * @return taskToDomain
      */
-    @Schema(description = "")
+    
     public Map<String, String> getTaskToDomain() {
         return taskToDomain;
     }
@@ -137,7 +137,7 @@ public class StartWorkflow {
      *
      * @return version
      */
-    @Schema(description = "")
+    
     public Integer getVersion() {
         return version;
     }

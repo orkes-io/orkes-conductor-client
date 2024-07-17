@@ -14,7 +14,7 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * CreateOrUpdateApplicationRequest
@@ -32,7 +32,7 @@ public class CreateOrUpdateApplicationRequest {
      *
      * @return name
      */
-    @Schema(required = true, description = "Application's name e.g.: Payment Processors")
+    
     public String getName() {
         return name;
     }

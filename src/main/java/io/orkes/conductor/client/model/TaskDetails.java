@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** TaskDetails */
 public class TaskDetails {
@@ -50,7 +50,7 @@ public class TaskDetails {
      *
      * @return output
      */
-    @Schema(description = "")
+    
     public Map<String, Object> getOutput() {
         return output;
     }
@@ -69,7 +69,7 @@ public class TaskDetails {
      *
      * @return taskId
      */
-    @Schema(description = "")
+    
     public String getTaskId() {
         return taskId;
     }
@@ -88,7 +88,7 @@ public class TaskDetails {
      *
      * @return taskRefName
      */
-    @Schema(description = "")
+    
     public String getTaskRefName() {
         return taskRefName;
     }
@@ -107,7 +107,7 @@ public class TaskDetails {
      *
      * @return workflowId
      */
-    @Schema(description = "")
+    
     public String getWorkflowId() {
         return workflowId;
     }

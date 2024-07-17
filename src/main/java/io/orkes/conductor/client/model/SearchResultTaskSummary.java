@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * SearchResultTaskSummary
  */
@@ -43,7 +43,7 @@ public class SearchResultTaskSummary {
    * Get results
    * @return results
   **/
-  @Schema(description = "")
+  
   public List<TaskSummary> getResults() {
     return results;
   }
@@ -61,7 +61,7 @@ public class SearchResultTaskSummary {
    * Get totalHits
    * @return totalHits
   **/
-  @Schema(description = "")
+  
   public Long getTotalHits() {
     return totalHits;
   }

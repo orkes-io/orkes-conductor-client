@@ -14,7 +14,7 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** TerminateWorkflow */
 public class TerminateWorkflow {
@@ -34,7 +34,7 @@ public class TerminateWorkflow {
      *
      * @return terminationReason
      */
-    @Schema(description = "")
+    
     public String getTerminationReason() {
         return terminationReason;
     }
@@ -53,7 +53,7 @@ public class TerminateWorkflow {
      *
      * @return workflowId
      */
-    @Schema(description = "")
+    
     public String getWorkflowId() {
         return workflowId;
     }

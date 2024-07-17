@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** Group */
 public class Group {
@@ -81,7 +81,7 @@ public class Group {
      *
      * @return defaultAccess
      */
-    @Schema(description = "")
+    
     public Map<String, List<String>> getDefaultAccess() {
         return defaultAccess;
     }
@@ -100,7 +100,7 @@ public class Group {
      *
      * @return description
      */
-    @Schema(description = "")
+    
     public String getDescription() {
         return description;
     }
@@ -119,7 +119,7 @@ public class Group {
      *
      * @return id
      */
-    @Schema(description = "")
+    
     public String getId() {
         return id;
     }
@@ -146,7 +146,7 @@ public class Group {
      *
      * @return roles
      */
-    @Schema(description = "")
+    
     public List<Role> getRoles() {
         return roles;
     }

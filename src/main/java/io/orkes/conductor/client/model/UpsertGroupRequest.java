@@ -14,8 +14,6 @@ package io.orkes.conductor.client.model;
 
 import java.util.*;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /** UpsertGroupRequest */
 public class UpsertGroupRequest {
     /**
@@ -117,9 +115,6 @@ public class UpsertGroupRequest {
      *
      * @return defaultAccess
      */
-    @Schema(
-            description =
-                    "a default Map<TargetType, Set<Access> to share permissions, allowed target types: WORKFLOW_DEF, TASK_DEF")
     public Map<String, List<String>> getDefaultAccess() {
         return defaultAccess;
     }
@@ -138,7 +133,7 @@ public class UpsertGroupRequest {
      *
      * @return description
      */
-    @Schema(required = true, description = "A general description of the group")
+    
     public String getDescription() {
         return description;
     }
@@ -165,7 +160,7 @@ public class UpsertGroupRequest {
      *
      * @return roles
      */
-    @Schema(description = "")
+    
     public List<RolesEnum> getRoles() {
         return roles;
     }

@@ -14,7 +14,7 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** ConductorApplication */
 public class ConductorApplication {
@@ -35,7 +35,7 @@ public class ConductorApplication {
      *
      * @return createdBy
      */
-    @Schema(description = "")
+    
     public String getCreatedBy() {
         return createdBy;
     }
@@ -54,7 +54,7 @@ public class ConductorApplication {
      *
      * @return id
      */
-    @Schema(description = "")
+    
     public String getId() {
         return id;
     }
@@ -73,7 +73,7 @@ public class ConductorApplication {
      *
      * @return name
      */
-    @Schema(description = "")
+    
     public String getName() {
         return name;
     }

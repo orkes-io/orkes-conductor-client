@@ -14,7 +14,7 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** ExternalStorageLocation */
 public class ExternalStorageLocation {
@@ -32,7 +32,7 @@ public class ExternalStorageLocation {
      *
      * @return path
      */
-    @Schema(description = "")
+    
     public String getPath() {
         return path;
     }
@@ -51,7 +51,7 @@ public class ExternalStorageLocation {
      *
      * @return uri
      */
-    @Schema(description = "")
+    
     public String getUri() {
         return uri;
     }

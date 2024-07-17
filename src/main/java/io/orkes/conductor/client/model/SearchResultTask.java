@@ -18,7 +18,7 @@ import java.util.Objects;
 
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** SearchResultTask */
 public class SearchResultTask {
@@ -46,7 +46,7 @@ public class SearchResultTask {
      *
      * @return results
      */
-    @Schema(description = "")
+    
     public List<Task> getResults() {
         return results;
     }
@@ -65,7 +65,7 @@ public class SearchResultTask {
      *
      * @return totalHits
      */
-    @Schema(description = "")
+    
     public Long getTotalHits() {
         return totalHits;
     }

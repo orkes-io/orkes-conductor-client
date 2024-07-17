@@ -14,12 +14,12 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * The object over which access is being granted or removed
  */
-@Schema(description = "The object over which access is being granted or removed")
+
 public class TargetRef {
 
     private String id = null;
@@ -74,7 +74,7 @@ public class TargetRef {
      * 
      * @return id
      **/
-    @Schema(required = true, description = "")
+    
     public String getId() {
         return id;
     }
@@ -93,7 +93,7 @@ public class TargetRef {
      * 
      * @return type
      **/
-    @Schema(required = true, description = "")
+    
     public TypeEnum getType() {
         return type;
     }

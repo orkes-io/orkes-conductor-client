@@ -14,7 +14,7 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * GenerateTokenRequest
@@ -34,7 +34,7 @@ public class GenerateTokenRequest {
      *
      * @return keyId
      */
-    @Schema(required = true, description = "")
+    
     public String getKeyId() {
         return keyId;
     }
@@ -53,7 +53,7 @@ public class GenerateTokenRequest {
      *
      * @return keySecret
      */
-    @Schema(required = true, description = "")
+    
     public String getKeySecret() {
         return keySecret;
     }

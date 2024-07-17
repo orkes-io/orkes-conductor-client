@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * GrantedAccess
@@ -79,7 +79,7 @@ public class GrantedAccess {
      *
      * @return access
      */
-    @Schema(description = "")
+    
     public List<AccessEnum> getAccess() {
         return access;
     }
@@ -98,7 +98,7 @@ public class GrantedAccess {
      *
      * @return target
      */
-    @Schema(description = "")
+    
     public TargetRef getTarget() {
         return target;
     }

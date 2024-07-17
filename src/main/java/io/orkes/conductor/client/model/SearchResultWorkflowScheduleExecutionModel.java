@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** SearchResultWorkflowScheduleExecutionModel */
 public class SearchResultWorkflowScheduleExecutionModel {
@@ -46,7 +46,7 @@ public class SearchResultWorkflowScheduleExecutionModel {
      *
      * @return results
      */
-    @Schema(description = "")
+    
     public List<WorkflowScheduleExecutionModel> getResults() {
         return results;
     }
@@ -65,7 +65,7 @@ public class SearchResultWorkflowScheduleExecutionModel {
      *
      * @return totalHits
      */
-    @Schema(description = "")
+    
     public Long getTotalHits() {
         return totalHits;
     }

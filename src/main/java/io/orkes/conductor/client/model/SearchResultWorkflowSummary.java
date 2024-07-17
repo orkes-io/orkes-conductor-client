@@ -18,7 +18,7 @@ import java.util.Objects;
 
 import io.orkes.conductor.client.model.run.WorkflowSummary;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** SearchResultWorkflowSummary */
 public class SearchResultWorkflowSummary {
@@ -46,7 +46,7 @@ public class SearchResultWorkflowSummary {
      *
      * @return results
      */
-    @Schema(description = "")
+    
     public List<WorkflowSummary> getResults() {
         return results;
     }
@@ -65,7 +65,7 @@ public class SearchResultWorkflowSummary {
      *
      * @return totalHits
      */
-    @Schema(description = "")
+    
     public Long getTotalHits() {
         return totalHits;
     }

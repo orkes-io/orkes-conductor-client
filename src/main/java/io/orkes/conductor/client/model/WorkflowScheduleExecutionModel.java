@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** WorkflowScheduleExecutionModel */
 public class WorkflowScheduleExecutionModel {
@@ -91,7 +91,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return executionId
      */
-    @Schema(description = "")
+    
     public String getExecutionId() {
         return executionId;
     }
@@ -110,7 +110,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return executionTime
      */
-    @Schema(description = "")
+    
     public Long getExecutionTime() {
         return executionTime;
     }
@@ -129,7 +129,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return reason
      */
-    @Schema(description = "")
+    
     public String getReason() {
         return reason;
     }
@@ -148,7 +148,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return scheduleName
      */
-    @Schema(description = "")
+    
     public String getScheduleName() {
         return scheduleName;
     }
@@ -167,7 +167,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return scheduledTime
      */
-    @Schema(description = "")
+    
     public Long getScheduledTime() {
         return scheduledTime;
     }
@@ -186,7 +186,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return stackTrace
      */
-    @Schema(description = "")
+    
     public String getStackTrace() {
         return stackTrace;
     }
@@ -206,7 +206,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return startWorkflowRequest
      */
-    @Schema(description = "")
+    
     public StartWorkflowRequest getStartWorkflowRequest() {
         return startWorkflowRequest;
     }
@@ -225,7 +225,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return state
      */
-    @Schema(description = "")
+    
     public StateEnum getState() {
         return state;
     }
@@ -244,7 +244,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return workflowId
      */
-    @Schema(description = "")
+    
     public String getWorkflowId() {
         return workflowId;
     }
@@ -263,7 +263,7 @@ public class WorkflowScheduleExecutionModel {
      *
      * @return workflowName
      */
-    @Schema(description = "")
+    
     public String getWorkflowName() {
         return workflowName;
     }

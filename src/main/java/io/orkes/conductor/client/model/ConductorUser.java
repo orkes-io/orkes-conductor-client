@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * ConductorUser
@@ -46,7 +46,7 @@ public class ConductorUser {
      *
      * @return applicationUser
      */
-    @Schema(description = "")
+    
     public Boolean isApplicationUser() {
         return applicationUser;
     }
@@ -73,7 +73,7 @@ public class ConductorUser {
      *
      * @return groups
      */
-    @Schema(description = "")
+    
     public List<Group> getGroups() {
         return groups;
     }
@@ -92,7 +92,7 @@ public class ConductorUser {
      *
      * @return id
      */
-    @Schema(description = "")
+    
     public String getId() {
         return id;
     }
@@ -111,7 +111,7 @@ public class ConductorUser {
      *
      * @return name
      */
-    @Schema(description = "")
+    
     public String getName() {
         return name;
     }
@@ -138,7 +138,7 @@ public class ConductorUser {
      *
      * @return roles
      */
-    @Schema(description = "")
+    
     public List<Role> getRoles() {
         return roles;
     }
@@ -157,7 +157,7 @@ public class ConductorUser {
      *
      * @return uuid
      */
-    @Schema(description = "")
+    
     public String getUuid() {
         return uuid;
     }

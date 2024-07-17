@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * SaveScheduleRequest
@@ -51,7 +51,7 @@ public class SaveScheduleRequest {
      *
      * @return createdBy
      */
-    @Schema(description = "")
+    
     public String getCreatedBy() {
         return createdBy;
     }
@@ -70,7 +70,7 @@ public class SaveScheduleRequest {
      *
      * @return cronExpression
      */
-    @Schema(required = true, description = "")
+    
     public String getCronExpression() {
         return cronExpression;
     }
@@ -89,7 +89,7 @@ public class SaveScheduleRequest {
      *
      * @return name
      */
-    @Schema(required = true, description = "")
+    
     public String getName() {
         return name;
     }
@@ -108,7 +108,7 @@ public class SaveScheduleRequest {
      *
      * @return paused
      */
-    @Schema(description = "")
+    
     public Boolean isPaused() {
         return paused;
     }
@@ -127,7 +127,7 @@ public class SaveScheduleRequest {
      *
      * @return runCatchupScheduleInstances
      */
-    @Schema(description = "")
+    
     public Boolean isRunCatchupScheduleInstances() {
         return runCatchupScheduleInstances;
     }
@@ -146,7 +146,7 @@ public class SaveScheduleRequest {
      *
      * @return scheduleEndTime
      */
-    @Schema(description = "")
+    
     public Long getScheduleEndTime() {
         return scheduleEndTime;
     }
@@ -165,7 +165,7 @@ public class SaveScheduleRequest {
      *
      * @return scheduleStartTime
      */
-    @Schema(description = "")
+    
     public Long getScheduleStartTime() {
         return scheduleStartTime;
     }
@@ -184,7 +184,7 @@ public class SaveScheduleRequest {
      *
      * @return startWorkflowRequest
      */
-    @Schema(description = "")
+    
     public StartWorkflowRequest getStartWorkflowRequest() {
         return startWorkflowRequest;
     }
@@ -203,7 +203,7 @@ public class SaveScheduleRequest {
      *
      * @return updatedBy
      */
-    @Schema(description = "")
+    
     public String getUpdatedBy() {
         return updatedBy;
     }

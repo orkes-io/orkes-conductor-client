@@ -14,7 +14,7 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** Subject */
 public class Subject {
@@ -65,7 +65,7 @@ public class Subject {
      *
      * @return id
      */
-    @Schema(description = "")
+    
     public String getId() {
         return id;
     }
@@ -84,7 +84,7 @@ public class Subject {
      *
      * @return type
      */
-    @Schema(description = "")
+    
     public TypeEnum getType() {
         return type;
     }

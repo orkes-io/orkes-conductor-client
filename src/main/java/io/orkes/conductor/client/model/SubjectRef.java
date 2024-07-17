@@ -14,10 +14,10 @@ package io.orkes.conductor.client.model;
 
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** User, group or role which is granted/removed access */
-@Schema(description = "User, group or role which is granted/removed access")
+
 public class SubjectRef {
 
     private String id = null;
@@ -67,7 +67,7 @@ public class SubjectRef {
      *
      * @return id
      */
-    @Schema(required = true, description = "")
+    
     public String getId() {
         return id;
     }
@@ -86,7 +86,7 @@ public class SubjectRef {
      *
      * @return type
      */
-    @Schema(description = "User, role or group")
+    
     public TypeEnum getType() {
         return type;
     }

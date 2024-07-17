@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** Role */
 public class Role {
@@ -35,7 +35,7 @@ public class Role {
      *
      * @return name
      */
-    @Schema(description = "")
+    
     public String getName() {
         return name;
     }
@@ -62,7 +62,7 @@ public class Role {
      *
      * @return permissions
      */
-    @Schema(description = "")
+    
     public List<Permission> getPermissions() {
         return permissions;
     }

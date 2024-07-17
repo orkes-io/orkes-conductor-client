@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /** WorkflowSchedule */
 public class WorkflowSchedule {
@@ -63,7 +63,7 @@ public class WorkflowSchedule {
      *
      * @return createTime
      */
-    @Schema(description = "")
+    
     public Long getCreateTime() {
         return createTime;
     }
@@ -82,7 +82,7 @@ public class WorkflowSchedule {
      *
      * @return createdBy
      */
-    @Schema(description = "")
+    
     public String getCreatedBy() {
         return createdBy;
     }
@@ -101,7 +101,7 @@ public class WorkflowSchedule {
      *
      * @return cronExpression
      */
-    @Schema(description = "")
+    
     public String getCronExpression() {
         return cronExpression;
     }
@@ -120,7 +120,7 @@ public class WorkflowSchedule {
      *
      * @return name
      */
-    @Schema(description = "")
+    
     public String getName() {
         return name;
     }
@@ -139,7 +139,7 @@ public class WorkflowSchedule {
      *
      * @return paused
      */
-    @Schema(description = "")
+    
     public Boolean isPaused() {
         return paused;
     }
@@ -158,7 +158,7 @@ public class WorkflowSchedule {
      *
      * @return runCatchupScheduleInstances
      */
-    @Schema(description = "")
+    
     public Boolean isRunCatchupScheduleInstances() {
         return runCatchupScheduleInstances;
     }
@@ -177,7 +177,7 @@ public class WorkflowSchedule {
      *
      * @return scheduleEndTime
      */
-    @Schema(description = "")
+    
     public Long getScheduleEndTime() {
         return scheduleEndTime;
     }
@@ -196,7 +196,7 @@ public class WorkflowSchedule {
      *
      * @return scheduleStartTime
      */
-    @Schema(description = "")
+    
     public Long getScheduleStartTime() {
         return scheduleStartTime;
     }
@@ -215,7 +215,7 @@ public class WorkflowSchedule {
      *
      * @return startWorkflowRequest
      */
-    @Schema(description = "")
+    
     public StartWorkflowRequest getStartWorkflowRequest() {
         return startWorkflowRequest;
     }
@@ -234,7 +234,7 @@ public class WorkflowSchedule {
      *
      * @return updatedBy
      */
-    @Schema(description = "")
+    
     public String getUpdatedBy() {
         return updatedBy;
     }
@@ -253,7 +253,7 @@ public class WorkflowSchedule {
      *
      * @return updatedTime
      */
-    @Schema(description = "")
+    
     public Long getUpdatedTime() {
         return updatedTime;
     }
