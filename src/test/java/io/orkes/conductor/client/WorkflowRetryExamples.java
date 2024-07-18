@@ -17,13 +17,12 @@ import java.util.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.model.run.Workflow;
-
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
+import io.orkes.conductor.client.model.run.Workflow;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 

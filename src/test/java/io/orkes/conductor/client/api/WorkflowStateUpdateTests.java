@@ -22,16 +22,15 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.model.run.Workflow;
-
 import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.ConflictException;
+import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStateUpdate;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 import io.orkes.conductor.client.model.metadata.workflow.IdempotencyStrategy;
 import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
-import io.orkes.conductor.client.model.WorkflowRun;
+import io.orkes.conductor.client.model.run.Workflow;
 
 import lombok.SneakyThrows;
 

@@ -263,6 +263,10 @@ public class ApiClient {
         }
 
         public ApiClient build() {
+            return new ApiClient(this);
+        }
+
+        void validateAndAssignDefaults() {
             if (StringUtils.isBlank(basePath)) {
                 throw new IllegalArgumentException("basePath cannot be blank");
             }
@@ -291,7 +295,7 @@ public class ApiClient {
                     tokenRefreshInSeconds = 2700;
                 }
             }
-            return new ApiClient(this);
+
         }
     }
 
@@ -300,6 +304,7 @@ public class ApiClient {
     }
 
     private ApiClient(Builder builder) {
+        builder.validateAndAssignDefaults();
         this.tokenRefreshInSeconds = builder.tokenRefreshInSeconds();
         LOGGER.info("Setting token refresh interval to {} seconds", this.tokenRefreshInSeconds);
         this.basePath = builder.basePath();
