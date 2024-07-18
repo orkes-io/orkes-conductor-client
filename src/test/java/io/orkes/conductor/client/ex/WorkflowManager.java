@@ -15,13 +15,13 @@ package io.orkes.conductor.client.ex;
 import java.time.Duration;
 import java.util.Map;
 
-import com.netflix.conductor.common.run.SearchResult;
-import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.common.run.WorkflowSummary;
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-import com.netflix.conductor.sdk.workflow.def.tasks.Http;
-import com.netflix.conductor.sdk.workflow.def.tasks.Wait;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.client.model.run.SearchResult;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.client.model.run.WorkflowSummary;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.sdk.workflow.def.tasks.Http;
+import io.orkes.conductor.sdk.workflow.def.tasks.Wait;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.OrkesClients;
@@ -33,15 +33,18 @@ import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 
 public class WorkflowManager {
 
-
-    private OrkesClients orkesClients;
-    private WorkflowClient workflowClient;
-    private TaskClient taskClient;
+    private final OrkesClients orkesClients;
+    private final WorkflowClient workflowClient;
+    private final TaskClient taskClient;
 
     public WorkflowManager() {
-        var configuration = new ApiClient("http://localhost:8080/api", "api_key_user_03", "api_key_user_03");
+        var apiClient = new ApiClient.Builder()
+                .basePath("http://localhost:8080/api")
+                .keyId("api_key_user_03")
+                .keySecret("api_key_user_03")
+                .build();
 
-        this.orkesClients = new OrkesClients(configuration);
+        this.orkesClients = new OrkesClients(apiClient);
         this.workflowClient = orkesClients.getWorkflowClient();
         this.taskClient = orkesClients.getTaskClient();
     }

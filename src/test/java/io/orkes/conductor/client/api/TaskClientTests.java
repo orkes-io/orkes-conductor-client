@@ -22,15 +22,15 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import io.orkes.conductor.client.ObjectMapperProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.shaded.com.google.common.util.concurrent.Uninterruptibles;
 
-import com.netflix.conductor.common.config.ObjectMapperProvider;
-import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.sdk.workflow.def.tasks.SimpleTask;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.TaskClient;

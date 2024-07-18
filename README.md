@@ -124,9 +124,9 @@ Create `workflow/GreetingsWorkflow.java` with the following:
 ```java
 package io.orkes.conductor.sdk.examples.HelloWorld.workflow;
 
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.sdk.workflow.def.tasks.SimpleTask;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 public class GreetingsWorkflow {
     private final WorkflowExecutor executor;
@@ -208,8 +208,8 @@ Create `workers/ConductorWorkers.java` with a simple worker and workflow functio
 ```java
 package io.orkes.conductor.sdk.examples.HelloWorld.worker;
 
-import com.netflix.conductor.sdk.workflow.task.InputParam;
-import com.netflix.conductor.sdk.workflow.task.WorkerTask;
+import io.orkes.conductor.sdk.workflow.task.InputParam;
+import io.orkes.conductor.sdk.workflow.task.WorkerTask;
   public class ConductorWorkers {
     @WorkerTask("greet")
     public String greet(@InputParam("name") String name) {
@@ -235,9 +235,9 @@ import java.util.concurrent.TimeoutException;
 
 import com.google.common.base.Preconditions;
 import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
@@ -378,8 +378,8 @@ Workers can be hosted along with the workflow or run in a distributed environmen
 You can create or convert any existing Java function to a distributed worker by adding `@WorkerTask` annotation to it. Here is a simple worker that takes name as input and returns greetings:
 
 ```java
-import com.netflix.conductor.sdk.workflow.task.InputParam;
-import com.netflix.conductor.sdk.workflow.task.WorkerTask;
+import io.orkes.conductor.sdk.workflow.task.InputParam;
+import io.orkes.conductor.sdk.workflow.task.WorkerTask;
 
 public class ConductorWorkers {
     @WorkerTask("greetings")
@@ -424,7 +424,7 @@ System tasks automate repeated tasks such as calling an HTTP endpoint, executing
 ##### Using Code to Create Wait Task
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.tasks.Wait;
+import io.orkes.conductor.sdk.workflow.def.tasks.Wait;
 /* Wait for a specific duration */
 Wait waitTask = new Wait("wait_for_2_sec",Duration.ofMillis(1000));
 /* Wait using Datetime */
@@ -453,7 +453,7 @@ Make a request to an HTTP(S) endpoint. The task allows for GET, PUT, POST, DELET
 ##### Using Code to Create HTTP Task
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.tasks.Http;
+import io.orkes.conductor.sdk.workflow.def.tasks.Http;
 Http httptask = new Http("mytask");
 httptask.url("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
 workflow.add(httptask);//workflow is an object of ConductorWorkflow<WorkflowInput>
@@ -478,7 +478,7 @@ Execute ECMA-compliant Javascript code. It is useful when writing a script for d
 ##### Using Code to Create Inline Task
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.tasks.Javascript;
+import io.orkes.conductor.sdk.workflow.def.tasks.Javascript;
 Javascript jstask = new Javascript("hello_script",
                   """function greetings(name) {
                      return {
@@ -511,7 +511,7 @@ workflow.add(jstask);
 ##### Using Code to Create JSON JQ Transform Task
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.tasks.JQ;
+import io.orkes.conductor.sdk.workflow.def.tasks.JQ;
 
 JQ jqtask = new JQ("jq_task", "{ key3: (.key1.value1 + .key2.value2) }");
 workflow.add(jqtask);
@@ -573,9 +573,9 @@ For cases where the workflows cannot be created statically ahead of time, Conduc
 `CreateWorkflow.java`
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.sdk.workflow.def.tasks.SimpleTask;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 public class CreateWorkflow {
 
@@ -610,8 +610,8 @@ public class CreateWorkflow {
 `ConductorWorkers.java`
 
 ```java
-import com.netflix.conductor.sdk.workflow.task.InputParam;
-import com.netflix.conductor.sdk.workflow.task.WorkerTask;
+import io.orkes.conductor.sdk.workflow.task.InputParam;
+import io.orkes.conductor.sdk.workflow.task.WorkerTask;
 
 public class ConductorWorkers {
 
@@ -793,7 +793,7 @@ What happens when a task is operating on a critical resource that can only handl
 
 ```java
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.TaskClient;

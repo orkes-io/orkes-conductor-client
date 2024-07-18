@@ -1,7 +1,7 @@
 package io.orkes.conductor.sdk.HelloWorld.workers;
 
-import com.netflix.conductor.sdk.workflow.task.InputParam;
-import com.netflix.conductor.sdk.workflow.task.WorkerTask;
+import io.orkes.conductor.sdk.workflow.task.InputParam;
+import io.orkes.conductor.sdk.workflow.task.WorkerTask;
 
 public class ConductorWorkers {
     @WorkerTask("greet")

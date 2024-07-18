@@ -19,7 +19,7 @@ import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 import io.orkes.conductor.client.model.metadata.tasks.TaskType;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
-import com.netflix.conductor.common.run.Workflow;
+import io.orkes.conductor.client.model.run.Workflow;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;

@@ -37,8 +37,8 @@ Workers can be hosted along with the workflow or run in a distributed environmen
 You can create or convert any existing Java function to a distributed worker by adding `@WorkerTask` annotation to it. Here is a simple worker that takes name as input and returns greetings:
 
 ```java
-import com.netflix.conductor.sdk.workflow.task.InputParam;
-import com.netflix.conductor.sdk.workflow.task.WorkerTask;
+import io.orkes.conductor.sdk.workflow.task.InputParam;
+import io.orkes.conductor.sdk.workflow.task.WorkerTask;
 
 public class ConductorWorkers {
     @WorkerTask("greetings")
@@ -83,7 +83,7 @@ System tasks automate repeated tasks such as calling an HTTP endpoint, executing
 #### Using Code to Create Wait Task
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.tasks.Wait;
+import io.orkes.conductor.sdk.workflow.def.tasks.Wait;
 /* Wait for a specific duration */
 Wait waitTask = new Wait("wait_for_2_sec",Duration.ofMillis(1000));
 /* Wait using Datetime */
@@ -112,7 +112,7 @@ Make a request to an HTTP(S) endpoint. The task allows for GET, PUT, POST, DELET
 #### Using Code to Create HTTP Task
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.tasks.Http;
+import io.orkes.conductor.sdk.workflow.def.tasks.Http;
 Http httptask = new Http("mytask");
 httptask.url("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
 workflow.add(httptask);//workflow is an object of ConductorWorkflow<WorkflowInput>
@@ -137,7 +137,7 @@ Execute ECMA-compliant Javascript code. It is useful when writing a script for d
 #### Using Code to Create Inline Task
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.tasks.Javascript;
+import io.orkes.conductor.sdk.workflow.def.tasks.Javascript;
 Javascript jstask = new Javascript("hello_script",
                   """function greetings(name) {
                      return {
@@ -170,7 +170,7 @@ workflow.add(jstask);
 #### Using Code to Create JSON JQ Transform Task
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.tasks.JQ;
+import io.orkes.conductor.sdk.workflow.def.tasks.JQ;
 
 JQ jqtask = new JQ("jq_task", "{ key3: (.key1.value1 + .key2.value2) }");
 workflow.add(jqtask);

@@ -53,9 +53,9 @@ For cases where the workflows cannot be created statically ahead of time, Conduc
 `CreateWorkflow.java`
 
 ```java
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.sdk.workflow.def.tasks.SimpleTask;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 public class CreateWorkflow {
 
@@ -90,8 +90,8 @@ public class CreateWorkflow {
 `ConductorWorkers.java`
 
 ```java
-import com.netflix.conductor.sdk.workflow.task.InputParam;
-import com.netflix.conductor.sdk.workflow.task.WorkerTask;
+import io.orkes.conductor.sdk.workflow.task.InputParam;
+import io.orkes.conductor.sdk.workflow.task.WorkerTask;
 
 public class ConductorWorkers {
 
@@ -273,7 +273,7 @@ What happens when a task is operating on a critical resource that can only handl
 
 ```java
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.TaskClient;

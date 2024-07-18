@@ -10,10 +10,10 @@ import java.util.concurrent.TimeoutException;
 
 
 import com.netflix.conductor.client.worker.Worker;
-import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
 
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.TaskClient;

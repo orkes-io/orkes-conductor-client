@@ -12,10 +12,10 @@
  */
 package io.orkes.conductor.client.util;
 
-import com.netflix.conductor.client.worker.Worker;
 
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.worker.Worker;
 
 public class SimpleWorker implements Worker {
     @Override

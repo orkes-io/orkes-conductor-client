@@ -34,7 +34,7 @@ public class MetadataClientTests extends ClientTest {
 
     public MetadataClientTests() {
         metadataClient = orkesClients.getMetadataClient();
-        ((OrkesMetadataClient) metadataClient).withReadTimeout(45000);
+        // ((OrkesMetadataClient) metadataClient).withReadTimeout(45000);
     }
 
     @Test

@@ -13,38 +13,31 @@
 package io.orkes.conductor.client.model.metadata.events;
 
 
-
-
-
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/** Defines an event handler */
+/**
+ * Defines an event handler
+ */
 
 public class EventHandler {
 
-    
     private String name;
 
-    
     private String event;
 
-    
     private String condition;
 
-    
     private List<Action> actions = new LinkedList<>();
 
-    
     private boolean active;
 
-    
     private String evaluatorType;
 
-    public EventHandler() {}
+    public EventHandler() {
+    }
 
     /**
      * @return the name MUST be unique within a conductor instance
@@ -130,10 +123,9 @@ public class EventHandler {
         this.evaluatorType = evaluatorType;
     }
 
-    
+
     public static class Action {
 
-        
         public enum Type {
             start_workflow,
             complete_task,
@@ -142,25 +134,18 @@ public class EventHandler {
             update_workflow_variables
         }
 
-        
         private Type action;
 
-        
         private StartWorkflow start_workflow;
 
-        
         private TaskDetails complete_task;
 
-        
         private TaskDetails fail_task;
 
-        
         private boolean expandInlineJSON;
 
-        
         private TerminateWorkflow terminate_workflow;
 
-        
         private UpdateWorkflowVariables update_workflow_variables;
 
         /**
@@ -221,7 +206,7 @@ public class EventHandler {
 
         /**
          * @param expandInlineJSON when set to true, the in-lined JSON strings are expanded to a
-         *     full json document
+         *                         full json document
          */
         public void setExpandInlineJSON(boolean expandInlineJSON) {
             this.expandInlineJSON = expandInlineJSON;
@@ -264,19 +249,19 @@ public class EventHandler {
         }
     }
 
-    
+
     public static class TaskDetails {
 
-        
+
         private String workflowId;
 
-        
+
         private String taskRefName;
 
-        
+
         private Map<String, Object> output = new HashMap<>();
 
-        
+
         private String taskId;
 
         /**
@@ -336,22 +321,18 @@ public class EventHandler {
         }
     }
 
-    
+
     public static class StartWorkflow {
 
-        
         private String name;
 
-        
+
         private Integer version;
 
-        
         private String correlationId;
 
-        
         private Map<String, Object> input = new HashMap<>();
 
-        
         private Map<String, String> taskToDomain;
 
         /**
@@ -419,13 +400,13 @@ public class EventHandler {
         }
     }
 
-    
+
     public static class TerminateWorkflow {
 
-        
+
         private String workflowId;
 
-        
+
         private String terminationReason;
 
         /**
@@ -457,16 +438,16 @@ public class EventHandler {
         }
     }
 
-    
+
     public static class UpdateWorkflowVariables {
 
-        
+
         private String workflowId;
 
-        
+
         private Map<String, Object> variables;
 
-        
+
         private Boolean appendArray;
 
         /**

@@ -14,9 +14,9 @@ package examples.java.io.orkes.conductor.sdk;
 
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
-import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 import io.orkes.conductor.client.*;
 import io.orkes.conductor.sdk.examples.HelloWorld.workflow.GreetingsWorkflow;
 import io.orkes.conductor.sdk.examples.HelloWorld.workflow.WorkflowInput;

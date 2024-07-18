@@ -12,38 +12,36 @@
  */
 package io.orkes.conductor.client.sdk;
 
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.OrkesClients;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.client.util.ApiUtil;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.sdk.workflow.def.tasks.SimpleTask;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.sdk.workflow.executor.task.AnnotatedWorkerExecutor;
+import io.orkes.conductor.sdk.workflow.executor.task.WorkerConfiguration;
+import io.orkes.conductor.sdk.workflow.task.InputParam;
+import io.orkes.conductor.sdk.workflow.task.WorkerTask;
+import org.junit.jupiter.api.Test;
+
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.junit.jupiter.api.Test;
-
-import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-import com.netflix.conductor.sdk.workflow.def.tasks.SimpleTask;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
-import com.netflix.conductor.sdk.workflow.executor.task.WorkerConfiguration;
-import com.netflix.conductor.sdk.workflow.task.InputParam;
-import com.netflix.conductor.sdk.workflow.task.WorkerTask;
-
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.OrkesClients;
-import io.orkes.conductor.client.spring.OrkesAnnotatedWorkerExecutor;
-import io.orkes.conductor.client.util.ApiUtil;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class WorkflowSDKTests {
-
-
 
     @Test
     public void testCreateWorkflow() {
         ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
         OrkesClients clients = new OrkesClients(apiClient);
-        OrkesAnnotatedWorkerExecutor workerExecutor = new OrkesAnnotatedWorkerExecutor(clients.getTaskClient(), new WorkerConfiguration());
+        AnnotatedWorkerExecutor workerExecutor = new AnnotatedWorkerExecutor(clients.getTaskClient(), new WorkerConfiguration());
         workerExecutor.initWorkers("io.orkes.conductor.client.sdk");
         workerExecutor.startPolling();
 

@@ -17,7 +17,7 @@ import java.util.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.netflix.conductor.common.run.Workflow;
+import io.orkes.conductor.client.model.run.Workflow;
 
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;

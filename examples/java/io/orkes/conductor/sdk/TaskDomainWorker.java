@@ -21,8 +21,8 @@ import java.util.Map;
 import com.netflix.conductor.client.worker.Worker;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
-import com.netflix.conductor.sdk.workflow.executor.task.WorkerConfiguration;
-import com.netflix.conductor.sdk.workflow.task.WorkerTask;
+import io.orkes.conductor.sdk.workflow.executor.task.WorkerConfiguration;
+import io.orkes.conductor.sdk.workflow.task.WorkerTask;
 
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.OrkesClients;

@@ -12,15 +12,16 @@
  */
 package io.orkes.conductor.client.api;
 
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
 import io.orkes.conductor.client.EventClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.metadata.events.EventHandler;
 import io.orkes.conductor.client.util.Commons;
+import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static io.orkes.conductor.client.model.metadata.events.EventHandler.Action;
+import static io.orkes.conductor.client.model.metadata.events.EventHandler.StartWorkflow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 

@@ -1,9 +1,9 @@
 package io.orkes.conductor.sdk;
 
-import com.netflix.conductor.sdk.workflow.def.ConductorWorkflow;
-import com.netflix.conductor.sdk.workflow.def.tasks.*;
-import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
-import com.netflix.conductor.sdk.workflow.def.tasks.JQ;
+import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
+import io.orkes.conductor.sdk.workflow.def.tasks.*;
+import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
+import io.orkes.conductor.sdk.workflow.def.tasks.JQ;
 
 
 
