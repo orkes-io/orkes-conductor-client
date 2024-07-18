@@ -54,9 +54,6 @@ dependencies {
 
     // logging
     implementation "org.slf4j:slf4j-api:${versions.slf4j}"
-    //implementation "org.apache.logging.log4j:log4j-core:${versions.log4j}"
-    //implementation "org.apache.logging.log4j:log4j-api:${versions.log4j}"
-    //implementation "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}"
 
     // test dependencies
     testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
@@ -64,6 +61,7 @@ dependencies {
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+    testImplementation "ch.qos.logback:logback-classic:1.5.6"
     testImplementation "org.mockito:mockito-core:${versions.mockito}"
     testImplementation "org.testcontainers:localstack:${versions.testContainers}"
     testImplementation "org.testcontainers:testcontainers:${versions.testContainers}"
@@ -162,19 +160,6 @@ allprojects {
 compileJava {
     sourceCompatibility = 17
     targetCompatibility = 17
-}
-
-configurations.implementation {
-    exclude(group: "com.netflix.conductor")
-}
-
-configurations {
-    all {
-        //exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
-        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-        exclude group: 'com.netflix.conductor'
-        exclude group: 'javax.ws.rs', module: 'javax.ws.rs-api'
-    }
 }
 
 spotless {
