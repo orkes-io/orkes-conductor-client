@@ -27,7 +27,7 @@ ext {
             spectator       : '1.3.7',
             awsSsm          : '1.12.300',
             azureSsm        : '4.2.3',
-            azureIdentity   : '1.3.7',
+            azureIdentity   : '1.12.2',
             eureka          : '1.10.17',
             wiremock        : '2.33.2',
             ioGRPC          : '1.63.1',
@@ -251,5 +251,5 @@ signing {
 tasks.withType(Test)  {
     maxParallelForks = 1
 }
-sourceSets.main.java.srcDirs += ['example/java', 'example/resources']
+sourceSets.main.java.srcDirs += ['examples/java', 'examples/resources']
 

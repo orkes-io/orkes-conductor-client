@@ -35,10 +35,43 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
     @Deprecated
     public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask);
 
+    /**
+     * Synchronously executes a workflow
+     * @param request workflow execution request
+     * @param waitUntilTask waits until workflow has reached this task.
+     *                      Useful for executing it synchronously until this task and then continuing asynchronous execution
+     * @param waitForSeconds maximum amount of time to wait before returning
+     * @return WorkflowRun
+     */
     public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds);
 
+    /**
+     * Synchronously executes a workflow
+     * @param request workflow execution request
+     * @param waitUntilTasks waits until workflow has reached one of these tasks.
+     *                       Useful for executing it synchronously until this task and then continuing asynchronous execution
+     *                       Useful when workflow has multiple branches to wait for any of the branches to reach the task
+     * @param waitForSeconds maximum amount of time to wait before returning
+     * @return WorkflowRun
+     */
+    public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, List<String> waitUntilTasks, Integer waitForSeconds);
+
+    /**
+     * Synchronously executes a workflow
+     * @param request workflow execution request
+     * @param waitUntilTask waits until workflow has reached one of these tasks.
+     *                       Useful for executing it synchronously until this task and then continuing asynchronous execution
+     * @param waitTimeout maximum amount of time to wait before returning
+     * @return WorkflowRun
+     */
     public abstract WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException;
 
+    /**
+     * Pause a running workflow - no new tasks are scheduled until resumed
+     * @param workflowIds ids of the workflow to be paused
+     * @return
+     * @throws ApiException
+     */
     public abstract BulkResponse pauseWorkflow(List<String> workflowIds) throws ApiException;
 
     public abstract BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
@@ -93,7 +126,7 @@ public abstract class WorkflowClient extends com.netflix.conductor.client.http.W
      */
     public abstract Workflow updateVariables(String workflowId, Map<String, Object> variables);
 
-    public abstract void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest body);
+    public abstract void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest request);
 
     /**
      *
