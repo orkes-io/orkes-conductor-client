@@ -12,24 +12,23 @@
  */
 package io.orkes.conductor.client.http;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.ObjectMapperProvider;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.http.api.TaskResourceApi;
-import io.orkes.conductor.client.model.TaskSummary;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 import io.orkes.conductor.client.model.run.SearchResult;
+import io.orkes.conductor.client.model.run.TaskSummary;
 import io.orkes.conductor.client.model.run.Workflow;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class OrkesTaskClient extends TaskClient {
 

@@ -12,20 +12,11 @@
  */
 package io.orkes.conductor.client.model.run;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
-import java.util.TimeZone;
-
-import org.apache.commons.lang3.StringUtils;
-
-import io.orkes.conductor.client.http.JSON;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 
-public class TaskSummary {
+import java.util.Objects;
 
-    /** The time should be stored as GMT */
-    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+public class TaskSummary {
 
     private String workflowId;
 
@@ -68,47 +59,6 @@ public class TaskSummary {
 
     
     private int workflowPriority;
-
-    public TaskSummary() {}
-
-    public TaskSummary(Task task) {
-        JSON json = new JSON();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        sdf.setTimeZone(GMT);
-
-        this.taskId = task.getTaskId();
-        this.taskDefName = task.getTaskDefName();
-        this.taskType = task.getTaskType();
-        this.workflowId = task.getWorkflowInstanceId();
-        this.workflowType = task.getWorkflowType();
-        this.workflowPriority = task.getWorkflowPriority();
-        this.correlationId = task.getCorrelationId();
-        this.scheduledTime = sdf.format(new Date(task.getScheduledTime()));
-        this.startTime = sdf.format(new Date(task.getStartTime()));
-        this.updateTime = sdf.format(new Date(task.getUpdateTime()));
-        this.endTime = sdf.format(new Date(task.getEndTime()));
-        this.status = task.getStatus();
-        this.reasonForIncompletion = task.getReasonForIncompletion();
-        this.queueWaitTime = task.getQueueWaitTime();
-        if (task.getInputData() != null) {
-            this.input = json.serialize(task.getInputData());
-        }
-
-        if (task.getOutputData() != null) {
-            this.output = json.serialize(task.getOutputData());
-        }
-
-        if (task.getEndTime() > 0) {
-            this.executionTime = task.getEndTime() - task.getStartTime();
-        }
-
-        if (StringUtils.isNotBlank(task.getExternalInputPayloadStoragePath())) {
-            this.externalInputPayloadStoragePath = task.getExternalInputPayloadStoragePath();
-        }
-        if (StringUtils.isNotBlank(task.getExternalOutputPayloadStoragePath())) {
-            this.externalOutputPayloadStoragePath = task.getExternalOutputPayloadStoragePath();
-        }
-    }
 
     /**
      * @return the workflowId

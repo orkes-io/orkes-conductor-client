@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import io.orkes.conductor.client.model.TaskSummary;
+import io.orkes.conductor.client.model.run.TaskSummary;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;

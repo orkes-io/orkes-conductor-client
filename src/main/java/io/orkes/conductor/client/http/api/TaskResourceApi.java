@@ -21,12 +21,12 @@ import io.orkes.conductor.client.http.ProgressRequestBody;
 import io.orkes.conductor.client.http.ProgressResponseBody;
 import io.orkes.conductor.client.model.ExternalStorageLocation;
 import io.orkes.conductor.client.model.SearchResultTask;
-import io.orkes.conductor.client.model.TaskSummary;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 import io.orkes.conductor.client.model.run.SearchResult;
+import io.orkes.conductor.client.model.run.TaskSummary;
 import io.orkes.conductor.client.model.run.Workflow;
 
 import java.io.IOException;
