@@ -26,11 +26,8 @@ import io.orkes.conductor.client.model.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 public class ApplicationResourceApi {
-    private ApiClient apiClient;
 
-    public ApplicationResourceApi() {
-        this(Configuration.getDefaultApiClient());
-    }
+    private ApiClient apiClient;
 
     public ApplicationResourceApi(ApiClient apiClient) {
         this.apiClient = apiClient;
@@ -47,9 +44,9 @@ public class ApplicationResourceApi {
     /**
      * Build call for addRoleToApplicationUser
      *
-     * @param applicationId (required)
-     * @param role (required)
-     * @param progressListener Progress listener
+     * @param applicationId           (required)
+     * @param role                    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -110,7 +107,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "POST",
@@ -148,9 +145,9 @@ public class ApplicationResourceApi {
 
     /**
      * @param applicationId (required)
-     * @param role (required)
+     * @param role          (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public void addRoleToApplicationUser(String applicationId, String role) throws ApiException {
         addRoleToApplicationUserWithHttpInfo(applicationId, role);
@@ -158,24 +155,25 @@ public class ApplicationResourceApi {
 
     /**
      * @param applicationId (required)
-     * @param role (required)
+     * @param role          (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<ConductorUser> addRoleToApplicationUserWithHttpInfo(
             String applicationId, String role) throws ApiException {
         okhttp3.Call call =
                 addRoleToApplicationUserValidateBeforeCall(applicationId, role, null, null);
-        Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorUser>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for createAccessKey
      *
-     * @param id (required)
-     * @param progressListener Progress listener
+     * @param id                      (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -231,7 +229,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "POST",
@@ -266,7 +264,7 @@ public class ApplicationResourceApi {
      * @param id (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public CreateAccessKeyResponse createAccessKey(String id) throws ApiException {
         return createAccessKeyWithHttpInfo(id).getData();
@@ -278,12 +276,13 @@ public class ApplicationResourceApi {
      * @param id (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<CreateAccessKeyResponse> createAccessKeyWithHttpInfo(String id)
             throws ApiException {
         okhttp3.Call call = createAccessKeyValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeReference<CreateAccessKeyResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<CreateAccessKeyResponse>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -291,8 +290,8 @@ public class ApplicationResourceApi {
      * Build call for createApplication
      *
      * @param createOrUpdateApplicationRequest (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param progressListener                 Progress listener
+     * @param progressRequestListener          Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
@@ -344,7 +343,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "POST",
@@ -382,7 +381,7 @@ public class ApplicationResourceApi {
      * @param createOrUpdateApplicationRequest (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
         ApiResponse<ConductorApplication> resp = createApplicationWithHttpInfo(createOrUpdateApplicationRequest);
@@ -395,20 +394,21 @@ public class ApplicationResourceApi {
      * @param createOrUpdateApplicationRequest (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
         okhttp3.Call call = createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, null, null);
-        Type localVarReturnType = new TypeReference<ConductorApplication>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorApplication>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for deleteAccessKey
      *
-     * @param applicationId (required)
-     * @param keyId (required)
-     * @param progressListener Progress listener
+     * @param applicationId           (required)
+     * @param keyId                   (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -469,7 +469,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "DELETE",
@@ -509,9 +509,9 @@ public class ApplicationResourceApi {
      * Delete an access key
      *
      * @param applicationId (required)
-     * @param keyId (required)
+     * @param keyId         (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public void deleteAccessKey(String applicationId, String keyId) throws ApiException {
         deleteAccessKeyWithHttpInfo(applicationId, keyId);
@@ -521,24 +521,25 @@ public class ApplicationResourceApi {
      * Delete an access key
      *
      * @param applicationId (required)
-     * @param keyId (required)
+     * @param keyId         (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Object> deleteAccessKeyWithHttpInfo(String applicationId, String keyId)
             throws ApiException {
         okhttp3.Call call =
                 deleteAccessKeyValidateBeforeCall(applicationId, keyId, null, null);
-        Type localVarReturnType = new TypeReference<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for deleteApplication
      *
-     * @param id (required)
-     * @param progressListener Progress listener
+     * @param id                      (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -594,7 +595,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "DELETE",
@@ -628,7 +629,7 @@ public class ApplicationResourceApi {
      *
      * @param id (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public void deleteApplication(String id) throws ApiException {
         deleteApplicationWithHttpInfo(id);
@@ -640,19 +641,20 @@ public class ApplicationResourceApi {
      * @param id (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Object> deleteApplicationWithHttpInfo(String id) throws ApiException {
         okhttp3.Call call = deleteApplicationValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeReference<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for getAccessKeys
      *
-     * @param id (required)
-     * @param progressListener Progress listener
+     * @param id                      (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -708,7 +710,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "GET",
@@ -743,7 +745,7 @@ public class ApplicationResourceApi {
      * @param id (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public List<AccessKeyResponse> getAccessKeys(String id) throws ApiException {
         ApiResponse<List<AccessKeyResponse>> resp = getAccessKeysWithHttpInfo(id);
@@ -756,20 +758,21 @@ public class ApplicationResourceApi {
      * @param id (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<List<AccessKeyResponse>> getAccessKeysWithHttpInfo(String id)
             throws ApiException {
         okhttp3.Call call = getAccessKeysValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeReference<List<AccessKeyResponse>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<AccessKeyResponse>>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for getApplication
      *
-     * @param id (required)
-     * @param progressListener Progress listener
+     * @param id                      (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -825,7 +828,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "GET",
@@ -860,7 +863,7 @@ public class ApplicationResourceApi {
      * @param id (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public ConductorApplication getApplication(String id) throws ApiException {
         ApiResponse<ConductorApplication> resp = getApplicationWithHttpInfo(id);
@@ -873,19 +876,20 @@ public class ApplicationResourceApi {
      * @param id (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<ConductorApplication> getApplicationWithHttpInfo(String id)
             throws ApiException {
         okhttp3.Call call = getApplicationValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeReference<ConductorApplication>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorApplication>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for listApplications
      *
-     * @param progressListener Progress listener
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -938,7 +942,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "GET",
@@ -966,7 +970,7 @@ public class ApplicationResourceApi {
      *
      * @return List&lt;ConductorApplication&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public List<ConductorApplication> listApplications() throws ApiException {
         ApiResponse<List<ConductorApplication>> resp = listApplicationsWithHttpInfo();
@@ -978,21 +982,22 @@ public class ApplicationResourceApi {
      *
      * @return ApiResponse&lt;List&lt;ConductorApplication&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<List<ConductorApplication>> listApplicationsWithHttpInfo()
             throws ApiException {
         okhttp3.Call call = listApplicationsValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeReference<List<ConductorApplication>>() {}.getType();
+        Type localVarReturnType = new TypeReference<List<ConductorApplication>>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for removeRoleFromApplicationUser
      *
-     * @param applicationId (required)
-     * @param role (required)
-     * @param progressListener Progress listener
+     * @param applicationId           (required)
+     * @param role                    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1053,7 +1058,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "DELETE",
@@ -1091,9 +1096,9 @@ public class ApplicationResourceApi {
 
     /**
      * @param applicationId (required)
-     * @param role (required)
+     * @param role          (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public void removeRoleFromApplicationUser(String applicationId, String role)
             throws ApiException {
@@ -1102,25 +1107,26 @@ public class ApplicationResourceApi {
 
     /**
      * @param applicationId (required)
-     * @param role (required)
+     * @param role          (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Object> removeRoleFromApplicationUserWithHttpInfo(
             String applicationId, String role) throws ApiException {
         okhttp3.Call call =
                 removeRoleFromApplicationUserValidateBeforeCall(applicationId, role, null, null);
-        Type localVarReturnType = new TypeReference<Object>() {}.getType();
+        Type localVarReturnType = new TypeReference<Object>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for toggleAccessKeyStatus
      *
-     * @param applicationId (required)
-     * @param keyId (required)
-     * @param progressListener Progress listener
+     * @param applicationId           (required)
+     * @param keyId                   (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1181,7 +1187,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "POST",
@@ -1221,10 +1227,10 @@ public class ApplicationResourceApi {
      * Toggle the status of an access key
      *
      * @param applicationId (required)
-     * @param keyId (required)
+     * @param keyId         (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId)
             throws ApiException {
@@ -1237,16 +1243,17 @@ public class ApplicationResourceApi {
      * Toggle the status of an access key
      *
      * @param applicationId (required)
-     * @param keyId (required)
+     * @param keyId         (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<AccessKeyResponse> toggleAccessKeyStatusWithHttpInfo(
             String applicationId, String keyId) throws ApiException {
         okhttp3.Call call =
                 toggleAccessKeyStatusValidateBeforeCall(applicationId, keyId, null, null);
-        Type localVarReturnType = new TypeReference<AccessKeyResponse>() {}.getType();
+        Type localVarReturnType = new TypeReference<AccessKeyResponse>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1254,9 +1261,9 @@ public class ApplicationResourceApi {
      * Build call for updateApplication
      *
      * @param createOrUpdateApplicationRequest (required)
-     * @param id (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param id                               (required)
+     * @param progressListener                 Progress listener
+     * @param progressRequestListener          Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
@@ -1311,7 +1318,7 @@ public class ApplicationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "PUT",
@@ -1354,10 +1361,10 @@ public class ApplicationResourceApi {
      * Update an application
      *
      * @param createOrUpdateApplicationRequest (required)
-     * @param id (required)
+     * @param id                               (required)
      * @return Object
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public ConductorApplication updateApplication(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id)
@@ -1371,10 +1378,10 @@ public class ApplicationResourceApi {
      * Update an application
      *
      * @param createOrUpdateApplicationRequest (required)
-     * @param id (required)
+     * @param id                               (required)
      * @return ApiResponse&lt;Object&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<ConductorApplication> updateApplicationWithHttpInfo(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id)
@@ -1382,25 +1389,27 @@ public class ApplicationResourceApi {
         okhttp3.Call call =
                 updateApplicationValidateBeforeCall(
                         createOrUpdateApplicationRequest, id, null, null);
-        Type localVarReturnType = new TypeReference<ConductorApplication>() {}.getType();
+        Type localVarReturnType = new TypeReference<ConductorApplication>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Put a tag to application
      *
-     * @param body  (required)
-     * @param id  (required)
+     * @param body (required)
+     * @param id   (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void putTagForApplication(List<TagObject> body, String id) throws ApiException {
         putTagForApplicationWithHttpInfo(body, id);
     }
+
     /**
      * Put a tag to application
      *
-     * @param body  (required)
-     * @param id  (required)
+     * @param body (required)
+     * @param id   (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1426,9 +1435,10 @@ public class ApplicationResourceApi {
 
     /**
      * Build call for putTagForApplication
-     * @param body  (required)
-     * @param id  (required)
-     * @param progressListener Progress listener
+     *
+     * @param body                    (required)
+     * @param id                      (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1459,7 +1469,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if(progressListener != null) {
+        if (progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
                 public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
@@ -1471,14 +1481,14 @@ public class ApplicationResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     /**
      * Get tags by application
      *
-     * @param id  (required)
+     * @param id (required)
      * @return List&lt;TagObject&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1490,13 +1500,14 @@ public class ApplicationResourceApi {
     /**
      * Get tags by application
      *
-     * @param id  (required)
+     * @param id (required)
      * @return ApiResponse&lt;List&lt;TagObject&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     private ApiResponse<List<TagObject>> getTagsForApplicationWithHttpInfo(String id) throws ApiException {
         okhttp3.Call call = getTagsForApplicationValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeReference<List<TagObject>>(){}.getType();
+        Type localVarReturnType = new TypeReference<List<TagObject>>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -1513,8 +1524,9 @@ public class ApplicationResourceApi {
 
     /**
      * Build call for getTagsForApplication
-     * @param id  (required)
-     * @param progressListener Progress listener
+     *
+     * @param id                      (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1545,7 +1557,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if(progressListener != null) {
+        if (progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
                 public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
@@ -1557,15 +1569,15 @@ public class ApplicationResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 
     /**
      * Delete a tag for application
      *
-     * @param body  (required)
-     * @param id  (required)
+     * @param body (required)
+     * @param id   (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void deleteTagForApplication(List<TagObject> body, String id) throws ApiException {
@@ -1575,8 +1587,8 @@ public class ApplicationResourceApi {
     /**
      * Delete a tag for application
      *
-     * @param body  (required)
-     * @param id  (required)
+     * @param body (required)
+     * @param id   (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1602,9 +1614,10 @@ public class ApplicationResourceApi {
 
     /**
      * Build call for deleteTagForApplication
-     * @param body  (required)
-     * @param id  (required)
-     * @param progressListener Progress listener
+     *
+     * @param body                    (required)
+     * @param id                      (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1635,7 +1648,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if(progressListener != null) {
+        if (progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
                 @Override
                 public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
@@ -1647,7 +1660,7 @@ public class ApplicationResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[] { "api_key" };
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
 }

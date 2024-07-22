@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.orkes.conductor.client.model.Auditable;
-import io.orkes.conductor.client.model.metadata.common.Schema;
+import io.orkes.conductor.client.model.metadata.Schema;
 
 
 public class TaskDef extends Auditable {

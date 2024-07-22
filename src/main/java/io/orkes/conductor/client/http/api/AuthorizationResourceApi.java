@@ -12,6 +12,16 @@
  */
 package io.orkes.conductor.client.http.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.ProgressRequestBody;
+import io.orkes.conductor.client.http.ProgressResponseBody;
+import io.orkes.conductor.client.model.AuthorizationRequest;
+import io.orkes.conductor.client.model.Subject;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -19,19 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.model.AuthorizationRequest;
-import io.orkes.conductor.client.model.Subject;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 public class AuthorizationResourceApi {
     private ApiClient apiClient;
-
-    public AuthorizationResourceApi() {
-        this(Configuration.getDefaultApiClient());
-    }
 
     public AuthorizationResourceApi(ApiClient apiClient) {
         this.apiClient = apiClient;
@@ -48,9 +47,9 @@ public class AuthorizationResourceApi {
     /**
      * Build call for getPermissions
      *
-     * @param type (required)
-     * @param id (required)
-     * @param progressListener Progress listener
+     * @param type                    (required)
+     * @param id                      (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -108,7 +107,7 @@ public class AuthorizationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "GET",
@@ -147,10 +146,10 @@ public class AuthorizationResourceApi {
      * Get the access that have been granted over the given object
      *
      * @param type (required)
-     * @param id (required)
+     * @param id   (required)
      * @return Map&lt;String, List&lt;Subject&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public Map<String, List<Subject>> getPermissions(String type, String id) throws ApiException {
         ApiResponse<Map<String, List<Subject>>> resp = getPermissionsWithHttpInfo(type, id);
@@ -161,23 +160,24 @@ public class AuthorizationResourceApi {
      * Get the access that have been granted over the given object
      *
      * @param type (required)
-     * @param id (required)
+     * @param id   (required)
      * @return ApiResponse&lt;Map&lt;String, List&lt;Subject&gt;&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Map<String, List<Subject>>> getPermissionsWithHttpInfo(
             String type, String id) throws ApiException {
         okhttp3.Call call = getPermissionsValidateBeforeCall(type, id, null, null);
-        Type localVarReturnType = new TypeReference<Map<String, List<Subject>>>() {}.getType();
+        Type localVarReturnType = new TypeReference<Map<String, List<Subject>>>() {
+        }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
      * Build call for grantPermissions
      *
-     * @param authorizationRequest (required)
-     * @param progressListener Progress listener
+     * @param authorizationRequest    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -231,7 +231,7 @@ public class AuthorizationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "POST",
@@ -266,7 +266,7 @@ public class AuthorizationResourceApi {
      *
      * @param authorizationRequest (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public void grantPermissions(AuthorizationRequest authorizationRequest) throws ApiException {
         grantPermissionsWithHttpInfo(authorizationRequest);
@@ -278,7 +278,7 @@ public class AuthorizationResourceApi {
      * @param authorizationRequest (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Void> grantPermissionsWithHttpInfo(
             AuthorizationRequest authorizationRequest) throws ApiException {
@@ -290,8 +290,8 @@ public class AuthorizationResourceApi {
     /**
      * Build call for removePermissions
      *
-     * @param authorizationRequest (required)
-     * @param progressListener Progress listener
+     * @param authorizationRequest    (required)
+     * @param progressListener        Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -345,7 +345,7 @@ public class AuthorizationResourceApi {
                             });
         }
 
-        String[] localVarAuthNames = new String[] {"api_key"};
+        String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "DELETE",
@@ -380,7 +380,7 @@ public class AuthorizationResourceApi {
      *
      * @param authorizationRequest (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     public void removePermissions(AuthorizationRequest authorizationRequest) throws ApiException {
         removePermissionsWithHttpInfo(authorizationRequest);
@@ -392,7 +392,7 @@ public class AuthorizationResourceApi {
      * @param authorizationRequest (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
+     *                      response body
      */
     private ApiResponse<Void> removePermissionsWithHttpInfo(
             AuthorizationRequest authorizationRequest) throws ApiException {

@@ -12,6 +12,18 @@
  */
 package io.orkes.conductor.client.http.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.ProgressRequestBody;
+import io.orkes.conductor.client.http.ProgressResponseBody;
+import io.orkes.conductor.client.model.ConductorUser;
+import io.orkes.conductor.client.model.GrantedAccessResponse;
+import io.orkes.conductor.client.model.Response;
+import io.orkes.conductor.client.model.UpsertUserRequest;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -19,21 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.model.ConductorUser;
-import io.orkes.conductor.client.model.GrantedAccessResponse;
-import io.orkes.conductor.client.model.Response;
-import io.orkes.conductor.client.model.UpsertUserRequest;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 public class UserResourceApi {
     private ApiClient apiClient;
-
-    public UserResourceApi() {
-        this(Configuration.getDefaultApiClient());
-    }
 
     public UserResourceApi(ApiClient apiClient) {
         this.apiClient = apiClient;

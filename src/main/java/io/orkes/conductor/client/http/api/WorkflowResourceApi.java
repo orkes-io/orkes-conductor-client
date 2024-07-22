@@ -12,6 +12,31 @@
  */
 package io.orkes.conductor.client.http.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.reflect.TypeToken;
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.ApiCallback;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.ProgressRequestBody;
+import io.orkes.conductor.client.http.ProgressResponseBody;
+import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
+import io.orkes.conductor.client.model.ExternalStorageLocation;
+import io.orkes.conductor.client.model.ScrollableSearchResultWorkflowSummary;
+import io.orkes.conductor.client.model.SearchResultWorkflow;
+import io.orkes.conductor.client.model.SearchResultWorkflowSummary;
+import io.orkes.conductor.client.model.WorkflowRun;
+import io.orkes.conductor.client.model.WorkflowStateUpdate;
+import io.orkes.conductor.client.model.WorkflowStatus;
+import io.orkes.conductor.client.model.metadata.workflow.RerunWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.SkipTaskRequest;
+import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
+import io.orkes.conductor.client.model.metadata.workflow.UpgradeWorkflowRequest;
+import io.orkes.conductor.client.model.run.Workflow;
+import io.orkes.conductor.client.model.run.WorkflowTestRequest;
+import okhttp3.Call;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -19,23 +44,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.model.*;
-import io.orkes.conductor.client.model.metadata.workflow.*;
-import io.orkes.conductor.client.model.run.Workflow;
-import io.orkes.conductor.client.model.run.WorkflowTestRequest;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.reflect.TypeToken;
-import okhttp3.Call;
-
 public class WorkflowResourceApi {
     private ApiClient apiClient;
-
-    public WorkflowResourceApi() {
-        this(Configuration.getDefaultApiClient());
-    }
 
     public WorkflowResourceApi(ApiClient apiClient) {
         this.apiClient = apiClient;

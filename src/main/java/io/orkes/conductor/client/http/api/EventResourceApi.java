@@ -12,6 +12,15 @@
  */
 package io.orkes.conductor.client.http.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.ProgressRequestBody;
+import io.orkes.conductor.client.http.ProgressResponseBody;
+import io.orkes.conductor.client.model.metadata.events.EventHandler;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -19,23 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Configuration;
-import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
-import io.orkes.conductor.client.model.metadata.events.EventHandler;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 public class EventResourceApi {
     private ApiClient apiClient;
 
-    public EventResourceApi() {
-        this(Configuration.getDefaultApiClient());
-    }
 
     public EventResourceApi(ApiClient apiClient) {
         this.apiClient = apiClient;

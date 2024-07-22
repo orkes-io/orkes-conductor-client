@@ -12,6 +12,19 @@
  */
 package io.orkes.conductor.client.http.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.ProgressRequestBody;
+import io.orkes.conductor.client.http.ProgressResponseBody;
+import io.orkes.conductor.client.model.SaveScheduleRequest;
+import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecution;
+import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
+import io.orkes.conductor.client.model.TagObject;
+import io.orkes.conductor.client.model.WorkflowSchedule;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -19,23 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.model.SaveScheduleRequest;
-import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecution;
-import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
-import io.orkes.conductor.client.model.TagObject;
-import io.orkes.conductor.client.model.WorkflowSchedule;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 
 public class SchedulerResourceApi {
     private ApiClient apiClient;
-
-    public SchedulerResourceApi() {
-        this(Configuration.getDefaultApiClient());
-    }
 
     public SchedulerResourceApi(ApiClient apiClient) {
         this.apiClient = apiClient;

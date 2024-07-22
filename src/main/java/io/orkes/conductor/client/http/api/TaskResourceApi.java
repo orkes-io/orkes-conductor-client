@@ -12,6 +12,23 @@
  */
 package io.orkes.conductor.client.http.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.ProgressRequestBody;
+import io.orkes.conductor.client.http.ProgressResponseBody;
+import io.orkes.conductor.client.model.ExternalStorageLocation;
+import io.orkes.conductor.client.model.SearchResultTask;
+import io.orkes.conductor.client.model.TaskSummary;
+import io.orkes.conductor.client.model.metadata.tasks.PollData;
+import io.orkes.conductor.client.model.metadata.tasks.Task;
+import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;
+import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
+import io.orkes.conductor.client.model.run.SearchResult;
+import io.orkes.conductor.client.model.run.Workflow;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.InetAddress;
@@ -21,24 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.model.*;
-import io.orkes.conductor.client.model.metadata.tasks.PollData;
-import io.orkes.conductor.client.model.metadata.tasks.Task;
-import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;
-import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
-import io.orkes.conductor.client.model.run.SearchResult;
-import io.orkes.conductor.client.model.run.Workflow;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 public class TaskResourceApi {
     private ApiClient apiClient;
-
-    public TaskResourceApi() {
-        this(Configuration.getDefaultApiClient());
-    }
 
     public TaskResourceApi(ApiClient apiClient) {
         this.apiClient = apiClient;

@@ -41,8 +41,6 @@ public class IntegrationResourceApi {
 
     private ApiClient apiClient;
 
-
-
     public IntegrationResourceApi(ApiClient apiClient) {
         this.apiClient = apiClient;
     }
