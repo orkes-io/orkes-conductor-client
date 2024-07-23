@@ -15,7 +15,7 @@ package io.orkes.conductor.client.util;
 import java.util.Arrays;
 import java.util.Map;
 
-import io.orkes.conductor.client.MetadataClient;
+import io.orkes.conductor.client.api.MetadataClient;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.tasks.TaskType;
 import io.orkes.conductor.client.model.metadata.workflow.SubWorkflowParams;

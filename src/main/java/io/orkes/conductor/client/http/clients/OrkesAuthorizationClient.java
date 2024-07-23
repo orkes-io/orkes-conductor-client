@@ -15,8 +15,8 @@ package io.orkes.conductor.client.http.clients;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.AuthorizationClient;
-import io.orkes.conductor.client.SecretsManager;
+import io.orkes.conductor.client.api.AuthorizationClient;
+import io.orkes.conductor.client.api.SecretsManager;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.*;
 

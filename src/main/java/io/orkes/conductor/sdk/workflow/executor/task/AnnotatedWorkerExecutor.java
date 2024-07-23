@@ -24,7 +24,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.api.TaskClient;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 import io.orkes.conductor.client.worker.Worker;
 import io.orkes.conductor.sdk.workflow.task.*;

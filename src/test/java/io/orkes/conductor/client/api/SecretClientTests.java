@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.SecretClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.TagObject;
 

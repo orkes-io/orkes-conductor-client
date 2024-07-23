@@ -26,7 +26,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.api.WorkflowClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.model.BulkResponse;

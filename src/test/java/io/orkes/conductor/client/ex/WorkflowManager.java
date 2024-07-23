@@ -12,12 +12,9 @@
  */
 package io.orkes.conductor.client.ex;
 
-import java.time.Duration;
-import java.util.Map;
-
 import io.orkes.conductor.client.OrkesClients;
-import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.api.TaskClient;
+import io.orkes.conductor.client.api.WorkflowClient;
 import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
@@ -29,6 +26,9 @@ import io.orkes.conductor.sdk.workflow.def.ConductorWorkflow;
 import io.orkes.conductor.sdk.workflow.def.tasks.Http;
 import io.orkes.conductor.sdk.workflow.def.tasks.Wait;
 import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
+
+import java.time.Duration;
+import java.util.Map;
 
 public class WorkflowManager {
 
@@ -72,7 +72,10 @@ public class WorkflowManager {
     }
 
     public void main() {
-        WorkflowExecutor workflowExecutor = orkesClients.getWorkflowExecutor();
+        WorkflowExecutor workflowExecutor = new WorkflowExecutor(orkesClients.getTaskClient(),
+                orkesClients.getWorkflowClient(),
+                orkesClients.getMetadataClient(),
+                100);
         String workflowId = startWorkflow(workflowExecutor);
         System.out.println("Started workflow with id " + workflowId);
 

@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.model.WorkflowRun;
 import io.orkes.conductor.client.model.WorkflowStateUpdate;

@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.clients.OrkesMetadataClient;
 import io.orkes.conductor.client.model.TagObject;

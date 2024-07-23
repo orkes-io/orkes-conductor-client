@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.api.TaskClient;
 import io.orkes.conductor.client.config.ConductorClientConfiguration;
 import io.orkes.conductor.client.worker.Worker;
 

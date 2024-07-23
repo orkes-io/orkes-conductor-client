@@ -19,8 +19,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.MetadataClient;
-import io.orkes.conductor.client.WorkflowClient;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;

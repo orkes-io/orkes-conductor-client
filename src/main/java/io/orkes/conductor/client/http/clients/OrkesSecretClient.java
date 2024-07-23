@@ -15,7 +15,7 @@ package io.orkes.conductor.client.http.clients;
 import java.util.List;
 import java.util.Set;
 
-import io.orkes.conductor.client.SecretClient;
+import io.orkes.conductor.client.api.SecretClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.TagObject;
 

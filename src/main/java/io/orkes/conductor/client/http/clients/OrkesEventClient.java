@@ -16,15 +16,16 @@ package io.orkes.conductor.client.http.clients;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.EventClient;
+import io.orkes.conductor.client.api.EventClient;
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 import io.orkes.conductor.client.model.metadata.events.EventHandler;
 
-public class OrkesEventClient extends EventClient {
+public class OrkesEventClient extends OrkesClient implements EventClient {
 
     private final EventResource eventResource;
 
     public OrkesEventClient(OrkesHttpClient httpClient) {
+        super(httpClient);
         this.eventResource = new EventResource(httpClient);
     }
 

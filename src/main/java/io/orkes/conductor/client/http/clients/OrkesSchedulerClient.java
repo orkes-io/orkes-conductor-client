@@ -14,7 +14,7 @@ package io.orkes.conductor.client.http.clients;
 
 import java.util.List;
 
-import io.orkes.conductor.client.SchedulerClient;
+import io.orkes.conductor.client.api.SchedulerClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecution;

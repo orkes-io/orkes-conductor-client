@@ -19,8 +19,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.AuthorizationClient;
-import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.*;
@@ -31,7 +29,6 @@ import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
 
-import static io.orkes.conductor.client.util.Commons.getTagObject;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthorizationClientTests extends ClientTest {

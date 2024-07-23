@@ -15,6 +15,7 @@ package io.orkes.conductor.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.orkes.conductor.client.api.TaskClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

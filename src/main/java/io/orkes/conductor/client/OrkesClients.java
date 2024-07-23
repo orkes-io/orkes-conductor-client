@@ -12,6 +12,15 @@
  */
 package io.orkes.conductor.client;
 
+import io.orkes.conductor.client.api.AuthorizationClient;
+import io.orkes.conductor.client.api.EventClient;
+import io.orkes.conductor.client.api.IntegrationClient;
+import io.orkes.conductor.client.api.MetadataClient;
+import io.orkes.conductor.client.api.PromptClient;
+import io.orkes.conductor.client.api.SchedulerClient;
+import io.orkes.conductor.client.api.SecretClient;
+import io.orkes.conductor.client.api.TaskClient;
+import io.orkes.conductor.client.api.WorkflowClient;
 import io.orkes.conductor.client.http.clients.OrkesAuthorizationClient;
 import io.orkes.conductor.client.http.clients.OrkesEventClient;
 import io.orkes.conductor.client.http.clients.OrkesHttpClient;
@@ -22,7 +31,6 @@ import io.orkes.conductor.client.http.clients.OrkesSchedulerClient;
 import io.orkes.conductor.client.http.clients.OrkesSecretClient;
 import io.orkes.conductor.client.http.clients.OrkesTaskClient;
 import io.orkes.conductor.client.http.clients.OrkesWorkflowClient;
-import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 public class OrkesClients {
 
@@ -66,9 +74,5 @@ public class OrkesClients {
 
     public PromptClient getPromptClient() {
         return new OrkesPromptClient(httpClient);
-    }
-
-    public WorkflowExecutor getWorkflowExecutor() {
-        return new WorkflowExecutor(getTaskClient(), getWorkflowClient(), getMetadataClient(), 100);
     }
 }

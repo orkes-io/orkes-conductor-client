@@ -14,6 +14,9 @@ package io.orkes.conductor.client;
 
 import java.util.*;
 
+import io.orkes.conductor.client.api.MetadataClient;
+import io.orkes.conductor.client.api.TaskClient;
+import io.orkes.conductor.client.api.WorkflowClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

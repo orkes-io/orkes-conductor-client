@@ -25,7 +25,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.orkes.conductor.client.TaskClient;
+import io.orkes.conductor.client.api.TaskClient;
 import io.orkes.conductor.client.config.PropertyFactory;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
