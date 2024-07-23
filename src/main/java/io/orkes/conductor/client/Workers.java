@@ -15,11 +15,11 @@ package io.orkes.conductor.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 import io.orkes.conductor.client.worker.Worker;

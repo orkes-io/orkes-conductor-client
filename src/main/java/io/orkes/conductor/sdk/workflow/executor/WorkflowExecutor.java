@@ -26,11 +26,11 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.ObjectMapperProvider;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.http.clients.OrkesMetadataClient;
 import io.orkes.conductor.client.http.clients.OrkesTaskClient;
 import io.orkes.conductor.client.http.clients.OrkesWorkflowClient;

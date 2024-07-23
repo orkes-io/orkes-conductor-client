@@ -12,7 +12,12 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Pair;
@@ -21,11 +26,7 @@ import io.orkes.conductor.client.model.GrantedAccessResponse;
 import io.orkes.conductor.client.model.Response;
 import io.orkes.conductor.client.model.UpsertUserRequest;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 class UserResource {
     private OrkesHttpClient httpClient;
@@ -34,15 +35,7 @@ class UserResource {
         this.httpClient = httpClient;
     }
 
-    /**
-     * Build call for deleteUser
-     *
-     * @param id (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call deleteUserCall(
             String id)
             throws ApiException {
@@ -95,40 +88,19 @@ class UserResource {
         return deleteUserCall(id);
     }
 
-    /**
-     * Delete a user
-     *
-     * @param id (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void deleteUser(String id) throws ApiException {
         deleteUserWithHttpInfo(id);
     }
 
-    /**
-     * Delete a user
-     *
-     * @param id (required)
-     * @return ApiResponse&lt;Response&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Response> deleteUserWithHttpInfo(String id) throws ApiException {
         okhttp3.Call call = deleteUserValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<Response>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getGrantedPermissions
-     *
-     * @param userId (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getGrantedPermissionsCall(
             String userId)
             throws ApiException {
@@ -183,27 +155,13 @@ class UserResource {
         return getGrantedPermissionsCall(userId);
     }
 
-    /**
-     * Get the permissions this user has over workflows and tasks
-     *
-     * @param userId (required)
-     * @return Object
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public GrantedAccessResponse getGrantedPermissions(String userId) throws ApiException {
         ApiResponse<GrantedAccessResponse> resp = getGrantedPermissionsWithHttpInfo(userId);
         return resp.getData();
     }
 
-    /**
-     * Get the permissions this user has over workflows and tasks
-     *
-     * @param userId (required)
-     * @return ApiResponse&lt;Object&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<GrantedAccessResponse> getGrantedPermissionsWithHttpInfo(String userId)
             throws ApiException {
         okhttp3.Call call = getGrantedPermissionsValidateBeforeCall(userId);
@@ -211,15 +169,7 @@ class UserResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getUser
-     *
-     * @param id (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getUserCall(
             String id)
             throws ApiException {
@@ -272,42 +222,20 @@ class UserResource {
         return getUserCall(id);
     }
 
-    /**
-     * Get a user by id
-     *
-     * @param id (required)
-     * @return Object
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public ConductorUser getUser(String id) throws ApiException {
         ApiResponse<ConductorUser> resp = getUserWithHttpInfo(id);
         return resp.getData();
     }
 
-    /**
-     * Get a user by id
-     *
-     * @param id (required)
-     * @return ApiResponse&lt;Object&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<ConductorUser> getUserWithHttpInfo(String id) throws ApiException {
         okhttp3.Call call = getUserValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for listUsers
-     *
-     * @param apps (optional, default to false)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call listUsersCall(
             Boolean apps)
             throws ApiException {
@@ -354,27 +282,13 @@ class UserResource {
         return listUsersCall(apps);
     }
 
-    /**
-     * Get all users
-     *
-     * @param apps (optional, default to false)
-     * @return List&lt;ConductorUser&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public List<ConductorUser> listUsers(Boolean apps) throws ApiException {
         ApiResponse<List<ConductorUser>> resp = listUsersWithHttpInfo(apps);
         return resp.getData();
     }
 
-    /**
-     * Get all users
-     *
-     * @param apps (optional, default to false)
-     * @return ApiResponse&lt;List&lt;ConductorUser&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<List<ConductorUser>> listUsersWithHttpInfo(Boolean apps)
             throws ApiException {
         okhttp3.Call call = listUsersValidateBeforeCall(apps);
@@ -382,16 +296,7 @@ class UserResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for sendInviteEmail
-     *
-     * @param id (required)
-     * @param conductorUser (optional)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call sendInviteEmailCall(
             String id,
             ConductorUser conductorUser)
@@ -444,27 +349,12 @@ class UserResource {
         return sendInviteEmailCall(id, conductorUser);
     }
 
-    /**
-     * Send an email with a link to this cluster
-     *
-     * @param id (required)
-     * @param conductorUser (optional)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void sendInviteEmail(String id, ConductorUser conductorUser) throws ApiException {
         sendInviteEmailWithHttpInfo(id, conductorUser);
     }
 
-    /**
-     * Send an email with a link to this cluster
-     *
-     * @param id (required)
-     * @param conductorUser (optional)
-     * @return ApiResponse&lt;Object&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Object> sendInviteEmailWithHttpInfo(String id, ConductorUser conductorUser)
             throws ApiException {
         okhttp3.Call call =
@@ -474,16 +364,7 @@ class UserResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for upsertUser
-     *
-     * @param upsertUserRequest (required)
-     * @param id (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call upsertUserCall(
             UpsertUserRequest upsertUserRequest,
             String id)
@@ -541,30 +422,14 @@ class UserResource {
         return upsertUserCall(upsertUserRequest, id);
     }
 
-    /**
-     * Create or update a user
-     *
-     * @param upsertUserRequest (required)
-     * @param id (required)
-     * @return Object
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id)
             throws ApiException {
         ApiResponse<ConductorUser> resp = upsertUserWithHttpInfo(upsertUserRequest, id);
         return resp.getData();
     }
 
-    /**
-     * Create or update a user
-     *
-     * @param upsertUserRequest (required)
-     * @param id (required)
-     * @return ApiResponse&lt;Object&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<ConductorUser> upsertUserWithHttpInfo(
             UpsertUserRequest upsertUserRequest, String id) throws ApiException {
         okhttp3.Call call =

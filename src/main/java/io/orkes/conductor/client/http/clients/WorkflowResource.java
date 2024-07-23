@@ -12,8 +12,12 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Pair;
@@ -31,13 +35,10 @@ import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
 import io.orkes.conductor.client.model.metadata.workflow.UpgradeWorkflowRequest;
 import io.orkes.conductor.client.model.run.Workflow;
 import io.orkes.conductor.client.model.run.WorkflowTestRequest;
-import okhttp3.Call;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.reflect.TypeToken;
+import okhttp3.Call;
 
 class WorkflowResource {
     private final OrkesHttpClient httpClient;
@@ -46,18 +47,7 @@ class WorkflowResource {
         this.httpClient = httpClient;
     }
 
-    /**
-     * Execute a workflow synchronously
-     *
-     * @param req (required)
-     * @param name (required)
-     * @param version (required)
-     * @param waitUntilTaskRef (optional)
-     * @param requestId (optional)
-     * @return WorkflowRun
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public WorkflowRun executeWorkflow(
             StartWorkflowRequest req,
             String name,
@@ -70,19 +60,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Execute a workflow synchronously
-     *
-     * @param req (required)
-     * @param name (required)
-     * @param version (required)
-     * @param waitUntilTaskRef (optional)
-     * @param requestId (optional)
-     * @param waitForSeconds (optional)
-     * @return WorkflowRun
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public WorkflowRun executeWorkflow(
             StartWorkflowRequest req,
             String name,
@@ -96,19 +74,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Execute a workflow synchronously
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param version (required)
-     * @param waitUntilTaskRef (optional)
-     * @param requestId (required)
-     * @param waitForSeconds (optional)
-     * @return ApiResponse&lt;WorkflowRun&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public ApiResponse<WorkflowRun> executeWorkflowWithHttpInfo(
             StartWorkflowRequest body,
             String name,
@@ -157,18 +123,7 @@ class WorkflowResource {
                 waitForSeconds);
     }
 
-    /**
-     * Execute a workflow synchronously
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param version (required)
-     * @param waitUntilTaskRef (optional)
-     * @param requestId (required)
-     * @return ApiResponse&lt;WorkflowRun&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public ApiResponse<WorkflowRun> executeWorkflowWithHttpInfo(
             StartWorkflowRequest body,
             String name,
@@ -321,15 +276,7 @@ class WorkflowResource {
                 localVarAuthNames);
     }
 
-    /**
-     * Build call for decide
-     *
-     * @param workflowId (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call decideCall(
             String workflowId)
             throws ApiException {
@@ -383,40 +330,18 @@ class WorkflowResource {
         return decideCall(workflowId);
     }
 
-    /**
-     * Starts the decision task for a workflow
-     *
-     * @param workflowId (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void decide(String workflowId) throws ApiException {
         decideWithHttpInfo(workflowId);
     }
 
-    /**
-     * Starts the decision task for a workflow
-     *
-     * @param workflowId (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> decideWithHttpInfo(String workflowId) throws ApiException {
         okhttp3.Call call = decideValidateBeforeCall(workflowId);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for delete
-     *
-     * @param workflowId (required)
-     * @param archiveWorkflow (optional, default to true)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call deleteCall(
             String workflowId,
             Boolean archiveWorkflow)
@@ -477,27 +402,12 @@ class WorkflowResource {
         return deleteCall(workflowId, archiveWorkflow);
     }
 
-    /**
-     * Removes the workflow from the system
-     *
-     * @param workflowId (required)
-     * @param archiveWorkflow (optional, default to true)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void delete(String workflowId, Boolean archiveWorkflow) throws ApiException {
         deleteWithHttpInfo(workflowId, archiveWorkflow);
     }
 
-    /**
-     * Removes the workflow from the system
-     *
-     * @param workflowId (required)
-     * @param archiveWorkflow (optional, default to true)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> deleteWithHttpInfo(String workflowId, Boolean archiveWorkflow)
             throws ApiException {
         okhttp3.Call call =
@@ -505,16 +415,7 @@ class WorkflowResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for getExecutionStatus
-     *
-     * @param workflowId (required)
-     * @param includeTasks (optional, default to true)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getExecutionStatusCall(
             String workflowId,
             Boolean includeTasks)
@@ -574,30 +475,14 @@ class WorkflowResource {
                 workflowId, includeTasks);
     }
 
-    /**
-     * Gets the workflow by workflow id
-     *
-     * @param workflowId (required)
-     * @param includeTasks (optional, default to true)
-     * @return Workflow
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public Workflow getExecutionStatus(String workflowId, Boolean includeTasks)
             throws ApiException {
         ApiResponse<Workflow> resp = getExecutionStatusWithHttpInfo(workflowId, includeTasks);
         return resp.getData();
     }
 
-    /**
-     * Gets the workflow by workflow id
-     *
-     * @param workflowId (required)
-     * @param includeTasks (optional, default to true)
-     * @return ApiResponse&lt;Workflow&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Workflow> getExecutionStatusWithHttpInfo(
             String workflowId, Boolean includeTasks) throws ApiException {
         okhttp3.Call call =
@@ -606,17 +491,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getExternalStorageLocation
-     *
-     * @param path (required)
-     * @param operation (required)
-     * @param payloadType (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getExternalStorageLocationCall(
             String path,
             String operation,
@@ -687,16 +562,7 @@ class WorkflowResource {
                 path, operation, payloadType);
     }
 
-    /**
-     * Get the uri and path of the external storage where the workflow payload is to be stored
-     *
-     * @param path (required)
-     * @param operation (required)
-     * @param payloadType (required)
-     * @return ExternalStorageLocation
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public ExternalStorageLocation getExternalStorageLocation(
             String path, String operation, String payloadType) throws ApiException {
         ApiResponse<ExternalStorageLocation> resp =
@@ -704,16 +570,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Get the uri and path of the external storage where the workflow payload is to be stored
-     *
-     * @param path (required)
-     * @param operation (required)
-     * @param payloadType (required)
-     * @return ApiResponse&lt;ExternalStorageLocation&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<ExternalStorageLocation> getExternalStorageLocationWithHttpInfo(
             String path, String operation, String payloadType) throws ApiException {
         okhttp3.Call call =
@@ -723,18 +580,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getRunningWorkflow
-     *
-     * @param name (required)
-     * @param version (optional, default to 1)
-     * @param startTime (optional)
-     * @param endTime (optional)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getRunningWorkflowCall(
             String name,
             Integer version,
@@ -804,17 +650,7 @@ class WorkflowResource {
                 endTime);
     }
 
-    /**
-     * Retrieve all the running workflows
-     *
-     * @param name (required)
-     * @param version (optional, default to 1)
-     * @param startTime (optional)
-     * @param endTime (optional)
-     * @return List&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public List<String> getRunningWorkflow(
             String name, Integer version, Long startTime, Long endTime) throws ApiException {
         ApiResponse<List<String>> resp =
@@ -822,17 +658,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Retrieve all the running workflows
-     *
-     * @param name (required)
-     * @param version (optional, default to 1)
-     * @param startTime (optional)
-     * @param endTime (optional)
-     * @return ApiResponse&lt;List&lt;String&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<List<String>> getRunningWorkflowWithHttpInfo(
             String name, Integer version, Long startTime, Long endTime) throws ApiException {
         okhttp3.Call call =
@@ -841,17 +667,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getWorkflowStatusSummary
-     *
-     * @param workflowId (required)
-     * @param includeOutput (optional, default to false)
-     * @param includeVariables (optional, default to false)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getWorkflowStatusSummaryCall(
             String workflowId,
             Boolean includeOutput,
@@ -918,16 +734,7 @@ class WorkflowResource {
                 includeVariables);
     }
 
-    /**
-     * Gets the workflow by workflow id
-     *
-     * @param workflowId (required)
-     * @param includeOutput (optional, default to false)
-     * @param includeVariables (optional, default to false)
-     * @return WorkflowStatus
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public WorkflowStatus getWorkflowStatusSummary(
             String workflowId, Boolean includeOutput, Boolean includeVariables)
             throws ApiException {
@@ -936,16 +743,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Gets the workflow by workflow id
-     *
-     * @param workflowId (required)
-     * @param includeOutput (optional, default to false)
-     * @param includeVariables (optional, default to false)
-     * @return ApiResponse&lt;WorkflowStatus&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<WorkflowStatus> getWorkflowStatusSummaryWithHttpInfo(
             String workflowId, Boolean includeOutput, Boolean includeVariables)
             throws ApiException {
@@ -956,18 +754,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getWorkflows
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param includeClosed (optional, default to false)
-     * @param includeTasks (optional, default to false)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getWorkflowsCall(
             List<String> body,
             String name,
@@ -1038,17 +825,7 @@ class WorkflowResource {
                 includeTasks);
     }
 
-    /**
-     * Lists workflows for the given correlation id list
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param includeClosed (optional, default to false)
-     * @param includeTasks (optional, default to false)
-     * @return Map&lt;String, List&lt;Workflow&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public Map<String, List<Workflow>> getWorkflows(
             List<String> body, String name, Boolean includeClosed, Boolean includeTasks)
             throws ApiException {
@@ -1057,17 +834,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Lists workflows for the given correlation id list
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param includeClosed (optional, default to false)
-     * @param includeTasks (optional, default to false)
-     * @return ApiResponse&lt;Map&lt;String, List&lt;Workflow&gt;&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Map<String, List<Workflow>>> getWorkflowsWithHttpInfo(
             List<String> body, String name, Boolean includeClosed, Boolean includeTasks)
             throws ApiException {
@@ -1077,18 +844,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getWorkflows1
-     *
-     * @param name (required)
-     * @param correlationId (required)
-     * @param includeClosed (optional, default to false)
-     * @param includeTasks (optional, default to false)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getWorkflows1Call(
             String name,
             String correlationId,
@@ -1139,15 +895,7 @@ class WorkflowResource {
                 localVarAuthNames);
     }
 
-    /**
-     * Lists workflows for the given correlation id list and workflow name list
-     *
-     * @param request  (required)
-     * @param includeClosed  (optional, default to false)
-     * @param includeTasks  (optional, default to false)
-     * @return Map of correlation id to workflow list
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks) throws ApiException {
         okhttp3.Call call = getWorkflowsByNamesAndCorrelationIdsBeforeCall(request, includeClosed, includeTasks);
         Type localVarReturnType = new TypeReference<Map<String, List<Workflow>>>(){}.getType();
@@ -1163,16 +911,7 @@ class WorkflowResource {
         return getWorkflowsByNamesAndCorrelationIdsCall(request, includeClosed, includeTasks);
     }
 
-    /**
-     * Build call for getWorkflows1
-     * @param body  (required)
-     * @param includeClosed  (optional, default to false)
-     * @param includeTasks  (optional, default to false)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     private okhttp3.Call getWorkflowsByNamesAndCorrelationIdsCall(CorrelationIdsSearchRequest body, Boolean includeClosed, Boolean includeTasks) throws ApiException {
 
         // create path and map variables
@@ -1229,17 +968,7 @@ class WorkflowResource {
                 includeTasks);
     }
 
-    /**
-     * Lists workflows for the given correlation id
-     *
-     * @param name (required)
-     * @param correlationId (required)
-     * @param includeClosed (optional, default to false)
-     * @param includeTasks (optional, default to false)
-     * @return List&lt;Workflow&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public List<Workflow> getWorkflowsByCorrelationId(
             String name, String correlationId, Boolean includeClosed, Boolean includeTasks)
             throws ApiException {
@@ -1248,17 +977,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Lists workflows for the given correlation id
-     *
-     * @param name (required)
-     * @param correlationId (required)
-     * @param includeClosed (optional, default to false)
-     * @param includeTasks (optional, default to false)
-     * @return ApiResponse&lt;List&lt;Workflow&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<List<Workflow>> getWorkflows1WithHttpInfo(
             String name, String correlationId, Boolean includeClosed, Boolean includeTasks)
             throws ApiException {
@@ -1269,15 +988,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for pauseWorkflow
-     *
-     * @param workflowId (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call pauseWorkflowCall(
             String workflowId)
             throws ApiException {
@@ -1333,40 +1044,18 @@ class WorkflowResource {
         return pauseWorkflowCall(workflowId);
     }
 
-    /**
-     * Pauses the workflow
-     *
-     * @param workflowId (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void pauseWorkflow(String workflowId) throws ApiException {
         pauseWorkflowWithHttpInfo(workflowId);
     }
 
-    /**
-     * Pauses the workflow
-     *
-     * @param workflowId (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> pauseWorkflowWithHttpInfo(String workflowId) throws ApiException {
         okhttp3.Call call = pauseWorkflowValidateBeforeCall(workflowId);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for rerun
-     *
-     * @param rerunWorkflowRequest (required)
-     * @param workflowId (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call rerunCall(
             RerunWorkflowRequest rerunWorkflowRequest,
             String workflowId)
@@ -1428,30 +1117,14 @@ class WorkflowResource {
                 workflowId);
     }
 
-    /**
-     * Reruns the workflow from a specific task
-     *
-     * @param rerunWorkflowRequest (required)
-     * @param workflowId (required)
-     * @return String
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public String rerun(RerunWorkflowRequest rerunWorkflowRequest, String workflowId)
             throws ApiException {
         ApiResponse<String> resp = rerunWithHttpInfo(rerunWorkflowRequest, workflowId);
         return resp.getData();
     }
 
-    /**
-     * Reruns the workflow from a specific task
-     *
-     * @param rerunWorkflowRequest (required)
-     * @param workflowId (required)
-     * @return ApiResponse&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<String> rerunWithHttpInfo(
             RerunWorkflowRequest rerunWorkflowRequest, String workflowId) throws ApiException {
         okhttp3.Call call =
@@ -1460,15 +1133,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for resetWorkflow
-     *
-     * @param workflowId (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call resetWorkflowCall(
             String workflowId)
             throws ApiException {
@@ -1524,40 +1189,18 @@ class WorkflowResource {
         return resetWorkflowCall(workflowId);
     }
 
-    /**
-     * Resets callback times of all non-terminal SIMPLE tasks to 0
-     *
-     * @param workflowId (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void resetWorkflow(String workflowId) throws ApiException {
         resetWorkflowWithHttpInfo(workflowId);
     }
 
-    /**
-     * Resets callback times of all non-terminal SIMPLE tasks to 0
-     *
-     * @param workflowId (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> resetWorkflowWithHttpInfo(String workflowId) throws ApiException {
         okhttp3.Call call = resetWorkflowValidateBeforeCall(workflowId);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for restart
-     *
-     * @param workflowId (required)
-     * @param useLatestDefinitions (optional, default to false)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call restartCall(
             String workflowId,
             Boolean useLatestDefinitions)
@@ -1620,27 +1263,12 @@ class WorkflowResource {
                 useLatestDefinitions);
     }
 
-    /**
-     * Restarts a completed workflow
-     *
-     * @param workflowId (required)
-     * @param useLatestDefinitions (optional, default to false)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void restart(String workflowId, Boolean useLatestDefinitions) throws ApiException {
         restartWithHttpInfo(workflowId, useLatestDefinitions);
     }
 
-    /**
-     * Restarts a completed workflow
-     *
-     * @param workflowId (required)
-     * @param useLatestDefinitions (optional, default to false)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> restartWithHttpInfo(String workflowId, Boolean useLatestDefinitions)
             throws ApiException {
         okhttp3.Call call =
@@ -1648,15 +1276,7 @@ class WorkflowResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for resumeWorkflow
-     *
-     * @param workflowId (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call resumeWorkflowCall(
             String workflowId)
             throws ApiException {
@@ -1712,40 +1332,18 @@ class WorkflowResource {
         return resumeWorkflowCall(workflowId);
     }
 
-    /**
-     * Resumes the workflow
-     *
-     * @param workflowId (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void resumeWorkflow(String workflowId) throws ApiException {
         resumeWorkflowWithHttpInfo(workflowId);
     }
 
-    /**
-     * Resumes the workflow
-     *
-     * @param workflowId (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> resumeWorkflowWithHttpInfo(String workflowId) throws ApiException {
         okhttp3.Call call = resumeWorkflowValidateBeforeCall(workflowId);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for retry
-     *
-     * @param workflowId (required)
-     * @param resumeSubworkflowTasks (optional, default to false)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call retryCall(
             String workflowId,
             Boolean resumeSubworkflowTasks)
@@ -1808,27 +1406,12 @@ class WorkflowResource {
                 resumeSubworkflowTasks);
     }
 
-    /**
-     * Retries the last failed task
-     *
-     * @param workflowId (required)
-     * @param resumeSubworkflowTasks (optional, default to false)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void retry(String workflowId, Boolean resumeSubworkflowTasks) throws ApiException {
         retryWithHttpInfo(workflowId, resumeSubworkflowTasks);
     }
 
-    /**
-     * Retries the last failed task
-     *
-     * @param workflowId (required)
-     * @param resumeSubworkflowTasks (optional, default to false)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> retryWithHttpInfo(String workflowId, Boolean resumeSubworkflowTasks)
             throws ApiException {
         okhttp3.Call call =
@@ -1836,21 +1419,7 @@ class WorkflowResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for search
-     *
-     * @param queryId (optional)
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param skipCache (optional, default to false)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call searchCall(
             String queryId,
             Integer start,
@@ -1925,22 +1494,7 @@ class WorkflowResource {
                 skipCache);
     }
 
-    /**
-     * Search for workflows based on payload and other parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC.
-     *
-     * @param queryId (optional)
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param skipCache (optional, default to false)
-     * @return ScrollableSearchResultWorkflowSummary
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public ScrollableSearchResultWorkflowSummary search(
             String queryId,
             Integer start,
@@ -1955,22 +1509,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Search for workflows based on payload and other parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC.
-     *
-     * @param queryId (optional)
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param skipCache (optional, default to false)
-     * @return ApiResponse&lt;ScrollableSearchResultWorkflowSummary&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<ScrollableSearchResultWorkflowSummary> searchWithHttpInfo(
             String queryId,
             Integer start,
@@ -1988,19 +1527,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for searchV2
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call searchV2Call(
             Integer start,
             Integer size,
@@ -2065,20 +1592,7 @@ class WorkflowResource {
                 query);
     }
 
-    /**
-     * Search for workflows based on payload and other parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC.
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @return SearchResultWorkflow
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public SearchResultWorkflow searchV2(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -2087,20 +1601,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Search for workflows based on payload and other parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC.
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @return ApiResponse&lt;SearchResultWorkflow&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<SearchResultWorkflow> searchV2WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -2110,19 +1611,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for searchWorkflowsByTasks
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call searchWorkflowsByTasksCall(
             Integer start,
             Integer size,
@@ -2187,20 +1676,7 @@ class WorkflowResource {
                 query);
     }
 
-    /**
-     * Search for workflows based on task parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @return SearchResultWorkflowSummary
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public SearchResultWorkflowSummary searchWorkflowsByTasks(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -2209,20 +1685,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Search for workflows based on task parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @return ApiResponse&lt;SearchResultWorkflowSummary&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<SearchResultWorkflowSummary> searchWorkflowsByTasksWithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -2233,19 +1696,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for searchWorkflowsByTasksV2
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call searchWorkflowsByTasksV2Call(
             Integer start,
             Integer size,
@@ -2310,20 +1761,7 @@ class WorkflowResource {
                 query);
     }
 
-    /**
-     * Search for workflows based on task parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @return SearchResultWorkflow
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public SearchResultWorkflow searchWorkflowsByTasksV2(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -2332,20 +1770,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Search for workflows based on task parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start (optional, default to 0)
-     * @param size (optional, default to 100)
-     * @param sort (optional)
-     * @param freeText (optional, default to *)
-     * @param query (optional)
-     * @return ApiResponse&lt;SearchResultWorkflow&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<SearchResultWorkflow> searchWorkflowsByTasksV2WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -2356,17 +1781,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for skipTaskFromWorkflow
-     *
-     * @param workflowId (required)
-     * @param taskReferenceName (required)
-     * @param skipTaskRequest (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call skipTaskFromWorkflowCall(
             String workflowId,
             String taskReferenceName,
@@ -2445,31 +1860,14 @@ class WorkflowResource {
                 skipTaskRequest);
     }
 
-    /**
-     * Skips a given task from a current running workflow
-     *
-     * @param workflowId (required)
-     * @param taskReferenceName (required)
-     * @param skipTaskRequest (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void skipTaskFromWorkflow(
             String workflowId, String taskReferenceName, SkipTaskRequest skipTaskRequest)
             throws ApiException {
         skipTaskFromWorkflowWithHttpInfo(workflowId, taskReferenceName, skipTaskRequest);
     }
 
-    /**
-     * Skips a given task from a current running workflow
-     *
-     * @param workflowId (required)
-     * @param taskReferenceName (required)
-     * @param skipTaskRequest (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> skipTaskFromWorkflowWithHttpInfo(
             String workflowId, String taskReferenceName, SkipTaskRequest skipTaskRequest)
             throws ApiException {
@@ -2479,15 +1877,7 @@ class WorkflowResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for startWorkflow
-     *
-     * @param startWorkflowRequest (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call startWorkflowCall(
             StartWorkflowRequest startWorkflowRequest)
             throws ApiException {
@@ -2584,40 +1974,19 @@ class WorkflowResource {
         return testWorkflowCall(testRequest);
     }
 
-    /**
-     * Test a workflow execution using mock data
-     *
-     * @param testRequest (required)
-     * @return Workflow
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public Workflow testWorkflow(WorkflowTestRequest testRequest) throws ApiException {
         ApiResponse<Workflow> resp = testWorkflowWithHttpInfo(testRequest);
         return resp.getData();
     }
 
-    /**
-     * Start a new workflow with StartWorkflowRequest, which allows task to be executed in a domain
-     *
-     * @param startWorkflowRequest (required)
-     * @return String
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ApiException {
         ApiResponse<String> resp = startWorkflowWithHttpInfo(startWorkflowRequest);
         return resp.getData();
     }
 
-    /**
-     * Start a new workflow with StartWorkflowRequest, which allows task to be executed in a domain
-     *
-     * @param startWorkflowRequest (required)
-     * @return ApiResponse&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<String> startWorkflowWithHttpInfo(StartWorkflowRequest startWorkflowRequest)
             throws ApiException {
         okhttp3.Call call =
@@ -2633,19 +2002,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for startWorkflow1
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param version (optional)
-     * @param correlationId (optional)
-     * @param priority (optional, default to 0)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call startWorkflow1Call(
             Map<String, Object> body,
             String name,
@@ -2721,19 +2078,7 @@ class WorkflowResource {
                 priority);
     }
 
-    /**
-     * Start a new workflow. Returns the ID of the workflow instance that can be later used for
-     * tracking
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param version (optional)
-     * @param correlationId (optional)
-     * @param priority (optional, default to 0)
-     * @return String
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public String startWorkflow1(
             Map<String, Object> body,
             String name,
@@ -2746,19 +2091,7 @@ class WorkflowResource {
         return resp.getData();
     }
 
-    /**
-     * Start a new workflow. Returns the ID of the workflow instance that can be later used for
-     * tracking
-     *
-     * @param body (required)
-     * @param name (required)
-     * @param version (optional)
-     * @param correlationId (optional)
-     * @param priority (optional, default to 0)
-     * @return ApiResponse&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<String> startWorkflow1WithHttpInfo(
             Map<String, Object> body,
             String name,
@@ -2773,17 +2106,7 @@ class WorkflowResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for terminate1
-     *
-     * @param workflowId (required)
-     * @param reason (optional)
-     * @param triggerFailureWorkflow failure workflow is triggered if set
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call terminate1Call(
             String workflowId,
             String reason,
@@ -2845,28 +2168,12 @@ class WorkflowResource {
         return terminate1Call(workflowId, reason, triggerFailureWorkflow);
     }
 
-    /**
-     * Terminate workflow execution
-     *
-     * @param workflowId (required)
-     * @param reason (optional)
-     * @param triggerFailureWorkflow (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void terminateWithAReason(String workflowId, String reason, boolean triggerFailureWorkflow) throws ApiException {
         terminate1WithHttpInfo(workflowId, reason, triggerFailureWorkflow);
     }
 
-    /**
-     * Terminate workflow execution
-     *
-     * @param workflowId (required)
-     * @param reason (optional)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> terminate1WithHttpInfo(String workflowId, String reason, boolean triggerFailureWorkflow)
             throws ApiException {
         okhttp3.Call call =
@@ -2874,14 +2181,7 @@ class WorkflowResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for uploadCompletedWorkflows
-     *
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call uploadCompletedWorkflowsCall()
             throws ApiException {
         Object localVarPostBody = null;
@@ -2925,25 +2225,13 @@ class WorkflowResource {
         return uploadCompletedWorkflowsCall();
     }
 
-    /**
-     * Force upload all completed workflows to document store
-     *
-     * @return Object
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public Object uploadCompletedWorkflows() throws ApiException {
         ApiResponse<Object> resp = uploadCompletedWorkflowsWithHttpInfo();
         return resp.getData();
     }
 
-    /**
-     * Force upload all completed workflows to document store
-     *
-     * @return ApiResponse&lt;Object&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Object> uploadCompletedWorkflowsWithHttpInfo() throws ApiException {
         okhttp3.Call call = uploadCompletedWorkflowsValidateBeforeCall();
         Type localVarReturnType = new TypeReference<>() {
@@ -2989,25 +2277,12 @@ class WorkflowResource {
                 localVarAuthNames);
     }
 
-    /**
-     * Upgrade running workflow to newer version
-     * Upgrade running workflow to newer version
-     * @param body  (required)
-     * @param workflowId  (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void upgradeRunningWorkflow(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
         upgradeRunningWorkflowWithHttpInfo(body, workflowId);
     }
 
-    /**
-     * Upgrade running workflow to newer version
-     * Upgrade running workflow to newer version
-     * @param body  (required)
-     * @param workflowId  (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> upgradeRunningWorkflowWithHttpInfo(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
         okhttp3.Call call = upgradeRunningWorkflowValidateBeforeCall(body, workflowId);
         return httpClient.execute(call);
@@ -3027,15 +2302,7 @@ class WorkflowResource {
         return upgradeRunningWorkflowCall(body, workflowId);
     }
 
-    /**
-     * Build call for upgradeRunningWorkflow
-     * @param body  (required)
-     * @param workflowId  (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call upgradeRunningWorkflowCall(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
 
         // create path and map variables
@@ -3067,33 +2334,13 @@ class WorkflowResource {
 
 
 
-    /**
-     * Update workflow and task status
-     * Updates the workflow variables, tasks and triggers evaluation.
-     * @param updateRequest  (required)
-     * @param requestId  (required)
-     * @param workflowId  (required)
-     * @param waitUntilTaskRef  (optional)
-     * @param waitForSeconds  (optional, default to 10)
-     * @return WorkflowRun
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public WorkflowRun updateWorkflowState(WorkflowStateUpdate updateRequest, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
         ApiResponse<WorkflowRun> resp = updateWorkflowAndTaskStateWithHttpInfo(updateRequest, requestId, workflowId, waitUntilTaskRef, waitForSeconds);
         return resp.getData();
     }
 
-    /**
-     * Update workflow and task status
-     * Updates the workflow variables, tasks and triggers evaluation.
-     * @param body  (required)
-     * @param requestId  (required)
-     * @param workflowId  (required)
-     * @param waitUntilTaskRef  (optional)
-     * @param waitForSeconds  (optional, default to 10)
-     * @return ApiResponse&lt;WorkflowRun&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<WorkflowRun> updateWorkflowAndTaskStateWithHttpInfo(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
         okhttp3.Call call = updateWorkflowAndTaskStateValidateBeforeCall(body, requestId, workflowId, waitUntilTaskRef, waitForSeconds);
         Type localVarReturnType = new TypeToken<WorkflowRun>(){}.getType();

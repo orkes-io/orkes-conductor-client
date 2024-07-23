@@ -12,9 +12,9 @@
  */
 package io.orkes.conductor.client.model.run;
 
-import io.orkes.conductor.client.model.metadata.tasks.Task;
-
 import java.util.Objects;
+
+import io.orkes.conductor.client.model.metadata.tasks.Task;
 
 public class TaskSummary {
 

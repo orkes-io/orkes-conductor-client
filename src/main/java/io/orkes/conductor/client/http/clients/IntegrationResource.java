@@ -12,7 +12,12 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Pair;
@@ -23,13 +28,9 @@ import io.orkes.conductor.client.model.integration.IntegrationApiUpdate;
 import io.orkes.conductor.client.model.integration.IntegrationDef;
 import io.orkes.conductor.client.model.integration.IntegrationUpdate;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
-import okhttp3.Call;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
+import okhttp3.Call;
 
 class IntegrationResource {
 
@@ -39,16 +40,7 @@ class IntegrationResource {
         this.httpClient = httpClient;
     }
 
-    /**
-     * Build call for associatePromptWithIntegration
-     *
-     * @param integrationProvider     (required)
-     * @param integrationName         (required)
-     * @param promptName              (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call associatePromptWithIntegrationCall(String integrationProvider, String integrationName, String promptName)
             throws ApiException {
         Object localVarPostBody = null;
@@ -105,42 +97,19 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Associate a Prompt Template with an Integration
-     *
-     * @param integrationProvider (required)
-     * @param integrationName     (required)
-     * @param promptName          (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void associatePromptWithIntegration(String integrationProvider, String integrationName, String promptName) throws ApiException {
         associatePromptWithIntegrationWithHttpInfo(integrationProvider, integrationName, promptName);
     }
 
-    /**
-     * Associate a Prompt Template with an Integration
-     *
-     * @param integrationProvider (required)
-     * @param integrationName     (required)
-     * @param promptName          (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> associatePromptWithIntegrationWithHttpInfo(String integrationProvider, String integrationName, String promptName)
             throws ApiException {
         Call call = associatePromptWithIntegrationValidateBeforeCall(integrationProvider, integrationName, promptName);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for deleteIntegrationApi
-     *
-     * @param name                    (required)
-     * @param integrationName         (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call deleteIntegrationApiCall(String name, String integrationName) throws ApiException {
         Object localVarPostBody = null;
 
@@ -190,38 +159,18 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Delete an Integration
-     *
-     * @param name            (required)
-     * @param integrationName (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void deleteIntegrationApi(String name, String integrationName) throws ApiException {
         deleteIntegrationApiWithHttpInfo(name, integrationName);
     }
 
-    /**
-     * Delete an Integration
-     *
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> deleteIntegrationApiWithHttpInfo(String name, String integrationName) throws ApiException {
         Call call = deleteIntegrationApiValidateBeforeCall(name, integrationName);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for deleteIntegrationProvider
-     *
-     * @param name                    (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call deleteIntegrationProviderCall(String name) throws ApiException {
         Object localVarPostBody = null;
 
@@ -265,38 +214,18 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Delete an Integration Provider
-     *
-     * @param name (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void deleteIntegrationProvider(String name) throws ApiException {
         deleteIntegrationProviderWithHttpInfo(name);
     }
 
-    /**
-     * Delete an Integration Provider
-     *
-     * @param name (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> deleteIntegrationProviderWithHttpInfo(String name) throws ApiException {
         Call call = deleteIntegrationProviderValidateBeforeCall(name);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for deleteTagForIntegration
-     *
-     * @param body                    (required)
-     * @param name                    (required)
-     * @param integrationName         (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call deleteTagForIntegrationCall(List<TagObject> body, String name, String integrationName)
             throws ApiException {
 
@@ -349,41 +278,18 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Delete a tag for Integration
-     *
-     * @param body            (required)
-     * @param name            (required)
-     * @param integrationName (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void deleteTagForIntegration(List<TagObject> body, String name, String integrationName) throws ApiException {
         deleteTagForIntegrationWithHttpInfo(body, name, integrationName);
     }
 
-    /**
-     * Delete a tag for Integration
-     *
-     * @param body            (required)
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> deleteTagForIntegrationWithHttpInfo(List<TagObject> body, String name, String integrationName) throws ApiException {
         Call call = deleteTagForIntegrationValidateBeforeCall(body, name, integrationName);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for deleteTagForIntegrationProvider
-     *
-     * @param body                    (required)
-     * @param name                    (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call deleteTagForIntegrationProviderCall(List<TagObject> body, String name) throws ApiException {
 
         // create path and map variables
@@ -429,39 +335,18 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Delete a tag for Integration Provider
-     *
-     * @param body (required)
-     * @param name (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void deleteTagForIntegrationProvider(List<TagObject> body, String name) throws ApiException {
         deleteTagForIntegrationProviderWithHttpInfo(body, name);
     }
 
-    /**
-     * Delete a tag for Integration Provider
-     *
-     * @param body (required)
-     * @param name (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> deleteTagForIntegrationProviderWithHttpInfo(List<TagObject> body, String name) throws ApiException {
         Call call = deleteTagForIntegrationProviderValidateBeforeCall(body, name);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for getIntegrationApi
-     *
-     * @param name                    (required)
-     * @param integrationName         (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getIntegrationApiCall(String name, String integrationName) throws ApiException {
         Object localVarPostBody = null;
 
@@ -511,27 +396,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get Integration details
-     *
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return IntegrationApi
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public IntegrationApi getIntegrationApi(String name, String integrationName) throws ApiException {
         ApiResponse<IntegrationApi> resp = getIntegrationApiWithHttpInfo(name, integrationName);
         return resp.getData();
     }
 
-    /**
-     * Get Integration details
-     *
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return ApiResponse&lt;IntegrationApi&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<IntegrationApi> getIntegrationApiWithHttpInfo(String name, String integrationName) throws ApiException {
         Call call = getIntegrationApiValidateBeforeCall(name, integrationName);
         Type localVarReturnType = new TypeReference<IntegrationApi>() {
@@ -539,15 +410,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getIntegrationApis
-     *
-     * @param name                    (required)
-     * @param activeOnly              (optional, default to true)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getIntegrationApisCall(String name, Boolean activeOnly) throws ApiException {
         Object localVarPostBody = null;
 
@@ -594,27 +457,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get Integrations of an Integration Provider
-     *
-     * @param name       (required)
-     * @param activeOnly (optional, default to true)
-     * @return List&lt;IntegrationApi&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public List<IntegrationApi> getIntegrationApis(String name, Boolean activeOnly) throws ApiException {
         ApiResponse<List<IntegrationApi>> resp = getIntegrationApisWithHttpInfo(name, activeOnly);
         return resp.getData();
     }
 
-    /**
-     * Get Integrations of an Integration Provider
-     *
-     * @param name       (required)
-     * @param activeOnly (optional, default to true)
-     * @return ApiResponse&lt;List&lt;IntegrationApi&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<List<IntegrationApi>> getIntegrationApisWithHttpInfo(String name, Boolean activeOnly) throws ApiException {
         Call call = getIntegrationApisValidateBeforeCall(name, activeOnly);
         Type localVarReturnType = new TypeReference<List<IntegrationApi>>() {
@@ -622,14 +471,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getIntegrationAvailableApis
-     *
-     * @param name                    (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getIntegrationAvailableApisCall(String name) throws ApiException {
         Object localVarPostBody = null;
 
@@ -673,25 +515,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get Integrations Available for an Integration Provider
-     *
-     * @param name (required)
-     * @return List&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public List<String> getIntegrationAvailableApis(String name) throws ApiException {
         ApiResponse<List<String>> resp = getIntegrationAvailableApisWithHttpInfo(name);
         return resp.getData();
     }
 
-    /**
-     * Get Integrations Available for an Integration Provider
-     *
-     * @param name (required)
-     * @return ApiResponse&lt;List&lt;String&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<List<String>> getIntegrationAvailableApisWithHttpInfo(String name) throws ApiException {
         Call call = getIntegrationAvailableApisValidateBeforeCall(name);
         Type localVarReturnType = new TypeReference<List<String>>() {
@@ -699,14 +529,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getIntegrationProvider
-     *
-     * @param name                    (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getIntegrationProviderCall(String name) throws ApiException {
         Object localVarPostBody = null;
 
@@ -750,25 +573,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get Integration provider
-     *
-     * @param name (required)
-     * @return Integration
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public Integration getIntegrationProvider(String name) throws ApiException {
         ApiResponse<Integration> resp = getIntegrationProviderWithHttpInfo(name);
         return resp.getData();
     }
 
-    /**
-     * Get Integration provider
-     *
-     * @param name (required)
-     * @return ApiResponse&lt;Integration&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Integration> getIntegrationProviderWithHttpInfo(String name) throws ApiException {
         Call call = getIntegrationProviderValidateBeforeCall(name);
         Type localVarReturnType = new TypeReference<Integration>() {
@@ -776,13 +587,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getIntegrationProviderDefs
-     *
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getIntegrationProviderDefsCall() throws ApiException {
         Object localVarPostBody = null;
 
@@ -820,23 +625,13 @@ class IntegrationResource {
         return getIntegrationProviderDefsCall();
     }
 
-    /**
-     * Get Integration provider definitions
-     *
-     * @return List&lt;IntegrationDef&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public List<IntegrationDef> getIntegrationProviderDefs() throws ApiException {
         ApiResponse<List<IntegrationDef>> resp = getIntegrationProviderDefsWithHttpInfo();
         return resp.getData();
     }
 
-    /**
-     * Get Integration provider definitions
-     *
-     * @return ApiResponse&lt;List&lt;IntegrationDef&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<List<IntegrationDef>> getIntegrationProviderDefsWithHttpInfo() throws ApiException {
         Call call = getIntegrationProviderDefsValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<IntegrationDef>>() {
@@ -844,15 +639,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getIntegrationProviders
-     *
-     * @param category                (optional)
-     * @param activeOnly              (optional, default to true)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getIntegrationProvidersCall(String category, Boolean activeOnly) throws ApiException {
         Object localVarPostBody = null;
 
@@ -898,27 +685,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get all Integrations Providers
-     *
-     * @param category   (optional)
-     * @param activeOnly (optional, default to true)
-     * @return List&lt;Integration&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public List<Integration> getIntegrationProviders(String category, Boolean activeOnly) throws ApiException {
         ApiResponse<List<Integration>> resp = getIntegrationProvidersWithHttpInfo(category, activeOnly);
         return resp.getData();
     }
 
-    /**
-     * Get all Integrations Providers
-     *
-     * @param category   (optional)
-     * @param activeOnly (optional, default to true)
-     * @return ApiResponse&lt;List&lt;Integration&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<List<Integration>> getIntegrationProvidersWithHttpInfo(String category, Boolean activeOnly) throws ApiException {
         Call call = getIntegrationProvidersValidateBeforeCall(category, activeOnly);
         Type localVarReturnType = new TypeReference<List<Integration>>() {
@@ -926,15 +699,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getPromptsWithIntegration
-     *
-     * @param integrationProvider     (required)
-     * @param integrationName         (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getPromptsWithIntegrationCall(String integrationProvider, String integrationName) throws ApiException {
         Object localVarPostBody = null;
 
@@ -985,27 +750,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get the list of prompt templates associated with an integration
-     *
-     * @param integrationProvider (required)
-     * @param integrationName     (required)
-     * @return List&lt;PromptTemplate&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public List<PromptTemplate> getPromptsWithIntegration(String integrationProvider, String integrationName) throws ApiException {
         ApiResponse<List<PromptTemplate>> resp = getPromptsWithIntegrationWithHttpInfo(integrationProvider, integrationName);
         return resp.getData();
     }
 
-    /**
-     * Get the list of prompt templates associated with an integration
-     *
-     * @param integrationProvider (required)
-     * @param integrationName     (required)
-     * @return ApiResponse&lt;List&lt;PromptTemplate&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<List<PromptTemplate>> getPromptsWithIntegrationWithHttpInfo(String integrationProvider, String integrationName) throws ApiException {
         Call call = getPromptsWithIntegrationValidateBeforeCall(integrationProvider, integrationName);
         Type localVarReturnType = new TypeReference<List<PromptTemplate>>() {
@@ -1013,15 +764,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getProvidersAndIntegrations
-     *
-     * @param type                    (optional)
-     * @param activeOnly              (optional, default to true)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getProvidersAndIntegrationsCall(String type, Boolean activeOnly) throws ApiException {
         Object localVarPostBody = null;
 
@@ -1067,27 +810,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get Integrations Providers and Integrations combo
-     *
-     * @param type       (optional)
-     * @param activeOnly (optional, default to true)
-     * @return List&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public List<String> getProvidersAndIntegrations(String type, Boolean activeOnly) throws ApiException {
         ApiResponse<List<String>> resp = getProvidersAndIntegrationsWithHttpInfo(type, activeOnly);
         return resp.getData();
     }
 
-    /**
-     * Get Integrations Providers and Integrations combo
-     *
-     * @param type       (optional)
-     * @param activeOnly (optional, default to true)
-     * @return ApiResponse&lt;List&lt;String&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<List<String>> getProvidersAndIntegrationsWithHttpInfo(String type, Boolean activeOnly) throws ApiException {
         Call call = getProvidersAndIntegrationsValidateBeforeCall(type, activeOnly);
         Type localVarReturnType = new TypeReference<List<String>>() {
@@ -1095,15 +824,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getTagsForIntegration
-     *
-     * @param name                    (required)
-     * @param integrationName         (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getTagsForIntegrationCall(String name, String integrationName) throws ApiException {
         Object localVarPostBody = null;
 
@@ -1153,27 +874,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get tags by Integration
-     *
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return List&lt;Tag&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public List<TagObject> getTagsForIntegration(String name, String integrationName) throws ApiException {
         ApiResponse<List<TagObject>> resp = getTagsForIntegrationWithHttpInfo(name, integrationName);
         return resp.getData();
     }
 
-    /**
-     * Get tags by Integration
-     *
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return ApiResponse&lt;List&lt;Tag&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<List<TagObject>> getTagsForIntegrationWithHttpInfo(String name, String integrationName) throws ApiException {
         Call call = getTagsForIntegrationValidateBeforeCall(name, integrationName);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {
@@ -1181,13 +888,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getTagsForIntegrationProvider
-     *
-     * @param name                    (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getTagsForIntegrationProviderCall(String name) throws ApiException {
         Object localVarPostBody = null;
 
@@ -1231,25 +932,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get tags by Integration Provider
-     *
-     * @param name (required)
-     * @return List&lt;Tag&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public List<TagObject> getTagsForIntegrationProvider(String name) throws ApiException {
         ApiResponse<List<TagObject>> resp = getTagsForIntegrationProviderWithHttpInfo(name);
         return resp.getData();
     }
 
-    /**
-     * Get tags by Integration Provider
-     *
-     * @param name (required)
-     * @return ApiResponse&lt;List&lt;Tag&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<List<TagObject>> getTagsForIntegrationProviderWithHttpInfo(String name) throws ApiException {
         Call call = getTagsForIntegrationProviderValidateBeforeCall(name);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {
@@ -1257,15 +946,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getTokenUsageForIntegration
-     *
-     * @param name                    (required)
-     * @param integrationName         (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getTokenUsageForIntegrationCall(String name, String integrationName) throws ApiException {
         Object localVarPostBody = null;
 
@@ -1314,27 +995,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get Token Usage by Integration
-     *
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return Integer
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public Integer getTokenUsageForIntegration(String name, String integrationName) throws ApiException {
         ApiResponse<Integer> resp = getTokenUsageForIntegrationWithHttpInfo(name, integrationName);
         return resp.getData();
     }
 
-    /**
-     * Get Token Usage by Integration
-     *
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return ApiResponse&lt;Integer&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Integer> getTokenUsageForIntegrationWithHttpInfo(String name, String integrationName) throws ApiException {
         Call call = getTokenUsageForIntegrationValidateBeforeCall(name, integrationName);
         Type localVarReturnType = new TypeReference<Integer>() {
@@ -1342,14 +1009,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getTokenUsageForIntegrationProvider
-     *
-     * @param name                    (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call getTokenUsageForIntegrationProviderCall(String name) throws ApiException {
         Object localVarPostBody = null;
 
@@ -1393,25 +1053,13 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Get Token Usage by Integration Provider
-     *
-     * @param name (required)
-     * @return Map&lt;String, String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public Map<String, Integer> getTokenUsageForIntegrationProvider(String name) throws ApiException {
         ApiResponse<Map<String, Integer>> resp = getTokenUsageForIntegrationProviderWithHttpInfo(name);
         return resp.getData();
     }
 
-    /**
-     * Get Token Usage by Integration Provider
-     *
-     * @param name (required)
-     * @return ApiResponse&lt;Map&lt;String, String&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Map<String, Integer>> getTokenUsageForIntegrationProviderWithHttpInfo(String name) throws ApiException {
         Call call = getTokenUsageForIntegrationProviderValidateBeforeCall(name);
         Type localVarReturnType = new TypeReference<Map<String, Integer>>() {
@@ -1419,16 +1067,7 @@ class IntegrationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for putTagForIntegration
-     *
-     * @param body                    (required)
-     * @param name                    (required)
-     * @param integrationName         (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call putTagForIntegrationCall(List<TagObject> body, String name, String integrationName)
             throws ApiException {
 
@@ -1483,41 +1122,18 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Put a tag to Integration
-     *
-     * @param body            (required)
-     * @param name            (required)
-     * @param integrationName (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void putTagForIntegration(List<TagObject> body, String name, String integrationName) throws ApiException {
         putTagForIntegrationWithHttpInfo(body, name, integrationName);
     }
 
-    /**
-     * Put a tag to Integration
-     *
-     * @param body            (required)
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> putTagForIntegrationWithHttpInfo(List<TagObject> body, String name, String integrationName) throws ApiException {
         Call call = putTagForIntegrationValidateBeforeCall(body, name, integrationName);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for putTagForIntegrationProvider
-     *
-     * @param body                    (required)
-     * @param name                    (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call putTagForIntegrationProviderCall(List<TagObject> body, String name) throws ApiException {
 
         // create path and map variables
@@ -1564,40 +1180,18 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Put a tag to Integration Provider
-     *
-     * @param body (required)
-     * @param name (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void putTagForIntegrationProvider(List<TagObject> body, String name) throws ApiException {
         putTagForIntegrationProviderWithHttpInfo(body, name);
     }
 
-    /**
-     * Put a tag to Integration Provider
-     *
-     * @param body (required)
-     * @param name (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> putTagForIntegrationProviderWithHttpInfo(List<TagObject> body, String name) throws ApiException {
         Call call = putTagForIntegrationProviderValidateBeforeCall(body, name);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for registerTokenUsage
-     *
-     * @param body                    (required)
-     * @param name                    (required)
-     * @param integrationName         (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call registerTokenUsageCall(Integer body, String name, String integrationName) throws ApiException {
 
         // create path and map variables
@@ -1651,42 +1245,18 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Register Token usage
-     *
-     * @param body            (required)
-     * @param name            (required)
-     * @param integrationName (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void registerTokenUsage(Integer body, String name, String integrationName) throws ApiException {
         registerTokenUsageWithHttpInfo(body, name, integrationName);
     }
 
-    /**
-     * Register Token usage
-     *
-     * @param body            (required)
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> registerTokenUsageWithHttpInfo(Integer body, String name, String integrationName) throws ApiException {
         Call call = registerTokenUsageValidateBeforeCall(body, name, integrationName);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for saveIntegrationApi
-     *
-     * @param body                    (required)
-     * @param name                    (required)
-     * @param integrationName         (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call saveIntegrationApiCall(IntegrationApiUpdate body, String name, String integrationName)
             throws ApiException {
 
@@ -1741,41 +1311,18 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Create or Update Integration
-     *
-     * @param body            (required)
-     * @param name            (required)
-     * @param integrationName (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void saveIntegrationApi(IntegrationApiUpdate body, String name, String integrationName) throws ApiException {
         saveIntegrationApiWithHttpInfo(body, name, integrationName);
     }
 
-    /**
-     * Create or Update Integration
-     *
-     * @param body            (required)
-     * @param name            (required)
-     * @param integrationName (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> saveIntegrationApiWithHttpInfo(IntegrationApiUpdate body, String name, String integrationName) throws ApiException {
         Call call = saveIntegrationApiValidateBeforeCall(body, name, integrationName);
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for saveIntegrationProvider
-     *
-     * @param body                    (required)
-     * @param name                    (required)
-
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call saveIntegrationProviderCall(IntegrationUpdate body, String name) throws ApiException {
 
         // create path and map variables
@@ -1820,25 +1367,12 @@ class IntegrationResource {
 
     }
 
-    /**
-     * Create or Update Integration provider
-     *
-     * @param body (required)
-     * @param name (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public void saveIntegrationProvider(IntegrationUpdate body, String name) throws ApiException {
         saveIntegrationProviderWithHttpInfo(body, name);
     }
 
-    /**
-     * Create or Update Integration provider
-     *
-     * @param body (required)
-     * @param name (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
+  
     public ApiResponse<Void> saveIntegrationProviderWithHttpInfo(IntegrationUpdate body, String name) throws ApiException {
         Call call = saveIntegrationProviderValidateBeforeCall(body, name);
         return httpClient.execute(call);

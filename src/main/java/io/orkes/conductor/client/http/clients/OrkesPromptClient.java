@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.orkes.conductor.client.PromptClient;
-import io.orkes.conductor.client.http.clients.OrkesHttpClient;
-import io.orkes.conductor.client.http.clients.PromptResource;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.integration.PromptTemplateTestRequest;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;

@@ -12,7 +12,11 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import io.orkes.conductor.client.ObjectMapperProvider;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
@@ -23,10 +27,7 @@ import io.orkes.conductor.client.model.run.SearchResult;
 import io.orkes.conductor.client.model.run.TaskSummary;
 import io.orkes.conductor.client.model.run.Workflow;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class OrkesTaskClient implements TaskClient {
 
@@ -65,14 +66,7 @@ public class OrkesTaskClient implements TaskClient {
     }
 
 
-    /**
-     * Update the task status and output based given workflow id and task reference name
-     *
-     * @param workflowId        Workflow Id
-     * @param taskReferenceName Reference name of the task to be updated
-     * @param status            Status of the task
-     * @param output            Output for the task
-     */
+  
     public void updateTask(String workflowId, String taskReferenceName, TaskResult.Status status, Object output) {
         Map<String, Object> outputMap = new HashMap<>();
         try {
@@ -83,15 +77,7 @@ public class OrkesTaskClient implements TaskClient {
         taskResource.updateTaskByRefName(outputMap, workflowId, taskReferenceName, status.toString());
     }
 
-    /**
-     * Update the task status and output based given workflow id and task reference name and return back the updated workflow status
-     *
-     * @param workflowId        Workflow Id
-     * @param taskReferenceName Reference name of the task to be updated
-     * @param status            Status of the task
-     * @param output            Output for the task
-     * @return Status of the workflow after updating the task
-     */
+  
     public Workflow updateTaskSync(String workflowId, String taskReferenceName, TaskResult.Status status, Object output) {
         Map<String, Object> outputMap = new HashMap<>();
         try {

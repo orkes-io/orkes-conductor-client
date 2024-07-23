@@ -50,15 +50,15 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.http.JSON;
 import io.orkes.conductor.client.http.Pair;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.orkes.conductor.client.http.auth.ApiKeyAuth;
 import io.orkes.conductor.client.http.auth.Authentication;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
@@ -136,14 +136,7 @@ public class OrkesHttpClient {
             return verifyingSsl;
         }
 
-        /**
-         * Configure whether to verify certificate and hostname when making https requests. Default to
-         * true. NOTE: Do NOT set to false in production code, otherwise you would face multiple types
-         * of cryptographic attacks.
-         *
-         * @param verifyingSsl True to verify TLS/SSL connection
-         * @return ApiClient
-         */
+      
         public Builder verifyingSsl(boolean verifyingSsl) {
             this.verifyingSsl = verifyingSsl;
             return this;
@@ -203,24 +196,13 @@ public class OrkesHttpClient {
             return this;
         }
 
-        /**
-         * Add a default header.
-         *
-         * @param key   The header's key
-         * @param value The header's value
-         * @return ApiClient
-         */
+      
         public Builder addDefaultHeader(String key, String value) {
             defaultHeaderMap.put(key, value);
             return this;
         }
 
-        /**
-         * Set the User-Agent header's value.
-         *
-         * @param userAgent HTTP request's user agent
-         * @return ApiClient
-         */
+      
         public Builder userAgent(String userAgent) {
             addDefaultHeader("User-Agent", userAgent);
             return this;
@@ -371,11 +353,7 @@ public class OrkesHttpClient {
         return executorThreadCount;
     }
 
-    /**
-     * Get HTTP client
-     *
-     * @return An instance of OkHttpClient
-     */
+  
     public OkHttpClient getHttpClient() {
         return httpClient;
     }
@@ -400,36 +378,19 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * True if isVerifyingSsl flag is on
-     *
-     * @return True if isVerifySsl flag is on
-     */
+  
     public boolean isVerifyingSsl() {
         return verifyingSsl;
     }
 
 
-    /**
-     * The path of temporary folder used to store downloaded files from endpoints with file
-     * response. The default value is <code>null</code>, i.e. using the system's default temporary
-     * folder.
-     *
-     * @return Temporary folder path
-     * @see <a href=
-     * "https://docs.oracle.com/javase/7/docs/api/java/io/File.html#createTempFile">createTempFile</a>
-     */
+  
     public String getTempFolderPath() {
         return tempFolderPath;
     }
 
 
-    /**
-     * Format the given parameter object into string.
-     *
-     * @param param Parameter
-     * @return String representation of the parameter
-     */
+  
     public String parameterToString(Object param) {
         if (param == null) {
             return "";
@@ -453,15 +414,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Formats the specified query parameter to a list containing a single {@code Pair} object.
-     *
-     * <p>Note that {@code value} must not be a collection.
-     *
-     * @param name  The name of the parameter.
-     * @param value The value of the parameter.
-     * @return A list containing a single {@code Pair} object.
-     */
+  
     public List<Pair> parameterToPair(String name, Object value) {
         List<Pair> params = new ArrayList<>();
 
@@ -473,16 +426,7 @@ public class OrkesHttpClient {
         return params;
     }
 
-    /**
-     * Formats the specified collection query parameters to a list of {@code Pair} objects.
-     *
-     * <p>Note that the values of each of the returned Pair objects are percent-encoded.
-     *
-     * @param collectionFormat The collection format of the parameter.
-     * @param name             The name of the parameter.
-     * @param value            The value of the parameter.
-     * @return A list of {@code Pair} objects.
-     */
+  
     public List<Pair> parameterToPairs(String collectionFormat, String name, Collection value) {
         List<Pair> params = new ArrayList<>();
 
@@ -523,37 +467,18 @@ public class OrkesHttpClient {
         return params;
     }
 
-    /**
-     * Sanitize filename by removing path. e.g. ../../sun.gif becomes sun.gif
-     *
-     * @param filename The filename to be sanitized
-     * @return The sanitized filename
-     */
+  
     public String sanitizeFilename(String filename) {
         return filename.replaceAll(".*[/\\\\]", "");
     }
 
-    /**
-     * Check if the given MIME is a JSON MIME. JSON MIME examples: application/json
-     * application/json; charset=UTF8 APPLICATION/JSON application/vnd.company+json "* / *" is also
-     * default to JSON
-     *
-     * @param mime MIME (Multipurpose Internet Mail Extensions)
-     * @return True if the given MIME is JSON, false otherwise.
-     */
+  
     public boolean isJsonMime(String mime) {
         String jsonMime = "(?i)^(application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(;.*)?$";
         return mime != null && (mime.matches(jsonMime) || mime.equals("*/*"));
     }
 
-    /**
-     * Select the Accept header's value from the given accepts array: if JSON exists in the given
-     * array, use it; otherwise use all of them (joining into a string)
-     *
-     * @param accepts The accepts array to select from
-     * @return The Accept header to use. If the given array is empty, null will be returned (not to
-     * set the Accept header explicitly).
-     */
+  
     public String selectHeaderAccept(String[] accepts) {
         if (accepts.length == 0) {
             return null;
@@ -567,14 +492,7 @@ public class OrkesHttpClient {
         return StringUtils.joinWith(",", (Object[]) accepts);
     }
 
-    /**
-     * Select the Content-Type header's value from the given array: if JSON exists in the given
-     * array, use it; otherwise use the first one of the array.
-     *
-     * @param contentTypes The Content-Type array to select from
-     * @return The Content-Type header to use. If the given array is empty, or matches "any", JSON
-     * will be used.
-     */
+  
     public String selectHeaderContentType(String[] contentTypes) {
         if (contentTypes.length == 0 || contentTypes[0].equals("*/*")) {
             return "application/json";
@@ -587,12 +505,7 @@ public class OrkesHttpClient {
         return contentTypes[0];
     }
 
-    /**
-     * Escape the given string to be used as URL query value.
-     *
-     * @param str String to be escaped
-     * @return Escaped string
-     */
+  
     public String escapeString(String str) {
         try {
             return URLEncoder.encode(str, "utf8").replaceAll("\\+", "%20");
@@ -601,17 +514,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Deserialize response body to Java object, according to the return type and the Content-Type
-     * response header.
-     *
-     * @param <T>        Type
-     * @param response   HTTP response
-     * @param returnType The type of the Java object
-     * @return The deserialized Java object
-     * @throws ApiException If fail to deserialize response body, i.e. cannot read response body or
-     *                      the Content-Type of the response is not supported.
-     */
+  
     @SuppressWarnings("unchecked")
     public <T> T deserialize(Response response, Type returnType) throws ApiException {
         if (response == null || returnType == null) {
@@ -661,15 +564,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Serialize the given Java object into request body according to the object's class and the
-     * request Content-Type.
-     *
-     * @param obj         The Java object
-     * @param contentType The request Content-Type
-     * @return The serialized request body
-     * @throws ApiException If fail to serialize the given object
-     */
+  
     public RequestBody serialize(Object obj, String contentType) throws ApiException {
         if (obj instanceof byte[]) {
             // Binary (byte array) body parameter support.
@@ -692,13 +587,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Download file from the given response.
-     *
-     * @param response An instance of the Response object
-     * @return Downloaded file
-     * @throws ApiException If fail to read file content from response and write to disk
-     */
+  
     public File downloadFileFromResponse(Response response) throws ApiException {
         try {
             File file = prepareDownloadFile(response);
@@ -711,13 +600,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Prepare file for download
-     *
-     * @param response An instance of the Response object
-     * @return Prepared file for the download
-     * @throws IOException If fail to prepare file for download
-     */
+  
     public File prepareDownloadFile(Response response) throws IOException {
         String filename = null;
         String contentDisposition = response.header("Content-Disposition");
@@ -751,28 +634,12 @@ public class OrkesHttpClient {
         else return Files.createTempFile(Paths.get(tempFolderPath), prefix, suffix).toFile();
     }
 
-    /**
-     * {@link #execute(Call, Type)}
-     *
-     * @param <T>  Type
-     * @param call An instance of the Call object
-     * @return ApiResponse&lt;T&gt;
-     * @throws ApiException If fail to execute the call
-     */
+  
     public <T> ApiResponse<T> execute(Call call) throws ApiException {
         return execute(call, null);
     }
 
-    /**
-     * Execute HTTP call and deserialize the HTTP response body into the given return type.
-     *
-     * @param returnType The return type used to deserialize HTTP response body
-     * @param <T>        The return type corresponding to (same with) returnType
-     * @param call       Call
-     * @return ApiResponse object containing response status, headers and data, which is a Java
-     * object deserialized from response body and would be null when returnType is null.
-     * @throws ApiException If fail to execute the call
-     */
+  
     public <T> ApiResponse<T> execute(Call call, Type returnType) throws ApiException {
         try {
             Response response = call.execute();
@@ -783,16 +650,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Handle the given response, return the deserialized object when the response is successful.
-     *
-     * @param <T>        Type
-     * @param response   Response
-     * @param returnType Return type
-     * @return Type
-     * @throws ApiException If the response has a unsuccessful status code or fail to deserialize
-     *                      the response body
-     */
+  
     public <T> T handleResponse(Response response, Type returnType) throws ApiException {
         if (response.isSuccessful()) {
             if (returnType == null || response.code() == 204) {
@@ -835,22 +693,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Build HTTP call with the given options.
-     *
-     * @param path                    The sub-path of the HTTP URL
-     * @param method                  The request method, one of "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH" and
-     *                                "DELETE"
-     * @param queryParams             The query parameters
-     * @param collectionQueryParams   The collection query parameters
-     * @param body                    The request body object
-     * @param headerParams            The header parameters
-     * @param formParams              The form parameters
-     * @param authNames               The authentications to apply
-     * @param progressRequestListener Progress request listener
-     * @return The HTTP call
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Call buildCall(
             String path,
             String method,
@@ -874,22 +717,7 @@ public class OrkesHttpClient {
         return httpClient.newCall(request);
     }
 
-    /**
-     * Build an HTTP request with the given options.
-     *
-     * @param path                    The sub-path of the HTTP URL
-     * @param method                  The request method, one of "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH" and
-     *                                "DELETE"
-     * @param queryParams             The query parameters
-     * @param collectionQueryParams   The collection query parameters
-     * @param body                    The request body object
-     * @param headerParams            The header parameters
-     * @param formParams              The form parameters
-     * @param authNames               The authentications to apply
-     * @param progressRequestListener Progress request listener
-     * @return The HTTP request
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public Request buildRequest(
             String path,
             String method,
@@ -936,14 +764,7 @@ public class OrkesHttpClient {
         return reqBuilder.method(method, reqBody).build();
     }
 
-    /**
-     * Build full URL by concatenating base path, the given sub path and query parameters.
-     *
-     * @param path                  The sub path
-     * @param queryParams           The query parameters
-     * @param collectionQueryParams The collection query parameters
-     * @return The full URL
-     */
+  
     public String buildUrl(String path, List<Pair> queryParams, List<Pair> collectionQueryParams) {
         final StringBuilder url = new StringBuilder();
         url.append(basePath).append(path);
@@ -987,12 +808,7 @@ public class OrkesHttpClient {
         return url.toString();
     }
 
-    /**
-     * Set header parameters to the request builder, including default headers.
-     *
-     * @param headerParams Header parameters in the from of Map
-     * @param reqBuilder   Request.Builder
-     */
+  
     public void processHeaderParams(Map<String, String> headerParams, Request.Builder reqBuilder) {
         for (Entry<String, String> param : headerParams.entrySet()) {
             reqBuilder.header(param.getKey(), parameterToString(param.getValue()));
@@ -1004,13 +820,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Update query and header parameters based on authentication settings.
-     *
-     * @param authNames    The authentications to apply
-     * @param queryParams  List of query parameters
-     * @param headerParams Map of header parameters
-     */
+  
     public void updateParamsForAuth(String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
         String token = getToken();
         if (isSecurityEnabled()) {
@@ -1019,12 +829,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Build a form-encoding request body with the given form parameters.
-     *
-     * @param formParams Form parameters in the form of Map
-     * @return RequestBody
-     */
+  
     public RequestBody buildRequestBodyFormEncoding(Map<String, Object> formParams) {
         FormBody.Builder formBuilder = new FormBody.Builder();
         for (Entry<String, Object> param : formParams.entrySet()) {
@@ -1033,13 +838,7 @@ public class OrkesHttpClient {
         return formBuilder.build();
     }
 
-    /**
-     * Build a multipart (file uploading) request body with the given form parameters, which could
-     * contain text fields and file fields.
-     *
-     * @param formParams Form parameters in the form of Map
-     * @return RequestBody
-     */
+  
     public RequestBody buildRequestBodyMultipart(Map<String, Object> formParams) {
         MultipartBody.Builder mpBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for (Entry<String, Object> param : formParams.entrySet()) {
@@ -1067,12 +866,7 @@ public class OrkesHttpClient {
         return mpBuilder.build();
     }
 
-    /**
-     * Guess Content-Type header from the given file (defaults to "application/octet-stream").
-     *
-     * @param file The given file
-     * @return The guessed Content-Type
-     */
+  
     public String guessContentTypeFromFile(File file) {
         String contentType = URLConnection.guessContentTypeFromName(file.getName());
         if (contentType == null) {
@@ -1082,10 +876,7 @@ public class OrkesHttpClient {
         }
     }
 
-    /**
-     * Apply SSL related settings to httpClient according to the current values of verifyingSsl and
-     * sslCaCert.
-     */
+  
     private void applySslSettings(OkHttpClient.Builder okhttpClientBuilder) {
         try {
             TrustManager[] trustManagers = null;

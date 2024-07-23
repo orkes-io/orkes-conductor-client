@@ -12,18 +12,19 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Pair;
 import io.orkes.conductor.client.model.AuthorizationRequest;
 import io.orkes.conductor.client.model.Subject;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 class AuthorizationResource {
     private final OrkesHttpClient httpClient;
@@ -32,14 +33,7 @@ class AuthorizationResource {
         this.httpClient = httpClient;
     }
 
-    /**
-     * Build call for getPermissions
-     *
-     * @param type (required)
-     * @param id   (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getPermissionsCall(
             String type,
             String id)
@@ -99,29 +93,13 @@ class AuthorizationResource {
         return getPermissionsCall(type, id);
     }
 
-    /**
-     * Get the access that have been granted over the given object
-     *
-     * @param type (required)
-     * @param id   (required)
-     * @return Map&lt;String, List&lt;Subject&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public Map<String, List<Subject>> getPermissions(String type, String id) throws ApiException {
         ApiResponse<Map<String, List<Subject>>> resp = getPermissionsWithHttpInfo(type, id);
         return resp.getData();
     }
 
-    /**
-     * Get the access that have been granted over the given object
-     *
-     * @param type (required)
-     * @param id   (required)
-     * @return ApiResponse&lt;Map&lt;String, List&lt;Subject&gt;&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<Map<String, List<Subject>>> getPermissionsWithHttpInfo(
             String type, String id) throws ApiException {
         okhttp3.Call call = getPermissionsValidateBeforeCall(type, id);
@@ -130,13 +108,7 @@ class AuthorizationResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for grantPermissions
-     *
-     * @param authorizationRequest (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call grantPermissionsCall(
             AuthorizationRequest authorizationRequest)
             throws ApiException {
@@ -186,25 +158,12 @@ class AuthorizationResource {
                 authorizationRequest);
     }
 
-    /**
-     * Grant access to a user over the target
-     *
-     * @param authorizationRequest (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public void grantPermissions(AuthorizationRequest authorizationRequest) throws ApiException {
         grantPermissionsWithHttpInfo(authorizationRequest);
     }
 
-    /**
-     * Grant access to a user over the target
-     *
-     * @param authorizationRequest (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<Void> grantPermissionsWithHttpInfo(
             AuthorizationRequest authorizationRequest) throws ApiException {
         okhttp3.Call call =
@@ -212,13 +171,7 @@ class AuthorizationResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for removePermissions
-     *
-     * @param authorizationRequest (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call removePermissionsCall(
             AuthorizationRequest authorizationRequest)
             throws ApiException {
@@ -268,25 +221,12 @@ class AuthorizationResource {
                 authorizationRequest);
     }
 
-    /**
-     * Remove user&#x27;s access over the target
-     *
-     * @param authorizationRequest (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public void removePermissions(AuthorizationRequest authorizationRequest) throws ApiException {
         removePermissionsWithHttpInfo(authorizationRequest);
     }
 
-    /**
-     * Remove user&#x27;s access over the target
-     *
-     * @param authorizationRequest (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<Void> removePermissionsWithHttpInfo(
             AuthorizationRequest authorizationRequest) throws ApiException {
         okhttp3.Call call =

@@ -25,16 +25,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Call;
 
 class TokenResource {
-    /**
-     * Build call for generateToken
-     *
-     * @param apiClient ApiClient (required)
-     * @param generateTokenRequest (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public static Call generateTokenCall(
             OrkesHttpClient apiClient,
             GenerateTokenRequest generateTokenRequest)
@@ -84,15 +75,7 @@ class TokenResource {
                 apiClient, generateTokenRequest);
     }
 
-    /**
-     * Generate JWT with the given access key
-     *
-     * @param apiClient ApiClient (required)
-     * @param generateTokenRequest (required)
-     * @return ApiResponse&lt;Response&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public static ApiResponse<Map<String, String>> generateTokenWithHttpInfo(
             OrkesHttpClient apiClient, GenerateTokenRequest generateTokenRequest) throws ApiException {
         Call call = generateTokenValidateBeforeCall(apiClient, generateTokenRequest);
@@ -100,15 +83,7 @@ class TokenResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getUserInfo
-     *
-     * @param apiClient ApiClient (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public static Call getUserInfoCall(
             OrkesHttpClient apiClient)
             throws ApiException {
@@ -151,14 +126,7 @@ class TokenResource {
         return getUserInfoCall(apiClient);
     }
 
-    /**
-     * Get the user info from the token
-     *
-     * @param apiClient ApiClient (required)
-     * @return ApiResponse&lt;Object&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public static ApiResponse<Object> getUserInfoWithHttpInfo(OrkesHttpClient apiClient)
             throws ApiException {
         Call call = getUserInfoValidateBeforeCall(apiClient);

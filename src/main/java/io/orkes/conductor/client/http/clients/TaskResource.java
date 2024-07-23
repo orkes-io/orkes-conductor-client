@@ -12,7 +12,14 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.lang.reflect.Type;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Pair;
@@ -26,13 +33,7 @@ import io.orkes.conductor.client.model.run.SearchResult;
 import io.orkes.conductor.client.model.run.TaskSummary;
 import io.orkes.conductor.client.model.run.Workflow;
 
-import java.lang.reflect.Type;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 class TaskResource {
     private final OrkesHttpClient apiClient;
@@ -41,12 +42,7 @@ class TaskResource {
         this.apiClient = httpClient;
     }
 
-    /**
-     * Build call for all
-     *
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call allCall()
             throws ApiException {
         Object localVarPostBody = null;
@@ -88,25 +84,13 @@ class TaskResource {
         return allCall();
     }
 
-    /**
-     * Get the details about each queue
-     *
-     * @return Map&lt;String, Long&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public Map<String, Long> all() throws ApiException {
         ApiResponse<Map<String, Long>> resp = allWithHttpInfo();
         return resp.getData();
     }
 
-    /**
-     * Get the details about each queue
-     *
-     * @return ApiResponse&lt;Map&lt;String, Long&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<Map<String, Long>> allWithHttpInfo() throws ApiException {
         okhttp3.Call call = allValidateBeforeCall();
         Type localVarReturnType = new TypeReference<Map<String, Long>>() {
@@ -114,12 +98,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for allVerbose
-     *
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call allVerboseCall()
             throws ApiException {
         Object localVarPostBody = null;
@@ -161,25 +140,13 @@ class TaskResource {
         return allVerboseCall();
     }
 
-    /**
-     * Get the details about each queue
-     *
-     * @return Map&lt;String, Map&lt;String, Map&lt;String, Long&gt;&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public Map<String, Map<String, Map<String, Long>>> allVerbose() throws ApiException {
         ApiResponse<Map<String, Map<String, Map<String, Long>>>> resp = allVerboseWithHttpInfo();
         return resp.getData();
     }
 
-    /**
-     * Get the details about each queue
-     *
-     * @return ApiResponse&lt;Map&lt;String, Map&lt;String, Map&lt;String, Long&gt;&gt;&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<Map<String, Map<String, Map<String, Long>>>> allVerboseWithHttpInfo()
             throws ApiException {
         okhttp3.Call call = allVerboseValidateBeforeCall();
@@ -189,17 +156,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for batchPoll
-     *
-     * @param tasktype (required)
-     * @param workerid (optional)
-     * @param domain   (optional)
-     * @param count    (optional, default to 1)
-     * @param timeout  (optional, default to 100)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call batchPollCall(
             String tasktype,
             String workerid,
@@ -271,18 +228,7 @@ class TaskResource {
                 timeout);
     }
 
-    /**
-     * Batch poll for a task of a certain type
-     *
-     * @param tasktype (required)
-     * @param workerid (optional)
-     * @param domain   (optional)
-     * @param count    (optional, default to 1)
-     * @param timeout  (optional, default to 100)
-     * @return List&lt;Task&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public List<Task> batchPoll(
             String tasktype, String workerid, String domain, Integer count, Integer timeout)
             throws ApiException {
@@ -291,18 +237,7 @@ class TaskResource {
         return resp.getData();
     }
 
-    /**
-     * Batch poll for a task of a certain type
-     *
-     * @param tasktype (required)
-     * @param workerid (optional)
-     * @param domain   (optional)
-     * @param count    (optional, default to 1)
-     * @param timeout  (optional, default to 100)
-     * @return ApiResponse&lt;List&lt;Task&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<List<Task>> batchPollWithHttpInfo(
             String tasktype, String workerid, String domain, Integer count, Integer timeout)
             throws ApiException {
@@ -313,12 +248,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getAllPollData
-     *
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getAllPollDataCall()
             throws ApiException {
         Object localVarPostBody = null;
@@ -360,25 +290,13 @@ class TaskResource {
         return getAllPollDataCall();
     }
 
-    /**
-     * Get the last poll data for all task types
-     *
-     * @return List&lt;PollData&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public List<PollData> getAllPollData() throws ApiException {
         ApiResponse<List<PollData>> resp = getAllPollDataWithHttpInfo();
         return resp.getData();
     }
 
-    /**
-     * Get the last poll data for all task types
-     *
-     * @return ApiResponse&lt;List&lt;PollData&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<List<PollData>> getAllPollDataWithHttpInfo() throws ApiException {
         okhttp3.Call call = getAllPollDataValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<PollData>>() {
@@ -386,15 +304,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getExternalStorageLocation1
-     *
-     * @param path        (required)
-     * @param operation   (required)
-     * @param payloadType (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getExternalStorageLocation1Call(
             String path,
             String operation,
@@ -463,16 +373,7 @@ class TaskResource {
                 path, operation, payloadType);
     }
 
-    /**
-     * Get the external uri where the task payload is to be stored
-     *
-     * @param path        (required)
-     * @param operation   (required)
-     * @param payloadType (required)
-     * @return ExternalStorageLocation
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public ExternalStorageLocation getExternalStorageLocation1(
             String path, String operation, String payloadType) throws ApiException {
         ApiResponse<ExternalStorageLocation> resp =
@@ -480,16 +381,7 @@ class TaskResource {
         return resp.getData();
     }
 
-    /**
-     * Get the external uri where the task payload is to be stored
-     *
-     * @param path        (required)
-     * @param operation   (required)
-     * @param payloadType (required)
-     * @return ApiResponse&lt;ExternalStorageLocation&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<ExternalStorageLocation> getExternalStorageLocation1WithHttpInfo(
             String path, String operation, String payloadType) throws ApiException {
         okhttp3.Call call =
@@ -500,13 +392,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getPollData
-     *
-     * @param taskType (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getPollDataCall(
             String taskType)
             throws ApiException {
@@ -557,27 +443,13 @@ class TaskResource {
         return getPollDataCall(taskType);
     }
 
-    /**
-     * Get the last poll data for a given task type
-     *
-     * @param taskType (required)
-     * @return List&lt;PollData&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public List<PollData> getPollData(String taskType) throws ApiException {
         ApiResponse<List<PollData>> resp = getPollDataWithHttpInfo(taskType);
         return resp.getData();
     }
 
-    /**
-     * Get the last poll data for a given task type
-     *
-     * @param taskType (required)
-     * @return ApiResponse&lt;List&lt;PollData&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<List<PollData>> getPollDataWithHttpInfo(String taskType)
             throws ApiException {
         okhttp3.Call call = getPollDataValidateBeforeCall(taskType);
@@ -586,13 +458,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getTask
-     *
-     * @param taskId (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getTaskCall(
             String taskId)
             throws ApiException {
@@ -645,27 +511,13 @@ class TaskResource {
         return getTaskCall(taskId);
     }
 
-    /**
-     * Get task by Id
-     *
-     * @param taskId (required)
-     * @return Task
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public Task getTask(String taskId) throws ApiException {
         ApiResponse<Task> resp = getTaskWithHttpInfo(taskId);
         return resp.getData();
     }
 
-    /**
-     * Get task by Id
-     *
-     * @param taskId (required)
-     * @return ApiResponse&lt;Task&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<Task> getTaskWithHttpInfo(String taskId) throws ApiException {
         okhttp3.Call call = getTaskValidateBeforeCall(taskId);
         Type localVarReturnType = new TypeReference<Task>() {
@@ -673,13 +525,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getTaskLogs
-     *
-     * @param taskId (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getTaskLogsCall(
             String taskId)
             throws ApiException {
@@ -732,27 +578,13 @@ class TaskResource {
         return getTaskLogsCall(taskId);
     }
 
-    /**
-     * Get Task Execution Logs
-     *
-     * @param taskId (required)
-     * @return List&lt;TaskExecLog&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public List<TaskExecLog> getTaskLogs(String taskId) throws ApiException {
         ApiResponse<List<TaskExecLog>> resp = getTaskLogsWithHttpInfo(taskId);
         return resp.getData();
     }
 
-    /**
-     * Get Task Execution Logs
-     *
-     * @param taskId (required)
-     * @return ApiResponse&lt;List&lt;TaskExecLog&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<List<TaskExecLog>> getTaskLogsWithHttpInfo(String taskId)
             throws ApiException {
         okhttp3.Call call = getTaskLogsValidateBeforeCall(taskId);
@@ -761,14 +593,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for log
-     *
-     * @param body   (required)
-     * @param taskId (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call logCall(
             String body,
             String taskId)
@@ -826,41 +651,18 @@ class TaskResource {
         return logCall(body, taskId);
     }
 
-    /**
-     * Log Task Execution Details
-     *
-     * @param body   (required)
-     * @param taskId (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public void log(String body, String taskId) throws ApiException {
         logWithHttpInfo(body, taskId);
     }
 
-    /**
-     * Log Task Execution Details
-     *
-     * @param body   (required)
-     * @param taskId (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<Void> logWithHttpInfo(String body, String taskId) throws ApiException {
         okhttp3.Call call = logValidateBeforeCall(body, taskId);
         return apiClient.execute(call);
     }
 
-    /**
-     * Build call for poll
-     *
-     * @param tasktype (required)
-     * @param workerid (optional)
-     * @param domain   (optional)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call pollCall(
             String tasktype,
             String workerid,
@@ -920,31 +722,13 @@ class TaskResource {
         return pollCall(tasktype, workerid, domain);
     }
 
-    /**
-     * Poll for a task of a certain type
-     *
-     * @param tasktype (required)
-     * @param workerid (optional)
-     * @param domain   (optional)
-     * @return Task
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public Task poll(String tasktype, String workerid, String domain) throws ApiException {
         ApiResponse<Task> resp = pollWithHttpInfo(tasktype, workerid, domain);
         return resp.getData();
     }
 
-    /**
-     * Poll for a task of a certain type
-     *
-     * @param tasktype (required)
-     * @param workerid (optional)
-     * @param domain   (optional)
-     * @return ApiResponse&lt;Task&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<Task> pollWithHttpInfo(String tasktype, String workerid, String domain)
             throws ApiException {
         okhttp3.Call call =
@@ -954,13 +738,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for requeuePendingTask
-     *
-     * @param taskType (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call requeuePendingTaskCall(
             String taskType)
             throws ApiException {
@@ -1013,27 +791,13 @@ class TaskResource {
         return requeuePendingTaskCall(taskType);
     }
 
-    /**
-     * Requeue pending tasks
-     *
-     * @param taskType (required)
-     * @return String
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public String requeuePendingTask(String taskType) throws ApiException {
         ApiResponse<String> resp = requeuePendingTaskWithHttpInfo(taskType);
         return resp.getData();
     }
 
-    /**
-     * Requeue pending tasks
-     *
-     * @param taskType (required)
-     * @return ApiResponse&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<String> requeuePendingTaskWithHttpInfo(String taskType)
             throws ApiException {
         okhttp3.Call call = requeuePendingTaskValidateBeforeCall(taskType);
@@ -1042,17 +806,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for search1
-     *
-     * @param start    (optional, default to 0)
-     * @param size     (optional, default to 100)
-     * @param sort     (optional)
-     * @param freeText (optional, default to *)
-     * @param query    (optional)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call searchTasksCall(
             Integer start,
             Integer size,
@@ -1115,20 +869,7 @@ class TaskResource {
                 query);
     }
 
-    /**
-     * Search for tasks based in payload and other parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start    (optional, default to 0)
-     * @param size     (optional, default to 100)
-     * @param sort     (optional)
-     * @param freeText (optional, default to *)
-     * @param query    (optional)
-     * @return SearchResultTaskSummary
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public SearchResult<TaskSummary> searchTasks(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -1137,20 +878,7 @@ class TaskResource {
         return resp.getData();
     }
 
-    /**
-     * Search for tasks based in payload and other parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start    (optional, default to 0)
-     * @param size     (optional, default to 100)
-     * @param sort     (optional)
-     * @param freeText (optional, default to *)
-     * @param query    (optional)
-     * @return ApiResponse&lt;SearchResultTaskSummary&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<SearchResult<TaskSummary>> searchTasksWithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -1161,17 +889,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for searchV21
-     *
-     * @param start    (optional, default to 0)
-     * @param size     (optional, default to 100)
-     * @param sort     (optional)
-     * @param freeText (optional, default to *)
-     * @param query    (optional)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call searchV21Call(
             Integer start,
             Integer size,
@@ -1234,20 +952,7 @@ class TaskResource {
                 query);
     }
 
-    /**
-     * Search for tasks based in payload and other parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start    (optional, default to 0)
-     * @param size     (optional, default to 100)
-     * @param sort     (optional)
-     * @param freeText (optional, default to *)
-     * @param query    (optional)
-     * @return SearchResultTask
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public SearchResultTask searchV21(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -1256,20 +961,7 @@ class TaskResource {
         return resp.getData();
     }
 
-    /**
-     * Search for tasks based in payload and other parameters use sort options as
-     * sort&#x3D;&lt;field&gt;:ASC|DESC e.g. sort&#x3D;name&amp;sort&#x3D;workflowId:DESC. If order
-     * is not specified, defaults to ASC
-     *
-     * @param start    (optional, default to 0)
-     * @param size     (optional, default to 100)
-     * @param sort     (optional)
-     * @param freeText (optional, default to *)
-     * @param query    (optional)
-     * @return ApiResponse&lt;SearchResultTask&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<SearchResultTask> searchV21WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
@@ -1280,13 +972,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for size
-     *
-     * @param taskType (optional)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call sizeCall(
             List<String> taskType)
             throws ApiException {
@@ -1333,27 +1019,13 @@ class TaskResource {
         return sizeCall(taskType);
     }
 
-    /**
-     * Get Task type queue sizes
-     *
-     * @param taskType (optional)
-     * @return Map&lt;String, Integer&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public Map<String, Integer> size(List<String> taskType) throws ApiException {
         ApiResponse<Map<String, Integer>> resp = sizeWithHttpInfo(taskType);
         return resp.getData();
     }
 
-    /**
-     * Get Task type queue sizes
-     *
-     * @param taskType (optional)
-     * @return ApiResponse&lt;Map&lt;String, Integer&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<Map<String, Integer>> sizeWithHttpInfo(List<String> taskType)
             throws ApiException {
         okhttp3.Call call = sizeValidateBeforeCall(taskType);
@@ -1362,13 +1034,7 @@ class TaskResource {
         return apiClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for updateTask
-     *
-     * @param taskResult (required)
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     private okhttp3.Call updateTaskCall(
             TaskResult taskResult)
             throws ApiException {
@@ -1415,27 +1081,13 @@ class TaskResource {
         return updateTaskCall(taskResult);
     }
 
-    /**
-     * Update a task
-     *
-     * @param taskResult (required)
-     * @return String
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     public String updateTask(TaskResult taskResult) throws ApiException {
         ApiResponse<String> resp = updateTaskWithHttpInfo(taskResult);
         return resp.getData();
     }
 
-    /**
-     * Update a task
-     *
-     * @param taskResult (required)
-     * @return ApiResponse&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private ApiResponse<String> updateTaskWithHttpInfo(TaskResult taskResult) throws ApiException {
         okhttp3.Call call = updateTaskValidateBeforeCall(taskResult);
         Type localVarReturnType = new TypeReference<String>() {
@@ -1537,17 +1189,7 @@ class TaskResource {
                 sync);
     }
 
-    /**
-     * Update a task By Ref Name
-     *
-     * @param body        (required)
-     * @param workflowId  (required)
-     * @param taskRefName (required)
-     * @param status      (required)
-     * @return String
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     @Deprecated
     public String updateTask1(
             Map<String, Object> body, String workflowId, String taskRefName, String status)
@@ -1558,14 +1200,7 @@ class TaskResource {
         return resp.getData();
     }
 
-    /**
-     * @param output      Task Output
-     * @param workflowId  Workflow Id
-     * @param taskRefName Reference name of the task to be updated
-     * @param status      Status
-     * @return Task Id
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response
-     */
+  
     public String updateTaskByRefName(Map<String, Object> output, String workflowId, String taskRefName, String status) throws ApiException {
         Type localVarReturnType = new TypeReference<String>() {
         }.getType();
@@ -1573,14 +1208,7 @@ class TaskResource {
         return resp.getData();
     }
 
-    /**
-     * @param output      Task Output
-     * @param workflowId  Workflow Id
-     * @param taskRefName Reference name of the task to be updated
-     * @param status      Status
-     * @return Status of the workflow after updating the task
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response
-     */
+  
     public Workflow updateTaskSync(Map<String, Object> output, String workflowId, String taskRefName, String status) throws ApiException {
         Type localVarReturnType = new TypeReference<Workflow>() {
         }.getType();
@@ -1588,17 +1216,7 @@ class TaskResource {
         return resp.getData();
     }
 
-    /**
-     * Update a task By Ref Name
-     *
-     * @param body        (required)
-     * @param workflowId  (required)
-     * @param taskRefName (required)
-     * @param status      (required)
-     * @return ApiResponse&lt;String&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *                      response body
-     */
+  
     private <T> ApiResponse<T> updateTask1WithHttpInfo(Map<String, Object> body, String workflowId, String taskRefName, String status, boolean sync, Type returnType)
             throws ApiException {
         okhttp3.Call call =

@@ -12,18 +12,19 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Pair;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 class TagsResource {
     private final OrkesHttpClient httpClient;
@@ -32,16 +33,7 @@ class TagsResource {
         this.httpClient = httpClient;
     }
 
-    /**
-     * Build call for addTaskTag
-     *
-     * @param tagObject (required)
-     * @param taskName (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call addTaskTagCall(
             TagObject tagObject,
             String taskName)
@@ -102,27 +94,12 @@ class TagsResource {
         return addTaskTagCall(tagObject, taskName);
     }
 
-    /**
-     * Adds the tag to the task
-     *
-     * @param tagObject (required)
-     * @param taskName (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void addTaskTag(TagObject tagObject, String taskName) throws ApiException {
         addTaskTagWithHttpInfo(tagObject, taskName);
     }
 
-    /**
-     * Adds the tag to the task
-     *
-     * @param tagObject (required)
-     * @param taskName (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> addTaskTagWithHttpInfo(TagObject tagObject, String taskName)
             throws ApiException {
         okhttp3.Call call =
@@ -130,16 +107,7 @@ class TagsResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for addWorkflowTag
-     *
-     * @param tagObject (required)
-     * @param name (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call addWorkflowTagCall(
             TagObject tagObject,
             String name)
@@ -199,27 +167,12 @@ class TagsResource {
         return addWorkflowTagCall(tagObject, name);
     }
 
-    /**
-     * Adds the tag to the workflow
-     *
-     * @param tagObject (required)
-     * @param name (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void addWorkflowTag(TagObject tagObject, String name) throws ApiException {
         addWorkflowTagWithHttpInfo(tagObject, name);
     }
 
-    /**
-     * Adds the tag to the workflow
-     *
-     * @param tagObject (required)
-     * @param name (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> addWorkflowTagWithHttpInfo(TagObject tagObject, String name)
             throws ApiException {
         okhttp3.Call call =
@@ -227,16 +180,7 @@ class TagsResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for deleteTaskTag
-     *
-     * @param tagString (required)
-     * @param taskName (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call deleteTaskTagCall(
             TagString tagString,
             String taskName)
@@ -297,27 +241,12 @@ class TagsResource {
         return deleteTaskTagCall(tagString, taskName);
     }
 
-    /**
-     * Removes the tag of the task
-     *
-     * @param tagString (required)
-     * @param taskName (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void deleteTaskTag(TagString tagString, String taskName) throws ApiException {
         deleteTaskTagWithHttpInfo(tagString, taskName);
     }
 
-    /**
-     * Removes the tag of the task
-     *
-     * @param tagString (required)
-     * @param taskName (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> deleteTaskTagWithHttpInfo(TagString tagString, String taskName)
             throws ApiException {
         okhttp3.Call call =
@@ -325,16 +254,7 @@ class TagsResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for deleteWorkflowTag
-     *
-     * @param tagObject (required)
-     * @param name (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call deleteWorkflowTagCall(
             TagObject tagObject,
             String name)
@@ -394,27 +314,12 @@ class TagsResource {
         return deleteWorkflowTagCall(tagObject, name);
     }
 
-    /**
-     * Removes the tag of the workflow
-     *
-     * @param tagObject (required)
-     * @param name (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void deleteWorkflowTag(TagObject tagObject, String name) throws ApiException {
         deleteWorkflowTagWithHttpInfo(tagObject, name);
     }
 
-    /**
-     * Removes the tag of the workflow
-     *
-     * @param tagObject (required)
-     * @param name (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> deleteWorkflowTagWithHttpInfo(TagObject tagObject, String name)
             throws ApiException {
         okhttp3.Call call =
@@ -422,14 +327,7 @@ class TagsResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for getTags
-     *
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getTagsCall()
             throws ApiException {
         Object localVarPostBody = null;
@@ -473,40 +371,20 @@ class TagsResource {
         return getTagsCall();
     }
 
-    /**
-     * List all tags
-     *
-     * @return List&lt;TagObject&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public List<TagObject> getTags() throws ApiException {
         ApiResponse<List<TagObject>> resp = getTagsWithHttpInfo();
         return resp.getData();
     }
 
-    /**
-     * List all tags
-     *
-     * @return ApiResponse&lt;List&lt;TagObject&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<List<TagObject>> getTagsWithHttpInfo() throws ApiException {
         okhttp3.Call call = getTagsValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getTaskTags
-     *
-     * @param taskName (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getTaskTagsCall(
             String taskName)
             throws ApiException {
@@ -561,27 +439,13 @@ class TagsResource {
         return getTaskTagsCall(taskName);
     }
 
-    /**
-     * Returns all the tags of the task
-     *
-     * @param taskName (required)
-     * @return List&lt;TagObject&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public List<TagObject> getTaskTags(String taskName) throws ApiException {
         ApiResponse<List<TagObject>> resp = getTaskTagsWithHttpInfo(taskName);
         return resp.getData();
     }
 
-    /**
-     * Returns all the tags of the task
-     *
-     * @param taskName (required)
-     * @return ApiResponse&lt;List&lt;TagObject&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<List<TagObject>> getTaskTagsWithHttpInfo(String taskName)
             throws ApiException {
         okhttp3.Call call = getTaskTagsValidateBeforeCall(taskName);
@@ -589,15 +453,7 @@ class TagsResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for getWorkflowTags
-     *
-     * @param name (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call getWorkflowTagsCall(
             String name)
             throws ApiException {
@@ -651,27 +507,13 @@ class TagsResource {
         return getWorkflowTagsCall(name);
     }
 
-    /**
-     * Returns all the tags of the workflow
-     *
-     * @param name (required)
-     * @return List&lt;TagObject&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public List<TagObject> getWorkflowTags(String name) throws ApiException {
         ApiResponse<List<TagObject>> resp = getWorkflowTagsWithHttpInfo(name);
         return resp.getData();
     }
 
-    /**
-     * Returns all the tags of the workflow
-     *
-     * @param name (required)
-     * @return ApiResponse&lt;List&lt;TagObject&gt;&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<List<TagObject>> getWorkflowTagsWithHttpInfo(String name)
             throws ApiException {
         okhttp3.Call call = getWorkflowTagsValidateBeforeCall(name);
@@ -679,16 +521,7 @@ class TagsResource {
         return httpClient.execute(call, localVarReturnType);
     }
 
-    /**
-     * Build call for setTaskTags
-     *
-     * @param tagObjects (required)
-     * @param taskName (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call setTaskTagsCall(
             List<TagObject> tagObjects,
             String taskName)
@@ -749,27 +582,12 @@ class TagsResource {
         return setTaskTagsCall(tagObjects, taskName);
     }
 
-    /**
-     * Adds the tag to the task
-     *
-     * @param tagObjects (required)
-     * @param taskName (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void setTaskTags(List<TagObject> tagObjects, String taskName) throws ApiException {
         setTaskTagsWithHttpInfo(tagObjects, taskName);
     }
 
-    /**
-     * Adds the tag to the task
-     *
-     * @param tagObjects (required)
-     * @param taskName (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> setTaskTagsWithHttpInfo(List<TagObject> tagObjects, String taskName)
             throws ApiException {
         okhttp3.Call call =
@@ -777,16 +595,7 @@ class TagsResource {
         return httpClient.execute(call);
     }
 
-    /**
-     * Build call for setWorkflowTags
-     *
-     * @param tagObjects (required)
-     * @param name (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
+  
     public okhttp3.Call setWorkflowTagsCall(
             List<TagObject> tagObjects,
             String name)
@@ -846,27 +655,12 @@ class TagsResource {
         return setWorkflowTagsCall(tagObjects, name);
     }
 
-    /**
-     * Set the tags of the workflow
-     *
-     * @param tagObjects (required)
-     * @param name (required)
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     public void setWorkflowTags(List<TagObject> tagObjects, String name) throws ApiException {
         setWorkflowTagsWithHttpInfo(tagObjects, name);
     }
 
-    /**
-     * Set the tags of the workflow
-     *
-     * @param tagObjects (required)
-     * @param name (required)
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the
-     *     response body
-     */
+  
     private ApiResponse<Void> setWorkflowTagsWithHttpInfo(List<TagObject> tagObjects, String name)
             throws ApiException {
         okhttp3.Call call =
