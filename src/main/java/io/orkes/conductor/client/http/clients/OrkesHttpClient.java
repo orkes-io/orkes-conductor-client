@@ -64,6 +64,7 @@ import io.orkes.conductor.client.http.auth.Authentication;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 import io.orkes.conductor.client.model.validation.ErrorResponse;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import okhttp3.Call;
@@ -353,7 +354,6 @@ public class OrkesHttpClient {
         return executorThreadCount;
     }
 
-  
     public OkHttpClient getHttpClient() {
         return httpClient;
     }
@@ -378,19 +378,14 @@ public class OrkesHttpClient {
         }
     }
 
-  
     public boolean isVerifyingSsl() {
         return verifyingSsl;
     }
 
-
-  
     public String getTempFolderPath() {
         return tempFolderPath;
     }
 
-
-  
     public String parameterToString(Object param) {
         if (param == null) {
             return "";
@@ -414,7 +409,6 @@ public class OrkesHttpClient {
         }
     }
 
-  
     public List<Pair> parameterToPair(String name, Object value) {
         List<Pair> params = new ArrayList<>();
 
@@ -426,7 +420,6 @@ public class OrkesHttpClient {
         return params;
     }
 
-  
     public List<Pair> parameterToPairs(String collectionFormat, String name, Collection value) {
         List<Pair> params = new ArrayList<>();
 
@@ -467,18 +460,15 @@ public class OrkesHttpClient {
         return params;
     }
 
-  
     public String sanitizeFilename(String filename) {
         return filename.replaceAll(".*[/\\\\]", "");
     }
 
-  
     public boolean isJsonMime(String mime) {
         String jsonMime = "(?i)^(application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(;.*)?$";
         return mime != null && (mime.matches(jsonMime) || mime.equals("*/*"));
     }
 
-  
     public String selectHeaderAccept(String[] accepts) {
         if (accepts.length == 0) {
             return null;
@@ -492,7 +482,6 @@ public class OrkesHttpClient {
         return StringUtils.joinWith(",", (Object[]) accepts);
     }
 
-  
     public String selectHeaderContentType(String[] contentTypes) {
         if (contentTypes.length == 0 || contentTypes[0].equals("*/*")) {
             return "application/json";
@@ -505,7 +494,6 @@ public class OrkesHttpClient {
         return contentTypes[0];
     }
 
-  
     public String escapeString(String str) {
         try {
             return URLEncoder.encode(str, "utf8").replaceAll("\\+", "%20");
@@ -514,7 +502,6 @@ public class OrkesHttpClient {
         }
     }
 
-  
     @SuppressWarnings("unchecked")
     public <T> T deserialize(Response response, Type returnType) throws ApiException {
         if (response == null || returnType == null) {
@@ -564,7 +551,6 @@ public class OrkesHttpClient {
         }
     }
 
-  
     public RequestBody serialize(Object obj, String contentType) throws ApiException {
         if (obj instanceof byte[]) {
             // Binary (byte array) body parameter support.
@@ -587,7 +573,6 @@ public class OrkesHttpClient {
         }
     }
 
-  
     public File downloadFileFromResponse(Response response) throws ApiException {
         try {
             File file = prepareDownloadFile(response);
@@ -600,7 +585,6 @@ public class OrkesHttpClient {
         }
     }
 
-  
     public File prepareDownloadFile(Response response) throws IOException {
         String filename = null;
         String contentDisposition = response.header("Content-Disposition");
@@ -634,23 +618,6 @@ public class OrkesHttpClient {
         else return Files.createTempFile(Paths.get(tempFolderPath), prefix, suffix).toFile();
     }
 
-  
-    public <T> ApiResponse<T> execute(Call call) throws ApiException {
-        return execute(call, null);
-    }
-
-  
-    public <T> ApiResponse<T> execute(Call call, Type returnType) throws ApiException {
-        try {
-            Response response = call.execute();
-            T data = handleResponse(response, returnType);
-            return new ApiResponse<>(response.code(), response.headers().toMultimap(), data);
-        } catch (IOException e) {
-            throw new ApiException(e);
-        }
-    }
-
-  
     public <T> T handleResponse(Response response, Type returnType) throws ApiException {
         if (response.isSuccessful()) {
             if (returnType == null || response.code() == 204) {
@@ -693,7 +660,6 @@ public class OrkesHttpClient {
         }
     }
 
-  
     public Call buildCall(
             String path,
             String method,
@@ -717,7 +683,6 @@ public class OrkesHttpClient {
         return httpClient.newCall(request);
     }
 
-  
     public Request buildRequest(
             String path,
             String method,
@@ -764,7 +729,6 @@ public class OrkesHttpClient {
         return reqBuilder.method(method, reqBody).build();
     }
 
-  
     public String buildUrl(String path, List<Pair> queryParams, List<Pair> collectionQueryParams) {
         final StringBuilder url = new StringBuilder();
         url.append(basePath).append(path);
@@ -808,7 +772,6 @@ public class OrkesHttpClient {
         return url.toString();
     }
 
-  
     public void processHeaderParams(Map<String, String> headerParams, Request.Builder reqBuilder) {
         for (Entry<String, String> param : headerParams.entrySet()) {
             reqBuilder.header(param.getKey(), parameterToString(param.getValue()));
@@ -820,7 +783,6 @@ public class OrkesHttpClient {
         }
     }
 
-  
     public void updateParamsForAuth(String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
         String token = getToken();
         if (isSecurityEnabled()) {
@@ -829,7 +791,6 @@ public class OrkesHttpClient {
         }
     }
 
-  
     public RequestBody buildRequestBodyFormEncoding(Map<String, Object> formParams) {
         FormBody.Builder formBuilder = new FormBody.Builder();
         for (Entry<String, Object> param : formParams.entrySet()) {
@@ -838,7 +799,6 @@ public class OrkesHttpClient {
         return formBuilder.build();
     }
 
-  
     public RequestBody buildRequestBodyMultipart(Map<String, Object> formParams) {
         MultipartBody.Builder mpBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for (Entry<String, Object> param : formParams.entrySet()) {
@@ -866,7 +826,6 @@ public class OrkesHttpClient {
         return mpBuilder.build();
     }
 
-  
     public String guessContentTypeFromFile(File file) {
         String contentType = URLConnection.guessContentTypeFromName(file.getName());
         if (contentType == null) {
@@ -876,7 +835,6 @@ public class OrkesHttpClient {
         }
     }
 
-  
     private void applySslSettings(OkHttpClient.Builder okhttpClientBuilder) {
         try {
             TrustManager[] trustManagers = null;
@@ -948,6 +906,53 @@ public class OrkesHttpClient {
         }
     }
 
+    public Call buildCall(String method, String path, String id, Object body) {
+        String localVarPath = path.replaceAll("\\{id\\}", escapeString(id != null ? id : ""));
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
+
+        localVarHeaderParams.put("Accept", selectHeaderAccept(new String[]{"application/json"}));
+        localVarHeaderParams.put("Content-Type", selectHeaderContentType(new String[]{"application/json"}));
+
+        return buildCall(
+                localVarPath, method, localVarQueryParams, localVarCollectionQueryParams, body,
+                localVarHeaderParams, localVarFormParams, new String[]{"api_key"});
+    }
+
+    public <T> ApiResponse<T> execute(Call call) throws ApiException {
+        return execute(call, (Type) null);
+    }
+
+    public <T> ApiResponse<T> execute(Call call, TypeReference<T> typeReference) throws ApiException {
+        return execute(call, typeReference.getType());
+    }
+
+    public <T> ApiResponse<T> execute(Call call, Type returnType) throws ApiException {
+        try {
+            Response response = call.execute();
+            T data = handleResponse(response, returnType);
+            return new ApiResponse<>(response.code(), response.headers().toMultimap(), data);
+        } catch (IOException e) {
+            throw new ApiException(e);
+        }
+    }
+
+    public <T> ApiResponse<T> doRequest(String method,
+                                         String path,
+                                         String id,
+                                         Object body,
+                                         TypeReference<T> typeReference) throws ApiException {
+        Call call = buildCall(method, path, id, body);
+        if (typeReference == null) {
+            execute(call);
+            return null;
+        } else {
+            return execute(call, typeReference.getType());
+        }
+    }
+
     private String refreshToken() {
         LOGGER.debug("Refreshing token @ {}", new Date());
         if (this.keyId == null || this.keySecret == null) {
@@ -963,4 +968,6 @@ public class OrkesHttpClient {
         apiKeyAuth.setApiKey(token);
         return apiKeyAuth;
     }
+
+
 }

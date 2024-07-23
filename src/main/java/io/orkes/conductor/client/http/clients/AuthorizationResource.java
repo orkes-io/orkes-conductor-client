@@ -33,8 +33,17 @@ class AuthorizationResource {
         this.httpClient = httpClient;
     }
 
+
+    Map<String, List<Subject>> getPermissions(String type, String id) throws ApiException {
+        ApiResponse<Map<String, List<Subject>>> resp = getPermissionsWithHttpInfo(type, id);
+        return resp.getData();
+    }
+
+    void grantPermissions(AuthorizationRequest authorizationRequest) throws ApiException {
+        grantPermissionsWithHttpInfo(authorizationRequest);
+    }
   
-    public okhttp3.Call getPermissionsCall(
+    private okhttp3.Call getPermissionsCall(
             String type,
             String id)
             throws ApiException {
@@ -94,12 +103,6 @@ class AuthorizationResource {
     }
 
   
-    public Map<String, List<Subject>> getPermissions(String type, String id) throws ApiException {
-        ApiResponse<Map<String, List<Subject>>> resp = getPermissionsWithHttpInfo(type, id);
-        return resp.getData();
-    }
-
-  
     private ApiResponse<Map<String, List<Subject>>> getPermissionsWithHttpInfo(
             String type, String id) throws ApiException {
         okhttp3.Call call = getPermissionsValidateBeforeCall(type, id);
@@ -156,11 +159,6 @@ class AuthorizationResource {
 
         return grantPermissionsCall(
                 authorizationRequest);
-    }
-
-  
-    public void grantPermissions(AuthorizationRequest authorizationRequest) throws ApiException {
-        grantPermissionsWithHttpInfo(authorizationRequest);
     }
 
   

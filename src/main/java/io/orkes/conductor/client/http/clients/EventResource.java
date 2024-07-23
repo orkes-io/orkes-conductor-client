@@ -24,6 +24,7 @@ import io.orkes.conductor.client.http.Pair;
 import io.orkes.conductor.client.model.metadata.events.EventHandler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import okhttp3.Call;
 
 class EventResource {
     private final OrkesHttpClient httpClient;
@@ -32,7 +33,7 @@ class EventResource {
         this.httpClient = httpClient;
     }
 
-    private okhttp3.Call addEventHandlerCall(EventHandler eventHandler) throws ApiException {
+    private Call addEventHandlerCall(EventHandler eventHandler) throws ApiException {
         // create path and map variables
         String localVarPath = "/event";
 
@@ -66,7 +67,7 @@ class EventResource {
                 localVarAuthNames);
     }
 
-    private okhttp3.Call addEventHandlerValidateBeforeCall(EventHandler eventHandler) throws ApiException {
+    private Call addEventHandlerValidateBeforeCall(EventHandler eventHandler) throws ApiException {
         // verify the required parameter 'body' is set
         if (eventHandler == null) {
             throw new ApiException(
@@ -78,12 +79,12 @@ class EventResource {
 
   
     public void addEventHandler(EventHandler eventHandler) throws ApiException {
-        okhttp3.Call call = addEventHandlerValidateBeforeCall(eventHandler);
+        Call call = addEventHandlerValidateBeforeCall(eventHandler);
         httpClient.execute(call);
     }
 
   
-    public okhttp3.Call deleteQueueConfigCall(
+    public Call deleteQueueConfigCall(
             String queueType,
             String queueName)
             throws ApiException {
@@ -127,7 +128,7 @@ class EventResource {
                 localVarAuthNames);
     }
 
-    private okhttp3.Call deleteQueueConfigValidateBeforeCall(
+    private Call deleteQueueConfigValidateBeforeCall(
             String queueType,
             String queueName)
             throws ApiException {
@@ -155,7 +156,7 @@ class EventResource {
   
     private ApiResponse<Object> deleteQueueConfigWithHttpInfo(String queueType, String queueName)
             throws ApiException {
-        okhttp3.Call call =
+        Call call =
                 deleteQueueConfigValidateBeforeCall(queueType, queueName);
         Type localVarReturnType = new TypeReference<>() {
         }.getType();
@@ -163,7 +164,7 @@ class EventResource {
     }
 
   
-    public okhttp3.Call getEventHandlersCall()
+    public Call getEventHandlersCall()
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -200,7 +201,7 @@ class EventResource {
                 localVarAuthNames);
     }
 
-    private okhttp3.Call getEventHandlersValidateBeforeCall()
+    private Call getEventHandlersValidateBeforeCall()
             throws ApiException {
         return getEventHandlersCall();
     }
@@ -213,14 +214,14 @@ class EventResource {
 
   
     private ApiResponse<List<EventHandler>> getEventHandlersWithHttpInfo() throws ApiException {
-        okhttp3.Call call = getEventHandlersValidateBeforeCall();
+        Call call = getEventHandlersValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<EventHandler>>() {
         }.getType();
         return httpClient.execute(call, localVarReturnType);
     }
 
   
-    public okhttp3.Call getEventHandlersForEventCall(
+    public Call getEventHandlersForEventCall(
             String event,
             Boolean activeOnly)
             throws ApiException {
@@ -264,7 +265,7 @@ class EventResource {
                 localVarAuthNames);
     }
 
-    private okhttp3.Call getEventHandlersForEventValidateBeforeCall(
+    private Call getEventHandlersForEventValidateBeforeCall(
             String event,
             Boolean activeOnly)
             throws ApiException {
@@ -289,7 +290,7 @@ class EventResource {
   
     private ApiResponse<List<EventHandler>> getEventHandlersForEventWithHttpInfo(
             String event, Boolean activeOnly) throws ApiException {
-        okhttp3.Call call =
+        Call call =
                 getEventHandlersForEventValidateBeforeCall(event, activeOnly);
         Type localVarReturnType = new TypeReference<List<EventHandler>>() {
         }.getType();
@@ -297,7 +298,7 @@ class EventResource {
     }
 
   
-    public okhttp3.Call getQueueConfigCall(
+    public Call getQueueConfigCall(
             String queueType,
             String queueName)
             throws ApiException {
@@ -343,7 +344,7 @@ class EventResource {
                 localVarAuthNames);
     }
 
-    private okhttp3.Call getQueueConfigValidateBeforeCall(
+    private Call getQueueConfigValidateBeforeCall(
             String queueType,
             String queueName)
             throws ApiException {
@@ -370,7 +371,7 @@ class EventResource {
   
     private ApiResponse<Map<String, Object>> getQueueConfigWithHttpInfo(String queueType, String queueName)
             throws ApiException {
-        okhttp3.Call call =
+        Call call =
                 getQueueConfigValidateBeforeCall(queueType, queueName);
         Type localVarReturnType = new TypeReference<Map<String, Object>>() {
         }.getType();
@@ -378,7 +379,7 @@ class EventResource {
     }
 
   
-    public okhttp3.Call getQueueNamesCall() throws ApiException {
+    public Call getQueueNamesCall() throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -412,7 +413,7 @@ class EventResource {
                 localVarAuthNames);
     }
 
-    private okhttp3.Call getQueueNamesValidateBeforeCall()
+    private Call getQueueNamesValidateBeforeCall()
             throws ApiException {
         return getQueueNamesCall();
     }
@@ -425,14 +426,12 @@ class EventResource {
 
   
     private ApiResponse<Object> getQueueNamesWithHttpInfo() throws ApiException {
-        okhttp3.Call call = getQueueNamesValidateBeforeCall();
+        Call call = getQueueNamesValidateBeforeCall();
         Type localVarReturnType = new TypeReference<>() {
         }.getType();
         return httpClient.execute(call, localVarReturnType);
     }
-
-  
-    public okhttp3.Call putQueueConfigCall(
+    public Call putQueueConfigCall(
             String body,
             String queueType,
             String queueName)
@@ -461,9 +460,6 @@ class EventResource {
 
         final String[] localVarContentTypes = {"application/json"};
         final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return httpClient.buildCall(
@@ -477,7 +473,7 @@ class EventResource {
                 localVarAuthNames);
     }
 
-    private okhttp3.Call putQueueConfigValidateBeforeCall(
+    private Call putQueueConfigValidateBeforeCall(
             String body,
             String queueType,
             String queueName)
@@ -498,8 +494,7 @@ class EventResource {
                     "Missing the required parameter 'queueName' when calling putQueueConfig(Async)");
         }
 
-        return putQueueConfigCall(
-                body, queueType, queueName);
+        return putQueueConfigCall(body, queueType, queueName);
     }
 
   
@@ -508,11 +503,9 @@ class EventResource {
         ApiResponse<Object> resp = putQueueConfigWithHttpInfo(body, queueType, queueName);
         return resp.getData();
     }
-
   
-    private ApiResponse<Object> putQueueConfigWithHttpInfo(
-            String body, String queueType, String queueName) throws ApiException {
-        okhttp3.Call call =
+    private ApiResponse<Object> putQueueConfigWithHttpInfo(String body, String queueType, String queueName) throws ApiException {
+        Call call =
                 putQueueConfigValidateBeforeCall(body, queueType, queueName);
         Type localVarReturnType = new TypeReference<>() {
         }.getType();
@@ -520,9 +513,7 @@ class EventResource {
     }
 
   
-    public okhttp3.Call removeEventHandlerStatusCall(
-            String name)
-            throws ApiException {
+    public Call removeEventHandlerStatusCall(String name) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -548,8 +539,6 @@ class EventResource {
         final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return httpClient.buildCall(
                 localVarPath,
@@ -562,7 +551,7 @@ class EventResource {
                 localVarAuthNames);
     }
 
-    private okhttp3.Call removeEventHandlerStatusValidateBeforeCall(
+    private Call removeEventHandlerStatusValidateBeforeCall(
             String name)
             throws ApiException {
         // verify the required parameter 'name' is set
@@ -582,13 +571,13 @@ class EventResource {
   
     private ApiResponse<Void> removeEventHandlerStatusWithHttpInfo(String name)
             throws ApiException {
-        okhttp3.Call call =
+        Call call =
                 removeEventHandlerStatusValidateBeforeCall(name);
         return httpClient.execute(call);
     }
 
   
-    public okhttp3.Call updateEventHandlerCall(
+    public Call updateEventHandlerCall(
             EventHandler eventHandler)
             throws ApiException {
 
@@ -625,7 +614,7 @@ class EventResource {
                 localVarAuthNames);
     }
 
-    private okhttp3.Call updateEventHandlerValidateBeforeCall(
+    private Call updateEventHandlerValidateBeforeCall(
             EventHandler eventHandler)
             throws ApiException {
         // verify the required parameter 'body' is set
@@ -651,18 +640,18 @@ class EventResource {
   
     private ApiResponse<Void> updateEventHandlerWithHttpInfo(EventHandler eventHandler)
             throws ApiException {
-        okhttp3.Call call =
+        Call call =
                 updateEventHandlerValidateBeforeCall(eventHandler);
         return httpClient.execute(call);
     }
 
     private ApiResponse<Void> handleIncomingEventWithHttpInfo(Map<String, Object> payload)
             throws ApiException {
-        okhttp3.Call call = handleIncomingEventValidateBeforeCall(payload);
+        Call call = handleIncomingEventValidateBeforeCall(payload);
         return httpClient.execute(call);
     }
 
-    private okhttp3.Call handleIncomingEventValidateBeforeCall(
+    private Call handleIncomingEventValidateBeforeCall(
             Map<String, Object> payload) throws ApiException {
 
         // create path and map variables

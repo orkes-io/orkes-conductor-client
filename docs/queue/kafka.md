@@ -38,7 +38,7 @@ QueueWorkerConfiguration getKafkaProducer() throws Exception {
 Now, the Conductor server must receive this brand new configuration:
 
 ```java
-import io.orkes.conductor.client.EventClient;
+import io.orkes.conductor.client.api.EventClient;
 import io.orkes.conductor.client.OrkesClients;
 
 void registerKafkaQueueConfiguration(OrkesClients orkesClients) throws Exception {

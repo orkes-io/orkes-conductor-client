@@ -155,7 +155,7 @@ Workflows represent the application state. With Conductor, you can query the wor
 
 ```java
 import io.orkes.conductor.client.OrkesClients;
-import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.ApiClient;
 OrkesClients orkesClients = OrkesClients(getApiClientWithCredentials());
 WorkflowClient workflowClient = orkesClients.getWorkflowClient();
 ```
@@ -274,10 +274,10 @@ What happens when a task is operating on a critical resource that can only handl
 ```java
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
-import io.orkes.conductor.client.MetadataClient;
+import io.orkes.conductor.client.api.MetadataClient;
 import io.orkes.conductor.client.OrkesClients;
-import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.WorkflowClient;
+import io.orkes.conductor.client.api.TaskClient;
+import io.orkes.conductor.client.api.WorkflowClient;
 
 import java.util.ArrayList;
 import java.util.List;
