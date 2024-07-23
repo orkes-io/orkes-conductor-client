@@ -110,6 +110,16 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     }
 
     @Override
+    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, List<String> waitUntilTasks, Integer waitForSeconds) {
+        String waitUntilTask = String.join(",", waitUntilTasks);
+        if(apiClient.isUseGRPC()) {
+            return grpcWorkflowClient.executeWorkflow(request, waitUntilTask, waitForSeconds);
+        } else {
+            return executeWorkflowHttp(request, waitUntilTask, waitForSeconds);
+        }
+    }
+
+    @Override
     public WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<WorkflowRun> future = executeWorkflow(request, waitUntilTask);
         return future.get(waitTimeout.get(ChronoUnit.MILLIS), TimeUnit.MILLISECONDS);
