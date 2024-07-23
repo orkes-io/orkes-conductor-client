@@ -29,7 +29,7 @@ public class GrantedAccessResponse {
 
     public GrantedAccessResponse addGrantedAccessItem(GrantedAccess grantedAccessItem) {
         if (this.grantedAccess == null) {
-            this.grantedAccess = new ArrayList<GrantedAccess>();
+            this.grantedAccess = new ArrayList<>();
         }
         this.grantedAccess.add(grantedAccessItem);
         return this;

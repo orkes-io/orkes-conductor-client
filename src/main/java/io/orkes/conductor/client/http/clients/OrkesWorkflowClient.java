@@ -10,26 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.clients;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import org.apache.commons.lang3.StringUtils;
-
-import io.orkes.conductor.client.ApiClient;
+import com.google.common.base.Preconditions;
 import io.orkes.conductor.client.WorkflowClient;
-import io.orkes.conductor.client.http.api.WorkflowBulkResourceApi;
-import io.orkes.conductor.client.http.api.WorkflowResourceApi;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.model.BulkResponse;
 import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
 import io.orkes.conductor.client.model.WorkflowRun;
@@ -43,25 +29,34 @@ import io.orkes.conductor.client.model.run.SearchResult;
 import io.orkes.conductor.client.model.run.Workflow;
 import io.orkes.conductor.client.model.run.WorkflowSummary;
 import io.orkes.conductor.client.model.run.WorkflowTestRequest;
+import org.apache.commons.lang3.StringUtils;
 
-import com.google.common.base.Preconditions;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable {
+public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, WorkflowClient {
 
-    protected ApiClient apiClient;
+    private final WorkflowResource httpClient;
 
-    private final WorkflowResourceApi httpClient;
-
-    private final WorkflowBulkResourceApi bulkResourceApi;
+    private final WorkflowBulkResource bulkResource;
 
     private ExecutorService executorService;
 
-    public OrkesWorkflowClient(ApiClient apiClient) {
-        this.apiClient = apiClient;
-        this.httpClient = new WorkflowResourceApi(apiClient);
-        this.bulkResourceApi = new WorkflowBulkResourceApi(apiClient);
+    public OrkesWorkflowClient(OrkesHttpClient httpClient) {
+        super(httpClient);
+        this.httpClient = new WorkflowResource(httpClient);
+        this.bulkResource = new WorkflowBulkResource(httpClient);
 
-        int threadCount = apiClient.getExecutorThreadCount();
+        int threadCount = httpClient.getExecutorThreadCount();
         if (threadCount < 1) {
             this.executorService = Executors.newCachedThreadPool();
         } else {
@@ -155,7 +150,7 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
     @Override
     public BulkResponse terminateWorkflows(List<String> workflowIds, String reason) {
         Preconditions.checkArgument(!workflowIds.isEmpty(), "workflow id cannot be blank");
-        return bulkResourceApi.terminate(workflowIds, reason, false);
+        return bulkResource.terminate(workflowIds, reason, false);
     }
 
     @Override
@@ -247,35 +242,35 @@ public class OrkesWorkflowClient extends WorkflowClient implements AutoCloseable
 
     @Override
     public BulkResponse pauseWorkflow(List<String> workflowIds) throws ApiException {
-        return bulkResourceApi.pauseWorkflow1(workflowIds);
+        return bulkResource.pauseWorkflow1(workflowIds);
     }
 
     @Override
     public BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
             throws ApiException {
-        return bulkResourceApi.restart1(workflowIds, useLatestDefinitions);
+        return bulkResource.restart1(workflowIds, useLatestDefinitions);
     }
 
     @Override
     public BulkResponse resumeWorkflow(List<String> workflowIds) throws ApiException {
-        return bulkResourceApi.resumeWorkflow1(workflowIds);
+        return bulkResource.resumeWorkflow1(workflowIds);
     }
 
     @Override
     public BulkResponse retryWorkflow(List<String> workflowIds) throws ApiException {
-        return bulkResourceApi.retry1(workflowIds);
+        return bulkResource.retry1(workflowIds);
     }
 
     @Override
     public BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
             throws ApiException {
-        return bulkResourceApi.terminate(workflowIds, reason, false);
+        return bulkResource.terminate(workflowIds, reason, false);
     }
 
     @Override
     public BulkResponse terminateWorkflowsWithFailure(List<String> workflowIds, String reason, boolean triggerFailureWorkflow)
             throws ApiException {
-        return bulkResourceApi.terminate(workflowIds, reason, triggerFailureWorkflow);
+        return bulkResource.terminate(workflowIds, reason, triggerFailureWorkflow);
     }
 
     @Override

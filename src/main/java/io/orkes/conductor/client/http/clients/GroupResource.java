@@ -10,39 +10,27 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http.api;
+package io.orkes.conductor.client.http.clients;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
 import io.orkes.conductor.client.model.ConductorUser;
 import io.orkes.conductor.client.model.GrantedAccessResponse;
 import io.orkes.conductor.client.model.Group;
 import io.orkes.conductor.client.model.UpsertGroupRequest;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GroupResourceApi {
-    private ApiClient apiClient;
+class GroupResource {
+    private final OrkesHttpClient apiClient;
 
-    public GroupResourceApi(ApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
-
-    public ApiClient getApiClient() {
-        return apiClient;
-    }
-
-    public void setApiClient(ApiClient apiClient) {
+    public GroupResource(OrkesHttpClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -58,9 +46,7 @@ public class GroupResourceApi {
      */
     public okhttp3.Call addUserToGroupCall(
             String groupId,
-            String userId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String userId)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -69,17 +55,17 @@ public class GroupResourceApi {
                 "/groups/{groupId}/users/{userId}"
                         .replaceAll(
                                 "\\{" + "groupId" + "\\}",
-                                apiClient.escapeString(groupId.toString()))
+                                apiClient.escapeString(groupId))
                         .replaceAll(
                                 "\\{" + "userId" + "\\}",
-                                apiClient.escapeString(userId.toString()));
+                                apiClient.escapeString(userId));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
@@ -91,28 +77,7 @@ public class GroupResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
         return apiClient.buildCall(
@@ -123,15 +88,12 @@ public class GroupResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call addUserToGroupValidateBeforeCall(
             String groupId,
-            String userId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String userId)
             throws ApiException {
         // verify the required parameter 'groupId' is set
         if (groupId == null) {
@@ -144,9 +106,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'userId' when calling addUserToGroup(Async)");
         }
 
-        okhttp3.Call call =
-                addUserToGroupCall(groupId, userId, progressListener, progressRequestListener);
-        return call;
+        return addUserToGroupCall(groupId, userId);
     }
 
     /**
@@ -173,7 +133,7 @@ public class GroupResourceApi {
     private ApiResponse<Void> addUserToGroupWithHttpInfo(String groupId, String userId)
             throws ApiException {
         okhttp3.Call call =
-                addUserToGroupValidateBeforeCall(groupId, userId, null, null);
+                addUserToGroupValidateBeforeCall(groupId, userId);
         return apiClient.execute(call);
     }
 
@@ -187,23 +147,21 @@ public class GroupResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call deleteGroupCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath =
                 "/groups/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
@@ -215,28 +173,7 @@ public class GroupResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
         return apiClient.buildCall(
@@ -247,14 +184,11 @@ public class GroupResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call deleteGroupValidateBeforeCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -262,9 +196,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'id' when calling deleteGroup(Async)");
         }
 
-        okhttp3.Call call =
-                deleteGroupCall(id, progressListener, progressRequestListener);
-        return call;
+        return deleteGroupCall(id);
     }
 
     /**
@@ -287,7 +219,7 @@ public class GroupResourceApi {
      *     response body
      */
     private ApiResponse<Void> deleteGroupWithHttpInfo(String id) throws ApiException {
-        okhttp3.Call call = deleteGroupValidateBeforeCall(id, null, null);
+        okhttp3.Call call = deleteGroupValidateBeforeCall(id);
         return apiClient.execute(call);
     }
 
@@ -301,9 +233,7 @@ public class GroupResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call getGrantedPermissions1Call(
-            String groupId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String groupId)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -312,14 +242,14 @@ public class GroupResourceApi {
                 "/groups/{groupId}/permissions"
                         .replaceAll(
                                 "\\{" + "groupId" + "\\}",
-                                apiClient.escapeString(groupId.toString()));
+                                apiClient.escapeString(groupId));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -330,28 +260,7 @@ public class GroupResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
         return apiClient.buildCall(
@@ -362,14 +271,11 @@ public class GroupResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call getGrantedPermissions1ValidateBeforeCall(
-            String groupId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String groupId)
             throws ApiException {
         // verify the required parameter 'groupId' is set
         if (groupId == null) {
@@ -377,9 +283,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'groupId' when calling getGrantedPermissions1(Async)");
         }
 
-        okhttp3.Call call =
-                getGrantedPermissions1Call(groupId, progressListener, progressRequestListener);
-        return call;
+        return getGrantedPermissions1Call(groupId);
     }
 
     /**
@@ -406,7 +310,7 @@ public class GroupResourceApi {
     private ApiResponse<GrantedAccessResponse> getGrantedPermissions1WithHttpInfo(String groupId)
             throws ApiException {
         okhttp3.Call call =
-                getGrantedPermissions1ValidateBeforeCall(groupId, null, null);
+                getGrantedPermissions1ValidateBeforeCall(groupId);
         Type localVarReturnType = new TypeReference<GrantedAccessResponse>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -421,23 +325,21 @@ public class GroupResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call getGroupCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath =
                 "/groups/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -448,28 +350,7 @@ public class GroupResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
         return apiClient.buildCall(
@@ -480,14 +361,11 @@ public class GroupResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call getGroupValidateBeforeCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -495,8 +373,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'id' when calling getGroup(Async)");
         }
 
-        okhttp3.Call call = getGroupCall(id, progressListener, progressRequestListener);
-        return call;
+        return getGroupCall(id);
     }
 
     /**
@@ -521,7 +398,7 @@ public class GroupResourceApi {
      *     response body
      */
     private ApiResponse<Group> getGroupWithHttpInfo(String id) throws ApiException {
-        okhttp3.Call call = getGroupValidateBeforeCall(id, null, null);
+        okhttp3.Call call = getGroupValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -536,23 +413,21 @@ public class GroupResourceApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call getUsersInGroupCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath =
                 "/groups/{id}/users"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -563,28 +438,7 @@ public class GroupResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
         return apiClient.buildCall(
@@ -595,14 +449,11 @@ public class GroupResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call getUsersInGroupValidateBeforeCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -610,9 +461,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'id' when calling getUsersInGroup(Async)");
         }
 
-        okhttp3.Call call =
-                getUsersInGroupCall(id, progressListener, progressRequestListener);
-        return call;
+        return getUsersInGroupCall(id);
     }
 
     /**
@@ -638,7 +487,7 @@ public class GroupResourceApi {
      */
     private ApiResponse<List<ConductorUser>> getUsersInGroupWithHttpInfo(String id)
             throws ApiException {
-        okhttp3.Call call = getUsersInGroupValidateBeforeCall(id, null, null);
+        okhttp3.Call call = getUsersInGroupValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<List<ConductorUser>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -651,21 +500,19 @@ public class GroupResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call listGroupsCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public okhttp3.Call listGroupsCall()
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/groups";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -676,28 +523,7 @@ public class GroupResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
         return apiClient.buildCall(
@@ -708,17 +534,13 @@ public class GroupResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call listGroupsValidateBeforeCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private okhttp3.Call listGroupsValidateBeforeCall()
             throws ApiException {
 
-        okhttp3.Call call = listGroupsCall(progressListener, progressRequestListener);
-        return call;
+        return listGroupsCall();
     }
 
     /**
@@ -741,7 +563,7 @@ public class GroupResourceApi {
      *     response body
      */
     private ApiResponse<List<Group>> listGroupsWithHttpInfo() throws ApiException {
-        okhttp3.Call call = listGroupsValidateBeforeCall(null, null);
+        okhttp3.Call call = listGroupsValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<Group>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -758,9 +580,7 @@ public class GroupResourceApi {
      */
     public okhttp3.Call removeUserFromGroupCall(
             String groupId,
-            String userId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String userId)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -769,17 +589,17 @@ public class GroupResourceApi {
                 "/groups/{groupId}/users/{userId}"
                         .replaceAll(
                                 "\\{" + "groupId" + "\\}",
-                                apiClient.escapeString(groupId.toString()))
+                                apiClient.escapeString(groupId))
                         .replaceAll(
                                 "\\{" + "userId" + "\\}",
-                                apiClient.escapeString(userId.toString()));
+                                apiClient.escapeString(userId));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
@@ -791,29 +611,6 @@ public class GroupResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[] {"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -823,15 +620,12 @@ public class GroupResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call removeUserFromGroupValidateBeforeCall(
             String groupId,
-            String userId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String userId)
             throws ApiException {
         // verify the required parameter 'groupId' is set
         if (groupId == null) {
@@ -844,9 +638,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'userId' when calling removeUserFromGroup(Async)");
         }
 
-        okhttp3.Call call =
-                removeUserFromGroupCall(groupId, userId, progressListener, progressRequestListener);
-        return call;
+        return removeUserFromGroupCall(groupId, userId);
     }
 
     /**
@@ -873,7 +665,7 @@ public class GroupResourceApi {
     private ApiResponse<Void> removeUserFromGroupWithHttpInfo(String groupId, String userId)
             throws ApiException {
         okhttp3.Call call =
-                removeUserFromGroupValidateBeforeCall(groupId, userId, null, null);
+                removeUserFromGroupValidateBeforeCall(groupId, userId);
         return apiClient.execute(call);
     }
 
@@ -889,23 +681,20 @@ public class GroupResourceApi {
      */
     public okhttp3.Call upsertGroupCall(
             UpsertGroupRequest upsertGroupRequest,
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
-        Object localVarPostBody = upsertGroupRequest;
 
         // create path and map variables
         String localVarPath =
                 "/groups/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -915,47 +704,21 @@ public class GroupResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[] {"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "PUT",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                upsertGroupRequest,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call upsertGroupValidateBeforeCall(
             UpsertGroupRequest upsertGroupRequest,
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (upsertGroupRequest == null) {
@@ -968,9 +731,7 @@ public class GroupResourceApi {
                     "Missing the required parameter 'id' when calling upsertGroup(Async)");
         }
 
-        okhttp3.Call call =
-                upsertGroupCall(upsertGroupRequest, id, progressListener, progressRequestListener);
-        return call;
+        return upsertGroupCall(upsertGroupRequest, id);
     }
 
     /**
@@ -999,7 +760,7 @@ public class GroupResourceApi {
     private ApiResponse<Group> upsertGroupWithHttpInfo(
             UpsertGroupRequest upsertGroupRequest, String id) throws ApiException {
         okhttp3.Call call =
-                upsertGroupValidateBeforeCall(upsertGroupRequest, id, null, null);
+                upsertGroupValidateBeforeCall(upsertGroupRequest, id);
         Type localVarReturnType = new TypeReference<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }

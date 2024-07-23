@@ -71,10 +71,8 @@ public abstract class QueueConfiguration {
         if (this.producer == null) {
             throw new RuntimeException("producer must be set");
         }
-        Map<String, Object> config =
-                Map.of(
-                        "consumer", this.consumer.getConfiguration(),
-                        "producer", this.producer.getConfiguration());
-        return config;
+        return Map.of(
+                "consumer", this.consumer.getConfiguration(),
+                "producer", this.producer.getConfiguration());
     }
 }

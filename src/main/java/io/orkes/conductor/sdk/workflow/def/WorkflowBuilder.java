@@ -158,7 +158,7 @@ public class WorkflowBuilder<T> {
 
         validate();
 
-        ConductorWorkflow<T> workflow = new ConductorWorkflow<T>(workflowExecutor);
+        ConductorWorkflow<T> workflow = new ConductorWorkflow<>(workflowExecutor);
         if (description != null) {
             workflow.setDescription(description);
         }

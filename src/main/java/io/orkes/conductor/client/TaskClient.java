@@ -25,17 +25,17 @@ import io.orkes.conductor.client.model.metadata.tasks.TaskResult;
 import io.orkes.conductor.client.model.run.SearchResult;
 import io.orkes.conductor.client.model.run.Workflow;
 
-public abstract class TaskClient  {
+public interface TaskClient  {
 
-    public abstract Task pollTask(String taskType, String workerId, String domain);
+    Task pollTask(String taskType, String workerId, String domain);
 
-    public abstract List<Task> batchPollTasksByTaskType(
+    List<Task> batchPollTasksByTaskType(
             String taskType, String workerId, int count, int timeoutInMillisecond);
 
-    public abstract List<Task> batchPollTasksInDomain(
+    List<Task> batchPollTasksInDomain(
             String taskType, String domain, String workerId, int count, int timeoutInMillisecond);
 
-    public abstract void updateTask(TaskResult taskResult);
+    void updateTask(TaskResult taskResult);
 
     /**
      * Update the task status and output based given workflow id and task reference name
@@ -44,7 +44,7 @@ public abstract class TaskClient  {
      * @param status Status of the task
      * @param output Output for the task
      */
-    public abstract void updateTask(String workflowId, String taskReferenceName, TaskResult.Status status, Object output);
+    void updateTask(String workflowId, String taskReferenceName, TaskResult.Status status, Object output);
 
     /**
      * Update the task status and output based given workflow id and task reference name and return back the updated workflow status
@@ -54,39 +54,39 @@ public abstract class TaskClient  {
      * @param output Output for the task
      * @return Status of the workflow after updating the task
      */
-    public abstract Workflow updateTaskSync(String workflowId, String taskReferenceName, TaskResult.Status status, Object output);
+    Workflow updateTaskSync(String workflowId, String taskReferenceName, TaskResult.Status status, Object output);
 
-    public abstract Optional<String> evaluateAndUploadLargePayload(
+    Optional<String> evaluateAndUploadLargePayload(
             Map<String, Object> taskOutputData, String taskType);
 
-    public abstract Boolean ack(String taskId, String workerId);
+    Boolean ack(String taskId, String workerId);
 
-    public abstract void logMessageForTask(String taskId, String logMessage);
+    void logMessageForTask(String taskId, String logMessage);
 
-    public abstract List<TaskExecLog> getTaskLogs(String taskId);
+    List<TaskExecLog> getTaskLogs(String taskId);
 
-    public abstract Task getTaskDetails(String taskId);
+    Task getTaskDetails(String taskId);
 
-    public abstract void removeTaskFromQueue(String taskType, String taskId);
+    void removeTaskFromQueue(String taskType, String taskId);
 
-    public abstract int getQueueSizeForTask(String taskType);
+    int getQueueSizeForTask(String taskType);
 
-    public abstract int getQueueSizeForTask(
+    int getQueueSizeForTask(
             String taskType, String domain, String isolationGroupId, String executionNamespace);
 
-    public abstract List<PollData> getPollData(String taskType);
+    List<PollData> getPollData(String taskType);
 
-    public abstract List<PollData> getAllPollData();
+    List<PollData> getAllPollData();
 
-    public abstract String requeueAllPendingTasks();
+    String requeueAllPendingTasks();
 
-    public abstract String requeuePendingTasksByTaskType(String taskType);
+    String requeuePendingTasksByTaskType(String taskType);
 
-    public abstract SearchResult<TaskSummary> search(String query);
+    SearchResult<TaskSummary> search(String query);
 
-    public abstract SearchResult<Task> searchV2(String query);
+    SearchResult<Task> searchV2(String query);
 
-    public abstract SearchResult<TaskSummary> search(Integer start, Integer size, String sort, String freeText, String query);
+    SearchResult<TaskSummary> search(Integer start, Integer size, String sort, String freeText, String query);
 
-    public abstract SearchResult<Task> searchV2(Integer start, Integer size, String sort, String freeText, String query);
+    SearchResult<Task> searchV2(Integer start, Integer size, String sort, String freeText, String query);
 }

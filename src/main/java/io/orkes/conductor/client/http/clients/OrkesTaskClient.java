@@ -10,13 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.clients;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.ObjectMapperProvider;
 import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.http.api.TaskResourceApi;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;
@@ -30,16 +28,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class OrkesTaskClient extends TaskClient {
+public class OrkesTaskClient implements TaskClient {
 
-    private final TaskResourceApi taskResourceApi;
+    private final TaskResource taskResource;
 
     private final ObjectMapper objectMapper = new ObjectMapperProvider().getObjectMapper();
 
-    public OrkesTaskClient(ApiClient apiClient) {
-        this.taskResourceApi = new TaskResourceApi(apiClient);
+    public OrkesTaskClient(OrkesHttpClient apiClient) {
+        this.taskResource = new TaskResource(apiClient);
     }
-
 
     @Override
     public Task pollTask(String taskType, String workerId, String domain) {
@@ -59,12 +56,12 @@ public class OrkesTaskClient extends TaskClient {
     @Override
     public List<Task> batchPollTasksInDomain(
             String taskType, String domain, String workerId, int count, int timeoutInMillisecond) {
-        return taskResourceApi.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
+        return taskResource.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
     }
 
     @Override
     public void updateTask(TaskResult taskResult) {
-        taskResourceApi.updateTask(taskResult);
+        taskResource.updateTask(taskResult);
     }
 
 
@@ -83,7 +80,7 @@ public class OrkesTaskClient extends TaskClient {
         } catch (Exception e) {
             outputMap.put("result", output);
         }
-        taskResourceApi.updateTaskByRefName(outputMap, workflowId, taskReferenceName, status.toString());
+        taskResource.updateTaskByRefName(outputMap, workflowId, taskReferenceName, status.toString());
     }
 
     /**
@@ -99,11 +96,10 @@ public class OrkesTaskClient extends TaskClient {
         Map<String, Object> outputMap = new HashMap<>();
         try {
             outputMap = objectMapper.convertValue(output, Map.class);
-            ;
         } catch (Exception e) {
             outputMap.put("result", output);
         }
-        return taskResourceApi.updateTaskSync(outputMap, workflowId, taskReferenceName, status.toString());
+        return taskResource.updateTaskSync(outputMap, workflowId, taskReferenceName, status.toString());
     }
 
     @Override
@@ -119,17 +115,17 @@ public class OrkesTaskClient extends TaskClient {
 
     @Override
     public void logMessageForTask(String taskId, String logMessage) {
-        taskResourceApi.log(logMessage, taskId);
+        taskResource.log(logMessage, taskId);
     }
 
     @Override
     public List<TaskExecLog> getTaskLogs(String taskId) {
-        return taskResourceApi.getTaskLogs(taskId);
+        return taskResource.getTaskLogs(taskId);
     }
 
     @Override
     public Task getTaskDetails(String taskId) {
-        return taskResourceApi.getTask(taskId);
+        return taskResource.getTask(taskId);
     }
 
     @Override
@@ -139,12 +135,12 @@ public class OrkesTaskClient extends TaskClient {
 
     @Override
     public int getQueueSizeForTask(String taskType) {
-        return taskResourceApi.size(List.of(taskType)).get(taskType);
+        return taskResource.size(List.of(taskType)).get(taskType);
     }
 
     @Override
     public int getQueueSizeForTask(String taskType, String domain, String isolationGroupId, String executionNamespace) {
-        return taskResourceApi.size(List.of(taskType)).get(taskType);
+        return taskResource.size(List.of(taskType)).get(taskType);
     }
 
     @Override
@@ -164,7 +160,7 @@ public class OrkesTaskClient extends TaskClient {
 
     @Override
     public String requeuePendingTasksByTaskType(String taskType) {
-        return taskResourceApi.requeuePendingTask(taskType);
+        return taskResource.requeuePendingTask(taskType);
     }
 
     @Override
@@ -179,7 +175,7 @@ public class OrkesTaskClient extends TaskClient {
 
     @Override
     public SearchResult<TaskSummary> search(Integer start, Integer size, String sort, String freeText, String query) {
-        return taskResourceApi.searchTasks(start, size, sort, freeText, query);
+        return taskResource.searchTasks(start, size, sort, freeText, query);
     }
 
     @Override

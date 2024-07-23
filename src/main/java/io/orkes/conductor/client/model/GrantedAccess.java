@@ -68,7 +68,7 @@ public class GrantedAccess {
 
     public GrantedAccess addAccessItem(AccessEnum accessItem) {
         if (this.access == null) {
-            this.access = new ArrayList<AccessEnum>();
+            this.access = new ArrayList<>();
         }
         this.access.add(accessItem);
         return this;

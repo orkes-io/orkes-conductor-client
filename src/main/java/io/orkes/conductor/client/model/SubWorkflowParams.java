@@ -60,7 +60,7 @@ public class SubWorkflowParams {
 
     public SubWorkflowParams putTaskToDomainItem(String key, String taskToDomainItem) {
         if (this.taskToDomain == null) {
-            this.taskToDomain = new HashMap<String, String>();
+            this.taskToDomain = new HashMap<>();
         }
         this.taskToDomain.put(key, taskToDomainItem);
         return this;

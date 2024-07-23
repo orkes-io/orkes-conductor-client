@@ -13,9 +13,9 @@
 package io.orkes.conductor.sdk.testing;
 
 
-import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.TaskClient;
-import io.orkes.conductor.client.http.OrkesTaskClient;
+import io.orkes.conductor.client.http.clients.OrkesTaskClient;
 import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 import io.orkes.conductor.sdk.workflow.executor.task.AnnotatedWorkerExecutor;
 
@@ -28,7 +28,7 @@ public class WorkflowTestRunner {
     private final WorkflowExecutor workflowExecutor;
 
     public WorkflowTestRunner(String serverApiUrl) {
-        TaskClient taskClient = new OrkesTaskClient(new ApiClient.Builder()
+        TaskClient taskClient = new OrkesTaskClient(new OrkesHttpClient.Builder()
                 .basePath(serverApiUrl)
                 .build());
         this.annotatedWorkerExecutor = new AnnotatedWorkerExecutor(taskClient);
@@ -40,7 +40,7 @@ public class WorkflowTestRunner {
         localServerRunner = new LocalServerRunner(port, conductorVersion);
 
         String serverAPIUrl = localServerRunner.getServerAPIUrl();
-        TaskClient taskClient = new OrkesTaskClient(new ApiClient.Builder()
+        TaskClient taskClient = new OrkesTaskClient(new OrkesHttpClient.Builder()
                 .basePath(serverAPIUrl)
                 .build());
         this.annotatedWorkerExecutor = new AnnotatedWorkerExecutor(taskClient);

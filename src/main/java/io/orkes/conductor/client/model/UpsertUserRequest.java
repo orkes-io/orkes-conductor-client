@@ -69,7 +69,7 @@ public class UpsertUserRequest {
 
     public UpsertUserRequest addGroupsItem(String groupsItem) {
         if (this.groups == null) {
-            this.groups = new ArrayList<String>();
+            this.groups = new ArrayList<>();
         }
         this.groups.add(groupsItem);
         return this;
@@ -115,7 +115,7 @@ public class UpsertUserRequest {
 
     public UpsertUserRequest addRolesItem(RolesEnum rolesItem) {
         if (this.roles == null) {
-            this.roles = new ArrayList<RolesEnum>();
+            this.roles = new ArrayList<>();
         }
         this.roles.add(rolesItem);
         return this;

@@ -10,67 +10,66 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.clients;
 
 import java.util.List;
 import java.util.Set;
 
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.SecretClient;
-import io.orkes.conductor.client.http.api.SecretResourceApi;
+import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.TagObject;
 
 public class OrkesSecretClient extends OrkesClient implements SecretClient {
 
-    private final SecretResourceApi secretResourceApi;
+    private final SecretResource secretResource;
 
-    public OrkesSecretClient(ApiClient apiClient) {
+    public OrkesSecretClient(OrkesHttpClient apiClient) {
         super(apiClient);
-        this.secretResourceApi = new SecretResourceApi(apiClient);
+        this.secretResource = new SecretResource(apiClient);
     }
 
     @Override
     public void deleteSecret(String key) throws ApiException {
-        secretResourceApi.deleteSecret(key);
+        secretResource.deleteSecret(key);
     }
 
     @Override
     public String getSecret(String key) throws ApiException {
-        return secretResourceApi.getSecret(key);
+        return secretResource.getSecret(key);
     }
 
     @Override
     public Set<String> listAllSecretNames() throws ApiException {
-        return secretResourceApi.listAllSecretNames();
+        return secretResource.listAllSecretNames();
     }
 
     @Override
     public List<String> listSecretsThatUserCanGrantAccessTo() throws ApiException {
-        return secretResourceApi.listSecretsThatUserCanGrantAccessTo();
+        return secretResource.listSecretsThatUserCanGrantAccessTo();
     }
 
     @Override
     public void putSecret(String value, String key) throws ApiException {
-        secretResourceApi.putSecret(value, key);
+        secretResource.putSecret(value, key);
     }
 
     @Override
     public boolean secretExists(String key) throws ApiException {
-        return secretResourceApi.secretExists(key);
+        return secretResource.secretExists(key);
     }
 
     @Override
     public void setSecretTags(List<TagObject> tags, String key) {
-        secretResourceApi.putTagForSecret(tags, key);
+        secretResource.putTagForSecret(tags, key);
     }
 
     @Override
     public void deleteSecretTags(List<TagObject> tags, String key) {
-        secretResourceApi.deleteTagForSecret(tags, key);
+        secretResource.deleteTagForSecret(tags, key);
     }
 
     @Override
     public List<TagObject> getSecretTags(String key) {
-        return secretResourceApi.getTags(key);
+        return secretResource.getTags(key);
     }
 }

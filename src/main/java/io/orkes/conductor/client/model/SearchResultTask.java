@@ -35,7 +35,7 @@ public class SearchResultTask {
 
     public SearchResultTask addResultsItem(Task resultsItem) {
         if (this.results == null) {
-            this.results = new ArrayList<Task>();
+            this.results = new ArrayList<>();
         }
         this.results.add(resultsItem);
         return this;

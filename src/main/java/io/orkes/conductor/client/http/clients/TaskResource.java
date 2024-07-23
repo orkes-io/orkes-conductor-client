@@ -10,15 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http.api;
+package io.orkes.conductor.client.http.clients;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
 import io.orkes.conductor.client.model.ExternalStorageLocation;
 import io.orkes.conductor.client.model.SearchResultTask;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
@@ -29,7 +26,6 @@ import io.orkes.conductor.client.model.run.SearchResult;
 import io.orkes.conductor.client.model.run.TaskSummary;
 import io.orkes.conductor.client.model.run.Workflow;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -38,44 +34,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TaskResourceApi {
-    private ApiClient apiClient;
+class TaskResource {
+    private final OrkesHttpClient apiClient;
 
-    public TaskResourceApi(ApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
-
-    public ApiClient getApiClient() {
-        return apiClient;
-    }
-
-    public void setApiClient(ApiClient apiClient) {
-        this.apiClient = apiClient;
+    public TaskResource(OrkesHttpClient httpClient) {
+        this.apiClient = httpClient;
     }
 
     /**
      * Build call for all
      *
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call allCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public okhttp3.Call allCall()
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/tasks/queue/all";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -86,29 +70,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -118,17 +79,13 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call allValidateBeforeCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private okhttp3.Call allValidateBeforeCall()
             throws ApiException {
 
-        okhttp3.Call call = allCall(progressListener, progressRequestListener);
-        return call;
+        return allCall();
     }
 
     /**
@@ -151,7 +108,7 @@ public class TaskResourceApi {
      *                      response body
      */
     private ApiResponse<Map<String, Long>> allWithHttpInfo() throws ApiException {
-        okhttp3.Call call = allValidateBeforeCall(null, null);
+        okhttp3.Call call = allValidateBeforeCall();
         Type localVarReturnType = new TypeReference<Map<String, Long>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -160,26 +117,22 @@ public class TaskResourceApi {
     /**
      * Build call for allVerbose
      *
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call allVerboseCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public okhttp3.Call allVerboseCall()
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/tasks/queue/all/verbose";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -190,29 +143,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -222,17 +152,13 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call allVerboseValidateBeforeCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private okhttp3.Call allVerboseValidateBeforeCall()
             throws ApiException {
 
-        okhttp3.Call call = allVerboseCall(progressListener, progressRequestListener);
-        return call;
+        return allVerboseCall();
     }
 
     /**
@@ -256,7 +182,7 @@ public class TaskResourceApi {
      */
     private ApiResponse<Map<String, Map<String, Map<String, Long>>>> allVerboseWithHttpInfo()
             throws ApiException {
-        okhttp3.Call call = allVerboseValidateBeforeCall(null, null);
+        okhttp3.Call call = allVerboseValidateBeforeCall();
         Type localVarReturnType =
                 new TypeReference<Map<String, Map<String, Map<String, Long>>>>() {
                 }.getType();
@@ -266,13 +192,11 @@ public class TaskResourceApi {
     /**
      * Build call for batchPoll
      *
-     * @param tasktype                (required)
-     * @param workerid                (optional)
-     * @param domain                  (optional)
-     * @param count                   (optional, default to 1)
-     * @param timeout                 (optional, default to 100)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param tasktype (required)
+     * @param workerid (optional)
+     * @param domain   (optional)
+     * @param count    (optional, default to 1)
+     * @param timeout  (optional, default to 100)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
@@ -281,9 +205,7 @@ public class TaskResourceApi {
             String workerid,
             String domain,
             Integer count,
-            Integer timeout,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            Integer timeout)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -292,10 +214,10 @@ public class TaskResourceApi {
                 "/tasks/poll/batch/{tasktype}"
                         .replaceAll(
                                 "\\{" + "tasktype" + "\\}",
-                                apiClient.escapeString(tasktype.toString()));
+                                apiClient.escapeString(tasktype));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
         if (workerid != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("workerid", workerid));
         if (domain != null) localVarQueryParams.addAll(apiClient.parameterToPair("domain", domain));
@@ -303,9 +225,9 @@ public class TaskResourceApi {
         if (timeout != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("timeout", timeout));
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -316,29 +238,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -348,8 +247,7 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call batchPollValidateBeforeCall(
@@ -357,9 +255,7 @@ public class TaskResourceApi {
             String workerid,
             String domain,
             Integer count,
-            Integer timeout,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            Integer timeout)
             throws ApiException {
         // verify the required parameter 'tasktype' is set
         if (tasktype == null) {
@@ -367,16 +263,12 @@ public class TaskResourceApi {
                     "Missing the required parameter 'tasktype' when calling batchPoll(Async)");
         }
 
-        okhttp3.Call call =
-                batchPollCall(
-                        tasktype,
-                        workerid,
-                        domain,
-                        count,
-                        timeout,
-                        progressListener,
-                        progressRequestListener);
-        return call;
+        return batchPollCall(
+                tasktype,
+                workerid,
+                domain,
+                count,
+                timeout);
     }
 
     /**
@@ -415,7 +307,7 @@ public class TaskResourceApi {
             String tasktype, String workerid, String domain, Integer count, Integer timeout)
             throws ApiException {
         okhttp3.Call call =
-                batchPollValidateBeforeCall(tasktype, workerid, domain, count, timeout, null, null);
+                batchPollValidateBeforeCall(tasktype, workerid, domain, count, timeout);
         Type localVarReturnType = new TypeReference<List<Task>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -424,26 +316,22 @@ public class TaskResourceApi {
     /**
      * Build call for getAllPollData
      *
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call getAllPollDataCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public okhttp3.Call getAllPollDataCall()
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/tasks/queue/polldata/all";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -454,29 +342,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -486,18 +351,13 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call getAllPollDataValidateBeforeCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private okhttp3.Call getAllPollDataValidateBeforeCall()
             throws ApiException {
 
-        okhttp3.Call call =
-                getAllPollDataCall(progressListener, progressRequestListener);
-        return call;
+        return getAllPollDataCall();
     }
 
     /**
@@ -520,7 +380,7 @@ public class TaskResourceApi {
      *                      response body
      */
     private ApiResponse<List<PollData>> getAllPollDataWithHttpInfo() throws ApiException {
-        okhttp3.Call call = getAllPollDataValidateBeforeCall(null, null);
+        okhttp3.Call call = getAllPollDataValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<PollData>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -529,37 +389,33 @@ public class TaskResourceApi {
     /**
      * Build call for getExternalStorageLocation1
      *
-     * @param path                    (required)
-     * @param operation               (required)
-     * @param payloadType             (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param path        (required)
+     * @param operation   (required)
+     * @param payloadType (required)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call getExternalStorageLocation1Call(
             String path,
             String operation,
-            String payloadType,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String payloadType)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/tasks/externalstoragelocation";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
         if (path != null) localVarQueryParams.addAll(apiClient.parameterToPair("path", path));
         if (operation != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("operation", operation));
         if (payloadType != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("payloadType", payloadType));
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -570,29 +426,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -602,16 +435,13 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call getExternalStorageLocation1ValidateBeforeCall(
             String path,
             String operation,
-            String payloadType,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String payloadType)
             throws ApiException {
         // verify the required parameter 'path' is set
         if (path == null) {
@@ -629,10 +459,8 @@ public class TaskResourceApi {
                     "Missing the required parameter 'payloadType' when calling getExternalStorageLocation1(Async)");
         }
 
-        okhttp3.Call call =
-                getExternalStorageLocation1Call(
-                        path, operation, payloadType, progressListener, progressRequestListener);
-        return call;
+        return getExternalStorageLocation1Call(
+                path, operation, payloadType);
     }
 
     /**
@@ -666,7 +494,7 @@ public class TaskResourceApi {
             String path, String operation, String payloadType) throws ApiException {
         okhttp3.Call call =
                 getExternalStorageLocation1ValidateBeforeCall(
-                        path, operation, payloadType, null, null);
+                        path, operation, payloadType);
         Type localVarReturnType = new TypeReference<ExternalStorageLocation>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -675,30 +503,26 @@ public class TaskResourceApi {
     /**
      * Build call for getPollData
      *
-     * @param taskType                (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param taskType (required)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call getPollDataCall(
-            String taskType,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskType)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/tasks/queue/polldata";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
         if (taskType != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("taskType", taskType));
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -709,29 +533,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -741,14 +542,11 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call getPollDataValidateBeforeCall(
-            String taskType,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskType)
             throws ApiException {
         // verify the required parameter 'taskType' is set
         if (taskType == null) {
@@ -756,9 +554,7 @@ public class TaskResourceApi {
                     "Missing the required parameter 'taskType' when calling getPollData(Async)");
         }
 
-        okhttp3.Call call =
-                getPollDataCall(taskType, progressListener, progressRequestListener);
-        return call;
+        return getPollDataCall(taskType);
     }
 
     /**
@@ -784,7 +580,7 @@ public class TaskResourceApi {
      */
     private ApiResponse<List<PollData>> getPollDataWithHttpInfo(String taskType)
             throws ApiException {
-        okhttp3.Call call = getPollDataValidateBeforeCall(taskType, null, null);
+        okhttp3.Call call = getPollDataValidateBeforeCall(taskType);
         Type localVarReturnType = new TypeReference<List<PollData>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -793,16 +589,12 @@ public class TaskResourceApi {
     /**
      * Build call for getTask
      *
-     * @param taskId                  (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param taskId (required)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call getTaskCall(
-            String taskId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskId)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -811,14 +603,14 @@ public class TaskResourceApi {
                 "/tasks/{taskId}"
                         .replaceAll(
                                 "\\{" + "taskId" + "\\}",
-                                apiClient.escapeString(taskId.toString()));
+                                apiClient.escapeString(taskId));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -829,29 +621,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -861,14 +630,11 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call getTaskValidateBeforeCall(
-            String taskId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskId)
             throws ApiException {
         // verify the required parameter 'taskId' is set
         if (taskId == null) {
@@ -876,9 +642,7 @@ public class TaskResourceApi {
                     "Missing the required parameter 'taskId' when calling getTask(Async)");
         }
 
-        okhttp3.Call call =
-                getTaskCall(taskId, progressListener, progressRequestListener);
-        return call;
+        return getTaskCall(taskId);
     }
 
     /**
@@ -903,7 +667,7 @@ public class TaskResourceApi {
      *                      response body
      */
     private ApiResponse<Task> getTaskWithHttpInfo(String taskId) throws ApiException {
-        okhttp3.Call call = getTaskValidateBeforeCall(taskId, null, null);
+        okhttp3.Call call = getTaskValidateBeforeCall(taskId);
         Type localVarReturnType = new TypeReference<Task>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -912,16 +676,12 @@ public class TaskResourceApi {
     /**
      * Build call for getTaskLogs
      *
-     * @param taskId                  (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param taskId (required)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call getTaskLogsCall(
-            String taskId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskId)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -930,14 +690,14 @@ public class TaskResourceApi {
                 "/tasks/{taskId}/log"
                         .replaceAll(
                                 "\\{" + "taskId" + "\\}",
-                                apiClient.escapeString(taskId.toString()));
+                                apiClient.escapeString(taskId));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -948,29 +708,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -980,14 +717,11 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call getTaskLogsValidateBeforeCall(
-            String taskId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskId)
             throws ApiException {
         // verify the required parameter 'taskId' is set
         if (taskId == null) {
@@ -995,9 +729,7 @@ public class TaskResourceApi {
                     "Missing the required parameter 'taskId' when calling getTaskLogs(Async)");
         }
 
-        okhttp3.Call call =
-                getTaskLogsCall(taskId, progressListener, progressRequestListener);
-        return call;
+        return getTaskLogsCall(taskId);
     }
 
     /**
@@ -1023,7 +755,7 @@ public class TaskResourceApi {
      */
     private ApiResponse<List<TaskExecLog>> getTaskLogsWithHttpInfo(String taskId)
             throws ApiException {
-        okhttp3.Call call = getTaskLogsValidateBeforeCall(taskId, null, null);
+        okhttp3.Call call = getTaskLogsValidateBeforeCall(taskId);
         Type localVarReturnType = new TypeReference<List<TaskExecLog>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1032,34 +764,29 @@ public class TaskResourceApi {
     /**
      * Build call for log
      *
-     * @param body                    (required)
-     * @param taskId                  (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param body   (required)
+     * @param taskId (required)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call logCall(
             String body,
-            String taskId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskId)
             throws ApiException {
-        Object localVarPostBody = body;
 
         // create path and map variables
         String localVarPath =
                 "/tasks/{taskId}/log"
                         .replaceAll(
                                 "\\{" + "taskId" + "\\}",
-                                apiClient.escapeString(taskId.toString()));
+                                apiClient.escapeString(taskId));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
@@ -1070,47 +797,21 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "POST",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                body,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call logValidateBeforeCall(
             String body,
-            String taskId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskId)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
@@ -1122,9 +823,7 @@ public class TaskResourceApi {
                     "Missing the required parameter 'taskId' when calling log(Async)");
         }
 
-        okhttp3.Call call =
-                logCall(body, taskId, progressListener, progressRequestListener);
-        return call;
+        return logCall(body, taskId);
     }
 
     /**
@@ -1149,27 +848,23 @@ public class TaskResourceApi {
      *                      response body
      */
     private ApiResponse<Void> logWithHttpInfo(String body, String taskId) throws ApiException {
-        okhttp3.Call call = logValidateBeforeCall(body, taskId, null, null);
+        okhttp3.Call call = logValidateBeforeCall(body, taskId);
         return apiClient.execute(call);
     }
 
     /**
      * Build call for poll
      *
-     * @param tasktype                (required)
-     * @param workerid                (optional)
-     * @param domain                  (optional)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param tasktype (required)
+     * @param workerid (optional)
+     * @param domain   (optional)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call pollCall(
             String tasktype,
             String workerid,
-            String domain,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String domain)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -1178,17 +873,17 @@ public class TaskResourceApi {
                 "/tasks/poll/{tasktype}"
                         .replaceAll(
                                 "\\{" + "tasktype" + "\\}",
-                                apiClient.escapeString(tasktype.toString()));
+                                apiClient.escapeString(tasktype));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
         if (workerid != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("workerid", workerid));
         if (domain != null) localVarQueryParams.addAll(apiClient.parameterToPair("domain", domain));
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1199,29 +894,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -1231,16 +903,13 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call pollValidateBeforeCall(
             String tasktype,
             String workerid,
-            String domain,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String domain)
             throws ApiException {
         // verify the required parameter 'tasktype' is set
         if (tasktype == null) {
@@ -1248,9 +917,7 @@ public class TaskResourceApi {
                     "Missing the required parameter 'tasktype' when calling poll(Async)");
         }
 
-        okhttp3.Call call =
-                pollCall(tasktype, workerid, domain, progressListener, progressRequestListener);
-        return call;
+        return pollCall(tasktype, workerid, domain);
     }
 
     /**
@@ -1281,7 +948,7 @@ public class TaskResourceApi {
     private ApiResponse<Task> pollWithHttpInfo(String tasktype, String workerid, String domain)
             throws ApiException {
         okhttp3.Call call =
-                pollValidateBeforeCall(tasktype, workerid, domain, null, null);
+                pollValidateBeforeCall(tasktype, workerid, domain);
         Type localVarReturnType = new TypeReference<Task>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1290,16 +957,12 @@ public class TaskResourceApi {
     /**
      * Build call for requeuePendingTask
      *
-     * @param taskType                (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param taskType (required)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call requeuePendingTaskCall(
-            String taskType,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskType)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -1308,14 +971,14 @@ public class TaskResourceApi {
                 "/tasks/queue/requeue/{taskType}"
                         .replaceAll(
                                 "\\{" + "taskType" + "\\}",
-                                apiClient.escapeString(taskType.toString()));
+                                apiClient.escapeString(taskType));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"text/plain"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1326,29 +989,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -1358,14 +998,11 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call requeuePendingTaskValidateBeforeCall(
-            String taskType,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskType)
             throws ApiException {
         // verify the required parameter 'taskType' is set
         if (taskType == null) {
@@ -1373,9 +1010,7 @@ public class TaskResourceApi {
                     "Missing the required parameter 'taskType' when calling requeuePendingTask(Async)");
         }
 
-        okhttp3.Call call =
-                requeuePendingTaskCall(taskType, progressListener, progressRequestListener);
-        return call;
+        return requeuePendingTaskCall(taskType);
     }
 
     /**
@@ -1401,7 +1036,7 @@ public class TaskResourceApi {
      */
     private ApiResponse<String> requeuePendingTaskWithHttpInfo(String taskType)
             throws ApiException {
-        okhttp3.Call call = requeuePendingTaskValidateBeforeCall(taskType, null, null);
+        okhttp3.Call call = requeuePendingTaskValidateBeforeCall(taskType);
         Type localVarReturnType = new TypeReference<String>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1410,13 +1045,11 @@ public class TaskResourceApi {
     /**
      * Build call for search1
      *
-     * @param start                   (optional, default to 0)
-     * @param size                    (optional, default to 100)
-     * @param sort                    (optional)
-     * @param freeText                (optional, default to *)
-     * @param query                   (optional)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param start    (optional, default to 0)
+     * @param size     (optional, default to 100)
+     * @param sort     (optional)
+     * @param freeText (optional, default to *)
+     * @param query    (optional)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
@@ -1425,17 +1058,15 @@ public class TaskResourceApi {
             Integer size,
             String sort,
             String freeText,
-            String query,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String query)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/tasks/search";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
         if (start != null) localVarQueryParams.addAll(apiClient.parameterToPair("start", start));
         if (size != null) localVarQueryParams.addAll(apiClient.parameterToPair("size", size));
         if (sort != null) localVarQueryParams.addAll(apiClient.parameterToPair("sort", sort));
@@ -1443,9 +1074,9 @@ public class TaskResourceApi {
             localVarQueryParams.addAll(apiClient.parameterToPair("freeText", freeText));
         if (query != null) localVarQueryParams.addAll(apiClient.parameterToPair("query", query));
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1456,29 +1087,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -1488,8 +1096,7 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call searchTasksValidateBeforeCall(
@@ -1497,21 +1104,15 @@ public class TaskResourceApi {
             Integer size,
             String sort,
             String freeText,
-            String query,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String query)
             throws ApiException {
 
-        okhttp3.Call call =
-                searchTasksCall(
-                        start,
-                        size,
-                        sort,
-                        freeText,
-                        query,
-                        progressListener,
-                        progressRequestListener);
-        return call;
+        return searchTasksCall(
+                start,
+                size,
+                sort,
+                freeText,
+                query);
     }
 
     /**
@@ -1554,7 +1155,7 @@ public class TaskResourceApi {
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         okhttp3.Call call =
-                searchTasksValidateBeforeCall(start, size, sort, freeText, query, null, null);
+                searchTasksValidateBeforeCall(start, size, sort, freeText, query);
         Type localVarReturnType = new TypeReference<SearchResult<TaskSummary>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1563,13 +1164,11 @@ public class TaskResourceApi {
     /**
      * Build call for searchV21
      *
-     * @param start                   (optional, default to 0)
-     * @param size                    (optional, default to 100)
-     * @param sort                    (optional)
-     * @param freeText                (optional, default to *)
-     * @param query                   (optional)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param start    (optional, default to 0)
+     * @param size     (optional, default to 100)
+     * @param sort     (optional)
+     * @param freeText (optional, default to *)
+     * @param query    (optional)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
@@ -1578,17 +1177,15 @@ public class TaskResourceApi {
             Integer size,
             String sort,
             String freeText,
-            String query,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String query)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/tasks/search-v2";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
         if (start != null) localVarQueryParams.addAll(apiClient.parameterToPair("start", start));
         if (size != null) localVarQueryParams.addAll(apiClient.parameterToPair("size", size));
         if (sort != null) localVarQueryParams.addAll(apiClient.parameterToPair("sort", sort));
@@ -1596,9 +1193,9 @@ public class TaskResourceApi {
             localVarQueryParams.addAll(apiClient.parameterToPair("freeText", freeText));
         if (query != null) localVarQueryParams.addAll(apiClient.parameterToPair("query", query));
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1609,29 +1206,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -1641,8 +1215,7 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call searchV21ValidateBeforeCall(
@@ -1650,21 +1223,15 @@ public class TaskResourceApi {
             Integer size,
             String sort,
             String freeText,
-            String query,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String query)
             throws ApiException {
 
-        okhttp3.Call call =
-                searchV21Call(
-                        start,
-                        size,
-                        sort,
-                        freeText,
-                        query,
-                        progressListener,
-                        progressRequestListener);
-        return call;
+        return searchV21Call(
+                start,
+                size,
+                sort,
+                freeText,
+                query);
     }
 
     /**
@@ -1707,7 +1274,7 @@ public class TaskResourceApi {
             Integer start, Integer size, String sort, String freeText, String query)
             throws ApiException {
         okhttp3.Call call =
-                searchV21ValidateBeforeCall(start, size, sort, freeText, query, null, null);
+                searchV21ValidateBeforeCall(start, size, sort, freeText, query);
         Type localVarReturnType = new TypeReference<SearchResultTask>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1716,31 +1283,27 @@ public class TaskResourceApi {
     /**
      * Build call for size
      *
-     * @param taskType                (optional)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param taskType (optional)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call sizeCall(
-            List<String> taskType,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            List<String> taskType)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/tasks/queue/sizes";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
         if (taskType != null)
             localVarCollectionQueryParams.addAll(
                     apiClient.parameterToPairs("multi", "taskType", taskType));
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1751,29 +1314,6 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -1783,19 +1323,14 @@ public class TaskResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call sizeValidateBeforeCall(
-            List<String> taskType,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            List<String> taskType)
             throws ApiException {
 
-        okhttp3.Call call =
-                sizeCall(taskType, progressListener, progressRequestListener);
-        return call;
+        return sizeCall(taskType);
     }
 
     /**
@@ -1821,7 +1356,7 @@ public class TaskResourceApi {
      */
     private ApiResponse<Map<String, Integer>> sizeWithHttpInfo(List<String> taskType)
             throws ApiException {
-        okhttp3.Call call = sizeValidateBeforeCall(taskType, null, null);
+        okhttp3.Call call = sizeValidateBeforeCall(taskType);
         Type localVarReturnType = new TypeReference<Map<String, Integer>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1830,28 +1365,23 @@ public class TaskResourceApi {
     /**
      * Build call for updateTask
      *
-     * @param taskResult              (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+     * @param taskResult (required)
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
     private okhttp3.Call updateTaskCall(
-            TaskResult taskResult,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            TaskResult taskResult)
             throws ApiException {
-        Object localVarPostBody = taskResult;
 
         // create path and map variables
         String localVarPath = "/tasks";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"text/plain"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1861,46 +1391,20 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "POST",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                taskResult,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call updateTaskValidateBeforeCall(
-            TaskResult taskResult,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            TaskResult taskResult)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (taskResult == null) {
@@ -1908,9 +1412,7 @@ public class TaskResourceApi {
                     "Missing the required parameter 'taskResult' when calling updateTask(Async)");
         }
 
-        okhttp3.Call call =
-                updateTaskCall(taskResult, progressListener, progressRequestListener);
-        return call;
+        return updateTaskCall(taskResult);
     }
 
     /**
@@ -1935,7 +1437,7 @@ public class TaskResourceApi {
      *                      response body
      */
     private ApiResponse<String> updateTaskWithHttpInfo(TaskResult taskResult) throws ApiException {
-        okhttp3.Call call = updateTaskValidateBeforeCall(taskResult, null, null);
+        okhttp3.Call call = updateTaskValidateBeforeCall(taskResult);
         Type localVarReturnType = new TypeReference<String>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1949,7 +1451,6 @@ public class TaskResourceApi {
             String workerId,
             boolean sync)
             throws ApiException {
-        Object localVarPostBody = body;
         String path = "/tasks/{workflowId}/{taskRefName}/{status}";
         if (sync) {
             path += "/sync";
@@ -1959,25 +1460,25 @@ public class TaskResourceApi {
                 path
                         .replaceAll(
                                 "\\{" + "workflowId" + "\\}",
-                                apiClient.escapeString(workflowId.toString()))
+                                apiClient.escapeString(workflowId))
                         .replaceAll(
                                 "\\{" + "taskRefName" + "\\}",
-                                apiClient.escapeString(taskRefName.toString()))
+                                apiClient.escapeString(taskRefName))
                         .replaceAll(
                                 "\\{" + "status" + "\\}",
-                                apiClient.escapeString(status.toString()));
+                                apiClient.escapeString(status));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
         if (workerId == null) {
             workerId = getIdentity();
         }
         localVarQueryParams.addAll(apiClient.parameterToPair("workerid", workerId));
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"text/plain"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1987,18 +1488,16 @@ public class TaskResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
                 "POST",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                body,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                null);
+                localVarAuthNames);
     }
 
     private okhttp3.Call updateTask1ValidateBeforeCall(
@@ -2029,15 +1528,13 @@ public class TaskResourceApi {
                     "Missing the required parameter 'status' when calling updateTask1(Async)");
         }
 
-        okhttp3.Call call =
-                updateTaskByRefNameCall(
-                        body,
-                        workflowId,
-                        taskRefName,
-                        status,
-                        getIdentity(),
-                        sync);
-        return call;
+        return updateTaskByRefNameCall(
+                body,
+                workflowId,
+                taskRefName,
+                status,
+                getIdentity(),
+                sync);
     }
 
     /**

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
@@ -43,7 +43,7 @@ public class WorkflowExecutionTests {
 
     @BeforeEach
     public void init() {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
+        OrkesHttpClient apiClient = ApiUtil.getApiClientWithCredentials();
         workflowResourceApi = new OrkesClients(apiClient).getWorkflowClient();
         TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
         Worker worker = new SimpleWorker();

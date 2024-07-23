@@ -12,51 +12,60 @@
  */
 package io.orkes.conductor.client;
 
-import io.orkes.conductor.client.http.*;
+import io.orkes.conductor.client.http.clients.OrkesAuthorizationClient;
+import io.orkes.conductor.client.http.clients.OrkesEventClient;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
+import io.orkes.conductor.client.http.clients.OrkesIntegrationClient;
+import io.orkes.conductor.client.http.clients.OrkesMetadataClient;
+import io.orkes.conductor.client.http.clients.OrkesPromptClient;
+import io.orkes.conductor.client.http.clients.OrkesSchedulerClient;
+import io.orkes.conductor.client.http.clients.OrkesSecretClient;
+import io.orkes.conductor.client.http.clients.OrkesTaskClient;
+import io.orkes.conductor.client.http.clients.OrkesWorkflowClient;
 import io.orkes.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 public class OrkesClients {
 
-    private final ApiClient apiClient;
+    private final OrkesHttpClient httpClient;
 
-    public OrkesClients(ApiClient apiClient) {
-        this.apiClient = apiClient;
+    public OrkesClients(OrkesHttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
     public WorkflowClient getWorkflowClient() {
-        return new OrkesWorkflowClient(apiClient);
+        return new OrkesWorkflowClient(httpClient);
     }
 
     public AuthorizationClient getAuthorizationClient() {
-        return new OrkesAuthorizationClient(apiClient);
+        return new OrkesAuthorizationClient(httpClient);
     }
 
     public EventClient getEventClient() {
-        return new OrkesEventClient(apiClient);
+        return new OrkesEventClient(httpClient);
     }
 
     public MetadataClient getMetadataClient() {
-        return new OrkesMetadataClient(apiClient);
+        return new OrkesMetadataClient(httpClient);
     }
 
     public SchedulerClient getSchedulerClient() {
-        return new OrkesSchedulerClient(apiClient);
+        return new OrkesSchedulerClient(httpClient);
     }
 
     public SecretClient getSecretClient() {
-        return new OrkesSecretClient(apiClient);
+        return new OrkesSecretClient(httpClient);
     }
 
     public TaskClient getTaskClient() {
-        return new OrkesTaskClient(apiClient);
+        return new OrkesTaskClient(httpClient);
     }
 
     public IntegrationClient getIntegrationClient() {
-        return new OrkesIntegrationClient(apiClient);
+        return new OrkesIntegrationClient(httpClient);
     }
 
     public PromptClient getPromptClient() {
-        return new OrkesPromptClient(apiClient);
+        return new OrkesPromptClient(httpClient);
     }
 
     public WorkflowExecutor getWorkflowExecutor() {

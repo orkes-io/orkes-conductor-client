@@ -70,7 +70,7 @@ public class Group {
 
     public Group putDefaultAccessItem(String key, List<String> defaultAccessItem) {
         if (this.defaultAccess == null) {
-            this.defaultAccess = new HashMap<String, List<String>>();
+            this.defaultAccess = new HashMap<>();
         }
         this.defaultAccess.put(key, defaultAccessItem);
         return this;
@@ -135,7 +135,7 @@ public class Group {
 
     public Group addRolesItem(Role rolesItem) {
         if (this.roles == null) {
-            this.roles = new ArrayList<Role>();
+            this.roles = new ArrayList<>();
         }
         this.roles.add(rolesItem);
         return this;

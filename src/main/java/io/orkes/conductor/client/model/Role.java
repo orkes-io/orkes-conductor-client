@@ -51,7 +51,7 @@ public class Role {
 
     public Role addPermissionsItem(Permission permissionsItem) {
         if (this.permissions == null) {
-            this.permissions = new ArrayList<Permission>();
+            this.permissions = new ArrayList<>();
         }
         this.permissions.add(permissionsItem);
         return this;

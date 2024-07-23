@@ -18,12 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.worker.Worker;
 
 public class LocalWorkerTest {
 
     public static void main(String[] args) {
-        ApiClient apiClient = new ApiClient("http://localhost:8080/api");
+        OrkesHttpClient apiClient = new OrkesHttpClient("http://localhost:8080/api");
         OrkesClients clients = new OrkesClients(apiClient);
         TaskClient taskClient = clients.getTaskClient();
 

@@ -61,7 +61,7 @@ public class StartWorkflow {
 
     public StartWorkflow putInputItem(String key, Object inputItem) {
         if (this.input == null) {
-            this.input = new HashMap<String, Object>();
+            this.input = new HashMap<>();
         }
         this.input.put(key, inputItem);
         return this;
@@ -107,7 +107,7 @@ public class StartWorkflow {
 
     public StartWorkflow putTaskToDomainItem(String key, String taskToDomainItem) {
         if (this.taskToDomain == null) {
-            this.taskToDomain = new HashMap<String, String>();
+            this.taskToDomain = new HashMap<>();
         }
         this.taskToDomain.put(key, taskToDomainItem);
         return this;

@@ -26,14 +26,14 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.ObjectMapperProvider;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
-import io.orkes.conductor.client.http.OrkesMetadataClient;
-import io.orkes.conductor.client.http.OrkesTaskClient;
-import io.orkes.conductor.client.http.OrkesWorkflowClient;
+import io.orkes.conductor.client.http.clients.OrkesMetadataClient;
+import io.orkes.conductor.client.http.clients.OrkesTaskClient;
+import io.orkes.conductor.client.http.clients.OrkesWorkflowClient;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.tasks.TaskType;
 import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;
@@ -107,7 +107,7 @@ public class WorkflowExecutor {
     }
 
     public WorkflowExecutor(String url) {
-        ApiClient apiClient = new ApiClient.Builder().basePath(url).build();
+        OrkesHttpClient apiClient = new OrkesHttpClient.Builder().basePath(url).build();
         this.taskClient = new OrkesTaskClient(apiClient);
         this.workflowClient = new OrkesWorkflowClient(apiClient);
         this.metadataClient = new OrkesMetadataClient(apiClient);

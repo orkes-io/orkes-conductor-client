@@ -35,7 +35,7 @@ public class SearchResultWorkflowScheduleExecutionModel {
     public SearchResultWorkflowScheduleExecutionModel addResultsItem(
             WorkflowScheduleExecutionModel resultsItem) {
         if (this.results == null) {
-            this.results = new ArrayList<WorkflowScheduleExecutionModel>();
+            this.results = new ArrayList<>();
         }
         this.results.add(resultsItem);
         return this;

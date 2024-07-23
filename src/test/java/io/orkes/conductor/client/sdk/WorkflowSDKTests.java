@@ -20,7 +20,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.model.run.Workflow;
 import io.orkes.conductor.client.util.ApiUtil;
@@ -40,7 +40,7 @@ public class WorkflowSDKTests {
 
     @Test
     public void testCreateWorkflow() {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
+        OrkesHttpClient apiClient = ApiUtil.getApiClientWithCredentials();
         OrkesClients clients = new OrkesClients(apiClient);
         AnnotatedWorkerExecutor workerExecutor = new AnnotatedWorkerExecutor(clients.getTaskClient(), new WorkerConfiguration());
         workerExecutor.initWorkers("io.orkes.conductor.client.sdk");

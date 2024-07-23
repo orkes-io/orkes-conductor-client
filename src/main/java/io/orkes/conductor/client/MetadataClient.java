@@ -19,47 +19,47 @@ import io.orkes.conductor.client.model.TagString;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
-public abstract class MetadataClient {
+public interface MetadataClient {
 
-    public abstract void registerWorkflowDef(WorkflowDef workflowDef);
+    void registerWorkflowDef(WorkflowDef workflowDef);
 
-    public abstract void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite);
+    void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite);
 
-    public abstract void updateWorkflowDefs(List<WorkflowDef> workflowDefs);
+    void updateWorkflowDefs(List<WorkflowDef> workflowDefs);
 
-    public abstract void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite);
+    void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite);
 
-    public abstract WorkflowDef getWorkflowDef(String name, Integer version);
+    WorkflowDef getWorkflowDef(String name, Integer version);
 
-    public abstract void unregisterWorkflowDef(String name, Integer version);
+    void unregisterWorkflowDef(String name, Integer version);
 
-    public abstract List<TaskDef> getAllTaskDefs();
+    List<TaskDef> getAllTaskDefs();
 
-    public abstract void registerTaskDefs(List<TaskDef> taskDefs);
+    void registerTaskDefs(List<TaskDef> taskDefs);
 
-    public abstract void updateTaskDef(TaskDef taskDef);
+    void updateTaskDef(TaskDef taskDef);
 
-    public abstract TaskDef getTaskDef(String taskType);
+    TaskDef getTaskDef(String taskType);
 
-    public abstract void unregisterTaskDef(String taskType);
+    void unregisterTaskDef(String taskType);
 
-    public abstract void addTaskTag(TagObject tagObject, String taskName);
+    void addTaskTag(TagObject tagObject, String taskName);
 
-    public abstract void addWorkflowTag(TagObject tagObject, String name);
+    void addWorkflowTag(TagObject tagObject, String name);
 
-    public abstract void deleteTaskTag(TagString tagString, String taskName);
+    void deleteTaskTag(TagString tagString, String taskName);
 
-    public abstract void deleteWorkflowTag(TagObject tagObject, String name);
+    void deleteWorkflowTag(TagObject tagObject, String name);
 
-    public abstract List<TagObject> getTags();
+    List<TagObject> getTags();
 
-    public abstract List<TagObject> getTaskTags(String taskName);
+    List<TagObject> getTaskTags(String taskName);
 
-    public abstract List<TagObject> getWorkflowTags(String name);
+    List<TagObject> getWorkflowTags(String name);
 
-    public abstract void setTaskTags(List<TagObject> tagObjects, String taskName);
+    void setTaskTags(List<TagObject> tagObjects, String taskName);
 
-    public abstract void setWorkflowTags(List<TagObject> tagObjects, String name);
+    void setWorkflowTags(List<TagObject> tagObjects, String name);
 
-    public abstract List<WorkflowDef> getAllWorkflowDefs();
+    List<WorkflowDef> getAllWorkflowDefs();
 }

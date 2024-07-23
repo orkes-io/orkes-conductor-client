@@ -10,22 +10,24 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client;
+package io.orkes.conductor.client.http.clients;
 
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.http.api.PromptResourceApi;
+import io.orkes.conductor.client.PromptClient;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
+import io.orkes.conductor.client.http.clients.PromptResource;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.integration.PromptTemplateTestRequest;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
 
 public class OrkesPromptClient implements PromptClient {
 
-    private final PromptResourceApi promptResourceApi;
+    private final PromptResource promptResourceApi;
 
-    public OrkesPromptClient(ApiClient apiClient) {
-        this.promptResourceApi = new PromptResourceApi(apiClient);
+    public OrkesPromptClient(OrkesHttpClient apiClient) {
+        this.promptResourceApi = new PromptResource(apiClient);
     }
 
     @Override

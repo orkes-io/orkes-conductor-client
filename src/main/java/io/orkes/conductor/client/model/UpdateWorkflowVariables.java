@@ -55,7 +55,7 @@ public class UpdateWorkflowVariables {
 
     public UpdateWorkflowVariables putVariablesItem(String key, Object variablesItem) {
         if (this.variables == null) {
-            this.variables = new HashMap<String, Object>();
+            this.variables = new HashMap<>();
         }
         this.variables.put(key, variablesItem);
         return this;

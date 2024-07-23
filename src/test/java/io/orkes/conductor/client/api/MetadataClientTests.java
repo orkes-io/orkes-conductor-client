@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.MetadataClient;
 import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.OrkesMetadataClient;
+import io.orkes.conductor.client.http.clients.OrkesMetadataClient;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;

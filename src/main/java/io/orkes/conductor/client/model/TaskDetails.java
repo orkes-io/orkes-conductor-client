@@ -39,7 +39,7 @@ public class TaskDetails {
 
     public TaskDetails putOutputItem(String key, Object outputItem) {
         if (this.output == null) {
-            this.output = new HashMap<String, Object>();
+            this.output = new HashMap<>();
         }
         this.output.put(key, outputItem);
         return this;

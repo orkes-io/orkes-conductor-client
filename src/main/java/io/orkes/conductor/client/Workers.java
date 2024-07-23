@@ -15,6 +15,7 @@ package io.orkes.conductor.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ public class Workers {
     private String keyId;
     private String secret;
 
-    private ApiClient apiClient = null;
+    private OrkesHttpClient apiClient = null;
 
     public Workers register(String name, WorkerFn workerFn) {
         workers.add(
@@ -71,7 +72,7 @@ public class Workers {
         return this;
     }
 
-    public Workers apiClient(ApiClient apiClient) {
+    public Workers apiClient(OrkesHttpClient apiClient) {
         this.apiClient = apiClient;
         return this;
     }
@@ -86,7 +87,7 @@ public class Workers {
             LOGGER.info("Starting workers : {}", workers);
 
             if (this.apiClient != null) {
-                this.apiClient =  new ApiClient.Builder()
+                this.apiClient =  new OrkesHttpClient.Builder()
                         .basePath(rootUri)
                         .keyId(keyId)
                         .keySecret(secret)

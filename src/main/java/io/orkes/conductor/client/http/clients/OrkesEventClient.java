@@ -10,68 +10,66 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.clients;
 
 
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.EventClient;
-import io.orkes.conductor.client.http.api.EventResourceApi;
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 import io.orkes.conductor.client.model.metadata.events.EventHandler;
 
 public class OrkesEventClient extends EventClient {
 
-    private final EventResourceApi eventResourceApi;
+    private final EventResource eventResource;
 
-    public OrkesEventClient(ApiClient apiClient) {
-        this.eventResourceApi = new EventResourceApi(apiClient);
+    public OrkesEventClient(OrkesHttpClient httpClient) {
+        this.eventResource = new EventResource(httpClient);
     }
 
     @Override
     public void registerEventHandler(EventHandler eventHandler) {
-        this.eventResourceApi.addEventHandler(eventHandler);
+        this.eventResource.addEventHandler(eventHandler);
     }
 
     @Override
     public void updateEventHandler(EventHandler eventHandler) {
-        this.eventResourceApi.updateEventHandler(eventHandler);
+        this.eventResource.updateEventHandler(eventHandler);
     }
 
     @Override
     public List<EventHandler> getEventHandlers(String event, boolean activeOnly) {
-        return eventResourceApi.getEventHandlersForEvent(event, activeOnly);
+        return eventResource.getEventHandlersForEvent(event, activeOnly);
     }
 
     @Override
     public List<EventHandler> getEventHandlers() {
-        return eventResourceApi.getEventHandlers();
+        return eventResource.getEventHandlers();
     }
 
     @Override
     public void handleIncomingEvent(Map<String, Object> payload) {
-        eventResourceApi.handleIncomingEvent(payload);
+        eventResource.handleIncomingEvent(payload);
     }
 
     @Override
     public void unregisterEventHandler(String name) {
-        eventResourceApi.removeEventHandlerStatus(name);
+        eventResource.removeEventHandlerStatus(name);
     }
 
     @Override
     public Map<String, Object> getQueueConfig(QueueConfiguration queueConfiguration) {
-        return eventResourceApi.getQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+        return eventResource.getQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 
     @Override
     public void deleteQueueConfig(QueueConfiguration queueConfiguration) {
-        eventResourceApi.deleteQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+        eventResource.deleteQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 
     @Override
     public void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception {
-        eventResourceApi.putQueueConfig(queueConfiguration.getConfiguration(), queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+        eventResource.putQueueConfig(queueConfiguration.getConfiguration(), queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 }

@@ -10,194 +10,190 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.clients;
 
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.AuthorizationClient;
 import io.orkes.conductor.client.SecretsManager;
-import io.orkes.conductor.client.http.api.ApplicationResourceApi;
-import io.orkes.conductor.client.http.api.AuthorizationResourceApi;
-import io.orkes.conductor.client.http.api.GroupResourceApi;
-import io.orkes.conductor.client.http.api.UserResourceApi;
+import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.*;
 
 public class OrkesAuthorizationClient extends OrkesClient implements AuthorizationClient {
 
-    private final AuthorizationResourceApi authorizationResourceApi;
-    private final ApplicationResourceApi applicationResourceApi;
-    private final GroupResourceApi groupResourceApi;
-    private final UserResourceApi userResourceApi;
+    private final AuthorizationResource authorizationResource;
+    private final ApplicationResource applicationResource;
+    private final GroupResource groupResource;
+    private final UserResource userResource;
 
-    public OrkesAuthorizationClient(ApiClient apiClient) {
-        super(apiClient);
-        this.authorizationResourceApi = new AuthorizationResourceApi(apiClient);
-        this.applicationResourceApi = new ApplicationResourceApi(apiClient);
-        this.groupResourceApi = new GroupResourceApi(apiClient);
-        this.userResourceApi = new UserResourceApi(apiClient);
+    public OrkesAuthorizationClient(OrkesHttpClient httpClient) {
+        super(httpClient);
+        this.authorizationResource = new AuthorizationResource(httpClient);
+        this.applicationResource = new ApplicationResource(httpClient);
+        this.groupResource = new GroupResource(httpClient);
+        this.userResource = new UserResource(httpClient);
     }
 
     @Override
     public Map<String, List<Subject>> getPermissions(String type, String id) throws ApiException {
-        return authorizationResourceApi.getPermissions(type, id);
+        return authorizationResource.getPermissions(type, id);
     }
 
     @Override
     public void grantPermissions(AuthorizationRequest authorizationRequest) throws ApiException {
-        authorizationResourceApi.grantPermissions(authorizationRequest);
+        authorizationResource.grantPermissions(authorizationRequest);
     }
 
     @Override
     public void removePermissions(AuthorizationRequest authorizationRequest) throws ApiException {
-        authorizationResourceApi.removePermissions(authorizationRequest);
+        authorizationResource.removePermissions(authorizationRequest);
     }
 
     @Override
     public void addUserToGroup(String groupId, String userId) throws ApiException {
-        groupResourceApi.addUserToGroup(groupId, userId);
+        groupResource.addUserToGroup(groupId, userId);
     }
 
     @Override
     public void deleteGroup(String id) throws ApiException {
-        groupResourceApi.deleteGroup(id);
+        groupResource.deleteGroup(id);
     }
 
     @Override
     public GrantedAccessResponse getGrantedPermissionsForGroup(String groupId) throws ApiException {
-        return groupResourceApi.getGrantedPermissions1(groupId);
+        return groupResource.getGrantedPermissions1(groupId);
     }
 
     @Override
     public Group getGroup(String id) throws ApiException {
-        return groupResourceApi.getGroup(id);
+        return groupResource.getGroup(id);
     }
 
     @Override
     public List<ConductorUser> getUsersInGroup(String id) throws ApiException {
-        return groupResourceApi.getUsersInGroup(id);
+        return groupResource.getUsersInGroup(id);
     }
 
     @Override
     public List<Group> listGroups() throws ApiException {
-        return groupResourceApi.listGroups();
+        return groupResource.listGroups();
     }
 
     @Override
     public void removeUserFromGroup(String groupId, String userId) throws ApiException {
-        groupResourceApi.removeUserFromGroup(groupId, userId);
+        groupResource.removeUserFromGroup(groupId, userId);
     }
 
     @Override
     public Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id) throws ApiException {
-        return groupResourceApi.upsertGroup(upsertGroupRequest, id);
+        return groupResource.upsertGroup(upsertGroupRequest, id);
     }
 
     @Override
     public void deleteUser(String id) throws ApiException {
-        userResourceApi.deleteUser(id);
+        userResource.deleteUser(id);
     }
 
     @Override
     public GrantedAccessResponse getGrantedPermissionsForUser(String userId) throws ApiException {
-        return userResourceApi.getGrantedPermissions(userId);
+        return userResource.getGrantedPermissions(userId);
     }
 
     @Override
     public ConductorUser getUser(String id) throws ApiException {
-        return userResourceApi.getUser(id);
+        return userResource.getUser(id);
     }
 
     @Override
     public List<ConductorUser> listUsers(Boolean apps) throws ApiException {
-        return userResourceApi.listUsers(apps);
+        return userResource.listUsers(apps);
     }
 
     @Override
     public void sendInviteEmail(String id, ConductorUser conductorUser) throws ApiException {
-        userResourceApi.sendInviteEmail(id, conductorUser);
+        userResource.sendInviteEmail(id, conductorUser);
     }
 
     @Override
     public ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id)
             throws ApiException {
-        return userResourceApi.upsertUser(upsertUserRequest, id);
+        return userResource.upsertUser(upsertUserRequest, id);
     }
 
     @Override
     public void addRoleToApplicationUser(String applicationId, String role) throws ApiException {
-        applicationResourceApi.addRoleToApplicationUser(applicationId, role);
+        applicationResource.addRoleToApplicationUser(applicationId, role);
     }
 
     @Override
     public CreateAccessKeyResponse createAccessKey(String id) throws ApiException {
-        return applicationResourceApi.createAccessKey(id);
+        return applicationResource.createAccessKey(id);
     }
 
     @Override
     public void createAccessKey(String id, SecretsManager secretsManager, String secretPath) {
-        CreateAccessKeyResponse response = applicationResourceApi.createAccessKey(id);
+        CreateAccessKeyResponse response = applicationResource.createAccessKey(id);
         secretsManager.storeSecret(secretPath, response.getSecret());
     }
 
     @Override
     public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
-        return applicationResourceApi.createApplication(createOrUpdateApplicationRequest);
+        return applicationResource.createApplication(createOrUpdateApplicationRequest);
     }
 
     @Override
     public void deleteAccessKey(String applicationId, String keyId) throws ApiException {
-        applicationResourceApi.deleteAccessKey(applicationId, keyId);
+        applicationResource.deleteAccessKey(applicationId, keyId);
     }
 
     @Override
     public void deleteApplication(String id) throws ApiException {
-        applicationResourceApi.deleteApplication(id);
+        applicationResource.deleteApplication(id);
     }
 
     @Override
     public List<AccessKeyResponse> getAccessKeys(String id) throws ApiException {
-        return applicationResourceApi.getAccessKeys(id);
+        return applicationResource.getAccessKeys(id);
     }
 
     @Override
     public ConductorApplication getApplication(String id) throws ApiException {
-        return applicationResourceApi.getApplication(id);
+        return applicationResource.getApplication(id);
     }
 
     @Override
     public List<ConductorApplication> listApplications() throws ApiException {
-        return applicationResourceApi.listApplications();
+        return applicationResource.listApplications();
     }
 
     @Override
     public void removeRoleFromApplicationUser(String applicationId, String role) throws ApiException {
-        applicationResourceApi.removeRoleFromApplicationUser(applicationId, role);
+        applicationResource.removeRoleFromApplicationUser(applicationId, role);
     }
 
     @Override
     public AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException {
-        return applicationResourceApi.toggleAccessKeyStatus(applicationId, keyId);
+        return applicationResource.toggleAccessKeyStatus(applicationId, keyId);
     }
 
     @Override
     public ConductorApplication updateApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id) throws ApiException {
-        return applicationResourceApi.updateApplication(createOrUpdateApplicationRequest, id);
+        return applicationResource.updateApplication(createOrUpdateApplicationRequest, id);
     }
 
     @Override
     public void setApplicationTags(List<TagObject> tags, String applicationId) {
-        applicationResourceApi.putTagForApplication(tags, applicationId);
+        applicationResource.putTagForApplication(tags, applicationId);
     }
 
     @Override
     public List<TagObject> getApplicationTags(String applicationId) {
-        return applicationResourceApi.getTagsForApplication(applicationId);
+        return applicationResource.getTagsForApplication(applicationId);
     }
 
     @Override
     public void deleteApplicationTags(List<TagObject> tags, String applicationId) {
-        applicationResourceApi.deleteTagForApplication(tags, applicationId);
+        applicationResource.deleteTagForApplication(tags, applicationId);
     }
 }

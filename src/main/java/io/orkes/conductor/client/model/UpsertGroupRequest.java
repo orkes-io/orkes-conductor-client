@@ -103,7 +103,7 @@ public class UpsertGroupRequest {
 
     public UpsertGroupRequest putDefaultAccessItem(String key, List<String> defaultAccessItem) {
         if (this.defaultAccess == null) {
-            this.defaultAccess = new HashMap<String, List<String>>();
+            this.defaultAccess = new HashMap<>();
         }
         this.defaultAccess.put(key, defaultAccessItem);
         return this;
@@ -149,7 +149,7 @@ public class UpsertGroupRequest {
 
     public UpsertGroupRequest addRolesItem(RolesEnum rolesItem) {
         if (this.roles == null) {
-            this.roles = new ArrayList<RolesEnum>();
+            this.roles = new ArrayList<>();
         }
         this.roles.add(rolesItem);
         return this;

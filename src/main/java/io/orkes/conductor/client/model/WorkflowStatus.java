@@ -94,7 +94,7 @@ public class WorkflowStatus {
 
     public WorkflowStatus putOutputItem(String key, Object outputItem) {
         if (this.output == null) {
-            this.output = new HashMap<String, Object>();
+            this.output = new HashMap<>();
         }
         this.output.put(key, outputItem);
         return this;
@@ -140,7 +140,7 @@ public class WorkflowStatus {
 
     public WorkflowStatus putVariablesItem(String key, Object variablesItem) {
         if (this.variables == null) {
-            this.variables = new HashMap<String, Object>();
+            this.variables = new HashMap<>();
         }
         this.variables.put(key, variablesItem);
         return this;

@@ -35,7 +35,7 @@ public class SearchResultWorkflow {
 
     public SearchResultWorkflow addResultsItem(Workflow resultsItem) {
         if (this.results == null) {
-            this.results = new ArrayList<Workflow>();
+            this.results = new ArrayList<>();
         }
         this.results.add(resultsItem);
         return this;

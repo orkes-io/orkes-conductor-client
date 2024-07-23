@@ -33,7 +33,7 @@ public class SearchResultTaskSummary {
 
   public SearchResultTaskSummary addResultsItem(TaskSummary resultsItem) {
     if (this.results == null) {
-      this.results = new ArrayList<TaskSummary>();
+      this.results = new ArrayList<>();
     }
     this.results.add(resultsItem);
     return this;

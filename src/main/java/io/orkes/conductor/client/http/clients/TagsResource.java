@@ -10,39 +10,26 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http.api;
+package io.orkes.conductor.client.http.clients;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.ProgressResponseBody;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+class TagsResource {
+    private final OrkesHttpClient httpClient;
 
-public class TagsApi {
-    private ApiClient apiClient;
-
-    public TagsApi(ApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
-
-    public ApiClient getApiClient() {
-        return apiClient;
-    }
-
-    public void setApiClient(ApiClient apiClient) {
-        this.apiClient = apiClient;
+    public TagsResource(OrkesHttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
     /**
@@ -57,76 +44,49 @@ public class TagsApi {
      */
     public okhttp3.Call addTaskTagCall(
             TagObject tagObject,
-            String taskName,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskName)
             throws ApiException {
-        Object localVarPostBody = tagObject;
 
         // create path and map variables
         String localVarPath =
                 "/metadata/task/{taskName}/tags"
                         .replaceAll(
                                 "\\{" + "taskName" + "\\}",
-                                apiClient.escapeString(taskName.toString()));
+                                httpClient.escapeString(taskName));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
 
         final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
+        return httpClient.buildCall(
                 localVarPath,
                 "POST",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                tagObject,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call addTaskTagValidateBeforeCall(
             TagObject tagObject,
-            String taskName,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskName)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (tagObject == null) {
@@ -139,9 +99,7 @@ public class TagsApi {
                     "Missing the required parameter 'taskName' when calling addTaskTag(Async)");
         }
 
-        okhttp3.Call call =
-                addTaskTagCall(tagObject, taskName, progressListener, progressRequestListener);
-        return call;
+        return addTaskTagCall(tagObject, taskName);
     }
 
     /**
@@ -168,8 +126,8 @@ public class TagsApi {
     private ApiResponse<Void> addTaskTagWithHttpInfo(TagObject tagObject, String taskName)
             throws ApiException {
         okhttp3.Call call =
-                addTaskTagValidateBeforeCall(tagObject, taskName, null, null);
-        return apiClient.execute(call);
+                addTaskTagValidateBeforeCall(tagObject, taskName);
+        return httpClient.execute(call);
     }
 
     /**
@@ -184,75 +142,48 @@ public class TagsApi {
      */
     public okhttp3.Call addWorkflowTagCall(
             TagObject tagObject,
-            String name,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String name)
             throws ApiException {
-        Object localVarPostBody = tagObject;
 
         // create path and map variables
         String localVarPath =
                 "/metadata/workflow/{name}/tags"
                         .replaceAll(
-                                "\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+                                "\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
 
         final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
+        return httpClient.buildCall(
                 localVarPath,
                 "POST",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                tagObject,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call addWorkflowTagValidateBeforeCall(
             TagObject tagObject,
-            String name,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String name)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (tagObject == null) {
@@ -265,9 +196,7 @@ public class TagsApi {
                     "Missing the required parameter 'name' when calling addWorkflowTag(Async)");
         }
 
-        okhttp3.Call call =
-                addWorkflowTagCall(tagObject, name, progressListener, progressRequestListener);
-        return call;
+        return addWorkflowTagCall(tagObject, name);
     }
 
     /**
@@ -294,8 +223,8 @@ public class TagsApi {
     private ApiResponse<Void> addWorkflowTagWithHttpInfo(TagObject tagObject, String name)
             throws ApiException {
         okhttp3.Call call =
-                addWorkflowTagValidateBeforeCall(tagObject, name, null, null);
-        return apiClient.execute(call);
+                addWorkflowTagValidateBeforeCall(tagObject, name);
+        return httpClient.execute(call);
     }
 
     /**
@@ -310,76 +239,49 @@ public class TagsApi {
      */
     public okhttp3.Call deleteTaskTagCall(
             TagString tagString,
-            String taskName,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskName)
             throws ApiException {
-        Object localVarPostBody = tagString;
 
         // create path and map variables
         String localVarPath =
                 "/metadata/task/{taskName}/tags"
                         .replaceAll(
                                 "\\{" + "taskName" + "\\}",
-                                apiClient.escapeString(taskName.toString()));
+                                httpClient.escapeString(taskName));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
 
         final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
+        return httpClient.buildCall(
                 localVarPath,
                 "DELETE",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                tagString,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call deleteTaskTagValidateBeforeCall(
             TagString tagString,
-            String taskName,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskName)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (tagString == null) {
@@ -392,9 +294,7 @@ public class TagsApi {
                     "Missing the required parameter 'taskName' when calling deleteTaskTag(Async)");
         }
 
-        okhttp3.Call call =
-                deleteTaskTagCall(tagString, taskName, progressListener, progressRequestListener);
-        return call;
+        return deleteTaskTagCall(tagString, taskName);
     }
 
     /**
@@ -421,8 +321,8 @@ public class TagsApi {
     private ApiResponse<Void> deleteTaskTagWithHttpInfo(TagString tagString, String taskName)
             throws ApiException {
         okhttp3.Call call =
-                deleteTaskTagValidateBeforeCall(tagString, taskName, null, null);
-        return apiClient.execute(call);
+                deleteTaskTagValidateBeforeCall(tagString, taskName);
+        return httpClient.execute(call);
     }
 
     /**
@@ -437,75 +337,48 @@ public class TagsApi {
      */
     public okhttp3.Call deleteWorkflowTagCall(
             TagObject tagObject,
-            String name,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String name)
             throws ApiException {
-        Object localVarPostBody = tagObject;
 
         // create path and map variables
         String localVarPath =
                 "/metadata/workflow/{name}/tags"
                         .replaceAll(
-                                "\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+                                "\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
 
         final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
+        return httpClient.buildCall(
                 localVarPath,
                 "DELETE",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                tagObject,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call deleteWorkflowTagValidateBeforeCall(
             TagObject tagObject,
-            String name,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String name)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (tagObject == null) {
@@ -518,9 +391,7 @@ public class TagsApi {
                     "Missing the required parameter 'name' when calling deleteWorkflowTag(Async)");
         }
 
-        okhttp3.Call call =
-                deleteWorkflowTagCall(tagObject, name, progressListener, progressRequestListener);
-        return call;
+        return deleteWorkflowTagCall(tagObject, name);
     }
 
     /**
@@ -547,8 +418,8 @@ public class TagsApi {
     private ApiResponse<Void> deleteWorkflowTagWithHttpInfo(TagObject tagObject, String name)
             throws ApiException {
         okhttp3.Call call =
-                deleteWorkflowTagValidateBeforeCall(tagObject, name, null, null);
-        return apiClient.execute(call);
+                deleteWorkflowTagValidateBeforeCall(tagObject, name);
+        return httpClient.execute(call);
     }
 
     /**
@@ -559,56 +430,33 @@ public class TagsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call getTagsCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public okhttp3.Call getTagsCall()
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/metadata/tags";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"*/*"};
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
 
         final String[] localVarContentTypes = {};
 
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
+        return httpClient.buildCall(
                 localVarPath,
                 "GET",
                 localVarQueryParams,
@@ -616,17 +464,13 @@ public class TagsApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call getTagsValidateBeforeCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private okhttp3.Call getTagsValidateBeforeCall()
             throws ApiException {
 
-        okhttp3.Call call = getTagsCall(progressListener, progressRequestListener);
-        return call;
+        return getTagsCall();
     }
 
     /**
@@ -649,9 +493,9 @@ public class TagsApi {
      *     response body
      */
     private ApiResponse<List<TagObject>> getTagsWithHttpInfo() throws ApiException {
-        okhttp3.Call call = getTagsValidateBeforeCall(null, null);
+        okhttp3.Call call = getTagsValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return httpClient.execute(call, localVarReturnType);
     }
 
     /**
@@ -664,9 +508,7 @@ public class TagsApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call getTaskTagsCall(
-            String taskName,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskName)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -675,49 +517,28 @@ public class TagsApi {
                 "/metadata/task/{taskName}/tags"
                         .replaceAll(
                                 "\\{" + "taskName" + "\\}",
-                                apiClient.escapeString(taskName.toString()));
+                                httpClient.escapeString(taskName));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
 
         final String[] localVarContentTypes = {};
 
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
+        return httpClient.buildCall(
                 localVarPath,
                 "GET",
                 localVarQueryParams,
@@ -725,14 +546,11 @@ public class TagsApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call getTaskTagsValidateBeforeCall(
-            String taskName,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskName)
             throws ApiException {
         // verify the required parameter 'taskName' is set
         if (taskName == null) {
@@ -740,9 +558,7 @@ public class TagsApi {
                     "Missing the required parameter 'taskName' when calling getTaskTags(Async)");
         }
 
-        okhttp3.Call call =
-                getTaskTagsCall(taskName, progressListener, progressRequestListener);
-        return call;
+        return getTaskTagsCall(taskName);
     }
 
     /**
@@ -768,9 +584,9 @@ public class TagsApi {
      */
     private ApiResponse<List<TagObject>> getTaskTagsWithHttpInfo(String taskName)
             throws ApiException {
-        okhttp3.Call call = getTaskTagsValidateBeforeCall(taskName, null, null);
+        okhttp3.Call call = getTaskTagsValidateBeforeCall(taskName);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return httpClient.execute(call, localVarReturnType);
     }
 
     /**
@@ -783,9 +599,7 @@ public class TagsApi {
      * @throws ApiException If fail to serialize the request body object
      */
     public okhttp3.Call getWorkflowTagsCall(
-            String name,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String name)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -793,49 +607,28 @@ public class TagsApi {
         String localVarPath =
                 "/metadata/workflow/{name}/tags"
                         .replaceAll(
-                                "\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+                                "\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
 
         final String[] localVarContentTypes = {};
 
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
+        return httpClient.buildCall(
                 localVarPath,
                 "GET",
                 localVarQueryParams,
@@ -843,14 +636,11 @@ public class TagsApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call getWorkflowTagsValidateBeforeCall(
-            String name,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String name)
             throws ApiException {
         // verify the required parameter 'name' is set
         if (name == null) {
@@ -858,9 +648,7 @@ public class TagsApi {
                     "Missing the required parameter 'name' when calling getWorkflowTags(Async)");
         }
 
-        okhttp3.Call call =
-                getWorkflowTagsCall(name, progressListener, progressRequestListener);
-        return call;
+        return getWorkflowTagsCall(name);
     }
 
     /**
@@ -886,9 +674,9 @@ public class TagsApi {
      */
     private ApiResponse<List<TagObject>> getWorkflowTagsWithHttpInfo(String name)
             throws ApiException {
-        okhttp3.Call call = getWorkflowTagsValidateBeforeCall(name, null, null);
+        okhttp3.Call call = getWorkflowTagsValidateBeforeCall(name);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return httpClient.execute(call, localVarReturnType);
     }
 
     /**
@@ -903,76 +691,49 @@ public class TagsApi {
      */
     public okhttp3.Call setTaskTagsCall(
             List<TagObject> tagObjects,
-            String taskName,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskName)
             throws ApiException {
-        Object localVarPostBody = tagObjects;
 
         // create path and map variables
         String localVarPath =
                 "/metadata/task/{taskName}/tags"
                         .replaceAll(
                                 "\\{" + "taskName" + "\\}",
-                                apiClient.escapeString(taskName.toString()));
+                                httpClient.escapeString(taskName));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
 
         final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
+        return httpClient.buildCall(
                 localVarPath,
                 "PUT",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                tagObjects,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call setTaskTagsValidateBeforeCall(
             List<TagObject> tagObjects,
-            String taskName,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String taskName)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (tagObjects == null) {
@@ -985,9 +746,7 @@ public class TagsApi {
                     "Missing the required parameter 'taskName' when calling setTaskTags(Async)");
         }
 
-        okhttp3.Call call =
-                setTaskTagsCall(tagObjects, taskName, progressListener, progressRequestListener);
-        return call;
+        return setTaskTagsCall(tagObjects, taskName);
     }
 
     /**
@@ -1014,8 +773,8 @@ public class TagsApi {
     private ApiResponse<Void> setTaskTagsWithHttpInfo(List<TagObject> tagObjects, String taskName)
             throws ApiException {
         okhttp3.Call call =
-                setTaskTagsValidateBeforeCall(tagObjects, taskName, null, null);
-        return apiClient.execute(call);
+                setTaskTagsValidateBeforeCall(tagObjects, taskName);
+        return httpClient.execute(call);
     }
 
     /**
@@ -1030,75 +789,48 @@ public class TagsApi {
      */
     public okhttp3.Call setWorkflowTagsCall(
             List<TagObject> tagObjects,
-            String name,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String name)
             throws ApiException {
-        Object localVarPostBody = tagObjects;
 
         // create path and map variables
         String localVarPath =
                 "/metadata/workflow/{name}/tags"
                         .replaceAll(
-                                "\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
+                                "\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {};
 
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
         if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
 
         final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
+        return httpClient.buildCall(
                 localVarPath,
                 "PUT",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                tagObjects,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
     private okhttp3.Call setWorkflowTagsValidateBeforeCall(
             List<TagObject> tagObjects,
-            String name,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String name)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (tagObjects == null) {
@@ -1111,9 +843,7 @@ public class TagsApi {
                     "Missing the required parameter 'name' when calling setWorkflowTags(Async)");
         }
 
-        okhttp3.Call call =
-                setWorkflowTagsCall(tagObjects, name, progressListener, progressRequestListener);
-        return call;
+        return setWorkflowTagsCall(tagObjects, name);
     }
 
     /**
@@ -1140,7 +870,7 @@ public class TagsApi {
     private ApiResponse<Void> setWorkflowTagsWithHttpInfo(List<TagObject> tagObjects, String name)
             throws ApiException {
         okhttp3.Call call =
-                setWorkflowTagsValidateBeforeCall(tagObjects, name, null, null);
-        return apiClient.execute(call);
+                setWorkflowTagsValidateBeforeCall(tagObjects, name);
+        return httpClient.execute(call);
     }
 }

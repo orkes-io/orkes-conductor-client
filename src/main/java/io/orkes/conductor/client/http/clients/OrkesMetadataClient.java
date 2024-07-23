@@ -10,138 +10,133 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
+package io.orkes.conductor.client.http.clients;
 
-import java.util.List;
-
-import io.orkes.conductor.client.ApiClient;
 import io.orkes.conductor.client.MetadataClient;
-import io.orkes.conductor.client.http.api.MetadataResourceApi;
-import io.orkes.conductor.client.http.api.TagsApi;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
-public class OrkesMetadataClient extends MetadataClient  {
+import java.util.List;
 
-    protected ApiClient apiClient;
+public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
 
-    private final MetadataResourceApi metadataResourceApi;
-    private final TagsApi tagsApi;
+    private final MetadataResource metadataResource;
+    private final TagsResource tagsResource;
 
-    public OrkesMetadataClient(ApiClient apiClient) {
-        this.apiClient = apiClient;
-        this.metadataResourceApi = new MetadataResourceApi(apiClient);
-        this.tagsApi = new TagsApi(apiClient);
+    public OrkesMetadataClient(OrkesHttpClient httpClient) {
+        super(httpClient);
+        this.metadataResource = new MetadataResource(httpClient);
+        this.tagsResource = new TagsResource(httpClient);
     }
 
     @Override
     public void registerWorkflowDef(WorkflowDef workflowDef) {
-        metadataResourceApi.create(workflowDef, true);
+        metadataResource.create(workflowDef, true);
     }
 
     @Override
     public void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite) {
-        metadataResourceApi.create(workflowDef, overwrite);
+        metadataResource.create(workflowDef, overwrite);
     }
 
     @Override
     public void updateWorkflowDefs(List<WorkflowDef> workflowDefs) {
-        metadataResourceApi.update(workflowDefs, true);
+        metadataResource.update(workflowDefs, true);
     }
 
     @Override
     public void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite) {
-        metadataResourceApi.update(workflowDefs, overwrite);
+        metadataResource.update(workflowDefs, overwrite);
     }
 
     @Override
     public WorkflowDef getWorkflowDef(String name, Integer version) {
-        return metadataResourceApi.get(name, version, false);
+        return metadataResource.get(name, version, false);
     }
 
     public WorkflowDef getWorkflowDefWithMetadata(String name, Integer version) {
-        return metadataResourceApi.get(name, version, true);
+        return metadataResource.get(name, version, true);
     }
 
     @Override
     public void unregisterWorkflowDef(String name, Integer version) {
-        metadataResourceApi.unregisterWorkflowDef(name, version);
+        metadataResource.unregisterWorkflowDef(name, version);
     }
 
     @Override
     public List<TaskDef> getAllTaskDefs() {
-        return metadataResourceApi.getTaskDefs(null, false, null, null);
+        return metadataResource.getTaskDefs(null, false, null, null);
     }
 
     @Override
     public void registerTaskDefs(List<TaskDef> taskDefs) {
-        metadataResourceApi.registerTaskDef(taskDefs);
+        metadataResource.registerTaskDef(taskDefs);
     }
 
     @Override
     public void updateTaskDef(TaskDef taskDef) {
-        metadataResourceApi.updateTaskDef(taskDef);
+        metadataResource.updateTaskDef(taskDef);
     }
 
     @Override
     public TaskDef getTaskDef(String taskType) {
-        return metadataResourceApi.getTaskDef(taskType, true);
+        return metadataResource.getTaskDef(taskType, true);
     }
 
     @Override
     public void unregisterTaskDef(String taskType) {
-        metadataResourceApi.unregisterTaskDef(taskType);
+        metadataResource.unregisterTaskDef(taskType);
     }
 
     @Override
     public void addTaskTag(TagObject tagObject, String taskName) {
-        tagsApi.addTaskTag(tagObject, taskName);
+        tagsResource.addTaskTag(tagObject, taskName);
     }
 
     @Override
     public void addWorkflowTag(TagObject tagObject, String name) {
-        tagsApi.addWorkflowTag(tagObject, name);
+        tagsResource.addWorkflowTag(tagObject, name);
     }
 
     @Override
     public void deleteTaskTag(TagString tagString, String taskName) {
-        tagsApi.deleteTaskTag(tagString, taskName);
+        tagsResource.deleteTaskTag(tagString, taskName);
     }
 
     @Override
     public void deleteWorkflowTag(TagObject tagObject, String name) {
-        tagsApi.deleteWorkflowTag(tagObject, name);
+        tagsResource.deleteWorkflowTag(tagObject, name);
     }
 
     @Override
     public List<TagObject> getTags() {
-        return tagsApi.getTags();
+        return tagsResource.getTags();
     }
 
     @Override
     public List<TagObject> getTaskTags(String taskName) {
-        return tagsApi.getTaskTags(taskName);
+        return tagsResource.getTaskTags(taskName);
     }
 
     @Override
     public List<TagObject> getWorkflowTags(String name) {
-        return tagsApi.getWorkflowTags(name);
+        return tagsResource.getWorkflowTags(name);
     }
 
     @Override
     public void setTaskTags(List<TagObject> tagObjects, String taskName) {
-        tagsApi.setTaskTags(tagObjects, taskName);
+        tagsResource.setTaskTags(tagObjects, taskName);
     }
 
     @Override
     public void setWorkflowTags(List<TagObject> tagObjects, String name) {
-        tagsApi.setWorkflowTags(tagObjects, name);
+        tagsResource.setWorkflowTags(tagObjects, name);
     }
 
     @Override
     public List<WorkflowDef> getAllWorkflowDefs() {
-        return metadataResourceApi.getAllWorkflows(null, false, null, null);
+        return metadataResource.getAllWorkflows(null, false, null, null);
     }
 }

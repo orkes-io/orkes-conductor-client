@@ -62,7 +62,7 @@ public class ConductorUser {
 
     public ConductorUser addGroupsItem(Group groupsItem) {
         if (this.groups == null) {
-            this.groups = new ArrayList<Group>();
+            this.groups = new ArrayList<>();
         }
         this.groups.add(groupsItem);
         return this;
@@ -127,7 +127,7 @@ public class ConductorUser {
 
     public ConductorUser addRolesItem(Role rolesItem) {
         if (this.roles == null) {
-            this.roles = new ArrayList<Role>();
+            this.roles = new ArrayList<>();
         }
         this.roles.add(rolesItem);
         return this;

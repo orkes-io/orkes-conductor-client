@@ -15,7 +15,7 @@ package io.orkes.conductor.client.ex;
 import java.time.Duration;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.WorkflowClient;
@@ -37,7 +37,7 @@ public class WorkflowManager {
     private final TaskClient taskClient;
 
     public WorkflowManager() {
-        var apiClient = new ApiClient.Builder()
+        var apiClient = new OrkesHttpClient.Builder()
                 .basePath("http://localhost:8080/api")
                 .keyId("api_key_user_03")
                 .keySecret("api_key_user_03")

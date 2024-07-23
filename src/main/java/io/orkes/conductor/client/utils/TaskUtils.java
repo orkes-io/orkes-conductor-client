@@ -43,6 +43,7 @@ public class TaskUtils {
     }
 
     public static WorkflowDef convertToWorkflowDef(Object workflowDef) {
-        return objectMapper.convertValue(workflowDef, new TypeReference<WorkflowDef>() {});
+        return objectMapper.convertValue(workflowDef, new TypeReference<>() {
+        });
     }
 }

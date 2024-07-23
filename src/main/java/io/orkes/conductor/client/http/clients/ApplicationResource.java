@@ -10,34 +10,31 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http.api;
+package io.orkes.conductor.client.http.clients;
 
-import java.io.IOException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.model.AccessKeyResponse;
+import io.orkes.conductor.client.model.ConductorApplication;
+import io.orkes.conductor.client.model.ConductorUser;
+import io.orkes.conductor.client.model.CreateAccessKeyResponse;
+import io.orkes.conductor.client.model.CreateOrUpdateApplicationRequest;
+import io.orkes.conductor.client.model.TagObject;
+import okhttp3.Call;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ApiClient;
-import io.orkes.conductor.client.http.*;
-import io.orkes.conductor.client.model.*;
+class ApplicationResource {
 
-import com.fasterxml.jackson.core.type.TypeReference;
+    private final OrkesHttpClient apiClient;
 
-public class ApplicationResourceApi {
-
-    private ApiClient apiClient;
-
-    public ApplicationResourceApi(ApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
-
-    public ApiClient getApiClient() {
-        return apiClient;
-    }
-
-    public void setApiClient(ApiClient apiClient) {
+    public ApplicationResource(OrkesHttpClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -46,16 +43,12 @@ public class ApplicationResourceApi {
      *
      * @param applicationId           (required)
      * @param role                    (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call addRoleToApplicationUserCall(
+    public Call addRoleToApplicationUserCall(
             String applicationId,
-            String role,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String role)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -64,16 +57,16 @@ public class ApplicationResourceApi {
                 "/applications/{applicationId}/roles/{role}"
                         .replaceAll(
                                 "\\{" + "applicationId" + "\\}",
-                                apiClient.escapeString(applicationId.toString()))
+                                apiClient.escapeString(applicationId))
                         .replaceAll(
-                                "\\{" + "role" + "\\}", apiClient.escapeString(role.toString()));
+                                "\\{" + "role" + "\\}", apiClient.escapeString(role));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -84,29 +77,6 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -116,15 +86,12 @@ public class ApplicationResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call addRoleToApplicationUserValidateBeforeCall(
+    private Call addRoleToApplicationUserValidateBeforeCall(
             String applicationId,
-            String role,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String role)
             throws ApiException {
         // verify the required parameter 'applicationId' is set
         if (applicationId == null) {
@@ -137,10 +104,8 @@ public class ApplicationResourceApi {
                     "Missing the required parameter 'role' when calling addRoleToApplicationUser(Async)");
         }
 
-        okhttp3.Call call =
-                addRoleToApplicationUserCall(
-                        applicationId, role, progressListener, progressRequestListener);
-        return call;
+        return addRoleToApplicationUserCall(
+                applicationId, role);
     }
 
     /**
@@ -162,10 +127,8 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<ConductorUser> addRoleToApplicationUserWithHttpInfo(
             String applicationId, String role) throws ApiException {
-        okhttp3.Call call =
-                addRoleToApplicationUserValidateBeforeCall(applicationId, role, null, null);
-        Type localVarReturnType = new TypeReference<ConductorUser>() {
-        }.getType();
+        Call call = addRoleToApplicationUserValidateBeforeCall(applicationId, role);
+        Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
@@ -173,29 +136,24 @@ public class ApplicationResourceApi {
      * Build call for createAccessKey
      *
      * @param id                      (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call createAccessKeyCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
-            throws ApiException {
+    public Call createAccessKeyCall(String id) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath =
                 "/applications/{id}/accessKeys"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -206,29 +164,6 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
                 localVarPath,
@@ -238,24 +173,17 @@ public class ApplicationResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call createAccessKeyValidateBeforeCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
-            throws ApiException {
+    private Call createAccessKeyValidateBeforeCall(String id) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
                     "Missing the required parameter 'id' when calling createAccessKey(Async)");
         }
 
-        okhttp3.Call call =
-                createAccessKeyCall(id, progressListener, progressRequestListener);
-        return call;
+        return createAccessKeyCall(id);
     }
 
     /**
@@ -280,7 +208,7 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<CreateAccessKeyResponse> createAccessKeyWithHttpInfo(String id)
             throws ApiException {
-        okhttp3.Call call = createAccessKeyValidateBeforeCall(id, null, null);
+        Call call = createAccessKeyValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<CreateAccessKeyResponse>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -295,22 +223,18 @@ public class ApplicationResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call createApplicationCall(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public Call createApplicationCall(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest)
             throws ApiException {
-        Object localVarPostBody = createOrUpdateApplicationRequest;
 
         // create path and map variables
         String localVarPath = "/applications";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -320,28 +244,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
@@ -349,17 +252,14 @@ public class ApplicationResourceApi {
                 "POST",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                createOrUpdateApplicationRequest,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call createApplicationValidateBeforeCall(
-            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private Call createApplicationValidateBeforeCall(
+            CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (createOrUpdateApplicationRequest == null) {
@@ -367,12 +267,8 @@ public class ApplicationResourceApi {
                     "Missing the required parameter 'createOrUpdateApplicationRequest' when calling createApplication(Async)");
         }
 
-        okhttp3.Call call =
-                createApplicationCall(
-                        createOrUpdateApplicationRequest,
-                        progressListener,
-                        progressRequestListener);
-        return call;
+        return createApplicationCall(
+                createOrUpdateApplicationRequest);
     }
 
     /**
@@ -397,7 +293,7 @@ public class ApplicationResourceApi {
      *                      response body
      */
     private ApiResponse<ConductorApplication> createApplicationWithHttpInfo(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) throws ApiException {
-        okhttp3.Call call = createApplicationValidateBeforeCall(createOrUpdateApplicationRequest, null, null);
+        Call call = createApplicationValidateBeforeCall(createOrUpdateApplicationRequest);
         Type localVarReturnType = new TypeReference<ConductorApplication>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -408,16 +304,13 @@ public class ApplicationResourceApi {
      *
      * @param applicationId           (required)
      * @param keyId                   (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call deleteAccessKeyCall(
+    public Call deleteAccessKeyCall(
             String applicationId,
-            String keyId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String keyId)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -426,16 +319,16 @@ public class ApplicationResourceApi {
                 "/applications/{applicationId}/accessKeys/{keyId}"
                         .replaceAll(
                                 "\\{" + "applicationId" + "\\}",
-                                apiClient.escapeString(applicationId.toString()))
+                                apiClient.escapeString(applicationId))
                         .replaceAll(
-                                "\\{" + "keyId" + "\\}", apiClient.escapeString(keyId.toString()));
+                                "\\{" + "keyId" + "\\}", apiClient.escapeString(keyId));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -446,28 +339,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
@@ -478,15 +350,12 @@ public class ApplicationResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call deleteAccessKeyValidateBeforeCall(
+    private Call deleteAccessKeyValidateBeforeCall(
             String applicationId,
-            String keyId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String keyId)
             throws ApiException {
         // verify the required parameter 'applicationId' is set
         if (applicationId == null) {
@@ -499,10 +368,8 @@ public class ApplicationResourceApi {
                     "Missing the required parameter 'keyId' when calling deleteAccessKey(Async)");
         }
 
-        okhttp3.Call call =
-                deleteAccessKeyCall(
-                        applicationId, keyId, progressListener, progressRequestListener);
-        return call;
+        return deleteAccessKeyCall(
+                applicationId, keyId);
     }
 
     /**
@@ -528,9 +395,9 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<Object> deleteAccessKeyWithHttpInfo(String applicationId, String keyId)
             throws ApiException {
-        okhttp3.Call call =
-                deleteAccessKeyValidateBeforeCall(applicationId, keyId, null, null);
-        Type localVarReturnType = new TypeReference<Object>() {
+        Call call =
+                deleteAccessKeyValidateBeforeCall(applicationId, keyId);
+        Type localVarReturnType = new TypeReference<>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -539,29 +406,26 @@ public class ApplicationResourceApi {
      * Build call for deleteApplication
      *
      * @param id                      (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call deleteApplicationCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public Call deleteApplicationCall(
+            String id)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath =
                 "/applications/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -572,28 +436,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
@@ -604,14 +447,11 @@ public class ApplicationResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call deleteApplicationValidateBeforeCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private Call deleteApplicationValidateBeforeCall(
+            String id)
             throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -619,9 +459,7 @@ public class ApplicationResourceApi {
                     "Missing the required parameter 'id' when calling deleteApplication(Async)");
         }
 
-        okhttp3.Call call =
-                deleteApplicationCall(id, progressListener, progressRequestListener);
-        return call;
+        return deleteApplicationCall(id);
     }
 
     /**
@@ -644,8 +482,8 @@ public class ApplicationResourceApi {
      *                      response body
      */
     private ApiResponse<Object> deleteApplicationWithHttpInfo(String id) throws ApiException {
-        okhttp3.Call call = deleteApplicationValidateBeforeCall(id, null, null);
-        Type localVarReturnType = new TypeReference<Object>() {
+        Call call = deleteApplicationValidateBeforeCall(id);
+        Type localVarReturnType = new TypeReference<>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -654,29 +492,26 @@ public class ApplicationResourceApi {
      * Build call for getAccessKeys
      *
      * @param id                      (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call getAccessKeysCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public Call getAccessKeysCall(
+            String id)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath =
                 "/applications/{id}/accessKeys"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -687,28 +522,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
@@ -719,14 +533,11 @@ public class ApplicationResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call getAccessKeysValidateBeforeCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private Call getAccessKeysValidateBeforeCall(
+            String id)
             throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -734,9 +545,7 @@ public class ApplicationResourceApi {
                     "Missing the required parameter 'id' when calling getAccessKeys(Async)");
         }
 
-        okhttp3.Call call =
-                getAccessKeysCall(id, progressListener, progressRequestListener);
-        return call;
+        return getAccessKeysCall(id);
     }
 
     /**
@@ -762,7 +571,7 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<List<AccessKeyResponse>> getAccessKeysWithHttpInfo(String id)
             throws ApiException {
-        okhttp3.Call call = getAccessKeysValidateBeforeCall(id, null, null);
+        Call call = getAccessKeysValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<List<AccessKeyResponse>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -772,29 +581,26 @@ public class ApplicationResourceApi {
      * Build call for getApplication
      *
      * @param id                      (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call getApplicationCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public Call getApplicationCall(
+            String id)
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath =
                 "/applications/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -805,28 +611,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
@@ -837,14 +622,11 @@ public class ApplicationResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call getApplicationValidateBeforeCall(
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private Call getApplicationValidateBeforeCall(
+            String id)
             throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -852,9 +634,7 @@ public class ApplicationResourceApi {
                     "Missing the required parameter 'id' when calling getApplication(Async)");
         }
 
-        okhttp3.Call call =
-                getApplicationCall(id, progressListener, progressRequestListener);
-        return call;
+        return getApplicationCall(id);
     }
 
     /**
@@ -880,7 +660,7 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<ConductorApplication> getApplicationWithHttpInfo(String id)
             throws ApiException {
-        okhttp3.Call call = getApplicationValidateBeforeCall(id, null, null);
+        Call call = getApplicationValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<ConductorApplication>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -889,26 +669,23 @@ public class ApplicationResourceApi {
     /**
      * Build call for listApplications
      *
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call listApplicationsCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    public Call listApplicationsCall()
             throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/applications";
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -919,28 +696,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
@@ -951,18 +707,13 @@ public class ApplicationResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call listApplicationsValidateBeforeCall(
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+    private Call listApplicationsValidateBeforeCall()
             throws ApiException {
 
-        okhttp3.Call call =
-                listApplicationsCall(progressListener, progressRequestListener);
-        return call;
+        return listApplicationsCall();
     }
 
     /**
@@ -986,7 +737,7 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<List<ConductorApplication>> listApplicationsWithHttpInfo()
             throws ApiException {
-        okhttp3.Call call = listApplicationsValidateBeforeCall(null, null);
+        Call call = listApplicationsValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<ConductorApplication>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -997,16 +748,13 @@ public class ApplicationResourceApi {
      *
      * @param applicationId           (required)
      * @param role                    (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call removeRoleFromApplicationUserCall(
+    public Call removeRoleFromApplicationUserCall(
             String applicationId,
-            String role,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String role)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -1015,16 +763,16 @@ public class ApplicationResourceApi {
                 "/applications/{applicationId}/roles/{role}"
                         .replaceAll(
                                 "\\{" + "applicationId" + "\\}",
-                                apiClient.escapeString(applicationId.toString()))
+                                apiClient.escapeString(applicationId))
                         .replaceAll(
-                                "\\{" + "role" + "\\}", apiClient.escapeString(role.toString()));
+                                "\\{" + "role" + "\\}", apiClient.escapeString(role));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1035,28 +783,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
@@ -1067,15 +794,12 @@ public class ApplicationResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call removeRoleFromApplicationUserValidateBeforeCall(
+    private Call removeRoleFromApplicationUserValidateBeforeCall(
             String applicationId,
-            String role,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String role)
             throws ApiException {
         // verify the required parameter 'applicationId' is set
         if (applicationId == null) {
@@ -1088,10 +812,8 @@ public class ApplicationResourceApi {
                     "Missing the required parameter 'role' when calling removeRoleFromApplicationUser(Async)");
         }
 
-        okhttp3.Call call =
-                removeRoleFromApplicationUserCall(
-                        applicationId, role, progressListener, progressRequestListener);
-        return call;
+        return removeRoleFromApplicationUserCall(
+                applicationId, role);
     }
 
     /**
@@ -1114,9 +836,9 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<Object> removeRoleFromApplicationUserWithHttpInfo(
             String applicationId, String role) throws ApiException {
-        okhttp3.Call call =
-                removeRoleFromApplicationUserValidateBeforeCall(applicationId, role, null, null);
-        Type localVarReturnType = new TypeReference<Object>() {
+        Call call =
+                removeRoleFromApplicationUserValidateBeforeCall(applicationId, role);
+        Type localVarReturnType = new TypeReference<>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -1126,16 +848,13 @@ public class ApplicationResourceApi {
      *
      * @param applicationId           (required)
      * @param keyId                   (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call toggleAccessKeyStatusCall(
+    public Call toggleAccessKeyStatusCall(
             String applicationId,
-            String keyId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String keyId)
             throws ApiException {
         Object localVarPostBody = null;
 
@@ -1144,16 +863,16 @@ public class ApplicationResourceApi {
                 "/applications/{applicationId}/accessKeys/{keyId}/status"
                         .replaceAll(
                                 "\\{" + "applicationId" + "\\}",
-                                apiClient.escapeString(applicationId.toString()))
+                                apiClient.escapeString(applicationId))
                         .replaceAll(
-                                "\\{" + "keyId" + "\\}", apiClient.escapeString(keyId.toString()));
+                                "\\{" + "keyId" + "\\}", apiClient.escapeString(keyId));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1164,28 +883,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
@@ -1196,15 +894,12 @@ public class ApplicationResourceApi {
                 localVarPostBody,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call toggleAccessKeyStatusValidateBeforeCall(
+    private Call toggleAccessKeyStatusValidateBeforeCall(
             String applicationId,
-            String keyId,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String keyId)
             throws ApiException {
         // verify the required parameter 'applicationId' is set
         if (applicationId == null) {
@@ -1217,10 +912,8 @@ public class ApplicationResourceApi {
                     "Missing the required parameter 'keyId' when calling toggleAccessKeyStatus(Async)");
         }
 
-        okhttp3.Call call =
-                toggleAccessKeyStatusCall(
-                        applicationId, keyId, progressListener, progressRequestListener);
-        return call;
+        return toggleAccessKeyStatusCall(
+                applicationId, keyId);
     }
 
     /**
@@ -1250,8 +943,8 @@ public class ApplicationResourceApi {
      */
     private ApiResponse<AccessKeyResponse> toggleAccessKeyStatusWithHttpInfo(
             String applicationId, String keyId) throws ApiException {
-        okhttp3.Call call =
-                toggleAccessKeyStatusValidateBeforeCall(applicationId, keyId, null, null);
+        Call call =
+                toggleAccessKeyStatusValidateBeforeCall(applicationId, keyId);
         Type localVarReturnType = new TypeReference<AccessKeyResponse>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1267,25 +960,22 @@ public class ApplicationResourceApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public okhttp3.Call updateApplicationCall(
+    public Call updateApplicationCall(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
-        Object localVarPostBody = createOrUpdateApplicationRequest;
 
         // create path and map variables
         String localVarPath =
                 "/applications/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {"application/json"};
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
@@ -1295,28 +985,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient
-                    .getHttpClient()
-                    .networkInterceptors()
-                    .add(
-                            new okhttp3.Interceptor() {
-                                @Override
-                                public okhttp3.Response intercept(
-                                        okhttp3.Interceptor.Chain chain)
-                                        throws IOException {
-                                    okhttp3.Response originalResponse =
-                                            chain.proceed(chain.request());
-                                    return originalResponse
-                                            .newBuilder()
-                                            .body(
-                                                    new ProgressResponseBody(
-                                                            originalResponse.body(),
-                                                            progressListener))
-                                            .build();
-                                }
-                            });
-        }
+
 
         String[] localVarAuthNames = new String[]{"api_key"};
         return apiClient.buildCall(
@@ -1324,18 +993,15 @@ public class ApplicationResourceApi {
                 "PUT",
                 localVarQueryParams,
                 localVarCollectionQueryParams,
-                localVarPostBody,
+                createOrUpdateApplicationRequest,
                 localVarHeaderParams,
                 localVarFormParams,
-                localVarAuthNames,
-                progressRequestListener);
+                localVarAuthNames);
     }
 
-    private okhttp3.Call updateApplicationValidateBeforeCall(
+    private Call updateApplicationValidateBeforeCall(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest,
-            String id,
-            final ProgressResponseBody.ProgressListener progressListener,
-            final ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String id)
             throws ApiException {
         // verify the required parameter 'body' is set
         if (createOrUpdateApplicationRequest == null) {
@@ -1348,13 +1014,9 @@ public class ApplicationResourceApi {
                     "Missing the required parameter 'id' when calling updateApplication(Async)");
         }
 
-        okhttp3.Call call =
-                updateApplicationCall(
-                        createOrUpdateApplicationRequest,
-                        id,
-                        progressListener,
-                        progressRequestListener);
-        return call;
+        return updateApplicationCall(
+                createOrUpdateApplicationRequest,
+                id);
     }
 
     /**
@@ -1386,9 +1048,9 @@ public class ApplicationResourceApi {
     private ApiResponse<ConductorApplication> updateApplicationWithHttpInfo(
             CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id)
             throws ApiException {
-        okhttp3.Call call =
+        Call call =
                 updateApplicationValidateBeforeCall(
-                        createOrUpdateApplicationRequest, id, null, null);
+                        createOrUpdateApplicationRequest, id);
         Type localVarReturnType = new TypeReference<ConductorApplication>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -1414,12 +1076,12 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     private ApiResponse<Void> putTagForApplicationWithHttpInfo(List<TagObject> body, String id) throws ApiException {
-        okhttp3.Call call = putTagForApplicationValidateBeforeCall(body, id, null, null);
+        Call call = putTagForApplicationValidateBeforeCall(body, id);
         return apiClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call putTagForApplicationValidateBeforeCall(List<TagObject> body, String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call putTagForApplicationValidateBeforeCall(List<TagObject> body, String id) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling putTagForApplication(Async)");
@@ -1429,8 +1091,7 @@ public class ApplicationResourceApi {
             throw new ApiException("Missing the required parameter 'id' when calling putTagForApplication(Async)");
         }
 
-        okhttp3.Call call = putTagForApplicationCall(body, id, progressListener, progressRequestListener);
-        return call;
+        return putTagForApplicationCall(body, id);
     }
 
     /**
@@ -1438,24 +1099,22 @@ public class ApplicationResourceApi {
      *
      * @param body                    (required)
      * @param id                      (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private okhttp3.Call putTagForApplicationCall(List<TagObject> body, String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = body;
+    private Call putTagForApplicationCall(List<TagObject> body, String id) throws ApiException {
 
         // create path and map variables
         String localVarPath = "/applications/{id}/tags"
-                .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {
 
@@ -1469,20 +1128,8 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
-                @Override
-                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
-                    okhttp3.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                }
-            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
-        return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+        return apiClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, body, localVarHeaderParams, localVarFormParams, localVarAuthNames);
     }
 
     /**
@@ -1505,45 +1152,43 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     private ApiResponse<List<TagObject>> getTagsForApplicationWithHttpInfo(String id) throws ApiException {
-        okhttp3.Call call = getTagsForApplicationValidateBeforeCall(id, null, null);
+        Call call = getTagsForApplicationValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {
         }.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call getTagsForApplicationValidateBeforeCall(String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call getTagsForApplicationValidateBeforeCall(String id) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException("Missing the required parameter 'id' when calling getTagsForApplication(Async)");
         }
 
-        okhttp3.Call call = getTagsForApplicationCall(id, progressListener, progressRequestListener);
-        return call;
+        return getTagsForApplicationCall(id);
     }
 
     /**
      * Build call for getTagsForApplication
      *
      * @param id                      (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private okhttp3.Call getTagsForApplicationCall(String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call getTagsForApplicationCall(String id) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/applications/{id}/tags"
-                .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {
                 "application/json"
@@ -1557,20 +1202,8 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
-                @Override
-                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
-                    okhttp3.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                }
-            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
-        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames);
     }
 
     /**
@@ -1593,12 +1226,12 @@ public class ApplicationResourceApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     private ApiResponse<Void> deleteTagForApplicationWithHttpInfo(List<TagObject> body, String id) throws ApiException {
-        okhttp3.Call call = deleteTagForApplicationValidateBeforeCall(body, id, null, null);
+        Call call = deleteTagForApplicationValidateBeforeCall(body, id);
         return apiClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call deleteTagForApplicationValidateBeforeCall(List<TagObject> body, String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call deleteTagForApplicationValidateBeforeCall(List<TagObject> body, String id) throws ApiException {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling deleteTagForApplication(Async)");
@@ -1608,8 +1241,7 @@ public class ApplicationResourceApi {
             throw new ApiException("Missing the required parameter 'id' when calling deleteTagForApplication(Async)");
         }
 
-        okhttp3.Call call = deleteTagForApplicationCall(body, id, progressListener, progressRequestListener);
-        return call;
+        return deleteTagForApplicationCall(body, id);
     }
 
     /**
@@ -1617,24 +1249,22 @@ public class ApplicationResourceApi {
      *
      * @param body                    (required)
      * @param id                      (required)
-     * @param progressListener        Progress listener
-     * @param progressRequestListener Progress request listener
+
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    private okhttp3.Call deleteTagForApplicationCall(List<TagObject> body, String id, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = body;
+    private Call deleteTagForApplicationCall(List<TagObject> body, String id) throws ApiException {
 
         // create path and map variables
         String localVarPath = "/applications/{id}/tags"
-                .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id.toString()));
+                .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
 
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
 
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {
 
@@ -1648,19 +1278,7 @@ public class ApplicationResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new okhttp3.Interceptor() {
-                @Override
-                public okhttp3.Response intercept(okhttp3.Interceptor.Chain chain) throws IOException {
-                    okhttp3.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                            .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                            .build();
-                }
-            });
-        }
-
         String[] localVarAuthNames = new String[]{"api_key"};
-        return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+        return apiClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, body, localVarHeaderParams, localVarFormParams, localVarAuthNames);
     }
 }

@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client;
+package io.orkes.conductor.client.http.clients;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,19 +50,15 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.orkes.conductor.client.http.ApiCallback;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.http.JSON;
 import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.ProgressRequestBody;
-import io.orkes.conductor.client.http.api.TokenResourceApi;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.orkes.conductor.client.http.auth.ApiKeyAuth;
 import io.orkes.conductor.client.http.auth.Authentication;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
@@ -71,7 +67,6 @@ import io.orkes.conductor.client.model.validation.ErrorResponse;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -84,10 +79,10 @@ import okhttp3.internal.http.HttpMethod;
 import okio.BufferedSink;
 import okio.Okio;
 
-public class ApiClient {
+public class OrkesHttpClient {
 
     public static final String PROP_TOKEN_REFRESH_INTERVAL = "CONDUCTOR_SECURITY_TOKEN_REFRESH_INTERVAL";
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrkesHttpClient.class);
     private static final String TOKEN_CACHE_KEY = "TOKEN";
     private final Cache<String, String> tokenCache;
 
@@ -262,8 +257,8 @@ public class ApiClient {
             return this;
         }
 
-        public ApiClient build() {
-            return new ApiClient(this);
+        public OrkesHttpClient build() {
+            return new OrkesHttpClient(this);
         }
 
         void validateAndAssignDefaults() {
@@ -303,7 +298,7 @@ public class ApiClient {
         return new Builder();
     }
 
-    private ApiClient(Builder builder) {
+    private OrkesHttpClient(Builder builder) {
         builder.validateAndAssignDefaults();
         this.tokenRefreshInSeconds = builder.tokenRefreshInSeconds();
         LOGGER.info("Setting token refresh interval to {} seconds", this.tokenRefreshInSeconds);
@@ -349,11 +344,11 @@ public class ApiClient {
         }
     }
 
-    public ApiClient() {
+    public OrkesHttpClient() {
         this(new Builder());
     }
 
-    public ApiClient(String basePath) {
+    public OrkesHttpClient(String basePath) {
         this(new Builder().basePath(basePath));
     }
 
@@ -782,7 +777,7 @@ public class ApiClient {
         try {
             Response response = call.execute();
             T data = handleResponse(response, returnType);
-            return new ApiResponse<T>(response.code(), response.headers().toMultimap(), data);
+            return new ApiResponse<>(response.code(), response.headers().toMultimap(), data);
         } catch (IOException e) {
             throw new ApiException(e);
         }
@@ -841,50 +836,6 @@ public class ApiClient {
     }
 
     /**
-     * {@link #executeAsync(Call, Type, ApiCallback)}
-     *
-     * @param <T>      Type
-     * @param call     An instance of the Call object
-     * @param callback ApiCallback&lt;T&gt;
-     */
-    public <T> void executeAsync(Call call, ApiCallback<T> callback) {
-        executeAsync(call, null, callback);
-    }
-
-    /**
-     * Execute HTTP call asynchronously.
-     *
-     * @param <T>        Type
-     * @param call       The callback to be executed when the API call finishes
-     * @param returnType Return type
-     * @param callback   ApiCallback
-     * @see #execute(Call, Type)
-     */
-    @SuppressWarnings("unchecked")
-    public <T> void executeAsync(Call call, final Type returnType, final ApiCallback<T> callback) {
-        call.enqueue(
-                new Callback() {
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) {
-                        T result;
-                        try {
-                            result = (T) handleResponse(response, returnType);
-                        } catch (ApiException e) {
-                            callback.onFailure(e, response.code(), response.headers().toMultimap());
-                            return;
-                        }
-                        callback.onSuccess(
-                                result, response.code(), response.headers().toMultimap());
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        callback.onFailure(new ApiException(e), 0, null);
-                    }
-                });
-    }
-
-    /**
      * Build HTTP call with the given options.
      *
      * @param path                    The sub-path of the HTTP URL
@@ -908,8 +859,7 @@ public class ApiClient {
             Object body,
             Map<String, String> headerParams,
             Map<String, Object> formParams,
-            String[] authNames,
-            ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String[] authNames)
             throws ApiException {
         Request request =
                 buildRequest(
@@ -920,8 +870,7 @@ public class ApiClient {
                         body,
                         headerParams,
                         formParams,
-                        authNames,
-                        progressRequestListener);
+                        authNames);
         return httpClient.newCall(request);
     }
 
@@ -949,8 +898,7 @@ public class ApiClient {
             Object body,
             Map<String, String> headerParams,
             Map<String, Object> formParams,
-            String[] authNames,
-            ProgressRequestBody.ProgressRequestListener progressRequestListener)
+            String[] authNames)
             throws ApiException {
         if (!"/token".equalsIgnoreCase(path)) {
             updateParamsForAuth(authNames, queryParams, headerParams);
@@ -960,7 +908,7 @@ public class ApiClient {
         final Request.Builder reqBuilder = new Request.Builder().url(url);
         processHeaderParams(headerParams, reqBuilder);
 
-        String contentType = (String) headerParams.get("Content-Type");
+        String contentType = headerParams.get("Content-Type");
         // ensuring a default content type
         if (contentType == null) {
             contentType = "application/json";
@@ -985,17 +933,7 @@ public class ApiClient {
             reqBody = serialize(body, contentType);
         }
 
-        Request request = null;
-
-        if (progressRequestListener != null && reqBody != null) {
-            ProgressRequestBody progressRequestBody =
-                    new ProgressRequestBody(reqBody, progressRequestListener);
-            request = reqBuilder.method(method, progressRequestBody).build();
-        } else {
-            request = reqBuilder.method(method, reqBody).build();
-        }
-
-        return request;
+        return reqBuilder.method(method, reqBody).build();
     }
 
     /**
@@ -1225,9 +1163,8 @@ public class ApiClient {
             throw new RuntimeException("KeyId and KeySecret must be set in order to get an authentication token");
         }
         GenerateTokenRequest generateTokenRequest = new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
-        Map<String, String> response = TokenResourceApi.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
-        String token = response.get("token");
-        return token;
+        Map<String, String> response = TokenResource.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
+        return response.get("token");
     }
 
     private ApiKeyAuth getApiKeyHeader(String token) {

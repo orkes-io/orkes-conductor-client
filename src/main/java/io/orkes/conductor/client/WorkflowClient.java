@@ -33,78 +33,78 @@ import io.orkes.conductor.client.model.run.Workflow;
 import io.orkes.conductor.client.model.run.WorkflowSummary;
 import io.orkes.conductor.client.model.run.WorkflowTestRequest;
 
-public abstract class WorkflowClient  {
+public interface WorkflowClient  {
 
-    public abstract String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ConflictException;
+    String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ConflictException;
 
     @Deprecated
-    public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask);
+    CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask);
 
-    public abstract CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds);
+    CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Integer waitForSeconds);
 
-    public abstract WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException;
+    WorkflowRun executeWorkflow(StartWorkflowRequest request, String waitUntilTask, Duration waitTimeout) throws ExecutionException, InterruptedException, TimeoutException;
 
-    public abstract SearchResult<WorkflowSummary> search(String query);
+    SearchResult<WorkflowSummary> search(String query);
 
-    public abstract SearchResult<Workflow> searchV2(String query);
+    SearchResult<Workflow> searchV2(String query);
 
-    public abstract SearchResult<WorkflowSummary> search(
+    SearchResult<WorkflowSummary> search(
             Integer start, Integer size, String sort, String freeText, String query);
 
-    public abstract SearchResult<Workflow> searchV2(
+    SearchResult<Workflow> searchV2(
             Integer start, Integer size, String sort, String freeText, String query);
 
-    public abstract BulkResponse pauseWorkflow(List<String> workflowIds) throws ApiException;
+    BulkResponse pauseWorkflow(List<String> workflowIds) throws ApiException;
 
-    public abstract BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
+    BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
             throws ApiException;
 
-    public abstract BulkResponse resumeWorkflow(List<String> workflowIds) throws ApiException;
+    BulkResponse resumeWorkflow(List<String> workflowIds) throws ApiException;
 
-    public abstract BulkResponse retryWorkflow(List<String> workflowIds) throws ApiException;
+    BulkResponse retryWorkflow(List<String> workflowIds) throws ApiException;
 
-    public abstract BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
+    BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
             throws ApiException;
 
-    public abstract Workflow getWorkflow(String workflowId, boolean includeTasks);
+    Workflow getWorkflow(String workflowId, boolean includeTasks);
 
-    public abstract List<Workflow> getWorkflows(
+    List<Workflow> getWorkflows(
             String name, String correlationId, boolean includeClosed, boolean includeTasks);
 
-    public abstract void deleteWorkflow(String workflowId, boolean archiveWorkflow);
+    void deleteWorkflow(String workflowId, boolean archiveWorkflow);
 
-    public abstract BulkResponse terminateWorkflows(List<String> workflowIds, String reason);
+    BulkResponse terminateWorkflows(List<String> workflowIds, String reason);
 
-    public abstract List<String> getRunningWorkflow(String workflowName, Integer version);
+    List<String> getRunningWorkflow(String workflowName, Integer version);
 
-    public abstract List<String> getWorkflowsByTimePeriod(
+    List<String> getWorkflowsByTimePeriod(
             String workflowName, int version, Long startTime, Long endTime);
 
-    public abstract void runDecider(String workflowId);
+    void runDecider(String workflowId);
 
-    public abstract void pauseWorkflow(String workflowId);
+    void pauseWorkflow(String workflowId);
 
-    public abstract void resumeWorkflow(String workflowId);
+    void resumeWorkflow(String workflowId);
 
-    public abstract void skipTaskFromWorkflow(String workflowId, String taskReferenceName);
+    void skipTaskFromWorkflow(String workflowId, String taskReferenceName);
 
-    public abstract String rerunWorkflow(String workflowId, RerunWorkflowRequest rerunWorkflowRequest);
+    String rerunWorkflow(String workflowId, RerunWorkflowRequest rerunWorkflowRequest);
 
-    public abstract void restart(String workflowId, boolean useLatestDefinitions);
+    void restart(String workflowId, boolean useLatestDefinitions);
 
-    public abstract void retryLastFailedTask(String workflowId);
+    void retryLastFailedTask(String workflowId);
 
-    public abstract void resetCallbacksForInProgressTasks(String workflowId);
+    void resetCallbacksForInProgressTasks(String workflowId);
 
-    public abstract void terminateWorkflow(String workflowId, String reason);
+    void terminateWorkflow(String workflowId, String reason);
 
-    public abstract void terminateWorkflowWithFailure(String workflowId, String reason, boolean triggerWorkflowFailure)
+    void terminateWorkflowWithFailure(String workflowId, String reason, boolean triggerWorkflowFailure)
             throws ApiException;
 
-    public abstract BulkResponse terminateWorkflowsWithFailure(List<String> workflowIds, String reason, boolean triggerWorkflowFailure)
+    BulkResponse terminateWorkflowsWithFailure(List<String> workflowIds, String reason, boolean triggerWorkflowFailure)
             throws ApiException;
 
-    public abstract WorkflowStatus getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables);
+    WorkflowStatus getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables);
 
     /**
      * Search workflows based on correlation ids and names
@@ -114,19 +114,19 @@ public abstract class WorkflowClient  {
      * @param includeTasks if set, returns tasks.
      * @return Map with a key as correlation id and value as a list of matching workflow executions
      */
-    public abstract Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(
+    Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(
             List<String> correlationIds, List<String> workflowNames, Boolean includeClosed, Boolean includeTasks);
 
-    public abstract void shutdown();
+    void shutdown();
 
-    public abstract void uploadCompletedWorkflows();
+    void uploadCompletedWorkflows();
 
     /**
      * Integration test your workflow using mock data
      * @param testRequest Workflow Start Request with test data
      * @return Workflow
      */
-    public abstract Workflow testWorkflow(WorkflowTestRequest testRequest);
+    Workflow testWorkflow(WorkflowTestRequest testRequest);
 
     /**
      * Update the workflow by setting variables as given.  This is similar to SET_VARIABLE task except that with
@@ -138,9 +138,9 @@ public abstract class WorkflowClient  {
      * @param variables Workflow variables.  The variables are merged with existing variables.
      * @return Updated state of the workflow
      */
-    public abstract Workflow updateVariables(String workflowId, Map<String, Object> variables);
+    Workflow updateVariables(String workflowId, Map<String, Object> variables);
 
-    public abstract void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest body);
+    void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest body);
 
     /**
      *
@@ -153,6 +153,6 @@ public abstract class WorkflowClient  {
      *
      * @return Returns updated workflow execution
      */
-    public abstract WorkflowRun updateWorkflow(String workflowId, List<String> waitUntilTaskRefNames, Integer waitForSeconds,
-        WorkflowStateUpdate updateRequest);
+    WorkflowRun updateWorkflow(String workflowId, List<String> waitUntilTaskRefNames, Integer waitForSeconds,
+                               WorkflowStateUpdate updateRequest);
 }

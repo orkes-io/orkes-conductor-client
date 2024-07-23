@@ -12,7 +12,7 @@
  */
 package io.orkes.conductor.client.util;
 
-import io.orkes.conductor.client.ApiClient;
+import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.OrkesClients;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,12 +23,12 @@ public class ApiUtil {
     private static final String ENV_SECRET = "CONDUCTOR_SERVER_AUTH_SECRET";
 
     public static OrkesClients getOrkesClient() {
-        final ApiClient apiClient = getApiClientWithCredentials();
+        final OrkesHttpClient apiClient = getApiClientWithCredentials();
         // apiClient.setReadTimeout(10_000);
         return new OrkesClients(apiClient);
     }
 
-    public static ApiClient getApiClientWithCredentials() {
+    public static OrkesHttpClient getApiClientWithCredentials() {
         String basePath = getBasePath();
         assertNotNull(basePath, ENV_ROOT_URI + " env not set");
         String keyId = getKeyId();
@@ -36,7 +36,7 @@ public class ApiUtil {
         String keySecret = getKeySecret();
         assertNotNull(keySecret, ENV_SECRET + " env not set");
 
-        return new ApiClient.Builder()
+        return new OrkesHttpClient.Builder()
                 .basePath(basePath)
                 .keyId(keyId)
                 .keySecret(keySecret)

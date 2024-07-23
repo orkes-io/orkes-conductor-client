@@ -53,7 +53,7 @@ public class AuthorizationRequest {
         }
     }
 
-    private List<AccessEnum> access = new ArrayList<AccessEnum>();
+    private List<AccessEnum> access = new ArrayList<>();
 
     private SubjectRef subject = null;
 

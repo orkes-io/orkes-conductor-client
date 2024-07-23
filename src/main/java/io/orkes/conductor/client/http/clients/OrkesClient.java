@@ -10,15 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http;
-
-import io.orkes.conductor.client.ApiClient;
+package io.orkes.conductor.client.http.clients;
 
 public abstract class OrkesClient {
 
-    protected ApiClient apiClient;
+    protected OrkesHttpClient apiClient;
 
-    protected OrkesClient(ApiClient apiClient) {
+    protected OrkesClient(OrkesHttpClient apiClient) {
         this.apiClient = apiClient;
     }
 
