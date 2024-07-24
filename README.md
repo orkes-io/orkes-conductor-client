@@ -196,7 +196,7 @@ http://localhost:8080/api/metadata/workflow -d @workflow.json
 ```
 
 > [!note]
-> To use the Conductor API, the Conductor server must be up and running (see [Running over Conductor standalone (installed locally)](#running-over-conductor-standalone-installed-locally))
+> To use the Conductor API, the Conductor server must be up and running (see [Running over Conductor standalone (installed locally)](https://github.com/orkes-io/orkes-conductor-client/blob/main/examples/java/io/orkes/conductor/sdk/examples/KitchenSink.java))
 
 ### Step 2: Write Worker
 
@@ -294,7 +294,8 @@ public class Main {
     }
 }
 ```
-Add the [ApiUtil.java](examples/java/io/orkes/conductor/sdk/ApiUtil.java) file to set the environment variables.
+Add the [ApiUtil.java](https://github.com/orkes-io/orkes-conductor-client/blob/main/examples/java/io/orkes/conductor/sdk/examples/ApiUtil.java) file to set the environment variables.
+
 ## Running Workflows on Conductor Standalone (Installed Locally)
 
 ### Conductor Server Settings
@@ -630,11 +631,11 @@ public class ConductorWorkers {
 }
 ```
 
-See [DynamicWorkflow](../../examples/java/io/orkes/conductor/sdk/DynamicWorkflow) for a fully functional example.
+See [DynamicWorkflow](https://github.com/orkes-io/orkes-conductor-client/tree/main/examples/java/io/orkes/conductor/sdk/examples/dynamicworkflow) for a fully functional example.
 
 #### Kitchen-Sink Workflow
 
-For a more complex workflow example with all the supported features, see [KitchenSink.java](../../examples/java/io/orkes/conductor/sdk/KitchenSink.java)
+For a more complex workflow example with all the supported features, see [KitchenSink.java](https://github.com/orkes-io/orkes-conductor-client/blob/main/examples/java/io/orkes/conductor/sdk/examples/KitchenSink.java)
 
 ### Executing Workflows
 
@@ -667,7 +668,7 @@ Workflow workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
 ### Managing Workflow Executions
 
 > [!note] 
-> See [WorkflowOps.java](../../examples/java/io/orkes/conductor/sdk/WorkflowOps.java) for a fully working application that demonstrates working with the workflow executions and sending signals to the workflow to manage its state.
+> See [WorkflowOps.java](https://github.com/orkes-io/orkes-conductor-client/blob/main/examples/java/io/orkes/conductor/sdk/examples/WorkflowOps.java) for a fully working application that demonstrates working with the workflow executions and sending signals to the workflow to manage its state.
 
 Workflows represent the application state. With Conductor, you can query the workflow execution state anytime during its lifecycle. You can also send signals to the workflow that determines the outcome of the workflow state.
 
@@ -864,7 +865,7 @@ public class TaskDefinitionTest {
 POST /api/metadata/taskdef -d @task_def.json
 ```
 
-See [TaskConfigure.java](../../examples/java/io/orkes/conductor/sdk/TaskConfigure.java) for a detailed working app.
+See [TaskConfigure.java](https://github.com/orkes-io/orkes-conductor-client/blob/main/examples/java/io/orkes/conductor/sdk/examples/TaskConfigure.java) for a detailed working app.
 
 ## Using Conductor in Your Application
 
@@ -943,9 +944,6 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 >[!note]
 >Workflow workers are your regular Java functions and can be tested with any available testing framework.
 
-#### Example Unit Testing Application
-
-See [WorkflowTest.java](../examples/java/io/orkes/conductor/sdk/WorkflowTest.java) for a fully functional example of how to test a moderately complex workflow with branches.
 
 ### Workflow Deployments Using CI/CD
 
