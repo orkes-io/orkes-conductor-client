@@ -196,7 +196,7 @@ http://localhost:8080/api/metadata/workflow -d @workflow.json
 ```
 
 > [!note]
-> To use the Conductor API, the Conductor server must be up and running (see [Running over Conductor standalone (installed locally)](https://github.com/orkes-io/orkes-conductor-client/blob/main/examples/java/io/orkes/conductor/sdk/examples/KitchenSink.java))
+> To use the Conductor API, the Conductor server must be up and running (see [Running over Conductor standalone (installed locally)](https://github.com/orkes-io/orkes-conductor-client?tab=readme-ov-file#running-workflows-on-conductor-standalone-installed-locally))
 
 ### Step 2: Write Worker
 
