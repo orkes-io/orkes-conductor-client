@@ -92,10 +92,6 @@ For Maven-based projects, modify the `pom.xml` file in the project directory by 
 >[!note]
 >Workflow workers are your regular Java functions and can be tested with any available testing framework.
 
-### Example Unit Testing Application
-
-See [WorkflowTest.java](../examples/java/io/orkes/conductor/sdk/WorkflowTest.java) for a fully functional example of how to test a moderately complex workflow with branches.
-
 ## Workflow Deployments Using CI/CD
 
 >[!tip]
