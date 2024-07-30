@@ -13,12 +13,12 @@
 package io.orkes.conductor.client.http.clients;
 
 
-import java.util.List;
-import java.util.Map;
-
 import io.orkes.conductor.client.api.EventClient;
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 import io.orkes.conductor.client.model.metadata.events.EventHandler;
+
+import java.util.List;
+import java.util.Map;
 
 public class OrkesEventClient extends OrkesClient implements EventClient {
 
@@ -26,17 +26,17 @@ public class OrkesEventClient extends OrkesClient implements EventClient {
 
     public OrkesEventClient(OrkesHttpClient httpClient) {
         super(httpClient);
-        this.eventResource = new EventResource(httpClient);
+        eventResource = new EventResource(httpClient);
     }
 
     @Override
     public void registerEventHandler(EventHandler eventHandler) {
-        this.eventResource.addEventHandler(eventHandler);
+        eventResource.addEventHandler(eventHandler);
     }
 
     @Override
     public void updateEventHandler(EventHandler eventHandler) {
-        this.eventResource.updateEventHandler(eventHandler);
+        eventResource.updateEventHandler(eventHandler);
     }
 
     @Override
@@ -67,10 +67,5 @@ public class OrkesEventClient extends OrkesClient implements EventClient {
     @Override
     public void deleteQueueConfig(QueueConfiguration queueConfiguration) {
         eventResource.deleteQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
-    }
-
-    @Override
-    public void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception {
-        eventResource.putQueueConfig(queueConfiguration.getConfiguration(), queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
     }
 }

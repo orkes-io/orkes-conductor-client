@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
@@ -40,7 +39,7 @@ class SchedulerResource {
   
     public okhttp3.Call deleteScheduleCall(
             String name)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -82,7 +81,7 @@ class SchedulerResource {
 
     private okhttp3.Call deleteScheduleValidateBeforeCall(
             String name)
-            throws ApiException {
+            {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException(
@@ -93,12 +92,12 @@ class SchedulerResource {
     }
 
   
-    public void deleteSchedule(String name) throws ApiException {
+    public void deleteSchedule(String name) {
         deleteScheduleWithHttpInfo(name);
     }
 
   
-    private ApiResponse<Void> deleteScheduleWithHttpInfo(String name) throws ApiException {
+    private ApiResponse<Void> deleteScheduleWithHttpInfo(String name) {
         okhttp3.Call call = deleteScheduleValidateBeforeCall(name);
         return httpClient.execute(call);
     }
@@ -106,7 +105,7 @@ class SchedulerResource {
   
     public okhttp3.Call getAllSchedulesCall(
             String workflowName)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -146,20 +145,20 @@ class SchedulerResource {
 
     private okhttp3.Call getAllSchedulesValidateBeforeCall(
             String workflowName)
-            throws ApiException {
+            {
 
         return getAllSchedulesCall(workflowName);
     }
 
   
-    public List<WorkflowSchedule> getAllSchedules(String workflowName) throws ApiException {
+    public List<WorkflowSchedule> getAllSchedules(String workflowName) {
         ApiResponse<List<WorkflowSchedule>> resp = getAllSchedulesWithHttpInfo(workflowName);
         return resp.getData();
     }
 
   
     private ApiResponse<List<WorkflowSchedule>> getAllSchedulesWithHttpInfo(String workflowName)
-            throws ApiException {
+            {
         okhttp3.Call call = getAllSchedulesValidateBeforeCall(workflowName);
         Type localVarReturnType = new TypeReference<List<WorkflowSchedule>>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -171,7 +170,7 @@ class SchedulerResource {
             Long scheduleStartTime,
             Long scheduleEndTime,
             Integer limit)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -221,7 +220,7 @@ class SchedulerResource {
             Long scheduleStartTime,
             Long scheduleEndTime,
             Integer limit)
-            throws ApiException {
+            {
         // verify the required parameter 'cronExpression' is set
         if (cronExpression == null) {
             throw new ApiException(
@@ -238,7 +237,7 @@ class SchedulerResource {
   
     public List<Long> getNextFewSchedules(
             String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit)
-            throws ApiException {
+            {
         ApiResponse<List<Long>> resp =
                 getNextFewSchedulesWithHttpInfo(
                         cronExpression, scheduleStartTime, scheduleEndTime, limit);
@@ -248,7 +247,7 @@ class SchedulerResource {
   
     private ApiResponse<List<Long>> getNextFewSchedulesWithHttpInfo(
             String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 getNextFewSchedulesValidateBeforeCall(
                         cronExpression, scheduleStartTime, scheduleEndTime, limit);
@@ -259,7 +258,7 @@ class SchedulerResource {
   
     public okhttp3.Call getScheduleCall(
             String name)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -300,7 +299,7 @@ class SchedulerResource {
 
     private okhttp3.Call getScheduleValidateBeforeCall(
             String name)
-            throws ApiException {
+            {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException(
@@ -311,13 +310,13 @@ class SchedulerResource {
     }
 
   
-    public WorkflowSchedule getSchedule(String name) throws ApiException {
+    public WorkflowSchedule getSchedule(String name) {
         ApiResponse<WorkflowSchedule> resp = getScheduleWithHttpInfo(name);
         return resp.getData();
     }
 
   
-    private ApiResponse<WorkflowSchedule> getScheduleWithHttpInfo(String name) throws ApiException {
+    private ApiResponse<WorkflowSchedule> getScheduleWithHttpInfo(String name) {
         okhttp3.Call call = getScheduleValidateBeforeCall(name);
         Type localVarReturnType = new TypeReference<WorkflowSchedule>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -325,7 +324,7 @@ class SchedulerResource {
 
   
     public okhttp3.Call pauseAllSchedulesCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -362,19 +361,19 @@ class SchedulerResource {
     }
 
     private okhttp3.Call pauseAllSchedulesValidateBeforeCall()
-            throws ApiException {
+            {
 
         return pauseAllSchedulesCall();
     }
 
   
-    public Map<String, Object> pauseAllSchedules() throws ApiException {
+    public Map<String, Object> pauseAllSchedules() {
         ApiResponse<Map<String, Object>> resp = pauseAllSchedulesWithHttpInfo();
         return resp.getData();
     }
 
   
-    private ApiResponse<Map<String, Object>> pauseAllSchedulesWithHttpInfo() throws ApiException {
+    private ApiResponse<Map<String, Object>> pauseAllSchedulesWithHttpInfo() {
         okhttp3.Call call = pauseAllSchedulesValidateBeforeCall();
         Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -383,7 +382,7 @@ class SchedulerResource {
   
     public okhttp3.Call pauseScheduleCall(
             String name)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -425,7 +424,7 @@ class SchedulerResource {
 
     private okhttp3.Call pauseScheduleValidateBeforeCall(
             String name)
-            throws ApiException {
+            {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException(
@@ -436,19 +435,19 @@ class SchedulerResource {
     }
 
   
-    public void pauseSchedule(String name) throws ApiException {
+    public void pauseSchedule(String name) {
         pauseScheduleWithHttpInfo(name);
     }
 
   
-    private ApiResponse<Void> pauseScheduleWithHttpInfo(String name) throws ApiException {
+    private ApiResponse<Void> pauseScheduleWithHttpInfo(String name) {
         okhttp3.Call call = pauseScheduleValidateBeforeCall(name);
         return httpClient.execute(call);
     }
 
   
     public okhttp3.Call requeueAllExecutionRecordsCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -485,20 +484,20 @@ class SchedulerResource {
     }
 
     private okhttp3.Call requeueAllExecutionRecordsValidateBeforeCall()
-            throws ApiException {
+            {
 
         return requeueAllExecutionRecordsCall();
     }
 
   
-    public Map<String, Object> requeueAllExecutionRecords() throws ApiException {
+    public Map<String, Object> requeueAllExecutionRecords() {
         ApiResponse<Map<String, Object>> resp = requeueAllExecutionRecordsWithHttpInfo();
         return resp.getData();
     }
 
   
     private ApiResponse<Map<String, Object>> requeueAllExecutionRecordsWithHttpInfo()
-            throws ApiException {
+            {
         okhttp3.Call call = requeueAllExecutionRecordsValidateBeforeCall();
         Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -506,7 +505,7 @@ class SchedulerResource {
 
   
     public okhttp3.Call resumeAllSchedulesCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -543,19 +542,19 @@ class SchedulerResource {
     }
 
     private okhttp3.Call resumeAllSchedulesValidateBeforeCall()
-            throws ApiException {
+            {
 
         return resumeAllSchedulesCall();
     }
 
   
-    public Map<String, Object> resumeAllSchedules() throws ApiException {
+    public Map<String, Object> resumeAllSchedules() {
         ApiResponse<Map<String, Object>> resp = resumeAllSchedulesWithHttpInfo();
         return resp.getData();
     }
 
   
-    private ApiResponse<Map<String, Object>> resumeAllSchedulesWithHttpInfo() throws ApiException {
+    private ApiResponse<Map<String, Object>> resumeAllSchedulesWithHttpInfo() {
         okhttp3.Call call = resumeAllSchedulesValidateBeforeCall();
         Type localVarReturnType = new TypeReference<Map<String, Object>>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -564,7 +563,7 @@ class SchedulerResource {
   
     public okhttp3.Call resumeScheduleCall(
             String name)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -606,7 +605,7 @@ class SchedulerResource {
 
     private okhttp3.Call resumeScheduleValidateBeforeCall(
             String name)
-            throws ApiException {
+            {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException(
@@ -617,12 +616,12 @@ class SchedulerResource {
     }
 
   
-    public void resumeSchedule(String name) throws ApiException {
+    public void resumeSchedule(String name) {
         resumeScheduleWithHttpInfo(name);
     }
 
   
-    private ApiResponse<Void> resumeScheduleWithHttpInfo(String name) throws ApiException {
+    private ApiResponse<Void> resumeScheduleWithHttpInfo(String name) {
         okhttp3.Call call = resumeScheduleValidateBeforeCall(name);
         return httpClient.execute(call);
     }
@@ -630,7 +629,7 @@ class SchedulerResource {
   
     public okhttp3.Call saveScheduleCall(
             SaveScheduleRequest saveScheduleRequest)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/scheduler/schedules";
@@ -667,7 +666,7 @@ class SchedulerResource {
 
     private okhttp3.Call saveScheduleValidateBeforeCall(
             SaveScheduleRequest saveScheduleRequest)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (saveScheduleRequest == null) {
             throw new ApiException(
@@ -678,13 +677,13 @@ class SchedulerResource {
     }
 
   
-    public void saveSchedule(SaveScheduleRequest saveScheduleRequest) throws ApiException {
+    public void saveSchedule(SaveScheduleRequest saveScheduleRequest) {
         saveScheduleWithHttpInfo(saveScheduleRequest);
     }
 
   
     private ApiResponse<Void> saveScheduleWithHttpInfo(SaveScheduleRequest saveScheduleRequest)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 saveScheduleValidateBeforeCall(saveScheduleRequest);
         return httpClient.execute(call);
@@ -697,7 +696,7 @@ class SchedulerResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -745,7 +744,7 @@ class SchedulerResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
 
         return searchV22Call(
                 start,
@@ -758,7 +757,7 @@ class SchedulerResource {
   
     public SearchResultWorkflowScheduleExecutionModel searchV22(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         ApiResponse<SearchResultWorkflowScheduleExecutionModel> resp =
                 searchV22WithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
@@ -766,7 +765,7 @@ class SchedulerResource {
 
     public SearchResultWorkflowScheduleExecution search(
         Integer start, Integer size, String sort, String freeText, String query)
-        throws ApiException {
+        {
         ApiResponse<SearchResultWorkflowScheduleExecution> resp = searchWithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
     }
@@ -774,7 +773,7 @@ class SchedulerResource {
   
     private ApiResponse<SearchResultWorkflowScheduleExecutionModel> searchV22WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 searchV22ValidateBeforeCall(start, size, sort, freeText, query);
         Type localVarReturnType =
@@ -784,7 +783,7 @@ class SchedulerResource {
 
     private ApiResponse<SearchResultWorkflowScheduleExecution> searchWithHttpInfo(
         Integer start, Integer size, String sort, String freeText, String query)
-        throws ApiException {
+        {
         okhttp3.Call call =
             searchV22ValidateBeforeCall(start, size, sort, freeText, query);
         Type localVarReturnType =
@@ -794,7 +793,7 @@ class SchedulerResource {
 
   
     public okhttp3.Call testTimeoutCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -832,35 +831,35 @@ class SchedulerResource {
     }
 
     private okhttp3.Call testTimeoutValidateBeforeCall()
-            throws ApiException {
+            {
 
         return testTimeoutCall();
     }
 
   
-    public void testTimeout() throws ApiException {
+    public void testTimeout() {
         testTimeoutWithHttpInfo();
     }
 
   
-    private ApiResponse<Void> testTimeoutWithHttpInfo() throws ApiException {
+    private ApiResponse<Void> testTimeoutWithHttpInfo() {
         okhttp3.Call call = testTimeoutValidateBeforeCall();
         return httpClient.execute(call);
     }
 
   
-    public void deleteTagForSchedule(List<TagObject> body, String name) throws ApiException {
+    public void deleteTagForSchedule(List<TagObject> body, String name) {
         deleteTagForScheduleWithHttpInfo(body, name);
     }
 
   
-    private ApiResponse<Void> deleteTagForScheduleWithHttpInfo(List<TagObject> body, String name) throws ApiException {
+    private ApiResponse<Void> deleteTagForScheduleWithHttpInfo(List<TagObject> body, String name) {
         okhttp3.Call call = deleteTagForScheduleValidateBeforeCall(body, name);
         return httpClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call deleteTagForScheduleValidateBeforeCall(List<TagObject> body, String name) throws ApiException {
+    private okhttp3.Call deleteTagForScheduleValidateBeforeCall(List<TagObject> body, String name) {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling deleteTagForSchedule(Async)");
@@ -874,7 +873,7 @@ class SchedulerResource {
     }
 
   
-    private okhttp3.Call deleteTagForScheduleCall(List<TagObject> body, String name) throws ApiException {
+    private okhttp3.Call deleteTagForScheduleCall(List<TagObject> body, String name) {
         // create path and map variables
         String localVarPath = "/scheduler/schedules/{name}/tags"
                 .replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
@@ -903,18 +902,18 @@ class SchedulerResource {
     }
 
   
-    public void putTagForSchedule(List<TagObject> body, String name) throws ApiException {
+    public void putTagForSchedule(List<TagObject> body, String name) {
         putTagForScheduleWithHttpInfo(body, name);
     }
 
   
-    private ApiResponse<Void> putTagForScheduleWithHttpInfo(List<TagObject> body, String name) throws ApiException {
+    private ApiResponse<Void> putTagForScheduleWithHttpInfo(List<TagObject> body, String name) {
         okhttp3.Call call = putTagForScheduleValidateBeforeCall(body, name);
         return httpClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call putTagForScheduleValidateBeforeCall(List<TagObject> body, String name) throws ApiException {
+    private okhttp3.Call putTagForScheduleValidateBeforeCall(List<TagObject> body, String name) {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling putTagForSchedule(Async)");
@@ -928,7 +927,7 @@ class SchedulerResource {
     }
 
   
-    private okhttp3.Call putTagForScheduleCall(List<TagObject> body, String name) throws ApiException {
+    private okhttp3.Call putTagForScheduleCall(List<TagObject> body, String name) {
 
         // create path and map variables
         String localVarPath = "/scheduler/schedules/{name}/tags"
@@ -958,20 +957,20 @@ class SchedulerResource {
     }
 
   
-    public List<TagObject> getTagsForSchedule(String name) throws ApiException {
+    public List<TagObject> getTagsForSchedule(String name) {
         ApiResponse<List<TagObject>> resp = getTagsForScheduleWithHttpInfo(name);
         return resp.getData();
     }
 
   
-    public ApiResponse<List<TagObject>> getTagsForScheduleWithHttpInfo(String name) throws ApiException {
+    public ApiResponse<List<TagObject>> getTagsForScheduleWithHttpInfo(String name) {
         okhttp3.Call call = getTagsForScheduleValidateBeforeCall(name);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call getTagsForScheduleValidateBeforeCall(String name) throws ApiException {
+    private okhttp3.Call getTagsForScheduleValidateBeforeCall(String name) {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException("Missing the required parameter 'name' when calling getTagsForSchedule(Async)");
@@ -981,7 +980,7 @@ class SchedulerResource {
     }
 
   
-    public okhttp3.Call getTagsForScheduleCall(String name) throws ApiException {
+    public okhttp3.Call getTagsForScheduleCall(String name) {
         Object localVarPostBody = null;
 
         // create path and map variables

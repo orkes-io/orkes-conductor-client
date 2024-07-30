@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
@@ -54,7 +53,7 @@ class WorkflowResource {
             Integer version,
             String waitUntilTaskRef,
             String requestId)
-            throws ApiException {
+            {
         ApiResponse<WorkflowRun> resp =
                 executeWorkflowWithHttpInfo(req, name, version, waitUntilTaskRef, requestId);
         return resp.getData();
@@ -68,7 +67,7 @@ class WorkflowResource {
             String waitUntilTaskRef,
             String requestId,
             Integer waitForSeconds)
-            throws ApiException {
+            {
         ApiResponse<WorkflowRun> resp =
                 executeWorkflowWithHttpInfo(req, name, version, waitUntilTaskRef, requestId, waitForSeconds);
         return resp.getData();
@@ -82,7 +81,7 @@ class WorkflowResource {
             String waitUntilTaskRef,
             String requestId,
             Integer waitForSeconds)
-            throws ApiException {
+            {
         okhttp3.Call call = executeWorkflowValidateBeforeCall(body, name, version, waitUntilTaskRef,
                 requestId,
                 waitForSeconds);
@@ -97,7 +96,7 @@ class WorkflowResource {
             String waitUntilTaskRef,
             String requestId,
             Integer waitForSeconds)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException(
@@ -130,7 +129,7 @@ class WorkflowResource {
             Integer version,
             String waitUntilTaskRef,
             String requestId)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 executeWorkflowValidateBeforeCall(
                         body, name, version, waitUntilTaskRef, requestId);
@@ -144,7 +143,7 @@ class WorkflowResource {
             Integer version,
             String waitUntilTaskRef,
             String requestId)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException(
@@ -175,7 +174,7 @@ class WorkflowResource {
             Integer version,
             String waitUntilTaskRef,
             String requestId)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -227,7 +226,7 @@ class WorkflowResource {
             String waitUntilTaskRef,
             String requestId,
             Integer waitForSeconds)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -279,7 +278,7 @@ class WorkflowResource {
   
     public okhttp3.Call decideCall(
             String workflowId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -320,7 +319,7 @@ class WorkflowResource {
 
     private okhttp3.Call decideValidateBeforeCall(
             String workflowId)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -331,12 +330,12 @@ class WorkflowResource {
     }
 
   
-    public void decide(String workflowId) throws ApiException {
+    public void decide(String workflowId) {
         decideWithHttpInfo(workflowId);
     }
 
   
-    private ApiResponse<Void> decideWithHttpInfo(String workflowId) throws ApiException {
+    private ApiResponse<Void> decideWithHttpInfo(String workflowId) {
         okhttp3.Call call = decideValidateBeforeCall(workflowId);
         return httpClient.execute(call);
     }
@@ -345,7 +344,7 @@ class WorkflowResource {
     public okhttp3.Call deleteCall(
             String workflowId,
             Boolean archiveWorkflow)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -392,7 +391,7 @@ class WorkflowResource {
     private okhttp3.Call deleteValidateBeforeCall(
             String workflowId,
             Boolean archiveWorkflow)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -403,13 +402,13 @@ class WorkflowResource {
     }
 
   
-    public void delete(String workflowId, Boolean archiveWorkflow) throws ApiException {
+    public void delete(String workflowId, Boolean archiveWorkflow) {
         deleteWithHttpInfo(workflowId, archiveWorkflow);
     }
 
   
     private ApiResponse<Void> deleteWithHttpInfo(String workflowId, Boolean archiveWorkflow)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 deleteValidateBeforeCall(workflowId, archiveWorkflow);
         return httpClient.execute(call);
@@ -419,7 +418,7 @@ class WorkflowResource {
     public okhttp3.Call getExecutionStatusCall(
             String workflowId,
             Boolean includeTasks)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -464,7 +463,7 @@ class WorkflowResource {
     private okhttp3.Call getExecutionStatusValidateBeforeCall(
             String workflowId,
             Boolean includeTasks)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -477,14 +476,14 @@ class WorkflowResource {
 
   
     public Workflow getExecutionStatus(String workflowId, Boolean includeTasks)
-            throws ApiException {
+            {
         ApiResponse<Workflow> resp = getExecutionStatusWithHttpInfo(workflowId, includeTasks);
         return resp.getData();
     }
 
   
     private ApiResponse<Workflow> getExecutionStatusWithHttpInfo(
-            String workflowId, Boolean includeTasks) throws ApiException {
+            String workflowId, Boolean includeTasks) {
         okhttp3.Call call =
                 getExecutionStatusValidateBeforeCall(workflowId, includeTasks);
         Type localVarReturnType = new TypeReference<Workflow>() {}.getType();
@@ -496,7 +495,7 @@ class WorkflowResource {
             String path,
             String operation,
             String payloadType)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -541,7 +540,7 @@ class WorkflowResource {
             String path,
             String operation,
             String payloadType)
-            throws ApiException {
+            {
         // verify the required parameter 'path' is set
         if (path == null) {
             throw new ApiException(
@@ -564,7 +563,7 @@ class WorkflowResource {
 
   
     public ExternalStorageLocation getExternalStorageLocation(
-            String path, String operation, String payloadType) throws ApiException {
+            String path, String operation, String payloadType) {
         ApiResponse<ExternalStorageLocation> resp =
                 getExternalStorageLocationWithHttpInfo(path, operation, payloadType);
         return resp.getData();
@@ -572,7 +571,7 @@ class WorkflowResource {
 
   
     private ApiResponse<ExternalStorageLocation> getExternalStorageLocationWithHttpInfo(
-            String path, String operation, String payloadType) throws ApiException {
+            String path, String operation, String payloadType) {
         okhttp3.Call call =
                 getExternalStorageLocationValidateBeforeCall(
                         path, operation, payloadType);
@@ -586,7 +585,7 @@ class WorkflowResource {
             Integer version,
             Long startTime,
             Long endTime)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -636,7 +635,7 @@ class WorkflowResource {
             Integer version,
             Long startTime,
             Long endTime)
-            throws ApiException {
+            {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException(
@@ -652,7 +651,7 @@ class WorkflowResource {
 
   
     public List<String> getRunningWorkflow(
-            String name, Integer version, Long startTime, Long endTime) throws ApiException {
+            String name, Integer version, Long startTime, Long endTime) {
         ApiResponse<List<String>> resp =
                 getRunningWorkflowWithHttpInfo(name, version, startTime, endTime);
         return resp.getData();
@@ -660,7 +659,7 @@ class WorkflowResource {
 
   
     private ApiResponse<List<String>> getRunningWorkflowWithHttpInfo(
-            String name, Integer version, Long startTime, Long endTime) throws ApiException {
+            String name, Integer version, Long startTime, Long endTime) {
         okhttp3.Call call =
                 getRunningWorkflowValidateBeforeCall(name, version, startTime, endTime);
         Type localVarReturnType = new TypeReference<List<String>>() {}.getType();
@@ -672,7 +671,7 @@ class WorkflowResource {
             String workflowId,
             Boolean includeOutput,
             Boolean includeVariables)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -721,7 +720,7 @@ class WorkflowResource {
             String workflowId,
             Boolean includeOutput,
             Boolean includeVariables)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -737,7 +736,7 @@ class WorkflowResource {
   
     public WorkflowStatus getWorkflowStatusSummary(
             String workflowId, Boolean includeOutput, Boolean includeVariables)
-            throws ApiException {
+            {
         ApiResponse<WorkflowStatus> resp =
                 getWorkflowStatusSummaryWithHttpInfo(workflowId, includeOutput, includeVariables);
         return resp.getData();
@@ -746,7 +745,7 @@ class WorkflowResource {
   
     private ApiResponse<WorkflowStatus> getWorkflowStatusSummaryWithHttpInfo(
             String workflowId, Boolean includeOutput, Boolean includeVariables)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 getWorkflowStatusSummaryValidateBeforeCall(
                         workflowId, includeOutput, includeVariables);
@@ -760,7 +759,7 @@ class WorkflowResource {
             String name,
             Boolean includeClosed,
             Boolean includeTasks)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -806,7 +805,7 @@ class WorkflowResource {
             String name,
             Boolean includeClosed,
             Boolean includeTasks)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException(
@@ -828,7 +827,7 @@ class WorkflowResource {
   
     public Map<String, List<Workflow>> getWorkflows(
             List<String> body, String name, Boolean includeClosed, Boolean includeTasks)
-            throws ApiException {
+            {
         ApiResponse<Map<String, List<Workflow>>> resp =
                 getWorkflowsWithHttpInfo(body, name, includeClosed, includeTasks);
         return resp.getData();
@@ -837,7 +836,7 @@ class WorkflowResource {
   
     private ApiResponse<Map<String, List<Workflow>>> getWorkflowsWithHttpInfo(
             List<String> body, String name, Boolean includeClosed, Boolean includeTasks)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 getWorkflowsValidateBeforeCall(body, name, includeClosed, includeTasks);
         Type localVarReturnType = new TypeReference<Map<String, List<Workflow>>>() {}.getType();
@@ -850,7 +849,7 @@ class WorkflowResource {
             String correlationId,
             Boolean includeClosed,
             Boolean includeTasks)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -896,14 +895,14 @@ class WorkflowResource {
     }
 
   
-    public Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks) throws ApiException {
+    public Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks) {
         okhttp3.Call call = getWorkflowsByNamesAndCorrelationIdsBeforeCall(request, includeClosed, includeTasks);
         Type localVarReturnType = new TypeReference<Map<String, List<Workflow>>>(){}.getType();
         ApiResponse<Map<String, List<Workflow>>> response = httpClient.execute(call, localVarReturnType);
         return response.getData();
     }
 
-    private okhttp3.Call getWorkflowsByNamesAndCorrelationIdsBeforeCall(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks) throws ApiException {
+    private okhttp3.Call getWorkflowsByNamesAndCorrelationIdsBeforeCall(CorrelationIdsSearchRequest request, Boolean includeClosed, Boolean includeTasks) {
         // verify the required parameter 'body' is set
         if (request == null) {
             throw new ApiException("Missing the required parameter 'body' when calling getWorkflows1(Async)");
@@ -912,7 +911,7 @@ class WorkflowResource {
     }
 
   
-    private okhttp3.Call getWorkflowsByNamesAndCorrelationIdsCall(CorrelationIdsSearchRequest body, Boolean includeClosed, Boolean includeTasks) throws ApiException {
+    private okhttp3.Call getWorkflowsByNamesAndCorrelationIdsCall(CorrelationIdsSearchRequest body, Boolean includeClosed, Boolean includeTasks) {
 
         // create path and map variables
         String localVarPath = "/workflow/correlated/batch";
@@ -949,7 +948,7 @@ class WorkflowResource {
             String correlationId,
             Boolean includeClosed,
             Boolean includeTasks)
-            throws ApiException {
+            {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException(
@@ -971,7 +970,7 @@ class WorkflowResource {
   
     public List<Workflow> getWorkflowsByCorrelationId(
             String name, String correlationId, Boolean includeClosed, Boolean includeTasks)
-            throws ApiException {
+            {
         ApiResponse<List<Workflow>> resp =
                 getWorkflows1WithHttpInfo(name, correlationId, includeClosed, includeTasks);
         return resp.getData();
@@ -980,7 +979,7 @@ class WorkflowResource {
   
     private ApiResponse<List<Workflow>> getWorkflows1WithHttpInfo(
             String name, String correlationId, Boolean includeClosed, Boolean includeTasks)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 getWorkflows1ValidateBeforeCall(
                         name, correlationId, includeClosed, includeTasks);
@@ -991,7 +990,7 @@ class WorkflowResource {
   
     public okhttp3.Call pauseWorkflowCall(
             String workflowId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1034,7 +1033,7 @@ class WorkflowResource {
 
     private okhttp3.Call pauseWorkflowValidateBeforeCall(
             String workflowId)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -1045,12 +1044,12 @@ class WorkflowResource {
     }
 
   
-    public void pauseWorkflow(String workflowId) throws ApiException {
+    public void pauseWorkflow(String workflowId) {
         pauseWorkflowWithHttpInfo(workflowId);
     }
 
   
-    private ApiResponse<Void> pauseWorkflowWithHttpInfo(String workflowId) throws ApiException {
+    private ApiResponse<Void> pauseWorkflowWithHttpInfo(String workflowId) {
         okhttp3.Call call = pauseWorkflowValidateBeforeCall(workflowId);
         return httpClient.execute(call);
     }
@@ -1059,7 +1058,7 @@ class WorkflowResource {
     public okhttp3.Call rerunCall(
             RerunWorkflowRequest rerunWorkflowRequest,
             String workflowId)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -1100,7 +1099,7 @@ class WorkflowResource {
     private okhttp3.Call rerunValidateBeforeCall(
             RerunWorkflowRequest rerunWorkflowRequest,
             String workflowId)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (rerunWorkflowRequest == null) {
             throw new ApiException(
@@ -1119,14 +1118,14 @@ class WorkflowResource {
 
   
     public String rerun(RerunWorkflowRequest rerunWorkflowRequest, String workflowId)
-            throws ApiException {
+            {
         ApiResponse<String> resp = rerunWithHttpInfo(rerunWorkflowRequest, workflowId);
         return resp.getData();
     }
 
   
     private ApiResponse<String> rerunWithHttpInfo(
-            RerunWorkflowRequest rerunWorkflowRequest, String workflowId) throws ApiException {
+            RerunWorkflowRequest rerunWorkflowRequest, String workflowId) {
         okhttp3.Call call =
                 rerunValidateBeforeCall(rerunWorkflowRequest, workflowId);
         Type localVarReturnType = new TypeReference<String>() {}.getType();
@@ -1136,7 +1135,7 @@ class WorkflowResource {
   
     public okhttp3.Call resetWorkflowCall(
             String workflowId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1179,7 +1178,7 @@ class WorkflowResource {
 
     private okhttp3.Call resetWorkflowValidateBeforeCall(
             String workflowId)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -1190,12 +1189,12 @@ class WorkflowResource {
     }
 
   
-    public void resetWorkflow(String workflowId) throws ApiException {
+    public void resetWorkflow(String workflowId) {
         resetWorkflowWithHttpInfo(workflowId);
     }
 
   
-    private ApiResponse<Void> resetWorkflowWithHttpInfo(String workflowId) throws ApiException {
+    private ApiResponse<Void> resetWorkflowWithHttpInfo(String workflowId) {
         okhttp3.Call call = resetWorkflowValidateBeforeCall(workflowId);
         return httpClient.execute(call);
     }
@@ -1204,7 +1203,7 @@ class WorkflowResource {
     public okhttp3.Call restartCall(
             String workflowId,
             Boolean useLatestDefinitions)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1251,7 +1250,7 @@ class WorkflowResource {
     private okhttp3.Call restartValidateBeforeCall(
             String workflowId,
             Boolean useLatestDefinitions)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -1264,13 +1263,13 @@ class WorkflowResource {
     }
 
   
-    public void restart(String workflowId, Boolean useLatestDefinitions) throws ApiException {
+    public void restart(String workflowId, Boolean useLatestDefinitions) {
         restartWithHttpInfo(workflowId, useLatestDefinitions);
     }
 
   
     private ApiResponse<Void> restartWithHttpInfo(String workflowId, Boolean useLatestDefinitions)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 restartValidateBeforeCall(workflowId, useLatestDefinitions);
         return httpClient.execute(call);
@@ -1279,7 +1278,7 @@ class WorkflowResource {
   
     public okhttp3.Call resumeWorkflowCall(
             String workflowId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1322,7 +1321,7 @@ class WorkflowResource {
 
     private okhttp3.Call resumeWorkflowValidateBeforeCall(
             String workflowId)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -1333,12 +1332,12 @@ class WorkflowResource {
     }
 
   
-    public void resumeWorkflow(String workflowId) throws ApiException {
+    public void resumeWorkflow(String workflowId) {
         resumeWorkflowWithHttpInfo(workflowId);
     }
 
   
-    private ApiResponse<Void> resumeWorkflowWithHttpInfo(String workflowId) throws ApiException {
+    private ApiResponse<Void> resumeWorkflowWithHttpInfo(String workflowId) {
         okhttp3.Call call = resumeWorkflowValidateBeforeCall(workflowId);
         return httpClient.execute(call);
     }
@@ -1347,7 +1346,7 @@ class WorkflowResource {
     public okhttp3.Call retryCall(
             String workflowId,
             Boolean resumeSubworkflowTasks)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1394,7 +1393,7 @@ class WorkflowResource {
     private okhttp3.Call retryValidateBeforeCall(
             String workflowId,
             Boolean resumeSubworkflowTasks)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -1407,13 +1406,13 @@ class WorkflowResource {
     }
 
   
-    public void retry(String workflowId, Boolean resumeSubworkflowTasks) throws ApiException {
+    public void retry(String workflowId, Boolean resumeSubworkflowTasks) {
         retryWithHttpInfo(workflowId, resumeSubworkflowTasks);
     }
 
   
     private ApiResponse<Void> retryWithHttpInfo(String workflowId, Boolean resumeSubworkflowTasks)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 retryValidateBeforeCall(workflowId, resumeSubworkflowTasks);
         return httpClient.execute(call);
@@ -1428,7 +1427,7 @@ class WorkflowResource {
             String freeText,
             String query,
             Boolean skipCache)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1482,7 +1481,7 @@ class WorkflowResource {
             String freeText,
             String query,
             Boolean skipCache)
-            throws ApiException {
+            {
 
         return searchCall(
                 queryId,
@@ -1503,7 +1502,7 @@ class WorkflowResource {
             String freeText,
             String query,
             Boolean skipCache)
-            throws ApiException {
+            {
         ApiResponse<ScrollableSearchResultWorkflowSummary> resp =
                 searchWithHttpInfo(queryId, start, size, sort, freeText, query, skipCache);
         return resp.getData();
@@ -1518,7 +1517,7 @@ class WorkflowResource {
             String freeText,
             String query,
             Boolean skipCache)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 searchValidateBeforeCall(
                         queryId, start, size, sort, freeText, query, skipCache);
@@ -1534,7 +1533,7 @@ class WorkflowResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1582,7 +1581,7 @@ class WorkflowResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
 
         return searchV2Call(
                 start,
@@ -1595,7 +1594,7 @@ class WorkflowResource {
   
     public SearchResultWorkflow searchV2(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         ApiResponse<SearchResultWorkflow> resp =
                 searchV2WithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
@@ -1604,7 +1603,7 @@ class WorkflowResource {
   
     private ApiResponse<SearchResultWorkflow> searchV2WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 searchV2ValidateBeforeCall(start, size, sort, freeText, query);
         Type localVarReturnType = new TypeReference<SearchResultWorkflow>() {}.getType();
@@ -1618,7 +1617,7 @@ class WorkflowResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1666,7 +1665,7 @@ class WorkflowResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
 
         return searchWorkflowsByTasksCall(
                 start,
@@ -1679,7 +1678,7 @@ class WorkflowResource {
   
     public SearchResultWorkflowSummary searchWorkflowsByTasks(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         ApiResponse<SearchResultWorkflowSummary> resp =
                 searchWorkflowsByTasksWithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
@@ -1688,7 +1687,7 @@ class WorkflowResource {
   
     private ApiResponse<SearchResultWorkflowSummary> searchWorkflowsByTasksWithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 searchWorkflowsByTasksValidateBeforeCall(
                         start, size, sort, freeText, query);
@@ -1703,7 +1702,7 @@ class WorkflowResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1751,7 +1750,7 @@ class WorkflowResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
 
         return searchWorkflowsByTasksV2Call(
                 start,
@@ -1764,7 +1763,7 @@ class WorkflowResource {
   
     public SearchResultWorkflow searchWorkflowsByTasksV2(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         ApiResponse<SearchResultWorkflow> resp =
                 searchWorkflowsByTasksV2WithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
@@ -1773,7 +1772,7 @@ class WorkflowResource {
   
     private ApiResponse<SearchResultWorkflow> searchWorkflowsByTasksV2WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 searchWorkflowsByTasksV2ValidateBeforeCall(
                         start, size, sort, freeText, query);
@@ -1786,7 +1785,7 @@ class WorkflowResource {
             String workflowId,
             String taskReferenceName,
             SkipTaskRequest skipTaskRequest)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1837,7 +1836,7 @@ class WorkflowResource {
             String workflowId,
             String taskReferenceName,
             SkipTaskRequest skipTaskRequest)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -1863,14 +1862,14 @@ class WorkflowResource {
   
     public void skipTaskFromWorkflow(
             String workflowId, String taskReferenceName, SkipTaskRequest skipTaskRequest)
-            throws ApiException {
+            {
         skipTaskFromWorkflowWithHttpInfo(workflowId, taskReferenceName, skipTaskRequest);
     }
 
   
     private ApiResponse<Void> skipTaskFromWorkflowWithHttpInfo(
             String workflowId, String taskReferenceName, SkipTaskRequest skipTaskRequest)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 skipTaskFromWorkflowValidateBeforeCall(
                         workflowId, taskReferenceName, skipTaskRequest);
@@ -1880,7 +1879,7 @@ class WorkflowResource {
   
     public okhttp3.Call startWorkflowCall(
             StartWorkflowRequest startWorkflowRequest)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/workflow";
@@ -1917,7 +1916,7 @@ class WorkflowResource {
 
     public okhttp3.Call testWorkflowCall(
             WorkflowTestRequest testRequest)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/workflow/test";
@@ -1953,7 +1952,7 @@ class WorkflowResource {
 
     private okhttp3.Call startWorkflowValidateBeforeCall(
             StartWorkflowRequest startWorkflowRequest)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (startWorkflowRequest == null) {
             throw new ApiException(
@@ -1965,7 +1964,7 @@ class WorkflowResource {
 
     private okhttp3.Call testWorkflowValidateBeforeCall(
             WorkflowTestRequest testRequest)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (testRequest == null) {
             throw new ApiException("Missing the required parameter 'testRequest' when calling testWorkflow");
@@ -1975,27 +1974,27 @@ class WorkflowResource {
     }
 
   
-    public Workflow testWorkflow(WorkflowTestRequest testRequest) throws ApiException {
+    public Workflow testWorkflow(WorkflowTestRequest testRequest) {
         ApiResponse<Workflow> resp = testWorkflowWithHttpInfo(testRequest);
         return resp.getData();
     }
 
   
-    public String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ApiException {
+    public String startWorkflow(StartWorkflowRequest startWorkflowRequest) {
         ApiResponse<String> resp = startWorkflowWithHttpInfo(startWorkflowRequest);
         return resp.getData();
     }
 
   
     private ApiResponse<String> startWorkflowWithHttpInfo(StartWorkflowRequest startWorkflowRequest)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 startWorkflowValidateBeforeCall(startWorkflowRequest);
         Type localVarReturnType = new TypeReference<String>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
     }
 
-    private ApiResponse<Workflow> testWorkflowWithHttpInfo(WorkflowTestRequest testRequest) throws ApiException {
+    private ApiResponse<Workflow> testWorkflowWithHttpInfo(WorkflowTestRequest testRequest) {
         okhttp3.Call call =
                 testWorkflowValidateBeforeCall(testRequest);
         Type localVarReturnType = new TypeReference<Workflow>() {}.getType();
@@ -2009,7 +2008,7 @@ class WorkflowResource {
             Integer version,
             String correlationId,
             Integer priority)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -2058,7 +2057,7 @@ class WorkflowResource {
             Integer version,
             String correlationId,
             Integer priority)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException(
@@ -2085,7 +2084,7 @@ class WorkflowResource {
             Integer version,
             String correlationId,
             Integer priority)
-            throws ApiException {
+            {
         ApiResponse<String> resp =
                 startWorkflow1WithHttpInfo(body, name, version, correlationId, priority);
         return resp.getData();
@@ -2098,7 +2097,7 @@ class WorkflowResource {
             Integer version,
             String correlationId,
             Integer priority)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 startWorkflow1ValidateBeforeCall(
                         body, name, version, correlationId, priority);
@@ -2111,7 +2110,7 @@ class WorkflowResource {
             String workflowId,
             String reason,
             boolean triggerFailureWorkflow)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -2158,7 +2157,7 @@ class WorkflowResource {
             String workflowId,
             String reason,
             boolean triggerFailureWorkflow)
-            throws ApiException {
+            {
         // verify the required parameter 'workflowId' is set
         if (workflowId == null) {
             throw new ApiException(
@@ -2169,13 +2168,13 @@ class WorkflowResource {
     }
 
   
-    public void terminateWithAReason(String workflowId, String reason, boolean triggerFailureWorkflow) throws ApiException {
+    public void terminateWithAReason(String workflowId, String reason, boolean triggerFailureWorkflow) {
         terminate1WithHttpInfo(workflowId, reason, triggerFailureWorkflow);
     }
 
   
     private ApiResponse<Void> terminate1WithHttpInfo(String workflowId, String reason, boolean triggerFailureWorkflow)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 terminate1ValidateBeforeCall(workflowId, reason, triggerFailureWorkflow);
         return httpClient.execute(call);
@@ -2183,7 +2182,7 @@ class WorkflowResource {
 
   
     public okhttp3.Call uploadCompletedWorkflowsCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -2220,19 +2219,19 @@ class WorkflowResource {
     }
 
     private okhttp3.Call uploadCompletedWorkflowsValidateBeforeCall()
-            throws ApiException {
+            {
 
         return uploadCompletedWorkflowsCall();
     }
 
   
-    public Object uploadCompletedWorkflows() throws ApiException {
+    public Object uploadCompletedWorkflows() {
         ApiResponse<Object> resp = uploadCompletedWorkflowsWithHttpInfo();
         return resp.getData();
     }
 
   
-    private ApiResponse<Object> uploadCompletedWorkflowsWithHttpInfo() throws ApiException {
+    private ApiResponse<Object> uploadCompletedWorkflowsWithHttpInfo() {
         okhttp3.Call call = uploadCompletedWorkflowsValidateBeforeCall();
         Type localVarReturnType = new TypeReference<>() {
         }.getType();
@@ -2278,18 +2277,18 @@ class WorkflowResource {
     }
 
   
-    public void upgradeRunningWorkflow(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
+    public void upgradeRunningWorkflow(UpgradeWorkflowRequest body, String workflowId) {
         upgradeRunningWorkflowWithHttpInfo(body, workflowId);
     }
 
   
-    public ApiResponse<Void> upgradeRunningWorkflowWithHttpInfo(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
+    public ApiResponse<Void> upgradeRunningWorkflowWithHttpInfo(UpgradeWorkflowRequest body, String workflowId) {
         okhttp3.Call call = upgradeRunningWorkflowValidateBeforeCall(body, workflowId);
         return httpClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call upgradeRunningWorkflowValidateBeforeCall(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
+    private okhttp3.Call upgradeRunningWorkflowValidateBeforeCall(UpgradeWorkflowRequest body, String workflowId) {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling upgradeRunningWorkflow(Async)");
@@ -2303,7 +2302,7 @@ class WorkflowResource {
     }
 
   
-    public okhttp3.Call upgradeRunningWorkflowCall(UpgradeWorkflowRequest body, String workflowId) throws ApiException {
+    public okhttp3.Call upgradeRunningWorkflowCall(UpgradeWorkflowRequest body, String workflowId) {
 
         // create path and map variables
         String localVarPath = "/workflow/{workflowId}/upgrade"
@@ -2335,20 +2334,20 @@ class WorkflowResource {
 
 
   
-    public WorkflowRun updateWorkflowState(WorkflowStateUpdate updateRequest, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+    public WorkflowRun updateWorkflowState(WorkflowStateUpdate updateRequest, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) {
         ApiResponse<WorkflowRun> resp = updateWorkflowAndTaskStateWithHttpInfo(updateRequest, requestId, workflowId, waitUntilTaskRef, waitForSeconds);
         return resp.getData();
     }
 
   
-    public ApiResponse<WorkflowRun> updateWorkflowAndTaskStateWithHttpInfo(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+    public ApiResponse<WorkflowRun> updateWorkflowAndTaskStateWithHttpInfo(WorkflowStateUpdate body, String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) {
         okhttp3.Call call = updateWorkflowAndTaskStateValidateBeforeCall(body, requestId, workflowId, waitUntilTaskRef, waitForSeconds);
         Type localVarReturnType = new TypeToken<WorkflowRun>(){}.getType();
         return httpClient.execute(call, localVarReturnType);
     }
 
 
-    public okhttp3.Call updateWorkflowAndTaskStateCall(WorkflowStateUpdate body,  String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+    public okhttp3.Call updateWorkflowAndTaskStateCall(WorkflowStateUpdate body,  String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) {
         // create path and map variables
         String localVarPath = "/workflow/{workflowId}/state"
             .replaceAll("\\{" + "workflowId" + "\\}", httpClient.escapeString(workflowId));
@@ -2383,7 +2382,7 @@ class WorkflowResource {
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call updateWorkflowAndTaskStateValidateBeforeCall(WorkflowStateUpdate body,  String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) throws ApiException {
+    private okhttp3.Call updateWorkflowAndTaskStateValidateBeforeCall(WorkflowStateUpdate body,  String requestId, String workflowId, String waitUntilTaskRef, Integer waitForSeconds) {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling updateWorkflowAndTaskState(Async)");

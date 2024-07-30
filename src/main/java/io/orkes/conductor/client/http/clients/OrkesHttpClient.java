@@ -15,12 +15,13 @@ package io.orkes.conductor.client.http.clients;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.http.JSON;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
+import io.orkes.conductor.client.model.TokenResponse;
 import io.orkes.conductor.client.model.validation.ErrorResponse;
 import okhttp3.Call;
 import okhttp3.HttpUrl;
@@ -344,20 +345,25 @@ public class OrkesHttpClient {
         return verifyingSsl;
     }
 
-    public <T> ApiResponse<T> doRequest(OrkesHttpClientRequest req, TypeReference<T> typeReference) throws ApiException {
+    public <T> ApiResponse<T> doRequest(OrkesHttpClientRequest req, TypeReference<T> typeReference) {
         Map<String, String> headerParams = req.getHeaderParams() == null ? new HashMap<>() : new HashMap<>(req.getHeaderParams());
         List<Param> pathParams = req.getPathParams() == null ? new ArrayList<>() : new ArrayList<>(req.getPathParams());
         List<Param> queryParams = req.getQueryParams() == null ? new ArrayList<>() : new ArrayList<>(req.getQueryParams());
 
-        Request request = buildRequest(req.getMethod(), req.getPath(), pathParams, queryParams, headerParams, req.getBody());
+        Request request = buildRequest(req.getMethod().toString(),
+                req.getPath(),
+                pathParams,
+                queryParams,
+                headerParams,
+                req.getBody());
+
         Call call = okHttpClient.newCall(request);
         if (typeReference == null) {
-            execute(call);
-        } else {
-            return execute(call, typeReference.getType());
+            execute(call, null);
+            return null;
         }
 
-        return null;
+        return execute(call, typeReference.getType());
     }
 
     private void scheduleTokenRefresh() {
@@ -390,57 +396,6 @@ public class OrkesHttpClient {
         }
     }
 
-    private List<Param> parameterToPair(String name, Object value) {
-        List<Param> params = new ArrayList<>();
-
-        // preconditions
-        if (name == null || name.isEmpty() || value == null || value instanceof Collection)
-            return params;
-
-        params.add(new Param(name, parameterToString(value)));
-        return params;
-    }
-
-    private List<Param> parameterToPairs(String collectionFormat, String name, Collection value) {
-        List<Param> params = new ArrayList<>();
-
-        // preconditions
-        if (name == null || name.isEmpty() || value == null || value.isEmpty()) {
-            return params;
-        }
-
-        // create the params based on the collection format
-        if ("multi".equals(collectionFormat)) {
-            for (Object item : value) {
-                params.add(new Param(name, urlEncode(parameterToString(item))));
-            }
-            return params;
-        }
-
-        // collectionFormat is assumed to be "csv" by default
-        String delimiter = ",";
-
-        // escape all delimiters except commas, which are URI reserved
-        // characters
-        if ("ssv".equals(collectionFormat)) {
-            delimiter = urlEncode(" ");
-        } else if ("tsv".equals(collectionFormat)) {
-            delimiter = urlEncode("\t");
-        } else if ("pipes".equals(collectionFormat)) {
-            delimiter = urlEncode("|");
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (Object item : value) {
-            sb.append(delimiter);
-            sb.append(urlEncode(parameterToString(item)));
-        }
-
-        params.add(new Param(name, sb.substring(delimiter.length())));
-
-        return params;
-    }
-
     private boolean isJsonMime(String mime) {
         String jsonMime = "(?i)^(application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(;.*)?$";
         return mime != null && (mime.matches(jsonMime) || mime.equals("*/*"));
@@ -450,7 +405,7 @@ public class OrkesHttpClient {
         return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 
-    private <T> T deserialize(Response response, Type returnType) throws ApiException {
+    private <T> T deserialize(Response response, Type returnType)  {
         if (returnType == null) {
             return null;
         }
@@ -468,7 +423,7 @@ public class OrkesHttpClient {
             return (T) respBody;
         }
 
-        throw new ApiException(
+        throw new OrkesClientException(
                 "Content type \"" + contentType + "\" is not supported for type: " + returnType,
                 response.code(),
                 response.headers().toMultimap(),
@@ -484,17 +439,16 @@ public class OrkesHttpClient {
         try {
             return response.body().string();
         } catch (IOException e) {
-            throw new ApiException(
-                    response.message(),
+            throw new OrkesClientException(response.message(),
                     e,
                     response.code(),
                     response.headers().toMultimap());
         }
     }
 
-    private RequestBody serialize(String contentType, Object obj) throws ApiException {
+    private RequestBody serialize(String contentType, Object obj)  {
         if (!isJsonMime(contentType)) {
-            throw new ApiException("Content type \"" + contentType + "\" is not supported");
+            throw new OrkesClientException("Content type \"" + contentType + "\" is not supported");
         }
 
         String content = null;
@@ -510,7 +464,7 @@ public class OrkesHttpClient {
 
     }
 
-    private <T> T handleResponse(Response response, Type returnType) throws ApiException {
+    private <T> T handleResponse(Response response, Type returnType) {
         if (!response.isSuccessful()) {
             String respBody = bodyAsString(response);
             //TODO improve Error handling
@@ -518,7 +472,10 @@ public class OrkesHttpClient {
                 throwConflictException(response, respBody);
             }
 
-            throw new ApiException(response.message(), response.code(), response.headers().toMultimap(), respBody);
+            throw new OrkesClientException(response.message(),
+                    response.code(),
+                    response.headers().toMultimap(),
+                    respBody);
         }
 
         try {
@@ -554,7 +511,7 @@ public class OrkesHttpClient {
                                  List<Param> pathParams,
                                  List<Param> queryParams,
                                  Map<String, String> headerParams,
-                                 Object body) throws ApiException {
+                                 Object body)  {
         if (!"/token".equalsIgnoreCase(path)) {
             addAuthHeader(headerParams);
         }
@@ -696,31 +653,25 @@ public class OrkesHttpClient {
         }
     }
 
-    private <T> ApiResponse<T> execute(Call call) throws ApiException {
-        return execute(call, (Type) null);
-    }
-
-    private <T> ApiResponse<T> execute(Call call, TypeReference<T> typeReference) throws ApiException {
-        return execute(call, typeReference.getType());
-    }
-
-    private <T> ApiResponse<T> execute(Call call, Type returnType) throws ApiException {
+    private <T> ApiResponse<T> execute(Call call, Type returnType)  {
         try {
             Response response = call.execute();
             T data = handleResponse(response, returnType);
             return new ApiResponse<>(response.code(), response.headers().toMultimap(), data);
         } catch (IOException e) {
-            throw new ApiException(e);
+            throw new OrkesClientException(e.getMessage(), e);
         }
     }
 
     private String refreshToken() {
         LOGGER.debug("Refreshing token @ {}", new Date());
-        if (this.keyId == null || this.keySecret == null) {
+        if (keyId == null || keySecret == null) {
             throw new RuntimeException("KeyId and KeySecret must be set in order to get an authentication token");
         }
-        GenerateTokenRequest generateTokenRequest = new GenerateTokenRequest().keyId(this.keyId).keySecret(this.keySecret);
-        Map<String, String> response = TokenResource.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
-        return response.get("token");
+
+        TokenResource tokenResource = new TokenResource(this);
+        GenerateTokenRequest generateTokenRequest = new GenerateTokenRequest(keyId, keySecret);
+        TokenResponse response = tokenResource.generate(generateTokenRequest).getData();
+        return response.getToken();
     }
 }

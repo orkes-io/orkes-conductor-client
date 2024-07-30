@@ -15,8 +15,8 @@ package io.orkes.conductor.client.http.clients;
 import java.util.List;
 import java.util.Map;
 
+import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.api.IntegrationClient;
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.integration.Integration;
 import io.orkes.conductor.client.model.integration.IntegrationApi;
@@ -32,25 +32,27 @@ public class OrkesIntegrationClient extends OrkesClient implements IntegrationCl
         this.integrationResource = new IntegrationResource(httpClient);
     }
 
-    public void associatePromptWithIntegration(String aiIntegration, String modelName, String promptName) {
-        integrationResource.associatePromptWithIntegration(aiIntegration, modelName, promptName);
+    public void associatePromptWithIntegration(String integrationProvider, String integrationName, String promptName) {
+        integrationResource.associatePromptWithIntegration(integrationProvider, integrationName, promptName);
     }
 
-    public void deleteIntegrationApi(String apiName, String integrationName) {
-        integrationResource.deleteIntegrationApi(apiName, integrationName);
+    public void deleteIntegrationApi(String integrationProvider, String integrationName) {
+        integrationResource.deleteIntegrationApi(integrationProvider, integrationName);
     }
 
-    public void deleteIntegration(String integrationName) {
+    public void deleteIntegrationProvider(String integrationName) {
         integrationResource.deleteIntegrationProvider(integrationName);
     }
 
-    public IntegrationApi getIntegrationApi(String apiName, String integrationName) throws ApiException {
+    public IntegrationApi getIntegrationApi(String integrationProvider, String integrationName) {
         try {
-            return integrationResource.getIntegrationApi(apiName, integrationName);
-        } catch (ApiException e) {
-            if (e.getStatusCode() == 404) {
+            return integrationResource.getIntegrationApi(integrationProvider, integrationName);
+        } catch (OrkesClientException e) {
+            //FIXME WHY? this creates inconsistency. Should all 404 be a null?
+            if (e.getStatus() == 404) {
                 return null;
             }
+
             throw e;
         }
     }
@@ -59,18 +61,18 @@ public class OrkesIntegrationClient extends OrkesClient implements IntegrationCl
         return integrationResource.getIntegrationApis(integrationName, true);
     }
 
-    public Integration getIntegration(String integrationName) throws ApiException {
+    public Integration getIntegrationProvider(String integrationProvider) {
         try {
-            return integrationResource.getIntegrationProvider(integrationName);
-        } catch (ApiException e) {
-            if (e.getStatusCode() == 404) {
+            return integrationResource.getIntegrationProvider(integrationProvider);
+        } catch (OrkesClientException e) {
+            if (e.getStatus() == 404) {
                 return null;
             }
             throw e;
         }
     }
 
-    public List<Integration> getIntegrations(String category, Boolean activeOnly) {
+    public List<Integration> getIntegrationProviders(String category, Boolean activeOnly) {
         return integrationResource.getIntegrationProviders(category, activeOnly);
     }
 
@@ -78,20 +80,20 @@ public class OrkesIntegrationClient extends OrkesClient implements IntegrationCl
         return integrationResource.getPromptsWithIntegration(aiIntegration, modelName);
     }
 
-    public void saveIntegrationApi(String integrationName, String apiName, IntegrationApiUpdate apiDetails) {
-        integrationResource.saveIntegrationApi(apiDetails, integrationName, apiName);
+    public void saveIntegrationApi(String integrationName, String apiName, IntegrationApiUpdate integrationApiUpdate) {
+        integrationResource.saveIntegrationApi(integrationApiUpdate, integrationName, apiName);
     }
 
     public void saveIntegration(String integrationName, IntegrationUpdate integrationDetails) {
         integrationResource.saveIntegrationProvider(integrationDetails, integrationName);
     }
 
-    public int getTokenUsageForIntegration(String name, String integrationName) {
-        return integrationResource.getTokenUsageForIntegration(name, integrationName);
+    public int getTokenUsageForIntegration(String integrationProvider, String integrationName) {
+        return integrationResource.getTokenUsageForIntegration(integrationProvider, integrationName);
     }
 
-    public Map<String, Integer> getTokenUsageForIntegrationProvider(String name) {
-        return integrationResource.getTokenUsageForIntegrationProvider(name);
+    public Map<String, Integer> getTokenUsageForIntegrationProvider(String integrationProvider) {
+        return integrationResource.getTokenUsageForIntegrationProvider(integrationProvider);
     }
 
     // Tags - Implementations are assumed to be placeholders
@@ -99,6 +101,7 @@ public class OrkesIntegrationClient extends OrkesClient implements IntegrationCl
     public void deleteTagForIntegrationProvider(List<TagObject> tags, String name) {
         integrationResource.deleteTagForIntegrationProvider(tags, name);
     }
+
     public void saveTagForIntegrationProvider(List<TagObject> tags, String name) {
         integrationResource.putTagForIntegrationProvider(tags, name);
     }

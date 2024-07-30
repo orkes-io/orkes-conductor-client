@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.ConductorUser;
@@ -39,7 +38,7 @@ class GroupResource {
     public okhttp3.Call addUserToGroupCall(
             String groupId,
             String userId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -86,7 +85,7 @@ class GroupResource {
     private okhttp3.Call addUserToGroupValidateBeforeCall(
             String groupId,
             String userId)
-            throws ApiException {
+            {
         // verify the required parameter 'groupId' is set
         if (groupId == null) {
             throw new ApiException(
@@ -102,13 +101,13 @@ class GroupResource {
     }
 
   
-    public void addUserToGroup(String groupId, String userId) throws ApiException {
+    public void addUserToGroup(String groupId, String userId) {
         addUserToGroupWithHttpInfo(groupId, userId);
     }
 
   
     private ApiResponse<Void> addUserToGroupWithHttpInfo(String groupId, String userId)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 addUserToGroupValidateBeforeCall(groupId, userId);
         return apiClient.execute(call);
@@ -117,7 +116,7 @@ class GroupResource {
   
     public okhttp3.Call deleteGroupCall(
             String id)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -158,7 +157,7 @@ class GroupResource {
 
     private okhttp3.Call deleteGroupValidateBeforeCall(
             String id)
-            throws ApiException {
+            {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -169,12 +168,12 @@ class GroupResource {
     }
 
   
-    public void deleteGroup(String id) throws ApiException {
+    public void deleteGroup(String id) {
         deleteGroupWithHttpInfo(id);
     }
 
   
-    private ApiResponse<Void> deleteGroupWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<Void> deleteGroupWithHttpInfo(String id) {
         okhttp3.Call call = deleteGroupValidateBeforeCall(id);
         return apiClient.execute(call);
     }
@@ -182,7 +181,7 @@ class GroupResource {
   
     public okhttp3.Call getGrantedPermissions1Call(
             String groupId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -224,7 +223,7 @@ class GroupResource {
 
     private okhttp3.Call getGrantedPermissions1ValidateBeforeCall(
             String groupId)
-            throws ApiException {
+            {
         // verify the required parameter 'groupId' is set
         if (groupId == null) {
             throw new ApiException(
@@ -235,14 +234,14 @@ class GroupResource {
     }
 
   
-    public GrantedAccessResponse getGrantedPermissions1(String groupId) throws ApiException {
+    public GrantedAccessResponse getGrantedPermissions1(String groupId) {
         ApiResponse<GrantedAccessResponse> resp = getGrantedPermissions1WithHttpInfo(groupId);
         return resp.getData();
     }
 
   
     private ApiResponse<GrantedAccessResponse> getGrantedPermissions1WithHttpInfo(String groupId)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 getGrantedPermissions1ValidateBeforeCall(groupId);
         Type localVarReturnType = new TypeReference<GrantedAccessResponse>() {}.getType();
@@ -252,7 +251,7 @@ class GroupResource {
   
     public okhttp3.Call getGroupCall(
             String id)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -292,7 +291,7 @@ class GroupResource {
 
     private okhttp3.Call getGroupValidateBeforeCall(
             String id)
-            throws ApiException {
+            {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -303,13 +302,13 @@ class GroupResource {
     }
 
   
-    public Group getGroup(String id) throws ApiException {
+    public Group getGroup(String id) {
         ApiResponse<Group> resp = getGroupWithHttpInfo(id);
         return resp.getData();
     }
 
   
-    private ApiResponse<Group> getGroupWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<Group> getGroupWithHttpInfo(String id) {
         okhttp3.Call call = getGroupValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<Group>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -318,7 +317,7 @@ class GroupResource {
   
     public okhttp3.Call getUsersInGroupCall(
             String id)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -358,7 +357,7 @@ class GroupResource {
 
     private okhttp3.Call getUsersInGroupValidateBeforeCall(
             String id)
-            throws ApiException {
+            {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -369,14 +368,14 @@ class GroupResource {
     }
 
   
-    public List<ConductorUser> getUsersInGroup(String id) throws ApiException {
+    public List<ConductorUser> getUsersInGroup(String id) {
         ApiResponse<List<ConductorUser>> resp = getUsersInGroupWithHttpInfo(id);
         return resp.getData();
     }
 
   
     private ApiResponse<List<ConductorUser>> getUsersInGroupWithHttpInfo(String id)
-            throws ApiException {
+            {
         okhttp3.Call call = getUsersInGroupValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<List<ConductorUser>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -384,7 +383,7 @@ class GroupResource {
 
   
     public okhttp3.Call listGroupsCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -421,19 +420,19 @@ class GroupResource {
     }
 
     private okhttp3.Call listGroupsValidateBeforeCall()
-            throws ApiException {
+            {
 
         return listGroupsCall();
     }
 
   
-    public List<Group> listGroups() throws ApiException {
+    public List<Group> listGroups() {
         ApiResponse<List<Group>> resp = listGroupsWithHttpInfo();
         return resp.getData();
     }
 
   
-    private ApiResponse<List<Group>> listGroupsWithHttpInfo() throws ApiException {
+    private ApiResponse<List<Group>> listGroupsWithHttpInfo() {
         okhttp3.Call call = listGroupsValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<Group>>() {}.getType();
         return apiClient.execute(call, localVarReturnType);
@@ -443,7 +442,7 @@ class GroupResource {
     public okhttp3.Call removeUserFromGroupCall(
             String groupId,
             String userId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -488,7 +487,7 @@ class GroupResource {
     private okhttp3.Call removeUserFromGroupValidateBeforeCall(
             String groupId,
             String userId)
-            throws ApiException {
+            {
         // verify the required parameter 'groupId' is set
         if (groupId == null) {
             throw new ApiException(
@@ -504,13 +503,13 @@ class GroupResource {
     }
 
   
-    public void removeUserFromGroup(String groupId, String userId) throws ApiException {
+    public void removeUserFromGroup(String groupId, String userId) {
         removeUserFromGroupWithHttpInfo(groupId, userId);
     }
 
   
     private ApiResponse<Void> removeUserFromGroupWithHttpInfo(String groupId, String userId)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 removeUserFromGroupValidateBeforeCall(groupId, userId);
         return apiClient.execute(call);
@@ -520,7 +519,7 @@ class GroupResource {
     public okhttp3.Call upsertGroupCall(
             UpsertGroupRequest upsertGroupRequest,
             String id)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -557,7 +556,7 @@ class GroupResource {
     private okhttp3.Call upsertGroupValidateBeforeCall(
             UpsertGroupRequest upsertGroupRequest,
             String id)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (upsertGroupRequest == null) {
             throw new ApiException(
@@ -573,14 +572,14 @@ class GroupResource {
     }
 
   
-    public Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id) throws ApiException {
+    public Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id) {
         ApiResponse<Group> resp = upsertGroupWithHttpInfo(upsertGroupRequest, id);
         return resp.getData();
     }
 
   
     private ApiResponse<Group> upsertGroupWithHttpInfo(
-            UpsertGroupRequest upsertGroupRequest, String id) throws ApiException {
+            UpsertGroupRequest upsertGroupRequest, String id) {
         okhttp3.Call call =
                 upsertGroupValidateBeforeCall(upsertGroupRequest, id);
         Type localVarReturnType = new TypeReference<Group>() {}.getType();

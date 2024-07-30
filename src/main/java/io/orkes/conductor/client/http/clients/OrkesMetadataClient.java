@@ -33,31 +33,31 @@ public class OrkesMetadataClient extends OrkesClient implements MetadataClient {
 
     @Override
     public void registerWorkflowDef(WorkflowDef workflowDef) {
-        metadataResource.create(workflowDef, true);
+        metadataResource.registerWorkflowDef(workflowDef, true);
     }
 
     @Override
     public void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite) {
-        metadataResource.create(workflowDef, overwrite);
+        metadataResource.registerWorkflowDef(workflowDef, overwrite);
     }
 
     @Override
     public void updateWorkflowDefs(List<WorkflowDef> workflowDefs) {
-        metadataResource.update(workflowDefs, true);
+        metadataResource.updateWorkflows(workflowDefs, true);
     }
 
     @Override
     public void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite) {
-        metadataResource.update(workflowDefs, overwrite);
+        metadataResource.updateWorkflows(workflowDefs, overwrite);
     }
 
     @Override
     public WorkflowDef getWorkflowDef(String name, Integer version) {
-        return metadataResource.get(name, version, false);
+        return metadataResource.getWorkflow(name, version, false);
     }
 
     public WorkflowDef getWorkflowDefWithMetadata(String name, Integer version) {
-        return metadataResource.get(name, version, true);
+        return metadataResource.getWorkflow(name, version, true);
     }
 
     @Override

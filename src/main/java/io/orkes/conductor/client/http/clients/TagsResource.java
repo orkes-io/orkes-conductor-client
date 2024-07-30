@@ -12,659 +12,127 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import io.orkes.conductor.client.http.ApiException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-class TagsResource {
-    private final OrkesHttpClient httpClient;
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
+
+class TagsResource extends Resource {
 
     public TagsResource(OrkesHttpClient httpClient) {
-        this.httpClient = httpClient;
+        super(httpClient);
     }
 
-  
-    public okhttp3.Call addTaskTagCall(
-            TagObject tagObject,
-            String taskName)
-            throws ApiException {
+    public void addTaskTag(TagObject tagObject, String taskName) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.POST)
+                .path("/metadata/task/{taskName}/tags")
+                .addPathParam("taskName", taskName)
+                .body(tagObject)
+                .build();
 
-        // create path and map variables
-        String localVarPath =
-                "/metadata/task/{taskName}/tags"
-                        .replaceAll(
-                                "\\{" + "taskName" + "\\}",
-                                httpClient.escapeString(taskName));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {};
-
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "POST",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                tagObject,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
+        httpClient.doRequest(request, null);
     }
 
-    private okhttp3.Call addTaskTagValidateBeforeCall(
-            TagObject tagObject,
-            String taskName)
-            throws ApiException {
-        // verify the required parameter 'body' is set
-        if (tagObject == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'tagObject' when calling addTaskTag(Async)");
-        }
-        // verify the required parameter 'taskName' is set
-        if (taskName == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'taskName' when calling addTaskTag(Async)");
-        }
+    public void addWorkflowTag(TagObject tagObject, String workflow) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.POST)
+                .path("/metadata/workflow/{workflow}/tags")
+                .addPathParam("workflow", workflow)
+                .body(tagObject)
+                .build();
 
-        return addTaskTagCall(tagObject, taskName);
+        httpClient.doRequest(request, null);
     }
 
-  
-    public void addTaskTag(TagObject tagObject, String taskName) throws ApiException {
-        addTaskTagWithHttpInfo(tagObject, taskName);
+    public void deleteTaskTag(TagString tagString, String taskName) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(DELETE)
+                .path("/metadata/task/{taskName}/tags")
+                .addPathParam("taskName", taskName)
+                .body(tagString)
+                .build();
+
+        httpClient.doRequest(request, null);
     }
 
-  
-    private ApiResponse<Void> addTaskTagWithHttpInfo(TagObject tagObject, String taskName)
-            throws ApiException {
-        okhttp3.Call call =
-                addTaskTagValidateBeforeCall(tagObject, taskName);
-        return httpClient.execute(call);
+    public void deleteWorkflowTag(TagObject tagObject, String workflow) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(DELETE)
+                .path("/metadata/workflow/{workflow}/tags")
+                .addPathParam("workflow", workflow)
+                .body(tagObject)
+                .build();
+
+        httpClient.doRequest(request, null);
     }
 
-  
-    public okhttp3.Call addWorkflowTagCall(
-            TagObject tagObject,
-            String name)
-            throws ApiException {
+    public List<TagObject> getTags() {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(GET)
+                .path("/metadata/tags")
+                .build();
 
-        // create path and map variables
-        String localVarPath =
-                "/metadata/workflow/{name}/tags"
-                        .replaceAll(
-                                "\\{" + "name" + "\\}", httpClient.escapeString(name));
+        ApiResponse<List<TagObject>> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {};
-
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "POST",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                tagObject,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call addWorkflowTagValidateBeforeCall(
-            TagObject tagObject,
-            String name)
-            throws ApiException {
-        // verify the required parameter 'body' is set
-        if (tagObject == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'tagObject' when calling addWorkflowTag(Async)");
-        }
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'name' when calling addWorkflowTag(Async)");
-        }
-
-        return addWorkflowTagCall(tagObject, name);
-    }
-
-  
-    public void addWorkflowTag(TagObject tagObject, String name) throws ApiException {
-        addWorkflowTagWithHttpInfo(tagObject, name);
-    }
-
-  
-    private ApiResponse<Void> addWorkflowTagWithHttpInfo(TagObject tagObject, String name)
-            throws ApiException {
-        okhttp3.Call call =
-                addWorkflowTagValidateBeforeCall(tagObject, name);
-        return httpClient.execute(call);
-    }
-
-  
-    public okhttp3.Call deleteTaskTagCall(
-            TagString tagString,
-            String taskName)
-            throws ApiException {
-
-        // create path and map variables
-        String localVarPath =
-                "/metadata/task/{taskName}/tags"
-                        .replaceAll(
-                                "\\{" + "taskName" + "\\}",
-                                httpClient.escapeString(taskName));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {};
-
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "DELETE",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                tagString,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call deleteTaskTagValidateBeforeCall(
-            TagString tagString,
-            String taskName)
-            throws ApiException {
-        // verify the required parameter 'body' is set
-        if (tagString == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'tagString' when calling deleteTaskTag(Async)");
-        }
-        // verify the required parameter 'taskName' is set
-        if (taskName == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'taskName' when calling deleteTaskTag(Async)");
-        }
-
-        return deleteTaskTagCall(tagString, taskName);
-    }
-
-  
-    public void deleteTaskTag(TagString tagString, String taskName) throws ApiException {
-        deleteTaskTagWithHttpInfo(tagString, taskName);
-    }
-
-  
-    private ApiResponse<Void> deleteTaskTagWithHttpInfo(TagString tagString, String taskName)
-            throws ApiException {
-        okhttp3.Call call =
-                deleteTaskTagValidateBeforeCall(tagString, taskName);
-        return httpClient.execute(call);
-    }
-
-  
-    public okhttp3.Call deleteWorkflowTagCall(
-            TagObject tagObject,
-            String name)
-            throws ApiException {
-
-        // create path and map variables
-        String localVarPath =
-                "/metadata/workflow/{name}/tags"
-                        .replaceAll(
-                                "\\{" + "name" + "\\}", httpClient.escapeString(name));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {};
-
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "DELETE",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                tagObject,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call deleteWorkflowTagValidateBeforeCall(
-            TagObject tagObject,
-            String name)
-            throws ApiException {
-        // verify the required parameter 'body' is set
-        if (tagObject == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'tagObject' when calling deleteWorkflowTag(Async)");
-        }
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'name' when calling deleteWorkflowTag(Async)");
-        }
-
-        return deleteWorkflowTagCall(tagObject, name);
-    }
-
-  
-    public void deleteWorkflowTag(TagObject tagObject, String name) throws ApiException {
-        deleteWorkflowTagWithHttpInfo(tagObject, name);
-    }
-
-  
-    private ApiResponse<Void> deleteWorkflowTagWithHttpInfo(TagObject tagObject, String name)
-            throws ApiException {
-        okhttp3.Call call =
-                deleteWorkflowTagValidateBeforeCall(tagObject, name);
-        return httpClient.execute(call);
-    }
-
-  
-    public okhttp3.Call getTagsCall()
-            throws ApiException {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath = "/metadata/tags";
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"*/*"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call getTagsValidateBeforeCall()
-            throws ApiException {
-
-        return getTagsCall();
-    }
-
-  
-    public List<TagObject> getTags() throws ApiException {
-        ApiResponse<List<TagObject>> resp = getTagsWithHttpInfo();
         return resp.getData();
     }
 
-  
-    private ApiResponse<List<TagObject>> getTagsWithHttpInfo() throws ApiException {
-        okhttp3.Call call = getTagsValidateBeforeCall();
-        Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
-        return httpClient.execute(call, localVarReturnType);
-    }
+    public List<TagObject> getTaskTags(String taskName) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/metadata/task/{taskName}/tags")
+                .addPathParam("taskName", taskName)
+                .build();
 
-  
-    public okhttp3.Call getTaskTagsCall(
-            String taskName)
-            throws ApiException {
-        Object localVarPostBody = null;
+        ApiResponse<List<TagObject>> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
-        // create path and map variables
-        String localVarPath =
-                "/metadata/task/{taskName}/tags"
-                        .replaceAll(
-                                "\\{" + "taskName" + "\\}",
-                                httpClient.escapeString(taskName));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call getTaskTagsValidateBeforeCall(
-            String taskName)
-            throws ApiException {
-        // verify the required parameter 'taskName' is set
-        if (taskName == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'taskName' when calling getTaskTags(Async)");
-        }
-
-        return getTaskTagsCall(taskName);
-    }
-
-  
-    public List<TagObject> getTaskTags(String taskName) throws ApiException {
-        ApiResponse<List<TagObject>> resp = getTaskTagsWithHttpInfo(taskName);
         return resp.getData();
     }
 
-  
-    private ApiResponse<List<TagObject>> getTaskTagsWithHttpInfo(String taskName)
-            throws ApiException {
-        okhttp3.Call call = getTaskTagsValidateBeforeCall(taskName);
-        Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
-        return httpClient.execute(call, localVarReturnType);
-    }
+    public List<TagObject> getWorkflowTags(String name) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/metadata/workflow/{name}/tags")
+                .addPathParam("name", name)
+                .build();
 
-  
-    public okhttp3.Call getWorkflowTagsCall(
-            String name)
-            throws ApiException {
-        Object localVarPostBody = null;
+        ApiResponse<List<TagObject>> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
-        // create path and map variables
-        String localVarPath =
-                "/metadata/workflow/{name}/tags"
-                        .replaceAll(
-                                "\\{" + "name" + "\\}", httpClient.escapeString(name));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call getWorkflowTagsValidateBeforeCall(
-            String name)
-            throws ApiException {
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'name' when calling getWorkflowTags(Async)");
-        }
-
-        return getWorkflowTagsCall(name);
-    }
-
-  
-    public List<TagObject> getWorkflowTags(String name) throws ApiException {
-        ApiResponse<List<TagObject>> resp = getWorkflowTagsWithHttpInfo(name);
         return resp.getData();
     }
 
-  
-    private ApiResponse<List<TagObject>> getWorkflowTagsWithHttpInfo(String name)
-            throws ApiException {
-        okhttp3.Call call = getWorkflowTagsValidateBeforeCall(name);
-        Type localVarReturnType = new TypeReference<List<TagObject>>() {}.getType();
-        return httpClient.execute(call, localVarReturnType);
+    public void setTaskTags(List<TagObject> tagObjects, String taskName) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.PUT)
+                .path("/metadata/task/{taskName}/tags")
+                .addPathParam("taskName", taskName)
+                .body(tagObjects)
+                .build();
+
+        httpClient.doRequest(request, null);
     }
 
-  
-    public okhttp3.Call setTaskTagsCall(
-            List<TagObject> tagObjects,
-            String taskName)
-            throws ApiException {
+    public void setWorkflowTags(List<TagObject> tagObjects, String workflow) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/metadata/workflow/{workflow}/tags")
+                .addPathParam("workflow", workflow)
+                .body(tagObjects)
+                .build();
 
-        // create path and map variables
-        String localVarPath =
-                "/metadata/task/{taskName}/tags"
-                        .replaceAll(
-                                "\\{" + "taskName" + "\\}",
-                                httpClient.escapeString(taskName));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {};
-
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "PUT",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                tagObjects,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call setTaskTagsValidateBeforeCall(
-            List<TagObject> tagObjects,
-            String taskName)
-            throws ApiException {
-        // verify the required parameter 'body' is set
-        if (tagObjects == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'tagObjects' when calling setTaskTags(Async)");
-        }
-        // verify the required parameter 'taskName' is set
-        if (taskName == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'taskName' when calling setTaskTags(Async)");
-        }
-
-        return setTaskTagsCall(tagObjects, taskName);
-    }
-
-  
-    public void setTaskTags(List<TagObject> tagObjects, String taskName) throws ApiException {
-        setTaskTagsWithHttpInfo(tagObjects, taskName);
-    }
-
-  
-    private ApiResponse<Void> setTaskTagsWithHttpInfo(List<TagObject> tagObjects, String taskName)
-            throws ApiException {
-        okhttp3.Call call =
-                setTaskTagsValidateBeforeCall(tagObjects, taskName);
-        return httpClient.execute(call);
-    }
-
-  
-    public okhttp3.Call setWorkflowTagsCall(
-            List<TagObject> tagObjects,
-            String name)
-            throws ApiException {
-
-        // create path and map variables
-        String localVarPath =
-                "/metadata/workflow/{name}/tags"
-                        .replaceAll(
-                                "\\{" + "name" + "\\}", httpClient.escapeString(name));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {};
-
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "PUT",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                tagObjects,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call setWorkflowTagsValidateBeforeCall(
-            List<TagObject> tagObjects,
-            String name)
-            throws ApiException {
-        // verify the required parameter 'body' is set
-        if (tagObjects == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'tagObjects' when calling setWorkflowTags(Async)");
-        }
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'name' when calling setWorkflowTags(Async)");
-        }
-
-        return setWorkflowTagsCall(tagObjects, name);
-    }
-
-  
-    public void setWorkflowTags(List<TagObject> tagObjects, String name) throws ApiException {
-        setWorkflowTagsWithHttpInfo(tagObjects, name);
-    }
-
-  
-    private ApiResponse<Void> setWorkflowTagsWithHttpInfo(List<TagObject> tagObjects, String name)
-            throws ApiException {
-        okhttp3.Call call =
-                setWorkflowTagsValidateBeforeCall(tagObjects, name);
-        return httpClient.execute(call);
+        httpClient.doRequest(request, null);
     }
 }

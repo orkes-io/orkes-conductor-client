@@ -1,16 +1,33 @@
+/*
+ * Copyright 2024 Orkes, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.orkes.conductor.client.http.clients;
-
-import io.orkes.conductor.client.http.Param;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.orkes.conductor.client.http.Param;
+
+import lombok.Getter;
+
 @Getter
 public class OrkesHttpClientRequest {
-    private final String method;
+
+    public enum Method {
+        GET, POST, PUT, DELETE, PATCH
+    }
+    private final Method method;
     private final String path;
     private final List<Param> pathParams;
     private final List<Param> queryParams;
@@ -31,34 +48,73 @@ public class OrkesHttpClientRequest {
     }
 
     public static class Builder {
-        private String method;
+        private Method method;
         private String path;
         private final List<Param> pathParams = new ArrayList<>();
         private final List<Param> queryParams = new ArrayList<>();
         private final Map<String, String> headerParams = new HashMap<>();
         private Object body;
 
-        public Builder method(String method) {
+        public Builder method(Method method) {
+            if (path == null || path.isEmpty()) {
+                throw new IllegalArgumentException("Path cannot be null or empty");
+            }
             this.method = method;
             return this;
         }
 
         public Builder path(String path) {
+            if (path == null || path.isEmpty()) {
+                throw new IllegalArgumentException("Path cannot be null or empty");
+            }
             this.path = path;
             return this;
         }
 
         public Builder addPathParam(String name, String value) {
+            if (name == null || name.isEmpty() || value == null) {
+                throw new IllegalArgumentException("Path parameter name and value cannot be null or empty");
+            }
             this.pathParams.add(new Param(name, value));
             return this;
         }
 
+        public Builder addQueryParam(String name, Integer value) {
+            if (value == null) {
+                return this;
+            }
+
+            addQueryParam(name, Integer.toString(value));
+            return this;
+        }
+
+        public Builder addQueryParam(String name, Boolean value) {
+            if (value == null) {
+                return this;
+            }
+
+            addQueryParam(name, Boolean.toString(value));
+            return this;
+        }
+
         public Builder addQueryParam(String name, String value) {
+            if (value == null) {
+                return this;
+            }
+
+            if (name == null || name.isEmpty()) {
+                throw new IllegalArgumentException("Query parameter name cannot be null or empty");
+            }
+
             this.queryParams.add(new Param(name, value));
             return this;
         }
 
         public Builder addHeaderParam(String name, String value) {
+            if (name == null || name.isEmpty() || value == null) {
+                throw new IllegalArgumentException("Header parameter name and value cannot be null or empty");
+            }
+
             this.headerParams.put(name, value);
             return this;
         }

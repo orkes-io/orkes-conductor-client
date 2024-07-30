@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.testcontainers.shaded.com.google.common.util.concurrent.Uninterruptibles;
 
 import io.orkes.conductor.client.ObjectMapperProvider;
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;

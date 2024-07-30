@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.BulkResponse;
@@ -35,7 +34,7 @@ class WorkflowBulkResource {
   
     public okhttp3.Call pauseWorkflow1Call(
             List<String> workflowIds)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/pause";
@@ -71,7 +70,7 @@ class WorkflowBulkResource {
 
     private okhttp3.Call pauseWorkflow1ValidateBeforeCall(
             List<String> workflowIds)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (workflowIds == null) {
             throw new ApiException(
@@ -82,14 +81,14 @@ class WorkflowBulkResource {
     }
 
   
-    public BulkResponse pauseWorkflow1(List<String> workflowIds) throws ApiException {
+    public BulkResponse pauseWorkflow1(List<String> workflowIds) {
         ApiResponse<BulkResponse> resp = pauseWorkflow1WithHttpInfo(workflowIds);
         return resp.getData();
     }
 
   
     private ApiResponse<BulkResponse> pauseWorkflow1WithHttpInfo(List<String> workflowIds)
-            throws ApiException {
+            {
         okhttp3.Call call = pauseWorkflow1ValidateBeforeCall(workflowIds);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -98,7 +97,7 @@ class WorkflowBulkResource {
     public okhttp3.Call restart1Call(
             List<String> workflowIds,
             Boolean useLatestDefinitions)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/restart";
@@ -138,7 +137,7 @@ class WorkflowBulkResource {
     private okhttp3.Call restart1ValidateBeforeCall(
             List<String> workflowIds,
             Boolean useLatestDefinitions)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (workflowIds == null) {
             throw new ApiException(
@@ -152,14 +151,14 @@ class WorkflowBulkResource {
 
   
     public BulkResponse restart1(List<String> workflowIds, Boolean useLatestDefinitions)
-            throws ApiException {
+            {
         ApiResponse<BulkResponse> resp = restart1WithHttpInfo(workflowIds, useLatestDefinitions);
         return resp.getData();
     }
 
   
     private ApiResponse<BulkResponse> restart1WithHttpInfo(
-            List<String> workflowIds, Boolean useLatestDefinitions) throws ApiException {
+            List<String> workflowIds, Boolean useLatestDefinitions) {
         okhttp3.Call call =
                 restart1ValidateBeforeCall(workflowIds, useLatestDefinitions);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
@@ -169,7 +168,7 @@ class WorkflowBulkResource {
   
     public okhttp3.Call resumeWorkflow1Call(
             List<String> workflowIds)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/resume";
@@ -205,7 +204,7 @@ class WorkflowBulkResource {
 
     private okhttp3.Call resumeWorkflow1ValidateBeforeCall(
             List<String> workflowIds)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (workflowIds == null) {
             throw new ApiException(
@@ -216,14 +215,14 @@ class WorkflowBulkResource {
     }
 
   
-    public BulkResponse resumeWorkflow1(List<String> workflowIds) throws ApiException {
+    public BulkResponse resumeWorkflow1(List<String> workflowIds) {
         ApiResponse<BulkResponse> resp = resumeWorkflow1WithHttpInfo(workflowIds);
         return resp.getData();
     }
 
   
     private ApiResponse<BulkResponse> resumeWorkflow1WithHttpInfo(List<String> workflowIds)
-            throws ApiException {
+            {
         okhttp3.Call call = resumeWorkflow1ValidateBeforeCall(workflowIds);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -232,7 +231,7 @@ class WorkflowBulkResource {
   
     public okhttp3.Call retry1Call(
             List<String> workflowIds)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/retry";
@@ -268,7 +267,7 @@ class WorkflowBulkResource {
 
     private okhttp3.Call retry1ValidateBeforeCall(
             List<String> workflowIds)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (workflowIds == null) {
             throw new ApiException(
@@ -279,14 +278,14 @@ class WorkflowBulkResource {
     }
 
   
-    public BulkResponse retry1(List<String> workflowIds) throws ApiException {
+    public BulkResponse retry1(List<String> workflowIds) {
         ApiResponse<BulkResponse> resp = retry1WithHttpInfo(workflowIds);
         return resp.getData();
     }
 
   
     private ApiResponse<BulkResponse> retry1WithHttpInfo(List<String> workflowIds)
-            throws ApiException {
+            {
         okhttp3.Call call = retry1ValidateBeforeCall(workflowIds);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -297,7 +296,7 @@ class WorkflowBulkResource {
             List<String> workflowIds,
             String reason,
             boolean triggerFailureWorkflow)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/workflow/bulk/terminate";
@@ -337,7 +336,7 @@ class WorkflowBulkResource {
             List<String> workflowIds,
             String reason,
             boolean triggerFailureWorkflow)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (workflowIds == null) {
             throw new ApiException(
@@ -348,14 +347,14 @@ class WorkflowBulkResource {
     }
 
   
-    public BulkResponse terminate(List<String> workflowIds, String reason, boolean triggerFailureWorkflow) throws ApiException {
+    public BulkResponse terminate(List<String> workflowIds, String reason, boolean triggerFailureWorkflow) {
         ApiResponse<BulkResponse> resp = terminateWithHttpInfo(workflowIds, reason, triggerFailureWorkflow);
         return resp.getData();
     }
 
   
     private ApiResponse<BulkResponse> terminateWithHttpInfo(List<String> workflowIds, String reason, boolean triggerFailureWorkflow)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 terminateValidateBeforeCall(workflowIds, reason, triggerFailureWorkflow);
         Type localVarReturnType = new TypeReference<BulkResponse>() {}.getType();

@@ -22,6 +22,7 @@ import io.orkes.conductor.client.model.integration.IntegrationApiUpdate;
 import io.orkes.conductor.client.model.integration.IntegrationUpdate;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
 
+// DONE
 public interface IntegrationClient {
     /**
      * Client for managing integrations with external systems. Some examples of integrations are:
@@ -50,15 +51,15 @@ public interface IntegrationClient {
 
     void deleteIntegrationApi(String apiName, String integrationName);
 
-    void deleteIntegration(String integrationName);
+    void deleteIntegrationProvider(String integrationName);
 
     IntegrationApi getIntegrationApi(String apiName, String integrationName);
 
     List<IntegrationApi> getIntegrationApis(String integrationName);
 
-    Integration getIntegration(String integrationName);
+    Integration getIntegrationProvider(String integrationName);
 
-    List<Integration> getIntegrations(String category, Boolean activeOnly);
+    List<Integration> getIntegrationProviders(String category, Boolean activeOnly);
 
     List<PromptTemplate> getPromptsWithIntegration(String aiIntegration, String modelName);
 

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.TagObject;
@@ -36,7 +35,7 @@ class SecretResource {
   
     public okhttp3.Call deleteSecretCall(
             String key)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -76,7 +75,7 @@ class SecretResource {
 
     private okhttp3.Call deleteSecretValidateBeforeCall(
             String key)
-            throws ApiException {
+            {
         // verify the required parameter 'key' is set
         if (key == null) {
             throw new ApiException(
@@ -87,12 +86,12 @@ class SecretResource {
     }
 
   
-    public void deleteSecret(String key) throws ApiException {
+    public void deleteSecret(String key) {
         deleteSecretWithHttpInfo(key);
     }
 
   
-    private ApiResponse<Object> deleteSecretWithHttpInfo(String key) throws ApiException {
+    private ApiResponse<Object> deleteSecretWithHttpInfo(String key) {
         okhttp3.Call call = deleteSecretValidateBeforeCall(key);
         Type localVarReturnType = new TypeReference<>() {
         }.getType();
@@ -102,7 +101,7 @@ class SecretResource {
   
     public okhttp3.Call getSecretCall(
             String key)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -142,7 +141,7 @@ class SecretResource {
 
     private okhttp3.Call getSecretValidateBeforeCall(
             String key)
-            throws ApiException {
+            {
         // verify the required parameter 'key' is set
         if (key == null) {
             throw new ApiException(
@@ -153,13 +152,13 @@ class SecretResource {
     }
 
   
-    public String getSecret(String key) throws ApiException {
+    public String getSecret(String key) {
         ApiResponse<String> resp = getSecretWithHttpInfo(key);
         return resp.getData();
     }
 
   
-    private ApiResponse<String> getSecretWithHttpInfo(String key) throws ApiException {
+    private ApiResponse<String> getSecretWithHttpInfo(String key) {
         okhttp3.Call call = getSecretValidateBeforeCall(key);
         Type localVarReturnType = new TypeReference<String>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -167,7 +166,7 @@ class SecretResource {
 
   
     public okhttp3.Call listAllSecretNamesCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -204,19 +203,19 @@ class SecretResource {
     }
 
     private okhttp3.Call listAllSecretNamesValidateBeforeCall()
-            throws ApiException {
+            {
 
         return listAllSecretNamesCall();
     }
 
   
-    public Set<String> listAllSecretNames() throws ApiException {
+    public Set<String> listAllSecretNames() {
         ApiResponse<Set<String>> resp = listAllSecretNamesWithHttpInfo();
         return resp.getData();
     }
 
   
-    private ApiResponse<Set<String>> listAllSecretNamesWithHttpInfo() throws ApiException {
+    private ApiResponse<Set<String>> listAllSecretNamesWithHttpInfo() {
         okhttp3.Call call = listAllSecretNamesValidateBeforeCall();
         Type localVarReturnType = new TypeReference<Set<String>>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -224,7 +223,7 @@ class SecretResource {
 
   
     public okhttp3.Call listSecretsThatUserCanGrantAccessToCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -261,20 +260,20 @@ class SecretResource {
     }
 
     private okhttp3.Call listSecretsThatUserCanGrantAccessToValidateBeforeCall()
-            throws ApiException {
+            {
 
         return listSecretsThatUserCanGrantAccessToCall();
     }
 
   
-    public List<String> listSecretsThatUserCanGrantAccessTo() throws ApiException {
+    public List<String> listSecretsThatUserCanGrantAccessTo() {
         ApiResponse<List<String>> resp = listSecretsThatUserCanGrantAccessToWithHttpInfo();
         return resp.getData();
     }
 
   
     private ApiResponse<List<String>> listSecretsThatUserCanGrantAccessToWithHttpInfo()
-            throws ApiException {
+            {
         okhttp3.Call call =
                 listSecretsThatUserCanGrantAccessToValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<String>>() {}.getType();
@@ -285,7 +284,7 @@ class SecretResource {
     public okhttp3.Call putSecretCall(
             String body,
             String key)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -324,7 +323,7 @@ class SecretResource {
     private okhttp3.Call putSecretValidateBeforeCall(
             String body,
             String key)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException(
@@ -340,12 +339,12 @@ class SecretResource {
     }
 
   
-    public void putSecret(String body, String key) throws ApiException {
+    public void putSecret(String body, String key) {
         putSecretWithHttpInfo(body, key);
     }
 
   
-    private ApiResponse<Object> putSecretWithHttpInfo(String body, String key) throws ApiException {
+    private ApiResponse<Object> putSecretWithHttpInfo(String body, String key) {
         okhttp3.Call call = putSecretValidateBeforeCall(body, key);
         Type localVarReturnType = new TypeReference<>() {
         }.getType();
@@ -355,7 +354,7 @@ class SecretResource {
   
     public okhttp3.Call secretExistsCall(
             String key)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -395,7 +394,7 @@ class SecretResource {
 
     private okhttp3.Call secretExistsValidateBeforeCall(
             String key)
-            throws ApiException {
+            {
         // verify the required parameter 'key' is set
         if (key == null) {
             throw new ApiException(
@@ -406,30 +405,30 @@ class SecretResource {
     }
 
   
-    public Boolean secretExists(String key) throws ApiException {
+    public Boolean secretExists(String key) {
         ApiResponse<Boolean> resp = secretExistsWithHttpInfo(key);
         return resp.getData();
     }
 
   
-    private ApiResponse<Boolean> secretExistsWithHttpInfo(String key) throws ApiException {
+    private ApiResponse<Boolean> secretExistsWithHttpInfo(String key) {
         okhttp3.Call call = secretExistsValidateBeforeCall(key);
         Type localVarReturnType = new TypeReference<Boolean>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
     }
 
   
-    public void putTagForSecret(List<TagObject> body, String key) throws ApiException {
+    public void putTagForSecret(List<TagObject> body, String key) {
         putTagForSecretWithHttpInfo(body, key);
     }
 
   
-    private ApiResponse<Void> putTagForSecretWithHttpInfo(List<TagObject> body, String key) throws ApiException {
+    private ApiResponse<Void> putTagForSecretWithHttpInfo(List<TagObject> body, String key) {
         okhttp3.Call call = putTagForSecretValidateBeforeCall(body, key);
         return httpClient.execute(call);
     }
 
-    private okhttp3.Call putTagForSecretValidateBeforeCall(List<TagObject> body, String key) throws ApiException {
+    private okhttp3.Call putTagForSecretValidateBeforeCall(List<TagObject> body, String key) {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling putTagForSecret(Async)");
@@ -442,7 +441,7 @@ class SecretResource {
         return putTagForSecretCall(body, key);
     }
   
-    private okhttp3.Call putTagForSecretCall(List<TagObject> body, String key) throws ApiException {
+    private okhttp3.Call putTagForSecretCall(List<TagObject> body, String key) {
 
         // create path and map variables
         String localVarPath = "/secrets/{key}/tags"
@@ -472,18 +471,18 @@ class SecretResource {
     }
 
   
-    public void deleteTagForSecret(List<TagObject> body, String key) throws ApiException {
+    public void deleteTagForSecret(List<TagObject> body, String key) {
         deleteTagForSecretWithHttpInfo(body, key);
     }
 
   
-    private ApiResponse<Void> deleteTagForSecretWithHttpInfo(List<TagObject> body, String key) throws ApiException {
+    private ApiResponse<Void> deleteTagForSecretWithHttpInfo(List<TagObject> body, String key) {
         okhttp3.Call call = deleteTagForSecretValidateBeforeCall(body, key);
         return httpClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call deleteTagForSecretValidateBeforeCall(List<TagObject> body, String key) throws ApiException {
+    private okhttp3.Call deleteTagForSecretValidateBeforeCall(List<TagObject> body, String key) {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling deleteTagForSecret(Async)");
@@ -496,7 +495,7 @@ class SecretResource {
         return deleteTagForSecretCall(body, key);
     }
   
-    private okhttp3.Call deleteTagForSecretCall(List<TagObject> body, String key) throws ApiException {
+    private okhttp3.Call deleteTagForSecretCall(List<TagObject> body, String key) {
 
         // create path and map variables
         String localVarPath = "/secrets/{key}/tags"
@@ -526,20 +525,20 @@ class SecretResource {
     }
 
   
-    public List<TagObject> getTags(String key) throws ApiException {
+    public List<TagObject> getTags(String key) {
         ApiResponse<List<TagObject>> resp = getTagsWithHttpInfo(key);
         return resp.getData();
     }
 
   
-    private ApiResponse<List<TagObject>> getTagsWithHttpInfo(String key) throws ApiException {
+    private ApiResponse<List<TagObject>> getTagsWithHttpInfo(String key) {
         okhttp3.Call call = getTagsValidateBeforeCall(key);
         Type localVarReturnType = new TypeReference<List<TagObject>>(){}.getType();
         return httpClient.execute(call, localVarReturnType);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call getTagsValidateBeforeCall(String key) throws ApiException {
+    private okhttp3.Call getTagsValidateBeforeCall(String key) {
         // verify the required parameter 'key' is set
         if (key == null) {
             throw new ApiException("Missing the required parameter 'key' when calling getTags(Async)");
@@ -549,7 +548,7 @@ class SecretResource {
     }
 
   
-    private okhttp3.Call getTagsCall(String key) throws ApiException {
+    private okhttp3.Call getTagsCall(String key) {
         Object localVarPostBody = null;
 
         // create path and map variables

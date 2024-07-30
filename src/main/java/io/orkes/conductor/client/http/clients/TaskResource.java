@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.ExternalStorageLocation;
@@ -43,7 +42,7 @@ class TaskResource {
     }
 
   
-    public okhttp3.Call allCall() throws ApiException {
+    public okhttp3.Call allCall() {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -78,19 +77,19 @@ class TaskResource {
     }
 
     private okhttp3.Call allValidateBeforeCall()
-            throws ApiException {
+            {
 
         return allCall();
     }
 
   
-    public Map<String, Long> all() throws ApiException {
+    public Map<String, Long> all() {
         ApiResponse<Map<String, Long>> resp = allWithHttpInfo();
         return resp.getData();
     }
 
   
-    private ApiResponse<Map<String, Long>> allWithHttpInfo() throws ApiException {
+    private ApiResponse<Map<String, Long>> allWithHttpInfo() {
         okhttp3.Call call = allValidateBeforeCall();
         Type localVarReturnType = new TypeReference<Map<String, Long>>() {
         }.getType();
@@ -99,7 +98,7 @@ class TaskResource {
 
   
     public okhttp3.Call allVerboseCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -134,20 +133,20 @@ class TaskResource {
     }
 
     private okhttp3.Call allVerboseValidateBeforeCall()
-            throws ApiException {
+            {
 
         return allVerboseCall();
     }
 
   
-    public Map<String, Map<String, Map<String, Long>>> allVerbose() throws ApiException {
+    public Map<String, Map<String, Map<String, Long>>> allVerbose() {
         ApiResponse<Map<String, Map<String, Map<String, Long>>>> resp = allVerboseWithHttpInfo();
         return resp.getData();
     }
 
   
     private ApiResponse<Map<String, Map<String, Map<String, Long>>>> allVerboseWithHttpInfo()
-            throws ApiException {
+            {
         okhttp3.Call call = allVerboseValidateBeforeCall();
         Type localVarReturnType =
                 new TypeReference<Map<String, Map<String, Map<String, Long>>>>() {
@@ -162,7 +161,7 @@ class TaskResource {
             String domain,
             Integer count,
             Integer timeout)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -212,7 +211,7 @@ class TaskResource {
             String domain,
             Integer count,
             Integer timeout)
-            throws ApiException {
+            {
         // verify the required parameter 'tasktype' is set
         if (tasktype == null) {
             throw new ApiException(
@@ -230,7 +229,7 @@ class TaskResource {
   
     public List<Task> batchPoll(
             String tasktype, String workerid, String domain, Integer count, Integer timeout)
-            throws ApiException {
+            {
         ApiResponse<List<Task>> resp =
                 batchPollWithHttpInfo(tasktype, workerid, domain, count, timeout);
         return resp.getData();
@@ -239,7 +238,7 @@ class TaskResource {
   
     private ApiResponse<List<Task>> batchPollWithHttpInfo(
             String tasktype, String workerid, String domain, Integer count, Integer timeout)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 batchPollValidateBeforeCall(tasktype, workerid, domain, count, timeout);
         Type localVarReturnType = new TypeReference<List<Task>>() {
@@ -249,7 +248,7 @@ class TaskResource {
 
   
     public okhttp3.Call getAllPollDataCall()
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -284,19 +283,19 @@ class TaskResource {
     }
 
     private okhttp3.Call getAllPollDataValidateBeforeCall()
-            throws ApiException {
+            {
 
         return getAllPollDataCall();
     }
 
   
-    public List<PollData> getAllPollData() throws ApiException {
+    public List<PollData> getAllPollData() {
         ApiResponse<List<PollData>> resp = getAllPollDataWithHttpInfo();
         return resp.getData();
     }
 
   
-    private ApiResponse<List<PollData>> getAllPollDataWithHttpInfo() throws ApiException {
+    private ApiResponse<List<PollData>> getAllPollDataWithHttpInfo() {
         okhttp3.Call call = getAllPollDataValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<PollData>>() {
         }.getType();
@@ -308,7 +307,7 @@ class TaskResource {
             String path,
             String operation,
             String payloadType)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -351,7 +350,7 @@ class TaskResource {
             String path,
             String operation,
             String payloadType)
-            throws ApiException {
+            {
         // verify the required parameter 'path' is set
         if (path == null) {
             throw new ApiException(
@@ -374,7 +373,7 @@ class TaskResource {
 
   
     public ExternalStorageLocation getExternalStorageLocation1(
-            String path, String operation, String payloadType) throws ApiException {
+            String path, String operation, String payloadType) {
         ApiResponse<ExternalStorageLocation> resp =
                 getExternalStorageLocation1WithHttpInfo(path, operation, payloadType);
         return resp.getData();
@@ -382,7 +381,7 @@ class TaskResource {
 
   
     private ApiResponse<ExternalStorageLocation> getExternalStorageLocation1WithHttpInfo(
-            String path, String operation, String payloadType) throws ApiException {
+            String path, String operation, String payloadType) {
         okhttp3.Call call =
                 getExternalStorageLocation1ValidateBeforeCall(
                         path, operation, payloadType);
@@ -394,7 +393,7 @@ class TaskResource {
   
     public okhttp3.Call getPollDataCall(
             String taskType)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -432,7 +431,7 @@ class TaskResource {
 
     private okhttp3.Call getPollDataValidateBeforeCall(
             String taskType)
-            throws ApiException {
+            {
         // verify the required parameter 'taskType' is set
         if (taskType == null) {
             throw new ApiException(
@@ -443,14 +442,14 @@ class TaskResource {
     }
 
   
-    public List<PollData> getPollData(String taskType) throws ApiException {
+    public List<PollData> getPollData(String taskType) {
         ApiResponse<List<PollData>> resp = getPollDataWithHttpInfo(taskType);
         return resp.getData();
     }
 
   
     private ApiResponse<List<PollData>> getPollDataWithHttpInfo(String taskType)
-            throws ApiException {
+            {
         okhttp3.Call call = getPollDataValidateBeforeCall(taskType);
         Type localVarReturnType = new TypeReference<List<PollData>>() {
         }.getType();
@@ -460,7 +459,7 @@ class TaskResource {
   
     public okhttp3.Call getTaskCall(
             String taskId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -500,7 +499,7 @@ class TaskResource {
 
     private okhttp3.Call getTaskValidateBeforeCall(
             String taskId)
-            throws ApiException {
+            {
         // verify the required parameter 'taskId' is set
         if (taskId == null) {
             throw new ApiException(
@@ -511,13 +510,13 @@ class TaskResource {
     }
 
   
-    public Task getTask(String taskId) throws ApiException {
+    public Task getTask(String taskId) {
         ApiResponse<Task> resp = getTaskWithHttpInfo(taskId);
         return resp.getData();
     }
 
   
-    private ApiResponse<Task> getTaskWithHttpInfo(String taskId) throws ApiException {
+    private ApiResponse<Task> getTaskWithHttpInfo(String taskId) {
         okhttp3.Call call = getTaskValidateBeforeCall(taskId);
         Type localVarReturnType = new TypeReference<Task>() {
         }.getType();
@@ -527,7 +526,7 @@ class TaskResource {
   
     public okhttp3.Call getTaskLogsCall(
             String taskId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -567,7 +566,7 @@ class TaskResource {
 
     private okhttp3.Call getTaskLogsValidateBeforeCall(
             String taskId)
-            throws ApiException {
+            {
         // verify the required parameter 'taskId' is set
         if (taskId == null) {
             throw new ApiException(
@@ -578,14 +577,14 @@ class TaskResource {
     }
 
   
-    public List<TaskExecLog> getTaskLogs(String taskId) throws ApiException {
+    public List<TaskExecLog> getTaskLogs(String taskId) {
         ApiResponse<List<TaskExecLog>> resp = getTaskLogsWithHttpInfo(taskId);
         return resp.getData();
     }
 
   
     private ApiResponse<List<TaskExecLog>> getTaskLogsWithHttpInfo(String taskId)
-            throws ApiException {
+            {
         okhttp3.Call call = getTaskLogsValidateBeforeCall(taskId);
         Type localVarReturnType = new TypeReference<List<TaskExecLog>>() {
         }.getType();
@@ -596,7 +595,7 @@ class TaskResource {
     public okhttp3.Call logCall(
             String body,
             String taskId)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -636,7 +635,7 @@ class TaskResource {
     private okhttp3.Call logValidateBeforeCall(
             String body,
             String taskId)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling log(Async)");
@@ -651,12 +650,12 @@ class TaskResource {
     }
 
   
-    public void log(String body, String taskId) throws ApiException {
+    public void log(String body, String taskId) {
         logWithHttpInfo(body, taskId);
     }
 
   
-    private ApiResponse<Void> logWithHttpInfo(String body, String taskId) throws ApiException {
+    private ApiResponse<Void> logWithHttpInfo(String body, String taskId) {
         okhttp3.Call call = logValidateBeforeCall(body, taskId);
         return apiClient.execute(call);
     }
@@ -666,7 +665,7 @@ class TaskResource {
             String tasktype,
             String workerid,
             String domain)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -711,7 +710,7 @@ class TaskResource {
             String tasktype,
             String workerid,
             String domain)
-            throws ApiException {
+            {
         // verify the required parameter 'tasktype' is set
         if (tasktype == null) {
             throw new ApiException(
@@ -722,14 +721,14 @@ class TaskResource {
     }
 
   
-    public Task poll(String tasktype, String workerid, String domain) throws ApiException {
+    public Task poll(String tasktype, String workerid, String domain) {
         ApiResponse<Task> resp = pollWithHttpInfo(tasktype, workerid, domain);
         return resp.getData();
     }
 
   
     private ApiResponse<Task> pollWithHttpInfo(String tasktype, String workerid, String domain)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 pollValidateBeforeCall(tasktype, workerid, domain);
         Type localVarReturnType = new TypeReference<Task>() {
@@ -740,7 +739,7 @@ class TaskResource {
   
     public okhttp3.Call requeuePendingTaskCall(
             String taskType)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -780,7 +779,7 @@ class TaskResource {
 
     private okhttp3.Call requeuePendingTaskValidateBeforeCall(
             String taskType)
-            throws ApiException {
+            {
         // verify the required parameter 'taskType' is set
         if (taskType == null) {
             throw new ApiException(
@@ -791,14 +790,14 @@ class TaskResource {
     }
 
   
-    public String requeuePendingTask(String taskType) throws ApiException {
+    public String requeuePendingTask(String taskType) {
         ApiResponse<String> resp = requeuePendingTaskWithHttpInfo(taskType);
         return resp.getData();
     }
 
   
     private ApiResponse<String> requeuePendingTaskWithHttpInfo(String taskType)
-            throws ApiException {
+            {
         okhttp3.Call call = requeuePendingTaskValidateBeforeCall(taskType);
         Type localVarReturnType = new TypeReference<String>() {
         }.getType();
@@ -812,7 +811,7 @@ class TaskResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -858,7 +857,7 @@ class TaskResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
 
         return searchTasksCall(
                 start,
@@ -871,7 +870,7 @@ class TaskResource {
   
     public SearchResult<TaskSummary> searchTasks(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         ApiResponse<SearchResult<TaskSummary>> resp =
                 searchTasksWithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
@@ -880,7 +879,7 @@ class TaskResource {
   
     private ApiResponse<SearchResult<TaskSummary>> searchTasksWithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 searchTasksValidateBeforeCall(start, size, sort, freeText, query);
         Type localVarReturnType = new TypeReference<SearchResult<TaskSummary>>() {
@@ -895,7 +894,7 @@ class TaskResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -941,7 +940,7 @@ class TaskResource {
             String sort,
             String freeText,
             String query)
-            throws ApiException {
+            {
 
         return searchV21Call(
                 start,
@@ -954,7 +953,7 @@ class TaskResource {
   
     public SearchResultTask searchV21(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         ApiResponse<SearchResultTask> resp =
                 searchV21WithHttpInfo(start, size, sort, freeText, query);
         return resp.getData();
@@ -963,7 +962,7 @@ class TaskResource {
   
     private ApiResponse<SearchResultTask> searchV21WithHttpInfo(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 searchV21ValidateBeforeCall(start, size, sort, freeText, query);
         Type localVarReturnType = new TypeReference<SearchResultTask>() {
@@ -974,7 +973,7 @@ class TaskResource {
   
     public okhttp3.Call sizeCall(
             List<String> taskType)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1013,20 +1012,20 @@ class TaskResource {
 
     private okhttp3.Call sizeValidateBeforeCall(
             List<String> taskType)
-            throws ApiException {
+            {
 
         return sizeCall(taskType);
     }
 
   
-    public Map<String, Integer> size(List<String> taskType) throws ApiException {
+    public Map<String, Integer> size(List<String> taskType) {
         ApiResponse<Map<String, Integer>> resp = sizeWithHttpInfo(taskType);
         return resp.getData();
     }
 
   
     private ApiResponse<Map<String, Integer>> sizeWithHttpInfo(List<String> taskType)
-            throws ApiException {
+            {
         okhttp3.Call call = sizeValidateBeforeCall(taskType);
         Type localVarReturnType = new TypeReference<Map<String, Integer>>() {
         }.getType();
@@ -1036,7 +1035,7 @@ class TaskResource {
   
     private okhttp3.Call updateTaskCall(
             TaskResult taskResult)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/tasks";
@@ -1070,7 +1069,7 @@ class TaskResource {
 
     private okhttp3.Call updateTaskValidateBeforeCall(
             TaskResult taskResult)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (taskResult == null) {
             throw new ApiException(
@@ -1081,13 +1080,13 @@ class TaskResource {
     }
 
   
-    public String updateTask(TaskResult taskResult) throws ApiException {
+    public String updateTask(TaskResult taskResult) {
         ApiResponse<String> resp = updateTaskWithHttpInfo(taskResult);
         return resp.getData();
     }
 
   
-    private ApiResponse<String> updateTaskWithHttpInfo(TaskResult taskResult) throws ApiException {
+    private ApiResponse<String> updateTaskWithHttpInfo(TaskResult taskResult) {
         okhttp3.Call call = updateTaskValidateBeforeCall(taskResult);
         Type localVarReturnType = new TypeReference<String>() {
         }.getType();
@@ -1101,7 +1100,7 @@ class TaskResource {
             String status,
             String workerId,
             boolean sync)
-            throws ApiException {
+            {
         String path = "/tasks/{workflowId}/{taskRefName}/{status}";
         if (sync) {
             path += "/sync";
@@ -1157,7 +1156,7 @@ class TaskResource {
             String taskRefName,
             String status,
             boolean sync)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException(
@@ -1192,7 +1191,7 @@ class TaskResource {
     @Deprecated
     public String updateTask1(
             Map<String, Object> body, String workflowId, String taskRefName, String status)
-            throws ApiException {
+            {
         Type localVarReturnType = new TypeReference<String>() {
         }.getType();
         ApiResponse<String> resp = updateTask1WithHttpInfo(body, workflowId, taskRefName, status, false, localVarReturnType);
@@ -1200,7 +1199,7 @@ class TaskResource {
     }
 
   
-    public String updateTaskByRefName(Map<String, Object> output, String workflowId, String taskRefName, String status) throws ApiException {
+    public String updateTaskByRefName(Map<String, Object> output, String workflowId, String taskRefName, String status) {
         Type localVarReturnType = new TypeReference<String>() {
         }.getType();
         ApiResponse<String> resp = updateTask1WithHttpInfo(output, workflowId, taskRefName, status, false, localVarReturnType);
@@ -1208,7 +1207,7 @@ class TaskResource {
     }
 
   
-    public Workflow updateTaskSync(Map<String, Object> output, String workflowId, String taskRefName, String status) throws ApiException {
+    public Workflow updateTaskSync(Map<String, Object> output, String workflowId, String taskRefName, String status) {
         Type localVarReturnType = new TypeReference<Workflow>() {
         }.getType();
         ApiResponse<Workflow> resp = updateTask1WithHttpInfo(output, workflowId, taskRefName, status, true, localVarReturnType);
@@ -1217,14 +1216,14 @@ class TaskResource {
 
   
     private <T> ApiResponse<T> updateTask1WithHttpInfo(Map<String, Object> body, String workflowId, String taskRefName, String status, boolean sync, Type returnType)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 updateTask1ValidateBeforeCall(body, workflowId, taskRefName, status, sync);
         return apiClient.execute(call, returnType);
     }
 
     private ApiResponse<Workflow> updateTaskSyncWithHttpInfo(Map<String, Object> body, String workflowId, String taskRefName, String status, boolean sync)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 updateTask1ValidateBeforeCall(body, workflowId, taskRefName, status, sync);
         Type localVarReturnType = new TypeReference<Workflow>() {

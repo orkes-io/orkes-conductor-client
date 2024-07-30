@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.ConductorUser;
@@ -38,7 +37,7 @@ class UserResource {
   
     public okhttp3.Call deleteUserCall(
             String id)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -78,7 +77,7 @@ class UserResource {
 
     private okhttp3.Call deleteUserValidateBeforeCall(
             String id)
-            throws ApiException {
+            {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -89,12 +88,12 @@ class UserResource {
     }
 
   
-    public void deleteUser(String id) throws ApiException {
+    public void deleteUser(String id) {
         deleteUserWithHttpInfo(id);
     }
 
   
-    private ApiResponse<Response> deleteUserWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<Response> deleteUserWithHttpInfo(String id) {
         okhttp3.Call call = deleteUserValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<Response>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -103,7 +102,7 @@ class UserResource {
   
     public okhttp3.Call getGrantedPermissionsCall(
             String userId)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -145,7 +144,7 @@ class UserResource {
 
     private okhttp3.Call getGrantedPermissionsValidateBeforeCall(
             String userId)
-            throws ApiException {
+            {
         // verify the required parameter 'userId' is set
         if (userId == null) {
             throw new ApiException(
@@ -156,14 +155,14 @@ class UserResource {
     }
 
   
-    public GrantedAccessResponse getGrantedPermissions(String userId) throws ApiException {
+    public GrantedAccessResponse getGrantedPermissions(String userId) {
         ApiResponse<GrantedAccessResponse> resp = getGrantedPermissionsWithHttpInfo(userId);
         return resp.getData();
     }
 
   
     private ApiResponse<GrantedAccessResponse> getGrantedPermissionsWithHttpInfo(String userId)
-            throws ApiException {
+            {
         okhttp3.Call call = getGrantedPermissionsValidateBeforeCall(userId);
         Type localVarReturnType = new TypeReference<GrantedAccessResponse>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -172,7 +171,7 @@ class UserResource {
   
     public okhttp3.Call getUserCall(
             String id)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -212,7 +211,7 @@ class UserResource {
 
     private okhttp3.Call getUserValidateBeforeCall(
             String id)
-            throws ApiException {
+            {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -223,13 +222,13 @@ class UserResource {
     }
 
   
-    public ConductorUser getUser(String id) throws ApiException {
+    public ConductorUser getUser(String id) {
         ApiResponse<ConductorUser> resp = getUserWithHttpInfo(id);
         return resp.getData();
     }
 
   
-    private ApiResponse<ConductorUser> getUserWithHttpInfo(String id) throws ApiException {
+    private ApiResponse<ConductorUser> getUserWithHttpInfo(String id) {
         okhttp3.Call call = getUserValidateBeforeCall(id);
         Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -238,7 +237,7 @@ class UserResource {
   
     public okhttp3.Call listUsersCall(
             Boolean apps)
-            throws ApiException {
+            {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -277,20 +276,20 @@ class UserResource {
 
     private okhttp3.Call listUsersValidateBeforeCall(
             Boolean apps)
-            throws ApiException {
+            {
 
         return listUsersCall(apps);
     }
 
   
-    public List<ConductorUser> listUsers(Boolean apps) throws ApiException {
+    public List<ConductorUser> listUsers(Boolean apps) {
         ApiResponse<List<ConductorUser>> resp = listUsersWithHttpInfo(apps);
         return resp.getData();
     }
 
   
     private ApiResponse<List<ConductorUser>> listUsersWithHttpInfo(Boolean apps)
-            throws ApiException {
+            {
         okhttp3.Call call = listUsersValidateBeforeCall(apps);
         Type localVarReturnType = new TypeReference<List<ConductorUser>>() {}.getType();
         return httpClient.execute(call, localVarReturnType);
@@ -300,7 +299,7 @@ class UserResource {
     public okhttp3.Call sendInviteEmailCall(
             String id,
             ConductorUser conductorUser)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -339,7 +338,7 @@ class UserResource {
     private okhttp3.Call sendInviteEmailValidateBeforeCall(
             String id,
             ConductorUser conductorUser)
-            throws ApiException {
+            {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -350,13 +349,13 @@ class UserResource {
     }
 
   
-    public void sendInviteEmail(String id, ConductorUser conductorUser) throws ApiException {
+    public void sendInviteEmail(String id, ConductorUser conductorUser) {
         sendInviteEmailWithHttpInfo(id, conductorUser);
     }
 
   
     private ApiResponse<Object> sendInviteEmailWithHttpInfo(String id, ConductorUser conductorUser)
-            throws ApiException {
+            {
         okhttp3.Call call =
                 sendInviteEmailValidateBeforeCall(id, conductorUser);
         Type localVarReturnType = new TypeReference<>() {
@@ -368,7 +367,7 @@ class UserResource {
     public okhttp3.Call upsertUserCall(
             UpsertUserRequest upsertUserRequest,
             String id)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath =
@@ -407,7 +406,7 @@ class UserResource {
     private okhttp3.Call upsertUserValidateBeforeCall(
             UpsertUserRequest upsertUserRequest,
             String id)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (upsertUserRequest == null) {
             throw new ApiException(
@@ -424,14 +423,14 @@ class UserResource {
 
   
     public ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id)
-            throws ApiException {
+            {
         ApiResponse<ConductorUser> resp = upsertUserWithHttpInfo(upsertUserRequest, id);
         return resp.getData();
     }
 
   
     private ApiResponse<ConductorUser> upsertUserWithHttpInfo(
-            UpsertUserRequest upsertUserRequest, String id) throws ApiException {
+            UpsertUserRequest upsertUserRequest, String id) {
         okhttp3.Call call =
                 upsertUserValidateBeforeCall(upsertUserRequest, id);
         Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();

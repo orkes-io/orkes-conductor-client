@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.TagObject;
@@ -37,7 +36,7 @@ class PromptResource {
     }
 
   
-    public Call deletePromptTemplateCall(String name) throws ApiException {
+    public Call deletePromptTemplateCall(String name) {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -70,7 +69,7 @@ class PromptResource {
     }
 
     @SuppressWarnings("rawtypes")
-    private Call deletePromptTemplateValidateBeforeCall(String name) throws ApiException {
+    private Call deletePromptTemplateValidateBeforeCall(String name) {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException("Missing the required parameter 'name' when calling deletePromptTemplate(Async)");
@@ -80,18 +79,18 @@ class PromptResource {
     }
 
   
-    public void deletePromptTemplate(String name) throws ApiException {
+    public void deletePromptTemplate(String name) {
         deletePromptTemplateWithHttpInfo(name);
     }
 
   
-    public ApiResponse<Void> deletePromptTemplateWithHttpInfo(String name) throws ApiException {
+    public ApiResponse<Void> deletePromptTemplateWithHttpInfo(String name) {
         Call call = deletePromptTemplateValidateBeforeCall(name);
         return httpClient.execute(call);
     }
 
   
-    public Call deleteTagForPromptTemplateCall(List<TagObject> body, String name) throws ApiException {
+    public Call deleteTagForPromptTemplateCall(List<TagObject> body, String name) {
 
         // create path and map variables
         String localVarPath = "/prompts/{name}/tags".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
@@ -121,7 +120,7 @@ class PromptResource {
     }
 
     @SuppressWarnings("rawtypes")
-    private Call deleteTagForPromptTemplateValidateBeforeCall(List<TagObject> body, String name) throws ApiException {
+    private Call deleteTagForPromptTemplateValidateBeforeCall(List<TagObject> body, String name) {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling deleteTagForPromptTemplate(Async)");
@@ -136,18 +135,18 @@ class PromptResource {
     }
 
   
-    public void deleteTagForPromptTemplate(List<TagObject> body, String name) throws ApiException {
+    public void deleteTagForPromptTemplate(List<TagObject> body, String name) {
         deleteTagForPromptTemplateWithHttpInfo(body, name);
     }
 
   
-    public ApiResponse<Void> deleteTagForPromptTemplateWithHttpInfo(List<TagObject> body, String name) throws ApiException {
+    public ApiResponse<Void> deleteTagForPromptTemplateWithHttpInfo(List<TagObject> body, String name) {
         Call call = deleteTagForPromptTemplateValidateBeforeCall(body, name);
         return httpClient.execute(call);
     }
 
   
-    public Call getPromptTemplateCall(String name) throws ApiException {
+    public Call getPromptTemplateCall(String name) {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -177,7 +176,7 @@ class PromptResource {
                 localVarFormParams, localVarAuthNames);
     }
 
-    private Call getPromptTemplateValidateBeforeCall(String name) throws ApiException {
+    private Call getPromptTemplateValidateBeforeCall(String name) {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException("Missing the required parameter 'name' when calling getPromptTemplate(Async)");
@@ -188,13 +187,13 @@ class PromptResource {
     }
 
   
-    public PromptTemplate getPromptTemplate(String name) throws ApiException {
+    public PromptTemplate getPromptTemplate(String name) {
         ApiResponse<PromptTemplate> resp = getPromptTemplateWithHttpInfo(name);
         return resp.getData();
     }
 
   
-    public ApiResponse<PromptTemplate> getPromptTemplateWithHttpInfo(String name) throws ApiException {
+    public ApiResponse<PromptTemplate> getPromptTemplateWithHttpInfo(String name) {
         Call call = getPromptTemplateValidateBeforeCall(name);
         Type localVarReturnType = new TypeReference<PromptTemplate>() {
         }.getType();
@@ -202,7 +201,7 @@ class PromptResource {
     }
 
   
-    public Call getPromptTemplatesCall() throws ApiException {
+    public Call getPromptTemplatesCall() {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -233,18 +232,18 @@ class PromptResource {
     }
 
     @SuppressWarnings("rawtypes")
-    private Call getPromptTemplatesValidateBeforeCall() throws ApiException {
+    private Call getPromptTemplatesValidateBeforeCall() {
         return getPromptTemplatesCall();
     }
 
   
-    public List<PromptTemplate> getPromptTemplates() throws ApiException {
+    public List<PromptTemplate> getPromptTemplates() {
         ApiResponse<List<PromptTemplate>> resp = getPromptTemplatesWithHttpInfo();
         return resp.getData();
     }
 
   
-    public ApiResponse<List<PromptTemplate>> getPromptTemplatesWithHttpInfo() throws ApiException {
+    public ApiResponse<List<PromptTemplate>> getPromptTemplatesWithHttpInfo() {
         Call call = getPromptTemplatesValidateBeforeCall();
         Type localVarReturnType = new TypeReference<List<PromptTemplate>>() {
         }.getType();
@@ -252,7 +251,7 @@ class PromptResource {
     }
 
   
-    public Call getTagsForPromptTemplateCall(String name) throws ApiException {
+    public Call getTagsForPromptTemplateCall(String name) {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -283,7 +282,7 @@ class PromptResource {
     }
 
     @SuppressWarnings("rawtypes")
-    private Call getTagsForPromptTemplateValidateBeforeCall(String name) throws ApiException {
+    private Call getTagsForPromptTemplateValidateBeforeCall(String name) {
         // verify the required parameter 'name' is set
         if (name == null) {
             throw new ApiException("Missing the required parameter 'name' when calling getTagsForPromptTemplate(Async)");
@@ -294,13 +293,13 @@ class PromptResource {
     }
 
   
-    public List<TagObject> getTagsForPromptTemplate(String name) throws ApiException {
+    public List<TagObject> getTagsForPromptTemplate(String name) {
         ApiResponse<List<TagObject>> resp = getTagsForPromptTemplateWithHttpInfo(name);
         return resp.getData();
     }
 
   
-    public ApiResponse<List<TagObject>> getTagsForPromptTemplateWithHttpInfo(String name) throws ApiException {
+    public ApiResponse<List<TagObject>> getTagsForPromptTemplateWithHttpInfo(String name) {
         Call call = getTagsForPromptTemplateValidateBeforeCall(name);
         Type localVarReturnType = new TypeReference<List<TagObject>>() {
         }.getType();
@@ -308,7 +307,7 @@ class PromptResource {
     }
 
   
-    public Call putTagForPromptTemplateCall(List<TagObject> body, String name) throws ApiException {
+    public Call putTagForPromptTemplateCall(List<TagObject> body, String name) {
 
         // create path and map variables
         String localVarPath = "/prompts/{name}/tags".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
@@ -337,7 +336,7 @@ class PromptResource {
                 localVarFormParams, localVarAuthNames);
     }
 
-    private Call putTagForPromptTemplateValidateBeforeCall(List<TagObject> body, String name) throws ApiException {
+    private Call putTagForPromptTemplateValidateBeforeCall(List<TagObject> body, String name) {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling putTagForPromptTemplate(Async)");
@@ -351,12 +350,12 @@ class PromptResource {
     }
 
   
-    public void putTagForPromptTemplate(List<TagObject> body, String name) throws ApiException {
+    public void putTagForPromptTemplate(List<TagObject> body, String name) {
         putTagForPromptTemplateWithHttpInfo(body, name);
     }
 
   
-    public ApiResponse<Void> putTagForPromptTemplateWithHttpInfo(List<TagObject> body, String name) throws ApiException {
+    public ApiResponse<Void> putTagForPromptTemplateWithHttpInfo(List<TagObject> body, String name) {
         Call call = putTagForPromptTemplateValidateBeforeCall(body, name);
         return httpClient.execute(call);
     }
@@ -365,7 +364,7 @@ class PromptResource {
 
   
     public Call savePromptTemplateCall(String body, String description, String name, List<String> models)
-            throws ApiException {
+            {
 
         // create path and map variables
         String localVarPath = "/prompts/{name}".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
@@ -402,7 +401,7 @@ class PromptResource {
 
     @SuppressWarnings("rawtypes")
     private Call savePromptTemplateValidateBeforeCall(String body, String description, String name, List<String> models)
-            throws ApiException {
+            {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling savePromptTemplate(Async)");
@@ -421,18 +420,18 @@ class PromptResource {
     }
 
   
-    public void savePromptTemplate(String body, String description, String name, List<String> models) throws ApiException {
+    public void savePromptTemplate(String body, String description, String name, List<String> models) {
         savePromptTemplateWithHttpInfo(body, description, name, models);
     }
 
   
-    public ApiResponse<Void> savePromptTemplateWithHttpInfo(String body, String description, String name, List<String> models) throws ApiException {
+    public ApiResponse<Void> savePromptTemplateWithHttpInfo(String body, String description, String name, List<String> models) {
         Call call = savePromptTemplateValidateBeforeCall(body, description, name, models);
         return httpClient.execute(call);
     }
 
     @SuppressWarnings("rawtypes")
-    private Call testMessageTemplateValidateBeforeCall(PromptTemplateTestRequest body) throws ApiException {
+    private Call testMessageTemplateValidateBeforeCall(PromptTemplateTestRequest body) {
         // verify the required parameter 'body' is set
         if (body == null) {
             throw new ApiException("Missing the required parameter 'body' when calling testMessageTemplate(Async)");
@@ -442,7 +441,7 @@ class PromptResource {
 
     }
 
-    public Call testMessageTemplateCall(PromptTemplateTestRequest body) throws ApiException {
+    public Call testMessageTemplateCall(PromptTemplateTestRequest body) {
 
         // create path and map variables
         String localVarPath = "/prompts/test";
@@ -470,13 +469,13 @@ class PromptResource {
     }
 
   
-    public String testMessageTemplate(PromptTemplateTestRequest body) throws ApiException {
+    public String testMessageTemplate(PromptTemplateTestRequest body) {
         ApiResponse<String> resp = testMessageTemplateWithHttpInfo(body);
         return resp.getData();
     }
 
   
-    public ApiResponse<String> testMessageTemplateWithHttpInfo(PromptTemplateTestRequest body) throws ApiException {
+    public ApiResponse<String> testMessageTemplateWithHttpInfo(PromptTemplateTestRequest body) {
         Call call = testMessageTemplateValidateBeforeCall(body);
         Type localVarReturnType = new TypeReference<String>() {
         }.getType();

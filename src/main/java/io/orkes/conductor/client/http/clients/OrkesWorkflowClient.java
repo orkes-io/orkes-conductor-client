@@ -27,7 +27,6 @@ import java.util.concurrent.TimeoutException;
 import org.apache.commons.lang3.StringUtils;
 
 import io.orkes.conductor.client.api.WorkflowClient;
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.model.BulkResponse;
 import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
@@ -243,35 +242,35 @@ public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, W
     }
 
     @Override
-    public BulkResponse pauseWorkflow(List<String> workflowIds) throws ApiException {
+    public BulkResponse pauseWorkflow(List<String> workflowIds) {
         return bulkResource.pauseWorkflow1(workflowIds);
     }
 
     @Override
     public BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
-            throws ApiException {
+            {
         return bulkResource.restart1(workflowIds, useLatestDefinitions);
     }
 
     @Override
-    public BulkResponse resumeWorkflow(List<String> workflowIds) throws ApiException {
+    public BulkResponse resumeWorkflow(List<String> workflowIds) {
         return bulkResource.resumeWorkflow1(workflowIds);
     }
 
     @Override
-    public BulkResponse retryWorkflow(List<String> workflowIds) throws ApiException {
+    public BulkResponse retryWorkflow(List<String> workflowIds) {
         return bulkResource.retry1(workflowIds);
     }
 
     @Override
     public BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
-            throws ApiException {
+            {
         return bulkResource.terminate(workflowIds, reason, false);
     }
 
     @Override
     public BulkResponse terminateWorkflowsWithFailure(List<String> workflowIds, String reason, boolean triggerFailureWorkflow)
-            throws ApiException {
+            {
         return bulkResource.terminate(workflowIds, reason, triggerFailureWorkflow);
     }
 

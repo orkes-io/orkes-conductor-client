@@ -15,7 +15,6 @@ package io.orkes.conductor.client.http.clients;
 import java.util.List;
 
 import io.orkes.conductor.client.api.SchedulerClient;
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecution;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionModel;
@@ -32,67 +31,67 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public void deleteSchedule(String name) throws ApiException {
+    public void deleteSchedule(String name) {
         schedulerResource.deleteSchedule(name);
     }
 
     @Override
-    public List<WorkflowSchedule> getAllSchedules(String workflowName) throws ApiException {
+    public List<WorkflowSchedule> getAllSchedules(String workflowName) {
         return schedulerResource.getAllSchedules(workflowName);
     }
 
     @Override
     public List<Long> getNextFewSchedules(
             String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit)
-            throws ApiException {
+            {
         return schedulerResource.getNextFewSchedules(
                 cronExpression, scheduleStartTime, scheduleEndTime, limit);
     }
 
     @Override
-    public WorkflowSchedule getSchedule(String name) throws ApiException {
+    public WorkflowSchedule getSchedule(String name) {
         return schedulerResource.getSchedule(name);
     }
 
     @Override
-    public void pauseAllSchedules() throws ApiException {
+    public void pauseAllSchedules() {
         schedulerResource.pauseAllSchedules();
     }
 
     @Override
-    public void pauseSchedule(String name) throws ApiException {
+    public void pauseSchedule(String name) {
         schedulerResource.pauseSchedule(name);
     }
 
     @Override
-    public void requeueAllExecutionRecords() throws ApiException {
+    public void requeueAllExecutionRecords() {
         schedulerResource.requeueAllExecutionRecords();
     }
 
     @Override
-    public void resumeAllSchedules() throws ApiException {
+    public void resumeAllSchedules() {
         schedulerResource.resumeAllSchedules();
     }
 
     @Override
-    public void resumeSchedule(String name) throws ApiException {
+    public void resumeSchedule(String name) {
         schedulerResource.resumeSchedule(name);
     }
 
     @Override
-    public void saveSchedule(SaveScheduleRequest saveScheduleRequest) throws ApiException {
+    public void saveSchedule(SaveScheduleRequest saveScheduleRequest) {
         schedulerResource.saveSchedule(saveScheduleRequest);
     }
 
     @Override
     public SearchResultWorkflowScheduleExecutionModel searchV22(
             Integer start, Integer size, String sort, String freeText, String query)
-            throws ApiException {
+            {
         return schedulerResource.searchV22(start, size, sort, freeText, query);
     }
     @Override
     public SearchResultWorkflowScheduleExecution search(Integer start, Integer size, String sort, String freeText, String query)
-        throws ApiException {
+        {
         return schedulerResource.search(start, size, sort, freeText, query);
     }
 

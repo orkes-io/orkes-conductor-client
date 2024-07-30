@@ -19,7 +19,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.model.BulkResponse;
 import io.orkes.conductor.client.model.WorkflowRun;

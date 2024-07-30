@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import io.orkes.conductor.client.api.SecretClient;
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.model.TagObject;
 
 public class OrkesSecretClient extends OrkesClient implements SecretClient {
@@ -29,32 +28,32 @@ public class OrkesSecretClient extends OrkesClient implements SecretClient {
     }
 
     @Override
-    public void deleteSecret(String key) throws ApiException {
+    public void deleteSecret(String key) {
         secretResource.deleteSecret(key);
     }
 
     @Override
-    public String getSecret(String key) throws ApiException {
+    public String getSecret(String key) {
         return secretResource.getSecret(key);
     }
 
     @Override
-    public Set<String> listAllSecretNames() throws ApiException {
+    public Set<String> listAllSecretNames() {
         return secretResource.listAllSecretNames();
     }
 
     @Override
-    public List<String> listSecretsThatUserCanGrantAccessTo() throws ApiException {
+    public List<String> listSecretsThatUserCanGrantAccessTo() {
         return secretResource.listSecretsThatUserCanGrantAccessTo();
     }
 
     @Override
-    public void putSecret(String value, String key) throws ApiException {
+    public void putSecret(String value, String key) {
         secretResource.putSecret(value, key);
     }
 
     @Override
-    public boolean secretExists(String key) throws ApiException {
+    public boolean secretExists(String key) {
         return secretResource.secretExists(key);
     }
 

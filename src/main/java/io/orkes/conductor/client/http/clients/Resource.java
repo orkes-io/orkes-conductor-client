@@ -12,25 +12,11 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import io.orkes.conductor.client.http.ApiException;
-
 abstract class Resource {
 
     protected final OrkesHttpClient httpClient;
 
     protected Resource(OrkesHttpClient httpClient) {
         this.httpClient = httpClient;
-    }
-
-    protected void validateNonNull(String param, Object object) {
-        validateNonNull(new String[]{param}, object);
-    }
-
-    protected void validateNonNull(String[] paramNames, Object... params) throws ApiException {
-        for (int i = 0; i < params.length; i++) {
-            if (params[i] == null) {
-                throw new ApiException("Missing required parameter '" + paramNames[i] + "'.");
-            }
-        }
     }
 }

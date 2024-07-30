@@ -12,12 +12,15 @@
  */
 package io.orkes.conductor.client;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import io.orkes.conductor.client.model.validation.ErrorResponse;
 import io.orkes.conductor.client.model.validation.ValidationError;
 
-public abstract class OrkesClientException extends RuntimeException {
+//TODO refactor - too many constructors
+public class OrkesClientException extends RuntimeException {
 
     private int status;
     private String instance;
@@ -25,6 +28,9 @@ public abstract class OrkesClientException extends RuntimeException {
     private boolean retryable;
     private List<ValidationError> validationErrors;
 
+    private Map<String, List<String>> responseHeaders = null;
+
+    private String responseBody;
 
     public OrkesClientException() {
     }
@@ -51,7 +57,43 @@ public abstract class OrkesClientException extends RuntimeException {
         this.validationErrors = errorResponse.getValidationErrors();
     }
 
-    public abstract boolean isClientError();
+    public OrkesClientException(String message,
+                                Throwable cause,
+                                int status,
+                                Map<String, List<String>> responseHeaders,
+                                String responseBody) {
+        super(message, cause);
+        this.status = status;
+        this.responseHeaders = responseHeaders;
+        this.responseBody = responseBody;
+    }
+
+    public OrkesClientException(String message,
+                                int status,
+                                Map<String, List<String>> responseHeaders,
+                                String responseBody) {
+        super(message);
+        this.status = status;
+        this.responseHeaders = responseHeaders;
+        this.responseBody = responseBody;
+    }
+
+    public OrkesClientException(String message,
+                                int status,
+                                Map<String, List<String>> responseHeaders) {
+        super(message);
+        this.status = status;
+        this.responseHeaders = responseHeaders;
+    }
+
+    public OrkesClientException(String message,
+                                Throwable cause,
+                                int status,
+                                Map<String, List<String>> responseHeaders) {
+        super(message, cause);
+        this.status = status;
+        this.responseHeaders = responseHeaders;
+    }
 
     public int getStatus() {
         return status;
@@ -93,6 +135,10 @@ public abstract class OrkesClientException extends RuntimeException {
         this.validationErrors = validationErrors;
     }
 
+    public boolean isClientError() {
+        return status > 399 && status < 499;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -122,5 +168,13 @@ public abstract class OrkesClientException extends RuntimeException {
 
         builder.append("}");
         return builder.toString();
+    }
+
+    public String responseBody() {
+        return responseBody;
+    }
+
+    public Map<String, List<String>> responseHeaders() {
+        return responseHeaders;
     }
 }

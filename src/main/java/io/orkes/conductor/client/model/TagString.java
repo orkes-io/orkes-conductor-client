@@ -49,12 +49,9 @@ public class TagString {
             }
             return null;
         }
-
     }
 
-
     private TypeEnum type = null;
-
 
     private String value = null;
 

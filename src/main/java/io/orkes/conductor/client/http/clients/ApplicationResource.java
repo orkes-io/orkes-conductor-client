@@ -13,7 +13,6 @@
 package io.orkes.conductor.client.http.clients;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.model.AccessKeyResponse;
 import io.orkes.conductor.client.model.ConductorApplication;
@@ -22,17 +21,22 @@ import io.orkes.conductor.client.model.CreateOrUpdateApplicationRequest;
 import io.orkes.conductor.client.model.TagObject;
 
 import java.util.List;
+import java.util.Objects;
+
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.POST;
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.PUT;
 
 class ApplicationResource extends Resource {
 
-    public ApplicationResource(OrkesHttpClient httpClient) {
+    ApplicationResource(OrkesHttpClient httpClient) {
         super(httpClient);
     }
 
-    void addRoleToApplicationUser(String applicationId, String role) throws ApiException {
-        validateNonNull(new String[]{"applicationId", "role"}, applicationId, role);
+    void addRoleToApplicationUser(String applicationId, String role)  {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("POST")
+                .method(POST)
                 .path("/applications/{applicationId}/roles/{role}")
                 .addPathParam("applicationId", applicationId)
                 .addPathParam("role", role)
@@ -40,10 +44,9 @@ class ApplicationResource extends Resource {
         httpClient.doRequest(request, null);
     }
 
-    CreateAccessKeyResponse createAccessKey(String applicationId) throws ApiException {
-        validateNonNull(new String[]{"applicationId"}, applicationId);
+    CreateAccessKeyResponse createAccessKey(String applicationId)  {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("POST")
+                .method(POST)
                 .path("/applications/{applicationId}/accessKeys")
                 .addPathParam("applicationId", applicationId)
                 .build();
@@ -53,11 +56,10 @@ class ApplicationResource extends Resource {
         return response.getData();
     }
 
-    ConductorApplication createApplication(CreateOrUpdateApplicationRequest body) throws ApiException {
-        validateNonNull(new String[]{"body"}, body);
-
+    ConductorApplication upsertApplication(CreateOrUpdateApplicationRequest body)  {
+        Objects.requireNonNull(body, "CreateOrUpdateApplicationRequest cannot be null");
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("POST")
+                .method(POST)
                 .path("/applications")
                 .body(body)
                 .build();
@@ -68,10 +70,9 @@ class ApplicationResource extends Resource {
         return response.getData();
     }
 
-    void deleteAccessKey(String applicationId, String keyId) throws ApiException {
-        validateNonNull(new String[]{"applicationId", "keyId"}, applicationId, keyId);
+    void deleteAccessKey(String applicationId, String keyId)  {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("DELETE")
+                .method(DELETE)
                 .path("/applications/{applicationId}/accessKeys/{keyId}")
                 .addPathParam("applicationId", applicationId)
                 .addPathParam("keyId", keyId)
@@ -79,20 +80,18 @@ class ApplicationResource extends Resource {
         httpClient.doRequest(request, null);
     }
 
-    void deleteApplication(String applicationId) throws ApiException {
-        validateNonNull(new String[]{"applicationId"}, applicationId);
+    void deleteApplication(String applicationId)  {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("DELETE")
+                .method(DELETE)
                 .path("/applications/{applicationId}")
                 .addPathParam("applicationId", applicationId)
                 .build();
         httpClient.doRequest(request, null);
     }
 
-    List<AccessKeyResponse> getAccessKeys(String applicationId) throws ApiException {
-        validateNonNull(new String[]{"applicationId"}, applicationId);
+    List<AccessKeyResponse> getAccessKeys(String applicationId)  {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("GET")
+                .method(GET)
                 .path("/applications/{applicationId}/accessKeys")
                 .addPathParam("applicationId", applicationId)
                 .build();
@@ -102,10 +101,9 @@ class ApplicationResource extends Resource {
         return response.getData();
     }
 
-    ConductorApplication getApplication(String applicationId) throws ApiException {
-        validateNonNull(new String[]{"applicationId"}, applicationId);
+    ConductorApplication getApplication(String applicationId)  {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("GET")
+                .method(GET)
                 .path("/applications/{applicationId}")
                 .addPathParam("applicationId", applicationId)
                 .build();
@@ -115,9 +113,9 @@ class ApplicationResource extends Resource {
         return response.getData();
     }
 
-    List<ConductorApplication> listApplications() throws ApiException {
+    List<ConductorApplication> listApplications()  {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("GET")
+                .method(GET)
                 .path("/applications/{applicationId}")
                 .build();
         ApiResponse<List<ConductorApplication>> response = httpClient.doRequest(request, new TypeReference<>() {
@@ -126,10 +124,9 @@ class ApplicationResource extends Resource {
         return response.getData();
     }
 
-    void removeRoleFromApplicationUser(String applicationId, String role) throws ApiException {
-        validateNonNull(new String[]{"applicationId", "role"}, applicationId, role);
+    void removeRoleFromApplicationUser(String applicationId, String role)  {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("DELETE")
+                .method(DELETE)
                 .path("/applications/{applicationId}/roles/{role}")
                 .addPathParam("applicationId", applicationId)
                 .addPathParam("role", role)
@@ -137,10 +134,9 @@ class ApplicationResource extends Resource {
         httpClient.doRequest(request, null);
     }
 
-    AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException {
-        validateNonNull(new String[]{"applicationId", "keyId"}, applicationId, keyId);
+    AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId)  {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("POST")
+                .method(POST)
                 .path("/applications/{applicationId}/accessKeys/{keyId}/status")
                 .addPathParam("applicationId", applicationId)
                 .addPathParam("keyId", keyId)
@@ -152,25 +148,10 @@ class ApplicationResource extends Resource {
         return response.getData();
     }
 
-    ConductorApplication updateApplication(CreateOrUpdateApplicationRequest body, String applicationId) throws ApiException {
-        validateNonNull(new String[]{"body", "applicationId"}, body, applicationId);
+    void putTags(List<TagObject> body, String applicationId)  {
+        Objects.requireNonNull(body, "List<TagObject> cannot be null");
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("POST")
-                .path("/applications/{id}")
-                .addPathParam("applicationId", applicationId)
-                .body(body)
-                .build();
-
-        ApiResponse<ConductorApplication> response = httpClient.doRequest(request, new TypeReference<>() {
-        });
-
-        return response.getData();
-    }
-
-    void putTagForApplication(List<TagObject> body, String applicationId) throws ApiException {
-        validateNonNull(new String[]{"body", "applicationId"}, body, applicationId);
-        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("PUT")
+                .method(PUT)
                 .path("/applications/{id}/tags")
                 .addPathParam("applicationId", applicationId)
                 .body(body)
@@ -179,19 +160,28 @@ class ApplicationResource extends Resource {
         httpClient.doRequest(request, null);
     }
 
-    List<TagObject> getTagsForApplication(String id) throws ApiException {
-        validateNonNull(new String[]{"id"}, id);
-        ApiResponse<List<TagObject>> response = httpClient.doRequest(
-                "GET", "/applications/{id}/tags", id, null,
-                new TypeReference<>() {
-                }
-        );
+    List<TagObject> getTags(String applicationId)  {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(GET)
+                .path("/applications/{id}/tags")
+                .addPathParam("applicationId", applicationId)
+                .build();
+
+        ApiResponse<List<TagObject>> response = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
         return response.getData();
     }
 
-    void deleteTagForApplication(List<TagObject> tags, String id) throws ApiException {
-        validateNonNull(new String[]{"tags", "id"}, tags, id);
-        httpClient.doRequest("DELETE", "/applications/{id}/tags", id, tags, null);
+    void deleteTags(List<TagObject> body, String applicationId)  {
+        Objects.requireNonNull(body, "List<TagObject> cannot be null");
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(DELETE)
+                .path("/applications/{id}/tags")
+                .addPathParam("applicationId", applicationId)
+                .body(body)
+                .build();
+
+        httpClient.doRequest(request, null);
     }
 }
