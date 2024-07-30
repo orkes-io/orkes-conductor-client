@@ -20,7 +20,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.BulkResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -40,8 +40,8 @@ class WorkflowBulkResource {
         // create path and map variables
         String localVarPath = "/workflow/bulk/pause";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -103,8 +103,8 @@ class WorkflowBulkResource {
         // create path and map variables
         String localVarPath = "/workflow/bulk/restart";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (useLatestDefinitions != null)
             localVarQueryParams.addAll(
                     httpClient.parameterToPair("useLatestDefinitions", useLatestDefinitions));
@@ -174,8 +174,8 @@ class WorkflowBulkResource {
         // create path and map variables
         String localVarPath = "/workflow/bulk/resume";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -237,8 +237,8 @@ class WorkflowBulkResource {
         // create path and map variables
         String localVarPath = "/workflow/bulk/retry";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -302,8 +302,8 @@ class WorkflowBulkResource {
         // create path and map variables
         String localVarPath = "/workflow/bulk/terminate";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (reason != null) localVarQueryParams.addAll(httpClient.parameterToPair("reason", reason));
         localVarQueryParams.addAll(httpClient.parameterToPair("triggerFailureWorkflow", triggerFailureWorkflow));
 

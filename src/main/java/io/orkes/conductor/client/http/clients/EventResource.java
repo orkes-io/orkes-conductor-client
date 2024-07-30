@@ -20,7 +20,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.metadata.events.EventHandler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -37,8 +37,8 @@ class EventResource {
         // create path and map variables
         String localVarPath = "/event";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -100,8 +100,8 @@ class EventResource {
                                 "\\{" + "queueName" + "\\}",
                                 httpClient.escapeString(queueName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -171,8 +171,8 @@ class EventResource {
         // create path and map variables
         String localVarPath = "/event";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -233,8 +233,8 @@ class EventResource {
                         .replaceAll(
                                 "\\{" + "event" + "\\}", httpClient.escapeString(event));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (activeOnly != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("activeOnly", activeOnly));
 
@@ -314,8 +314,8 @@ class EventResource {
                                 "\\{" + "queueName" + "\\}",
                                 httpClient.escapeString(queueName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -385,8 +385,8 @@ class EventResource {
         // create path and map variables
         String localVarPath = "/event/queue/config";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -447,8 +447,8 @@ class EventResource {
                                 "\\{" + "queueName" + "\\}",
                                 httpClient.escapeString(queueName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -522,8 +522,8 @@ class EventResource {
                         .replaceAll(
                                 "\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -584,8 +584,8 @@ class EventResource {
         // create path and map variables
         String localVarPath = "/event";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -657,8 +657,8 @@ class EventResource {
         // create path and map variables
         String localVarPath = "/event/handleIncomingEvent";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 

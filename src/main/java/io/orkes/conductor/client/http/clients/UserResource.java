@@ -20,7 +20,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.ConductorUser;
 import io.orkes.conductor.client.model.GrantedAccessResponse;
 import io.orkes.conductor.client.model.Response;
@@ -46,8 +46,8 @@ class UserResource {
                 "/users/{id}"
                         .replaceAll("\\{" + "id" + "\\}", httpClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -113,8 +113,8 @@ class UserResource {
                                 "\\{" + "userId" + "\\}",
                                 httpClient.escapeString(userId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -180,8 +180,8 @@ class UserResource {
                 "/users/{id}"
                         .replaceAll("\\{" + "id" + "\\}", httpClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -244,8 +244,8 @@ class UserResource {
         // create path and map variables
         String localVarPath = "/users";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (apps != null) localVarQueryParams.addAll(httpClient.parameterToPair("apps", apps));
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
@@ -307,8 +307,8 @@ class UserResource {
                 "/users/{id}/sendInviteEmail"
                         .replaceAll("\\{" + "id" + "\\}", httpClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -375,8 +375,8 @@ class UserResource {
                 "/users/{id}"
                         .replaceAll("\\{" + "id" + "\\}", httpClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 

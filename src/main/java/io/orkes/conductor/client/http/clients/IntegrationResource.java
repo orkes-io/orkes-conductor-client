@@ -20,7 +20,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.integration.Integration;
 import io.orkes.conductor.client.model.integration.IntegrationApi;
@@ -51,8 +51,8 @@ class IntegrationResource {
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName))
                 .replaceAll("\\{" + "prompt_name" + "\\}", httpClient.escapeString(promptName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -118,8 +118,8 @@ class IntegrationResource {
                         httpClient.escapeString(name))
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -177,8 +177,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider/{name}".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -234,8 +234,8 @@ class IntegrationResource {
                         httpClient.escapeString(name))
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -295,8 +295,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider/{name}/tags".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -355,8 +355,8 @@ class IntegrationResource {
                         httpClient.escapeString(name))
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -417,8 +417,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider/{name}/integration".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (activeOnly != null) {
             localVarQueryParams.addAll(httpClient.parameterToPair("activeOnly", activeOnly));
         }
@@ -478,8 +478,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider/{name}/integration/all".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -536,8 +536,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider/{name}".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -594,8 +594,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/def";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -646,8 +646,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (category != null) {
             localVarQueryParams.addAll(httpClient.parameterToPair("category", category));
         }
@@ -708,8 +708,8 @@ class IntegrationResource {
                         "\\{" + "integration_provider" + "\\}", httpClient.escapeString(integrationProvider))
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -771,8 +771,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/all";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (type != null) {
             localVarQueryParams.addAll(httpClient.parameterToPair("type", type));
         }
@@ -833,8 +833,8 @@ class IntegrationResource {
                         httpClient.escapeString(name))
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -895,8 +895,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider/{name}/tags".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -955,8 +955,8 @@ class IntegrationResource {
                         httpClient.escapeString(name))
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1016,8 +1016,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider/{name}/metrics".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1076,8 +1076,8 @@ class IntegrationResource {
                         httpClient.escapeString(name))
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1139,8 +1139,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider/{name}/tags".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1199,8 +1199,8 @@ class IntegrationResource {
                         httpClient.escapeString(name))
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1265,8 +1265,8 @@ class IntegrationResource {
                         httpClient.escapeString(name))
                 .replaceAll("\\{" + "integration_name" + "\\}", httpClient.escapeString(integrationName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1328,8 +1328,8 @@ class IntegrationResource {
         // create path and map variables
         String localVarPath = "/integrations/provider/{name}".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 

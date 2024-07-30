@@ -10,19 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.orkes.conductor.client.http.auth;
+package io.orkes.conductor.client.http;
 
-import java.util.List;
-import java.util.Map;
-
-import io.orkes.conductor.client.http.Pair;
-
-public interface Authentication {
-    /**
-     * Apply authentication settings to header and query params.
-     *
-     * @param queryParams List of query parameters
-     * @param headerParams Map of header parameters
-     */
-    void applyToParams(List<Pair> queryParams, Map<String, String> headerParams);
+/**
+ * Used for path variables and query params
+ *
+ * @param name
+ * @param value
+ */
+public record Param(String name, String value) {
 }

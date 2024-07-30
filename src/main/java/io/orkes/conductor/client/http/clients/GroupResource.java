@@ -20,7 +20,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.ConductorUser;
 import io.orkes.conductor.client.model.GrantedAccessResponse;
 import io.orkes.conductor.client.model.Group;
@@ -52,8 +52,8 @@ class GroupResource {
                                 "\\{" + "userId" + "\\}",
                                 apiClient.escapeString(userId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -125,8 +125,8 @@ class GroupResource {
                 "/groups/{id}"
                         .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -192,8 +192,8 @@ class GroupResource {
                                 "\\{" + "groupId" + "\\}",
                                 apiClient.escapeString(groupId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -260,8 +260,8 @@ class GroupResource {
                 "/groups/{id}"
                         .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -326,8 +326,8 @@ class GroupResource {
                 "/groups/{id}/users"
                         .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -390,8 +390,8 @@ class GroupResource {
         // create path and map variables
         String localVarPath = "/groups";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -456,8 +456,8 @@ class GroupResource {
                                 "\\{" + "userId" + "\\}",
                                 apiClient.escapeString(userId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -527,8 +527,8 @@ class GroupResource {
                 "/groups/{id}"
                         .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 

@@ -20,7 +20,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.CorrelationIdsSearchRequest;
 import io.orkes.conductor.client.model.ExternalStorageLocation;
 import io.orkes.conductor.client.model.ScrollableSearchResultWorkflowSummary;
@@ -185,8 +185,8 @@ class WorkflowResource {
                                 "\\{" + "version" + "\\}",
                                 httpClient.escapeString(version.toString()));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (requestId != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("requestId", requestId));
 
@@ -237,8 +237,8 @@ class WorkflowResource {
                                 "\\{" + "version" + "\\}",
                                 httpClient.escapeString(version.toString()));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (requestId != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("requestId", requestId));
 
@@ -289,8 +289,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -355,8 +355,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (archiveWorkflow != null)
             localVarQueryParams.addAll(
                     httpClient.parameterToPair("archiveWorkflow", archiveWorkflow));
@@ -429,8 +429,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (includeTasks != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("includeTasks", includeTasks));
 
@@ -502,8 +502,8 @@ class WorkflowResource {
         // create path and map variables
         String localVarPath = "/workflow/externalstoragelocation";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (path != null) localVarQueryParams.addAll(httpClient.parameterToPair("path", path));
         if (operation != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("operation", operation));
@@ -595,8 +595,8 @@ class WorkflowResource {
                         .replaceAll(
                                 "\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (version != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("version", version));
         if (startTime != null)
@@ -682,8 +682,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (includeOutput != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("includeOutput", includeOutput));
         if (includeVariables != null)
@@ -768,8 +768,8 @@ class WorkflowResource {
                         .replaceAll(
                                 "\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (includeClosed != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("includeClosed", includeClosed));
         if (includeTasks != null)
@@ -861,8 +861,8 @@ class WorkflowResource {
                                 "\\{" + "correlationId" + "\\}",
                                 httpClient.escapeString(correlationId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (includeClosed != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("includeClosed", includeClosed));
         if (includeTasks != null)
@@ -917,8 +917,8 @@ class WorkflowResource {
         // create path and map variables
         String localVarPath = "/workflow/correlated/batch";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (includeClosed != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("includeClosed", includeClosed));
         if (includeTasks != null)
@@ -1001,8 +1001,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1068,8 +1068,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1146,8 +1146,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1214,8 +1214,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (useLatestDefinitions != null)
             localVarQueryParams.addAll(
                     httpClient.parameterToPair("useLatestDefinitions", useLatestDefinitions));
@@ -1289,8 +1289,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1357,8 +1357,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (resumeSubworkflowTasks != null)
             localVarQueryParams.addAll(
                     httpClient.parameterToPair("resumeSubworkflowTasks", resumeSubworkflowTasks));
@@ -1434,8 +1434,8 @@ class WorkflowResource {
         // create path and map variables
         String localVarPath = "/workflow/search";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (queryId != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("queryId", queryId));
         if (start != null) localVarQueryParams.addAll(httpClient.parameterToPair("start", start));
@@ -1540,8 +1540,8 @@ class WorkflowResource {
         // create path and map variables
         String localVarPath = "/workflow/search-v2";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (start != null) localVarQueryParams.addAll(httpClient.parameterToPair("start", start));
         if (size != null) localVarQueryParams.addAll(httpClient.parameterToPair("size", size));
         if (sort != null) localVarQueryParams.addAll(httpClient.parameterToPair("sort", sort));
@@ -1624,8 +1624,8 @@ class WorkflowResource {
         // create path and map variables
         String localVarPath = "/workflow/search-by-tasks";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (start != null) localVarQueryParams.addAll(httpClient.parameterToPair("start", start));
         if (size != null) localVarQueryParams.addAll(httpClient.parameterToPair("size", size));
         if (sort != null) localVarQueryParams.addAll(httpClient.parameterToPair("sort", sort));
@@ -1709,8 +1709,8 @@ class WorkflowResource {
         // create path and map variables
         String localVarPath = "/workflow/search-by-tasks-v2";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (start != null) localVarQueryParams.addAll(httpClient.parameterToPair("start", start));
         if (size != null) localVarQueryParams.addAll(httpClient.parameterToPair("size", size));
         if (sort != null) localVarQueryParams.addAll(httpClient.parameterToPair("sort", sort));
@@ -1799,8 +1799,8 @@ class WorkflowResource {
                                 "\\{" + "taskReferenceName" + "\\}",
                                 httpClient.escapeString(taskReferenceName));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (skipTaskRequest != null)
             localVarQueryParams.addAll(
                     httpClient.parameterToPair("skipTaskRequest", skipTaskRequest));
@@ -1885,8 +1885,8 @@ class WorkflowResource {
         // create path and map variables
         String localVarPath = "/workflow";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1922,8 +1922,8 @@ class WorkflowResource {
         // create path and map variables
         String localVarPath = "/workflow/test";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -2017,8 +2017,8 @@ class WorkflowResource {
                         .replaceAll(
                                 "\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (version != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("version", version));
         if (correlationId != null)
@@ -2121,8 +2121,8 @@ class WorkflowResource {
                                 "\\{" + "workflowId" + "\\}",
                                 httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (reason != null) localVarQueryParams.addAll(httpClient.parameterToPair("reason", reason));
         localVarQueryParams.addAll(httpClient.parameterToPair("triggerFailureWorkflow", triggerFailureWorkflow));
 
@@ -2189,8 +2189,8 @@ class WorkflowResource {
         // create path and map variables
         String localVarPath = "/workflow/document-store/upload";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -2252,8 +2252,8 @@ class WorkflowResource {
                 httpClient.escapeString(workflowId));
 
                         ;
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         Map<String, String> localVarHeaderParams = new HashMap<>();
         Map<String, Object> localVarFormParams = new HashMap<>();
 
@@ -2309,8 +2309,8 @@ class WorkflowResource {
         String localVarPath = "/workflow/{workflowId}/upgrade"
                 .replaceAll("\\{" + "workflowId" + "\\}", httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -2353,8 +2353,8 @@ class WorkflowResource {
         String localVarPath = "/workflow/{workflowId}/state"
             .replaceAll("\\{" + "workflowId" + "\\}", httpClient.escapeString(workflowId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (requestId != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("requestId", requestId));
         if (waitUntilTaskRef != null)

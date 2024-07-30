@@ -22,15 +22,15 @@ import io.orkes.conductor.client.model.*;
 
 public class OrkesAuthorizationClient extends OrkesClient implements AuthorizationClient {
 
-    private final AuthorizationResource authorizationResource;
     private final ApplicationResource applicationResource;
+    private final AuthorizationResource authorizationResource;
     private final GroupResource groupResource;
     private final UserResource userResource;
 
     public OrkesAuthorizationClient(OrkesHttpClient httpClient) {
         super(httpClient);
-        this.authorizationResource = new AuthorizationResource(httpClient);
         this.applicationResource = new ApplicationResource(httpClient);
+        this.authorizationResource = new AuthorizationResource(httpClient);
         this.groupResource = new GroupResource(httpClient);
         this.userResource = new UserResource(httpClient);
     }

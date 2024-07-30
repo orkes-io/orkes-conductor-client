@@ -20,7 +20,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
@@ -40,8 +40,8 @@ class MetadataResource {
         // create path and map variables
         String localVarPath = "/metadata/workflow";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (overwrite != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("overwrite", overwrite));
 
@@ -104,8 +104,8 @@ class MetadataResource {
                         .replaceAll(
                                 "\\{" + "name" + "\\}", httpClient.escapeString(name));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (version != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("version", version));
         if (metadata != null)
@@ -167,8 +167,8 @@ class MetadataResource {
         // create path and map variables
         String localVarPath = "/metadata/workflow";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (access != null) localVarQueryParams.addAll(httpClient.parameterToPair("access", access));
         if (metadata != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("metadata", metadata));
@@ -242,8 +242,8 @@ class MetadataResource {
                                 "\\{" + "tasktype" + "\\}",
                                 httpClient.escapeString(tasktype));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (metadata != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("metadata", metadata));
 
@@ -313,8 +313,8 @@ class MetadataResource {
         // create path and map variables
         String localVarPath = "/metadata/taskdefs";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (access != null) localVarQueryParams.addAll(httpClient.parameterToPair("access", access));
         if (metadata != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("metadata", metadata));
@@ -387,8 +387,8 @@ class MetadataResource {
         // create path and map variables
         String localVarPath = "/metadata/taskdefs";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -452,8 +452,8 @@ class MetadataResource {
                                 "\\{" + "tasktype" + "\\}",
                                 httpClient.escapeString(tasktype));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -519,8 +519,8 @@ class MetadataResource {
                                 "\\{" + "version" + "\\}",
                                 httpClient.escapeString(version.toString()));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -588,8 +588,8 @@ class MetadataResource {
         // create path and map variables
         String localVarPath = "/metadata/workflow";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (overwrite != null)
             localVarQueryParams.addAll(httpClient.parameterToPair("overwrite", overwrite));
 
@@ -652,8 +652,8 @@ class MetadataResource {
         // create path and map variables
         String localVarPath = "/metadata/taskdefs";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 

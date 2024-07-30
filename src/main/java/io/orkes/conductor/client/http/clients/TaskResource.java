@@ -22,7 +22,7 @@ import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.ExternalStorageLocation;
 import io.orkes.conductor.client.model.SearchResultTask;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
@@ -43,15 +43,14 @@ class TaskResource {
     }
 
   
-    public okhttp3.Call allCall()
-            throws ApiException {
+    public okhttp3.Call allCall() throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/tasks/queue/all";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -106,8 +105,8 @@ class TaskResource {
         // create path and map variables
         String localVarPath = "/tasks/queue/all/verbose";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -173,8 +172,8 @@ class TaskResource {
                                 "\\{" + "tasktype" + "\\}",
                                 apiClient.escapeString(tasktype));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (workerid != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("workerid", workerid));
         if (domain != null) localVarQueryParams.addAll(apiClient.parameterToPair("domain", domain));
@@ -256,8 +255,8 @@ class TaskResource {
         // create path and map variables
         String localVarPath = "/tasks/queue/polldata/all";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -315,8 +314,8 @@ class TaskResource {
         // create path and map variables
         String localVarPath = "/tasks/externalstoragelocation";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (path != null) localVarQueryParams.addAll(apiClient.parameterToPair("path", path));
         if (operation != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("operation", operation));
@@ -401,8 +400,8 @@ class TaskResource {
         // create path and map variables
         String localVarPath = "/tasks/queue/polldata";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (taskType != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("taskType", taskType));
 
@@ -471,8 +470,8 @@ class TaskResource {
                                 "\\{" + "taskId" + "\\}",
                                 apiClient.escapeString(taskId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -538,8 +537,8 @@ class TaskResource {
                                 "\\{" + "taskId" + "\\}",
                                 apiClient.escapeString(taskId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -606,8 +605,8 @@ class TaskResource {
                                 "\\{" + "taskId" + "\\}",
                                 apiClient.escapeString(taskId));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -677,8 +676,8 @@ class TaskResource {
                                 "\\{" + "tasktype" + "\\}",
                                 apiClient.escapeString(tasktype));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (workerid != null)
             localVarQueryParams.addAll(apiClient.parameterToPair("workerid", workerid));
         if (domain != null) localVarQueryParams.addAll(apiClient.parameterToPair("domain", domain));
@@ -751,8 +750,8 @@ class TaskResource {
                                 "\\{" + "taskType" + "\\}",
                                 apiClient.escapeString(taskType));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -819,8 +818,8 @@ class TaskResource {
         // create path and map variables
         String localVarPath = "/tasks/search";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (start != null) localVarQueryParams.addAll(apiClient.parameterToPair("start", start));
         if (size != null) localVarQueryParams.addAll(apiClient.parameterToPair("size", size));
         if (sort != null) localVarQueryParams.addAll(apiClient.parameterToPair("sort", sort));
@@ -902,8 +901,8 @@ class TaskResource {
         // create path and map variables
         String localVarPath = "/tasks/search-v2";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (start != null) localVarQueryParams.addAll(apiClient.parameterToPair("start", start));
         if (size != null) localVarQueryParams.addAll(apiClient.parameterToPair("size", size));
         if (sort != null) localVarQueryParams.addAll(apiClient.parameterToPair("sort", sort));
@@ -981,8 +980,8 @@ class TaskResource {
         // create path and map variables
         String localVarPath = "/tasks/queue/sizes";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
         if (taskType != null)
             localVarCollectionQueryParams.addAll(
                     apiClient.parameterToPairs("multi", "taskType", taskType));
@@ -1042,8 +1041,8 @@ class TaskResource {
         // create path and map variables
         String localVarPath = "/tasks";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -1120,8 +1119,8 @@ class TaskResource {
                                 "\\{" + "status" + "\\}",
                                 apiClient.escapeString(status));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         if (workerId == null) {
             workerId = getIdentity();

@@ -12,16 +12,40 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import java.io.File;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import io.orkes.conductor.client.http.ApiException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.ConflictException;
+import io.orkes.conductor.client.http.JSON;
+import io.orkes.conductor.client.http.Param;
+import io.orkes.conductor.client.model.GenerateTokenRequest;
+import io.orkes.conductor.client.model.validation.ErrorResponse;
+import okhttp3.Call;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.internal.http.HttpMethod;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
@@ -37,48 +61,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.orkes.conductor.client.http.ApiException;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.ConflictException;
-import io.orkes.conductor.client.http.JSON;
-import io.orkes.conductor.client.http.Pair;
-import io.orkes.conductor.client.http.auth.ApiKeyAuth;
-import io.orkes.conductor.client.http.auth.Authentication;
-import io.orkes.conductor.client.model.GenerateTokenRequest;
-import io.orkes.conductor.client.model.validation.ErrorResponse;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import okhttp3.Call;
-import okhttp3.FormBody;
-import okhttp3.Headers;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.internal.http.HttpMethod;
-import okio.BufferedSink;
-import okio.Okio;
 
 public class OrkesHttpClient {
 
@@ -88,9 +75,8 @@ public class OrkesHttpClient {
     private final Cache<String, String> tokenCache;
 
     private final Map<String, String> defaultHeaderMap;
-    private final OkHttpClient httpClient;
+    private final OkHttpClient okHttpClient;
     private final String basePath;
-    private final String tempFolderPath;
     private final boolean verifyingSsl;
     private final InputStream sslCaCert;
     private final KeyManager[] keyManagers;
@@ -102,7 +88,6 @@ public class OrkesHttpClient {
 
     public static class Builder {
         private String basePath = "http://localhost:8080/api";
-        private String tempFolderPath;
         private boolean verifyingSsl = true;
         private InputStream sslCaCert;
         private KeyManager[] keyManagers;
@@ -124,20 +109,11 @@ public class OrkesHttpClient {
             return this;
         }
 
-        public String tempFolderPath() {
-            return tempFolderPath;
-        }
-
-        public Builder tempFolderPath(String tempFolderPath) {
-            this.tempFolderPath = tempFolderPath;
-            return this;
-        }
-
         public boolean verifyingSsl() {
             return verifyingSsl;
         }
 
-      
+
         public Builder verifyingSsl(boolean verifyingSsl) {
             this.verifyingSsl = verifyingSsl;
             return this;
@@ -197,13 +173,11 @@ public class OrkesHttpClient {
             return this;
         }
 
-      
         public Builder addDefaultHeader(String key, String value) {
             defaultHeaderMap.put(key, value);
             return this;
         }
 
-      
         public Builder userAgent(String userAgent) {
             addDefaultHeader("User-Agent", userAgent);
             return this;
@@ -291,7 +265,6 @@ public class OrkesHttpClient {
         this.verifyingSsl = builder.verifyingSsl();
         this.sslCaCert = builder.sslCaCert();
         this.keyManagers = builder.keyManagers();
-        this.tempFolderPath = builder.tempFolderPath();
 
         this.json = new JSON();
         this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(tokenRefreshInSeconds, TimeUnit.SECONDS).build();
@@ -313,7 +286,7 @@ public class OrkesHttpClient {
         }
 
         applySslSettings(okHttpBuilder);
-        this.httpClient = okHttpBuilder.build();
+        this.okHttpClient = okHttpBuilder.build();
 
         if (isSecurityEnabled()) {
             scheduleTokenRefresh();
@@ -335,13 +308,6 @@ public class OrkesHttpClient {
         this(new Builder().basePath(basePath));
     }
 
-    private void scheduleTokenRefresh() {
-        ScheduledExecutorService tokenRefreshService = Executors.newSingleThreadScheduledExecutor();
-        long refreshInterval = Math.max(30, tokenRefreshInSeconds - 30);
-        LOGGER.info("Starting token refresh thread to run at every {} seconds", refreshInterval);
-        tokenRefreshService.scheduleAtFixedRate(this::refreshToken, refreshInterval, refreshInterval, TimeUnit.SECONDS);
-    }
-
     public boolean isSecurityEnabled() {
         return StringUtils.isNotBlank(keyId) && StringUtils.isNotBlank(keySecret);
     }
@@ -354,16 +320,12 @@ public class OrkesHttpClient {
         return executorThreadCount;
     }
 
-    public OkHttpClient getHttpClient() {
-        return httpClient;
-    }
-
     public void shutdown() {
-        httpClient.dispatcher().executorService().shutdown();
-        httpClient.connectionPool().evictAll();
-        if (httpClient.cache() != null) {
+        okHttpClient.dispatcher().executorService().shutdown();
+        okHttpClient.connectionPool().evictAll();
+        if (okHttpClient.cache() != null) {
             try {
-                httpClient.cache().close();
+                okHttpClient.cache().close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -382,11 +344,30 @@ public class OrkesHttpClient {
         return verifyingSsl;
     }
 
-    public String getTempFolderPath() {
-        return tempFolderPath;
+    public <T> ApiResponse<T> doRequest(OrkesHttpClientRequest req, TypeReference<T> typeReference) throws ApiException {
+        Map<String, String> headerParams = req.getHeaderParams() == null ? new HashMap<>() : new HashMap<>(req.getHeaderParams());
+        List<Param> pathParams = req.getPathParams() == null ? new ArrayList<>() : new ArrayList<>(req.getPathParams());
+        List<Param> queryParams = req.getQueryParams() == null ? new ArrayList<>() : new ArrayList<>(req.getQueryParams());
+
+        Request request = buildRequest(req.getMethod(), req.getPath(), pathParams, queryParams, headerParams, req.getBody());
+        Call call = okHttpClient.newCall(request);
+        if (typeReference == null) {
+            execute(call);
+        } else {
+            return execute(call, typeReference.getType());
+        }
+
+        return null;
     }
 
-    public String parameterToString(Object param) {
+    private void scheduleTokenRefresh() {
+        ScheduledExecutorService tokenRefreshService = Executors.newSingleThreadScheduledExecutor();
+        long refreshInterval = Math.max(30, tokenRefreshInSeconds - 30);
+        LOGGER.info("Starting token refresh thread to run at every {} seconds", refreshInterval);
+        tokenRefreshService.scheduleAtFixedRate(this::refreshToken, refreshInterval, refreshInterval, TimeUnit.SECONDS);
+    }
+
+    private String parameterToString(Object param) {
         if (param == null) {
             return "";
         } else if (param instanceof Date
@@ -409,19 +390,19 @@ public class OrkesHttpClient {
         }
     }
 
-    public List<Pair> parameterToPair(String name, Object value) {
-        List<Pair> params = new ArrayList<>();
+    private List<Param> parameterToPair(String name, Object value) {
+        List<Param> params = new ArrayList<>();
 
         // preconditions
         if (name == null || name.isEmpty() || value == null || value instanceof Collection)
             return params;
 
-        params.add(new Pair(name, parameterToString(value)));
+        params.add(new Param(name, parameterToString(value)));
         return params;
     }
 
-    public List<Pair> parameterToPairs(String collectionFormat, String name, Collection value) {
-        List<Pair> params = new ArrayList<>();
+    private List<Param> parameterToPairs(String collectionFormat, String name, Collection value) {
+        List<Param> params = new ArrayList<>();
 
         // preconditions
         if (name == null || name.isEmpty() || value == null || value.isEmpty()) {
@@ -431,7 +412,7 @@ public class OrkesHttpClient {
         // create the params based on the collection format
         if ("multi".equals(collectionFormat)) {
             for (Object item : value) {
-                params.add(new Pair(name, escapeString(parameterToString(item))));
+                params.add(new Param(name, urlEncode(parameterToString(item))));
             }
             return params;
         }
@@ -442,340 +423,192 @@ public class OrkesHttpClient {
         // escape all delimiters except commas, which are URI reserved
         // characters
         if ("ssv".equals(collectionFormat)) {
-            delimiter = escapeString(" ");
+            delimiter = urlEncode(" ");
         } else if ("tsv".equals(collectionFormat)) {
-            delimiter = escapeString("\t");
+            delimiter = urlEncode("\t");
         } else if ("pipes".equals(collectionFormat)) {
-            delimiter = escapeString("|");
+            delimiter = urlEncode("|");
         }
 
         StringBuilder sb = new StringBuilder();
         for (Object item : value) {
             sb.append(delimiter);
-            sb.append(escapeString(parameterToString(item)));
+            sb.append(urlEncode(parameterToString(item)));
         }
 
-        params.add(new Pair(name, sb.substring(delimiter.length())));
+        params.add(new Param(name, sb.substring(delimiter.length())));
 
         return params;
     }
 
-    public String sanitizeFilename(String filename) {
-        return filename.replaceAll(".*[/\\\\]", "");
-    }
-
-    public boolean isJsonMime(String mime) {
+    private boolean isJsonMime(String mime) {
         String jsonMime = "(?i)^(application/json|[^;/ \t]+/[^;/ \t]+[+]json)[ \t]*(;.*)?$";
         return mime != null && (mime.matches(jsonMime) || mime.equals("*/*"));
     }
 
-    public String selectHeaderAccept(String[] accepts) {
-        if (accepts.length == 0) {
-            return null;
-        }
-        for (String accept : accepts) {
-            if (isJsonMime(accept)) {
-                return accept;
-            }
-        }
-
-        return StringUtils.joinWith(",", (Object[]) accepts);
+    private String urlEncode(String str) {
+        return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 
-    public String selectHeaderContentType(String[] contentTypes) {
-        if (contentTypes.length == 0 || contentTypes[0].equals("*/*")) {
-            return "application/json";
-        }
-        for (String contentType : contentTypes) {
-            if (isJsonMime(contentType)) {
-                return contentType;
-            }
-        }
-        return contentTypes[0];
-    }
-
-    public String escapeString(String str) {
-        try {
-            return URLEncoder.encode(str, "utf8").replaceAll("\\+", "%20");
-        } catch (UnsupportedEncodingException e) {
-            return str;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T deserialize(Response response, Type returnType) throws ApiException {
-        if (response == null || returnType == null) {
+    private <T> T deserialize(Response response, Type returnType) throws ApiException {
+        if (returnType == null) {
             return null;
         }
 
-        if ("byte[]".equals(returnType.toString())) {
-            // Handle binary response (byte array).
-            try {
-                return (T) response.body().bytes();
-            } catch (IOException e) {
-                throw new ApiException(e);
-            }
-        } else if (returnType.equals(File.class)) {
-            // Handle file downloading.
-            return (T) downloadFileFromResponse(response);
-        }
-
-        String respBody;
-        try {
-            if (response.body() != null) respBody = response.body().string();
-            else respBody = null;
-        } catch (IOException e) {
-            throw new ApiException(e);
-        }
-
+        String respBody = bodyAsString(response);
         if (respBody == null || "".equals(respBody)) {
             return null;
         }
 
-        String contentType = response.headers().get("Content-Type");
-        if (contentType == null) {
-            // ensuring a default content type
-            contentType = "application/json";
-        }
-        if (isJsonMime(contentType)) {
+        String contentType = response.header("Content-Type");
+        if (contentType == null || isJsonMime(contentType)) {
             return json.deserialize(respBody, returnType);
         } else if (returnType.equals(String.class)) {
-            // Expecting string, return the raw response body.
+            //noinspection unchecked
             return (T) respBody;
-        } else {
+        }
+
+        throw new ApiException(
+                "Content type \"" + contentType + "\" is not supported for type: " + returnType,
+                response.code(),
+                response.headers().toMultimap(),
+                respBody);
+    }
+
+    @Nullable
+    private String bodyAsString(Response response) {
+        if (response.body() == null) {
+            return null;
+        }
+
+        try {
+            return response.body().string();
+        } catch (IOException e) {
             throw new ApiException(
-                    "Content type \"" + contentType + "\" is not supported for type: " + returnType,
+                    response.message(),
+                    e,
                     response.code(),
-                    response.headers().toMultimap(),
-                    respBody);
+                    response.headers().toMultimap());
         }
     }
 
-    public RequestBody serialize(Object obj, String contentType) throws ApiException {
-        if (obj instanceof byte[]) {
-            // Binary (byte array) body parameter support.
-            return RequestBody.create(MediaType.parse(contentType), (byte[]) obj);
-        } else if (obj instanceof File) {
-            // File body parameter support.
-            return RequestBody.create(MediaType.parse(contentType), (File) obj);
-        } else if (isJsonMime(contentType)) {
-            String content = null;
-            if (obj != null) {
-                if (obj instanceof String) {
-                    content = (String) obj;
-                } else {
-                    content = json.serialize(obj);
-                }
-            }
-            return RequestBody.create(MediaType.parse(contentType), content);
-        } else {
+    private RequestBody serialize(String contentType, Object obj) throws ApiException {
+        if (!isJsonMime(contentType)) {
             throw new ApiException("Content type \"" + contentType + "\" is not supported");
         }
-    }
 
-    public File downloadFileFromResponse(Response response) throws ApiException {
-        try {
-            File file = prepareDownloadFile(response);
-            BufferedSink sink = Okio.buffer(Okio.sink(file));
-            sink.writeAll(response.body().source());
-            sink.close();
-            return file;
-        } catch (IOException e) {
-            throw new ApiException(e);
-        }
-    }
-
-    public File prepareDownloadFile(Response response) throws IOException {
-        String filename = null;
-        String contentDisposition = response.header("Content-Disposition");
-        if (contentDisposition != null && !"".equals(contentDisposition)) {
-            // Get filename from the Content-Disposition header.
-            Pattern pattern = Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
-            Matcher matcher = pattern.matcher(contentDisposition);
-            if (matcher.find()) {
-                filename = sanitizeFilename(matcher.group(1));
-            }
-        }
-
-        String prefix = null;
-        String suffix = null;
-        if (filename == null) {
-            prefix = "download-";
-            suffix = "";
-        } else {
-            int pos = filename.lastIndexOf(".");
-            if (pos == -1) {
-                prefix = filename + "-";
+        String content = null;
+        if (obj != null) {
+            if (obj instanceof String) {
+                content = (String) obj;
             } else {
-                prefix = filename.substring(0, pos) + "-";
-                suffix = filename.substring(pos);
+                content = json.serialize(obj);
             }
-            // File.createTempFile requires the prefix to be at least three characters long
-            if (prefix.length() < 3) prefix = "download-";
         }
 
-        if (tempFolderPath == null) return Files.createTempFile(prefix, suffix).toFile();
-        else return Files.createTempFile(Paths.get(tempFolderPath), prefix, suffix).toFile();
+        return RequestBody.create(MediaType.parse(contentType), content);
+
     }
 
-    public <T> T handleResponse(Response response, Type returnType) throws ApiException {
-        if (response.isSuccessful()) {
+    private <T> T handleResponse(Response response, Type returnType) throws ApiException {
+        if (!response.isSuccessful()) {
+            String respBody = bodyAsString(response);
+            //TODO improve Error handling
+            if (response.code() == 409) {
+                throwConflictException(response, respBody);
+            }
+
+            throw new ApiException(response.message(), response.code(), response.headers().toMultimap(), respBody);
+        }
+
+        try {
             if (returnType == null || response.code() == 204) {
-                // returning null if the returnType is not defined,
-                // or the status code is 204 (No Content)
-                if (response.body() != null) {
-                    response.body().close();
-                }
                 return null;
             } else {
                 return deserialize(response, returnType);
             }
-        } else {
-            String respBody = null;
+        } finally {
             if (response.body() != null) {
-                try {
-                    respBody = response.body().string();
-                    if (response.code() == 409) {
-                        ErrorResponse errorResponse = json.deserialize(respBody, ErrorResponse.class);
-                        String message;
-                        if (errorResponse != null && errorResponse.getMessage() != null) {
-                            message = errorResponse.getMessage();
-                        } else {
-                            message = response.message();
-                        }
-                        throw new ConflictException(
-                                message,
-                                response.code(),
-                                response.headers().toMultimap(), respBody);
-                    }
-                } catch (IOException e) {
-                    throw new ApiException(
-                            response.message(),
-                            e,
-                            response.code(),
-                            response.headers().toMultimap());
-                }
+                response.body().close();
             }
-            throw new ApiException(response.message(), response.code(), response.headers().toMultimap(), respBody);
         }
     }
 
-    public Call buildCall(
-            String path,
-            String method,
-            List<Pair> queryParams,
-            List<Pair> collectionQueryParams,
-            Object body,
-            Map<String, String> headerParams,
-            Map<String, Object> formParams,
-            String[] authNames)
-            throws ApiException {
-        Request request =
-                buildRequest(
-                        path,
-                        method,
-                        queryParams,
-                        collectionQueryParams,
-                        body,
-                        headerParams,
-                        formParams,
-                        authNames);
-        return httpClient.newCall(request);
+    private void throwConflictException(Response response, String respBody) {
+        ErrorResponse errorResponse = json.deserialize(respBody, ErrorResponse.class);
+        String message;
+        if (errorResponse != null && errorResponse.getMessage() != null) {
+            message = errorResponse.getMessage();
+        } else {
+            message = response.message();
+        }
+
+        throw new ConflictException(
+                message,
+                response.code(),
+                response.headers().toMultimap(), respBody);
     }
 
-    public Request buildRequest(
-            String path,
-            String method,
-            List<Pair> queryParams,
-            List<Pair> collectionQueryParams,
-            Object body,
-            Map<String, String> headerParams,
-            Map<String, Object> formParams,
-            String[] authNames)
-            throws ApiException {
+    private Request buildRequest(String method,
+                                 String path,
+                                 List<Param> pathParams,
+                                 List<Param> queryParams,
+                                 Map<String, String> headerParams,
+                                 Object body) throws ApiException {
         if (!"/token".equalsIgnoreCase(path)) {
-            updateParamsForAuth(authNames, queryParams, headerParams);
+            addAuthHeader(headerParams);
         }
 
-        final String url = buildUrl(path, queryParams, collectionQueryParams);
+        for (Param param : pathParams) {
+            String encodedValue = urlEncode(param.value());
+            path = path.replace("{" + param.name() + "}", encodedValue);
+        }
+
+        final HttpUrl url = buildUrl(path, queryParams);
         final Request.Builder reqBuilder = new Request.Builder().url(url);
         processHeaderParams(headerParams, reqBuilder);
 
         String contentType = headerParams.get("Content-Type");
-        // ensuring a default content type
         if (contentType == null) {
             contentType = "application/json";
         }
 
-        RequestBody reqBody;
-        if (!HttpMethod.permitsRequestBody(method)) {
-            reqBody = null;
-        } else if ("application/x-www-form-urlencoded".equals(contentType)) {
-            reqBody = buildRequestBodyFormEncoding(formParams);
-        } else if ("multipart/form-data".equals(contentType)) {
-            reqBody = buildRequestBodyMultipart(formParams);
-        } else if (body == null) {
-            if ("DELETE".equals(method)) {
-                // allow calling DELETE without sending a request body
-                reqBody = null;
-            } else {
-                // use an empty request body (for POST, PUT and PATCH)
-                reqBody = RequestBody.create(MediaType.parse(contentType), "");
-            }
-        } else {
-            reqBody = serialize(body, contentType);
-        }
-
+        RequestBody reqBody = reqBody(method, contentType, body);
         return reqBuilder.method(method, reqBody).build();
     }
 
-    public String buildUrl(String path, List<Pair> queryParams, List<Pair> collectionQueryParams) {
-        final StringBuilder url = new StringBuilder();
-        url.append(basePath).append(path);
-
-        if (queryParams != null && !queryParams.isEmpty()) {
-            // support (constant) query string in `path`, e.g. "/posts?draft=1"
-            String prefix = path.contains("?") ? "&" : "?";
-            for (Pair param : queryParams) {
-                if (param.getValue() != null) {
-                    if (prefix != null) {
-                        url.append(prefix);
-                        prefix = null;
-                    } else {
-                        url.append("&");
-                    }
-                    String value = parameterToString(param.getValue());
-                    url.append(escapeString(param.getName()))
-                            .append("=")
-                            .append(escapeString(value));
-                }
-            }
+    @Nullable
+    private RequestBody reqBody(String method, String contentType, Object body) {
+        if (!HttpMethod.permitsRequestBody(method)) {
+            return null;
         }
 
-        if (collectionQueryParams != null && !collectionQueryParams.isEmpty()) {
-            String prefix = url.toString().contains("?") ? "&" : "?";
-            for (Pair param : collectionQueryParams) {
-                if (param.getValue() != null) {
-                    if (prefix != null) {
-                        url.append(prefix);
-                        prefix = null;
-                    } else {
-                        url.append("&");
-                    }
-                    String value = parameterToString(param.getValue());
-                    // collection query parameter value already escaped as part of parameterToPairs
-                    url.append(escapeString(param.getName())).append("=").append(value);
-                }
-            }
+        if (body == null && "DELETE".equals(method)) {
+            return null;
+        } else if (body == null) {
+            //FIXME deprecated method usage
+            return RequestBody.create(MediaType.parse(contentType), "");
+
         }
 
-        return url.toString();
+        return serialize(contentType, body);
     }
 
-    public void processHeaderParams(Map<String, String> headerParams, Request.Builder reqBuilder) {
+    private HttpUrl buildUrl(String path, List<Param> queryParams) {
+        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(basePath + path))
+                .newBuilder();
+        for (Param param : queryParams) {
+            urlBuilder.addQueryParameter(param.name(), param.value());
+        }
+
+        return urlBuilder.build();
+    }
+
+    private void processHeaderParams(Map<String, String> headerParams, Request.Builder reqBuilder) {
         for (Entry<String, String> param : headerParams.entrySet()) {
             reqBuilder.header(param.getKey(), parameterToString(param.getValue()));
         }
+
         for (Entry<String, String> header : defaultHeaderMap.entrySet()) {
             if (!headerParams.containsKey(header.getKey())) {
                 reqBuilder.header(header.getKey(), parameterToString(header.getValue()));
@@ -783,56 +616,12 @@ public class OrkesHttpClient {
         }
     }
 
-    public void updateParamsForAuth(String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
-        String token = getToken();
-        if (isSecurityEnabled()) {
-            Authentication auth = getApiKeyHeader(token);
-            auth.applyToParams(queryParams, headerParams);
+    private void addAuthHeader(Map<String, String> headerParams) {
+        if (!isSecurityEnabled()) {
+            return;
         }
-    }
 
-    public RequestBody buildRequestBodyFormEncoding(Map<String, Object> formParams) {
-        FormBody.Builder formBuilder = new FormBody.Builder();
-        for (Entry<String, Object> param : formParams.entrySet()) {
-            formBuilder.add(param.getKey(), parameterToString(param.getValue()));
-        }
-        return formBuilder.build();
-    }
-
-    public RequestBody buildRequestBodyMultipart(Map<String, Object> formParams) {
-        MultipartBody.Builder mpBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        for (Entry<String, Object> param : formParams.entrySet()) {
-            if (param.getValue() instanceof File file) {
-                Headers partHeaders =
-                        Headers.of(
-                                "Content-Disposition",
-                                "form-data; name=\""
-                                        + param.getKey()
-                                        + "\"; filename=\""
-                                        + file.getName()
-                                        + "\"");
-                MediaType mediaType = MediaType.parse(guessContentTypeFromFile(file));
-                //FIXME deprecated method usage
-                mpBuilder.addPart(MultipartBody.Part.create(partHeaders, RequestBody.create(mediaType, file)));
-            } else {
-                Headers partHeaders =
-                        Headers.of(
-                                "Content-Disposition",
-                                "form-data; name=\"" + param.getKey() + "\"");
-                mpBuilder.addPart(
-                        partHeaders, RequestBody.create(null, parameterToString(param.getValue())));
-            }
-        }
-        return mpBuilder.build();
-    }
-
-    public String guessContentTypeFromFile(File file) {
-        String contentType = URLConnection.guessContentTypeFromName(file.getName());
-        if (contentType == null) {
-            return "application/octet-stream";
-        } else {
-            return contentType;
-        }
+        headerParams.put("X-Authorization", getToken());
     }
 
     private void applySslSettings(OkHttpClient.Builder okhttpClientBuilder) {
@@ -895,61 +684,33 @@ public class OrkesHttpClient {
         }
     }
 
-    public String getToken() {
+    private String getToken() {
+        if (!isSecurityEnabled()) {
+            return null;
+        }
+
         try {
-            if (!isSecurityEnabled()) {
-                return null;
-            }
-            return tokenCache.get(TOKEN_CACHE_KEY, () -> refreshToken());
+            return tokenCache.get(TOKEN_CACHE_KEY, this::refreshToken);
         } catch (ExecutionException e) {
             return null;
         }
     }
 
-    public Call buildCall(String method, String path, String id, Object body) {
-        String localVarPath = path.replaceAll("\\{id\\}", escapeString(id != null ? id : ""));
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        localVarHeaderParams.put("Accept", selectHeaderAccept(new String[]{"application/json"}));
-        localVarHeaderParams.put("Content-Type", selectHeaderContentType(new String[]{"application/json"}));
-
-        return buildCall(
-                localVarPath, method, localVarQueryParams, localVarCollectionQueryParams, body,
-                localVarHeaderParams, localVarFormParams, new String[]{"api_key"});
-    }
-
-    public <T> ApiResponse<T> execute(Call call) throws ApiException {
+    private <T> ApiResponse<T> execute(Call call) throws ApiException {
         return execute(call, (Type) null);
     }
 
-    public <T> ApiResponse<T> execute(Call call, TypeReference<T> typeReference) throws ApiException {
+    private <T> ApiResponse<T> execute(Call call, TypeReference<T> typeReference) throws ApiException {
         return execute(call, typeReference.getType());
     }
 
-    public <T> ApiResponse<T> execute(Call call, Type returnType) throws ApiException {
+    private <T> ApiResponse<T> execute(Call call, Type returnType) throws ApiException {
         try {
             Response response = call.execute();
             T data = handleResponse(response, returnType);
             return new ApiResponse<>(response.code(), response.headers().toMultimap(), data);
         } catch (IOException e) {
             throw new ApiException(e);
-        }
-    }
-
-    public <T> ApiResponse<T> doRequest(String method,
-                                         String path,
-                                         String id,
-                                         Object body,
-                                         TypeReference<T> typeReference) throws ApiException {
-        Call call = buildCall(method, path, id, body);
-        if (typeReference == null) {
-            execute(call);
-            return null;
-        } else {
-            return execute(call, typeReference.getType());
         }
     }
 
@@ -962,12 +723,4 @@ public class OrkesHttpClient {
         Map<String, String> response = TokenResource.generateTokenWithHttpInfo(this, generateTokenRequest).getData();
         return response.get("token");
     }
-
-    private ApiKeyAuth getApiKeyHeader(String token) {
-        ApiKeyAuth apiKeyAuth = new ApiKeyAuth("header", "X-Authorization");
-        apiKeyAuth.setApiKey(token);
-        return apiKeyAuth;
-    }
-
-
 }

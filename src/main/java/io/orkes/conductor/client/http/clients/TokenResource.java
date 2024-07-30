@@ -22,78 +22,32 @@ import io.orkes.conductor.client.http.*;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.orkes.conductor.client.model.TokenResponse;
 import okhttp3.Call;
 
-class TokenResource {
-  
-    public static Call generateTokenCall(
-            OrkesHttpClient apiClient,
-            GenerateTokenRequest generateTokenRequest)
-            throws ApiException {
+class TokenResource extends Resource {
 
-        // create path and map variables
+    TokenResource(OrkesHttpClient httpClient) {
+        super(httpClient);
+    }
+
+    public ApiResponse<TokenResponse> generateTokenWithHttpInfo(GenerateTokenRequest generateTokenRequest) throws ApiException {
+        validateNonNull("generateTokenRequest", generateTokenRequest);
+
         String localVarPath = "/token";
-
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
-                localVarPath,
-                "POST",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                generateTokenRequest,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private static Call generateTokenValidateBeforeCall(
-            OrkesHttpClient apiClient,
-            GenerateTokenRequest generateTokenRequest)
-            throws ApiException {
-        // verify the required parameter 'body' is set
-        if (generateTokenRequest == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'generateTokenRequest' when calling generateToken(Async)");
-        }
-
-        return generateTokenCall(
-                apiClient, generateTokenRequest);
-    }
-
-  
-    public static ApiResponse<Map<String, String>> generateTokenWithHttpInfo(
-            OrkesHttpClient apiClient, GenerateTokenRequest generateTokenRequest) throws ApiException {
-        Call call = generateTokenValidateBeforeCall(apiClient, generateTokenRequest);
         Type localVarReturnType = new TypeReference<Map<String, String>>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        return httpClient.doRequest("POST", )
     }
 
-  
-    public static Call getUserInfoCall(
-            OrkesHttpClient apiClient)
-            throws ApiException {
+
+    public static Call getUserInfoCall(OrkesHttpClient apiClient) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/token/userInfo";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -129,6 +83,8 @@ class TokenResource {
   
     public static ApiResponse<Object> getUserInfoWithHttpInfo(OrkesHttpClient apiClient)
             throws ApiException {
+
+        String localVarPath = "/token/userInfo";
         Call call = getUserInfoValidateBeforeCall(apiClient);
         Type localVarReturnType = new TypeReference<>() {
         }.getType();

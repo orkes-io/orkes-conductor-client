@@ -21,7 +21,7 @@ import java.util.Set;
 
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Pair;
+import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.TagObject;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -44,8 +44,8 @@ class SecretResource {
                 "/secrets/{key}"
                         .replaceAll("\\{" + "key" + "\\}", httpClient.escapeString(key));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -110,8 +110,8 @@ class SecretResource {
                 "/secrets/{key}"
                         .replaceAll("\\{" + "key" + "\\}", httpClient.escapeString(key));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -173,8 +173,8 @@ class SecretResource {
         // create path and map variables
         String localVarPath = "/secrets";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -230,8 +230,8 @@ class SecretResource {
         // create path and map variables
         String localVarPath = "/secrets";
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -292,8 +292,8 @@ class SecretResource {
                 "/secrets/{key}"
                         .replaceAll("\\{" + "key" + "\\}", httpClient.escapeString(key));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -363,8 +363,8 @@ class SecretResource {
                 "/secrets/{key}/exists"
                         .replaceAll("\\{" + "key" + "\\}", httpClient.escapeString(key));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -448,8 +448,8 @@ class SecretResource {
         String localVarPath = "/secrets/{key}/tags"
                 .replaceAll("\\{" + "key" + "\\}", httpClient.escapeString(key));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -502,8 +502,8 @@ class SecretResource {
         String localVarPath = "/secrets/{key}/tags"
                 .replaceAll("\\{" + "key" + "\\}", httpClient.escapeString(key));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 
@@ -556,8 +556,8 @@ class SecretResource {
         String localVarPath = "/secrets/{key}/tags"
                 .replaceAll("\\{" + "key" + "\\}", httpClient.escapeString(key));
 
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        List<Param> localVarQueryParams = new ArrayList<>();
+        List<Param> localVarCollectionQueryParams = new ArrayList<>();
 
         Map<String, String> localVarHeaderParams = new HashMap<>();
 

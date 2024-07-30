@@ -12,8 +12,7 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import java.util.List;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.orkes.conductor.client.http.ApiException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.model.AccessKeyResponse;
@@ -22,110 +21,162 @@ import io.orkes.conductor.client.model.CreateAccessKeyResponse;
 import io.orkes.conductor.client.model.CreateOrUpdateApplicationRequest;
 import io.orkes.conductor.client.model.TagObject;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
 
 class ApplicationResource extends Resource {
 
-    private final OrkesHttpClient httpClient;
-
     public ApplicationResource(OrkesHttpClient httpClient) {
-        this.httpClient = httpClient;
+        super(httpClient);
     }
 
     void addRoleToApplicationUser(String applicationId, String role) throws ApiException {
         validateNonNull(new String[]{"applicationId", "role"}, applicationId, role);
-        httpClient.doRequest("POST", "/applications/{applicationId}/roles/{role}", applicationId, role, null);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("POST")
+                .path("/applications/{applicationId}/roles/{role}")
+                .addPathParam("applicationId", applicationId)
+                .addPathParam("role", role)
+                .build();
+        httpClient.doRequest(request, null);
     }
 
-    CreateAccessKeyResponse createAccessKey(String id) throws ApiException {
-        validateNonNull(new String[]{"id"}, id);
-        ApiResponse<CreateAccessKeyResponse> response = httpClient.doRequest(
-                "POST", "/applications/{id}/accessKeys", id, null, new TypeReference<>() {
-                }
-        );
+    CreateAccessKeyResponse createAccessKey(String applicationId) throws ApiException {
+        validateNonNull(new String[]{"applicationId"}, applicationId);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("POST")
+                .path("/applications/{applicationId}/accessKeys")
+                .addPathParam("applicationId", applicationId)
+                .build();
+        ApiResponse<CreateAccessKeyResponse> response = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
         return response.getData();
     }
 
-    ConductorApplication createApplication(CreateOrUpdateApplicationRequest request) throws ApiException {
-        validateNonNull(new String[]{"CreateOrUpdateApplicationRequest"}, request);
-        ApiResponse<ConductorApplication> response = httpClient.doRequest(
-                "POST", "/applications", null, request, new TypeReference<>() {
-                }
-        );
+    ConductorApplication createApplication(CreateOrUpdateApplicationRequest body) throws ApiException {
+        validateNonNull(new String[]{"body"}, body);
+
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("POST")
+                .path("/applications")
+                .body(body)
+                .build();
+
+        ApiResponse<ConductorApplication> response = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
         return response.getData();
     }
 
     void deleteAccessKey(String applicationId, String keyId) throws ApiException {
         validateNonNull(new String[]{"applicationId", "keyId"}, applicationId, keyId);
-        httpClient.doRequest("DELETE", "/applications/{applicationId}/accessKeys/{keyId}", applicationId, keyId, null);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("DELETE")
+                .path("/applications/{applicationId}/accessKeys/{keyId}")
+                .addPathParam("applicationId", applicationId)
+                .addPathParam("keyId", keyId)
+                .build();
+        httpClient.doRequest(request, null);
     }
 
-    void deleteApplication(String id) throws ApiException {
-        validateNonNull(new String[]{"id", "keyId"}, id);
-        httpClient.doRequest("DELETE", "/applications/{id}", id, null, null);
+    void deleteApplication(String applicationId) throws ApiException {
+        validateNonNull(new String[]{"applicationId"}, applicationId);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("DELETE")
+                .path("/applications/{applicationId}")
+                .addPathParam("applicationId", applicationId)
+                .build();
+        httpClient.doRequest(request, null);
     }
 
-    List<AccessKeyResponse> getAccessKeys(String id) throws ApiException {
-        validateNonNull(new String[]{"id"}, id);
-        ApiResponse<List<AccessKeyResponse>> response = httpClient.doRequest(
-                "GET", "/applications/{id}/accessKeys", id, null, new TypeReference<>() {
-                }
-        );
+    List<AccessKeyResponse> getAccessKeys(String applicationId) throws ApiException {
+        validateNonNull(new String[]{"applicationId"}, applicationId);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("GET")
+                .path("/applications/{applicationId}/accessKeys")
+                .addPathParam("applicationId", applicationId)
+                .build();
+        ApiResponse<List<AccessKeyResponse>> response = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
         return response.getData();
     }
 
-    ConductorApplication getApplication(String id) throws ApiException {
-        validateNonNull(new String[]{"id"}, id);
-        ApiResponse<ConductorApplication> response = httpClient.doRequest(
-                "GET", "/applications/{id}", id, null, new TypeReference<>() {
-                }
-        );
+    ConductorApplication getApplication(String applicationId) throws ApiException {
+        validateNonNull(new String[]{"applicationId"}, applicationId);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("GET")
+                .path("/applications/{applicationId}")
+                .addPathParam("applicationId", applicationId)
+                .build();
+        ApiResponse<ConductorApplication> response = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
         return response.getData();
     }
 
     List<ConductorApplication> listApplications() throws ApiException {
-        ApiResponse<List<ConductorApplication>> response = httpClient.doRequest(
-                "GET", "/applications", null, null, new TypeReference<>() {
-                }
-        );
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("GET")
+                .path("/applications/{applicationId}")
+                .build();
+        ApiResponse<List<ConductorApplication>> response = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
         return response.getData();
     }
 
     void removeRoleFromApplicationUser(String applicationId, String role) throws ApiException {
         validateNonNull(new String[]{"applicationId", "role"}, applicationId, role);
-        httpClient.doRequest("DELETE", "/applications/{applicationId}/roles/{role}", applicationId, role, null);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("DELETE")
+                .path("/applications/{applicationId}/roles/{role}")
+                .addPathParam("applicationId", applicationId)
+                .addPathParam("role", role)
+                .build();
+        httpClient.doRequest(request, null);
     }
 
     AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId) throws ApiException {
         validateNonNull(new String[]{"applicationId", "keyId"}, applicationId, keyId);
-        ApiResponse<AccessKeyResponse> response = httpClient.doRequest(
-                "POST", "/applications/{applicationId}/accessKeys/{keyId}/status",
-                applicationId,
-                keyId,
-                new TypeReference<>() {
-                }
-        );
-        return response.getData();
-    }
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("POST")
+                .path("/applications/{applicationId}/accessKeys/{keyId}/status")
+                .addPathParam("applicationId", applicationId)
+                .addPathParam("keyId", keyId)
+                .build();
 
-    ConductorApplication updateApplication(CreateOrUpdateApplicationRequest request, String id) throws ApiException {
-        validateNonNull(new String[]{"request", "id"}, request, id);
-        ApiResponse<ConductorApplication> response = httpClient.doRequest(
-                "PUT", "/applications/{id}", id, request, new TypeReference<>() {
-                }
-        );
+        ApiResponse<AccessKeyResponse> response = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
         return response.getData();
     }
 
-    void putTagForApplication(List<TagObject> tags, String id) throws ApiException {
-        validateNonNull(new String[]{"tags", "id"}, tags, id);
-        httpClient.doRequest("PUT", "/applications/{id}/tags", id, tags, null);
+    ConductorApplication updateApplication(CreateOrUpdateApplicationRequest body, String applicationId) throws ApiException {
+        validateNonNull(new String[]{"body", "applicationId"}, body, applicationId);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("POST")
+                .path("/applications/{id}")
+                .addPathParam("applicationId", applicationId)
+                .body(body)
+                .build();
+
+        ApiResponse<ConductorApplication> response = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
+        return response.getData();
+    }
+
+    void putTagForApplication(List<TagObject> body, String applicationId) throws ApiException {
+        validateNonNull(new String[]{"body", "applicationId"}, body, applicationId);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method("PUT")
+                .path("/applications/{id}/tags")
+                .addPathParam("applicationId", applicationId)
+                .body(body)
+                .build();
+
+        httpClient.doRequest(request, null);
     }
 
     List<TagObject> getTagsForApplication(String id) throws ApiException {
