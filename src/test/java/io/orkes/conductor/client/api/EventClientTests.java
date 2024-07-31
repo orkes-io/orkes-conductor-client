@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.model.metadata.events.EventHandler;
 import io.orkes.conductor.client.util.Commons;
 
@@ -41,8 +42,8 @@ public class EventClientTests extends ClientTest {
     void testEventHandler() {
         try {
             eventClient.unregisterEventHandler(EVENT_NAME);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
+        } catch (OrkesClientException e) {
+            if (e.getStatus() != 404) {
                 throw e;
             }
         }

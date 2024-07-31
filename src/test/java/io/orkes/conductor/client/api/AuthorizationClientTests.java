@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.model.TargetRef.TypeEnum;
@@ -70,7 +71,7 @@ public class AuthorizationClientTests extends ClientTest {
         assertEquals(user.getName(), receivedUser.getName());
         assertEquals(user.getGroups().get(0).getId(), receivedUser.getGroups().get(0).getId());
         assertEquals(user.getRoles().get(0).getName(), receivedUser.getRoles().get(0).getName());
-        authorizationClient.sendInviteEmail(user.getId(), user);
+        authorizationClient.sendInviteEmail(user.getId());
         Group group = authorizationClient.upsertGroup(getUpsertGroupRequest(), Commons.GROUP_ID);
         assertNotNull(group);
         authorizationClient.removeUserFromGroup(Commons.GROUP_ID, user.getId());
@@ -222,8 +223,8 @@ public class AuthorizationClientTests extends ClientTest {
     void testMethods() {
         try {
             authorizationClient.deleteUser(Commons.USER_EMAIL);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
+        } catch (OrkesClientException e) {
+            if (e.getStatus() != 404) {
                 throw e;
             }
         }
@@ -234,8 +235,8 @@ public class AuthorizationClientTests extends ClientTest {
         assertFalse(users.isEmpty());
         try {
             authorizationClient.deleteGroup(Commons.GROUP_ID);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
+        } catch (OrkesClientException e) {
+            if (e.getStatus() != 404) {
                 throw e;
             }
         }

@@ -16,7 +16,18 @@ import java.util.List;
 import java.util.Map;
 
 import io.orkes.conductor.client.api.AuthorizationClient;
-import io.orkes.conductor.client.model.*;
+import io.orkes.conductor.client.model.AccessKeyResponse;
+import io.orkes.conductor.client.model.AuthorizationRequest;
+import io.orkes.conductor.client.model.ConductorApplication;
+import io.orkes.conductor.client.model.ConductorUser;
+import io.orkes.conductor.client.model.CreateAccessKeyResponse;
+import io.orkes.conductor.client.model.CreateOrUpdateApplicationRequest;
+import io.orkes.conductor.client.model.GrantedAccessResponse;
+import io.orkes.conductor.client.model.Group;
+import io.orkes.conductor.client.model.Subject;
+import io.orkes.conductor.client.model.TagObject;
+import io.orkes.conductor.client.model.UpsertGroupRequest;
+import io.orkes.conductor.client.model.UpsertUserRequest;
 
 public class OrkesAuthorizationClient extends OrkesClient implements AuthorizationClient {
 
@@ -60,7 +71,7 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
 
     @Override
     public GrantedAccessResponse getGrantedPermissionsForGroup(String groupId) {
-        return groupResource.getGrantedPermissions1(groupId);
+        return groupResource.getGrantedPermissions(groupId);
     }
 
     @Override
@@ -109,13 +120,12 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public void sendInviteEmail(String id, ConductorUser conductorUser) {
-        userResource.sendInviteEmail(id, conductorUser);
+    public void sendInviteEmail(String email) {
+        userResource.sendInviteEmail(email);
     }
 
     @Override
-    public ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id)
-            {
+    public ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id) {
         return userResource.upsertUser(upsertUserRequest, id);
     }
 
@@ -130,14 +140,8 @@ public class OrkesAuthorizationClient extends OrkesClient implements Authorizati
     }
 
     @Override
-    public void createAccessKey(String id, SecretsManager secretsManager, String secretPath) {
-        CreateAccessKeyResponse response = applicationResource.createAccessKey(id);
-        secretsManager.storeSecret(secretPath, response.getSecret());
-    }
-
-    @Override
     public ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest) {
-        return applicationResource.upsertApplication(createOrUpdateApplicationRequest);
+        return applicationResource.upsertApplication(createOrUpdateApplicationRequest, null);
     }
 
     @Override

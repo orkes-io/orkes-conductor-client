@@ -12,7 +12,6 @@
  */
 package io.orkes.conductor.client;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 

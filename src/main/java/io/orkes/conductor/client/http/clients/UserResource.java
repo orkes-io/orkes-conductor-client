@@ -12,17 +12,11 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.ConductorUser;
 import io.orkes.conductor.client.model.GrantedAccessResponse;
-import io.orkes.conductor.client.model.Response;
 import io.orkes.conductor.client.model.UpsertUserRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -34,406 +28,77 @@ class UserResource {
         this.httpClient = httpClient;
     }
 
-  
-    public okhttp3.Call deleteUserCall(
-            String id)
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath =
-                "/users/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", httpClient.escapeString(id));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "DELETE",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call deleteUserValidateBeforeCall(
-            String id)
-            {
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'id' when calling deleteUser(Async)");
-        }
-
-        return deleteUserCall(id);
-    }
-
-  
     public void deleteUser(String id) {
-        deleteUserWithHttpInfo(id);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.DELETE)
+                .path("/users/{id}")
+                .addPathParam("id", id)
+                .build();
+
+        httpClient.doRequest(request);
     }
 
-  
-    private ApiResponse<Response> deleteUserWithHttpInfo(String id) {
-        okhttp3.Call call = deleteUserValidateBeforeCall(id);
-        Type localVarReturnType = new TypeReference<Response>() {}.getType();
-        return httpClient.execute(call, localVarReturnType);
-    }
-
-  
-    public okhttp3.Call getGrantedPermissionsCall(
-            String userId)
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath =
-                "/users/{userId}/permissions"
-                        .replaceAll(
-                                "\\{" + "userId" + "\\}",
-                                httpClient.escapeString(userId));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call getGrantedPermissionsValidateBeforeCall(
-            String userId)
-            {
-        // verify the required parameter 'userId' is set
-        if (userId == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'userId' when calling getGrantedPermissions(Async)");
-        }
-
-        return getGrantedPermissionsCall(userId);
-    }
-
-  
     public GrantedAccessResponse getGrantedPermissions(String userId) {
-        ApiResponse<GrantedAccessResponse> resp = getGrantedPermissionsWithHttpInfo(userId);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/users/{userId}/permissions")
+                .addPathParam("userId", userId)
+                .build();
+
+        ApiResponse<GrantedAccessResponse> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
         return resp.getData();
     }
 
-  
-    private ApiResponse<GrantedAccessResponse> getGrantedPermissionsWithHttpInfo(String userId)
-            {
-        okhttp3.Call call = getGrantedPermissionsValidateBeforeCall(userId);
-        Type localVarReturnType = new TypeReference<GrantedAccessResponse>() {}.getType();
-        return httpClient.execute(call, localVarReturnType);
-    }
-
-  
-    public okhttp3.Call getUserCall(
-            String id)
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath =
-                "/users/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", httpClient.escapeString(id));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call getUserValidateBeforeCall(
-            String id)
-            {
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'id' when calling getUser(Async)");
-        }
-
-        return getUserCall(id);
-    }
-
-  
     public ConductorUser getUser(String id) {
-        ApiResponse<ConductorUser> resp = getUserWithHttpInfo(id);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/users/{id}")
+                .addPathParam("id", id)
+                .build();
+
+        ApiResponse<ConductorUser> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
         return resp.getData();
     }
 
-  
-    private ApiResponse<ConductorUser> getUserWithHttpInfo(String id) {
-        okhttp3.Call call = getUserValidateBeforeCall(id);
-        Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
-        return httpClient.execute(call, localVarReturnType);
-    }
 
-  
-    public okhttp3.Call listUsersCall(
-            Boolean apps)
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath = "/users";
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-        if (apps != null) localVarQueryParams.addAll(httpClient.parameterToPair("apps", apps));
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call listUsersValidateBeforeCall(
-            Boolean apps)
-            {
-
-        return listUsersCall(apps);
-    }
-
-  
     public List<ConductorUser> listUsers(Boolean apps) {
-        ApiResponse<List<ConductorUser>> resp = listUsersWithHttpInfo(apps);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/users")
+                .addQueryParam("apps", apps)
+                .build();
+
+        ApiResponse<List<ConductorUser>> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
         return resp.getData();
     }
 
-  
-    private ApiResponse<List<ConductorUser>> listUsersWithHttpInfo(Boolean apps)
-            {
-        okhttp3.Call call = listUsersValidateBeforeCall(apps);
-        Type localVarReturnType = new TypeReference<List<ConductorUser>>() {}.getType();
-        return httpClient.execute(call, localVarReturnType);
+    public void sendInviteEmail(String email) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.POST)
+                .path("/users/{email}/sendInviteEmail")
+                .addPathParam("id", email)
+                .build();
+
+        httpClient.doRequest(request);
     }
 
-  
-    public okhttp3.Call sendInviteEmailCall(
-            String id,
-            ConductorUser conductorUser)
-            {
+    public ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.PUT)
+                .path("/users/{id}")
+                .addPathParam("id", id)
+                .body(upsertUserRequest)
+                .build();
 
-        // create path and map variables
-        String localVarPath =
-                "/users/{id}/sendInviteEmail"
-                        .replaceAll("\\{" + "id" + "\\}", httpClient.escapeString(id));
+        ApiResponse<ConductorUser> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "POST",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                conductorUser,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call sendInviteEmailValidateBeforeCall(
-            String id,
-            ConductorUser conductorUser)
-            {
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'id' when calling sendInviteEmail(Async)");
-        }
-
-        return sendInviteEmailCall(id, conductorUser);
-    }
-
-  
-    public void sendInviteEmail(String id, ConductorUser conductorUser) {
-        sendInviteEmailWithHttpInfo(id, conductorUser);
-    }
-
-  
-    private ApiResponse<Object> sendInviteEmailWithHttpInfo(String id, ConductorUser conductorUser)
-            {
-        okhttp3.Call call =
-                sendInviteEmailValidateBeforeCall(id, conductorUser);
-        Type localVarReturnType = new TypeReference<>() {
-        }.getType();
-        return httpClient.execute(call, localVarReturnType);
-    }
-
-  
-    public okhttp3.Call upsertUserCall(
-            UpsertUserRequest upsertUserRequest,
-            String id)
-            {
-
-        // create path and map variables
-        String localVarPath =
-                "/users/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", httpClient.escapeString(id));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return httpClient.buildCall(
-                localVarPath,
-                "PUT",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                upsertUserRequest,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call upsertUserValidateBeforeCall(
-            UpsertUserRequest upsertUserRequest,
-            String id)
-            {
-        // verify the required parameter 'body' is set
-        if (upsertUserRequest == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'upsertUserRequest' when calling upsertUser(Async)");
-        }
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'id' when calling upsertUser(Async)");
-        }
-
-        return upsertUserCall(upsertUserRequest, id);
-    }
-
-  
-    public ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id)
-            {
-        ApiResponse<ConductorUser> resp = upsertUserWithHttpInfo(upsertUserRequest, id);
         return resp.getData();
-    }
-
-  
-    private ApiResponse<ConductorUser> upsertUserWithHttpInfo(
-            UpsertUserRequest upsertUserRequest, String id) {
-        okhttp3.Call call =
-                upsertUserValidateBeforeCall(upsertUserRequest, id);
-        Type localVarReturnType = new TypeReference<ConductorUser>() {}.getType();
-        return httpClient.execute(call, localVarReturnType);
     }
 }

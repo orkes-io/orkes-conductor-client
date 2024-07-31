@@ -12,14 +12,9 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.ConductorUser;
 import io.orkes.conductor.client.model.GrantedAccessResponse;
 import io.orkes.conductor.client.model.Group;
@@ -27,562 +22,106 @@ import io.orkes.conductor.client.model.UpsertGroupRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-class GroupResource {
-    private final OrkesHttpClient apiClient;
+class GroupResource extends Resource {
 
-    public GroupResource(OrkesHttpClient apiClient) {
-        this.apiClient = apiClient;
+    public GroupResource(OrkesHttpClient httpClient) {
+        super(httpClient);
     }
 
-  
-    public okhttp3.Call addUserToGroupCall(
-            String groupId,
-            String userId)
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath =
-                "/groups/{groupId}/users/{userId}"
-                        .replaceAll(
-                                "\\{" + "groupId" + "\\}",
-                                apiClient.escapeString(groupId))
-                        .replaceAll(
-                                "\\{" + "userId" + "\\}",
-                                apiClient.escapeString(userId));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {};
-
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
-                localVarPath,
-                "POST",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call addUserToGroupValidateBeforeCall(
-            String groupId,
-            String userId)
-            {
-        // verify the required parameter 'groupId' is set
-        if (groupId == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'groupId' when calling addUserToGroup(Async)");
-        }
-        // verify the required parameter 'userId' is set
-        if (userId == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'userId' when calling addUserToGroup(Async)");
-        }
-
-        return addUserToGroupCall(groupId, userId);
-    }
-
-  
     public void addUserToGroup(String groupId, String userId) {
-        addUserToGroupWithHttpInfo(groupId, userId);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.POST)
+                .path("/groups/{groupId}/users/{userId}")
+                .addPathParam("groupId", groupId)
+                .addPathParam("userId", userId)
+                .build();
+
+        httpClient.doRequest(request);
     }
 
-  
-    private ApiResponse<Void> addUserToGroupWithHttpInfo(String groupId, String userId)
-            {
-        okhttp3.Call call =
-                addUserToGroupValidateBeforeCall(groupId, userId);
-        return apiClient.execute(call);
-    }
-
-  
-    public okhttp3.Call deleteGroupCall(
-            String id)
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath =
-                "/groups/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {};
-
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
-                localVarPath,
-                "DELETE",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call deleteGroupValidateBeforeCall(
-            String id)
-            {
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'id' when calling deleteGroup(Async)");
-        }
-
-        return deleteGroupCall(id);
-    }
-
-  
     public void deleteGroup(String id) {
-        deleteGroupWithHttpInfo(id);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.DELETE)
+                .path("/groups/{id}")
+                .addPathParam("id", id)
+                .build();
+
+        httpClient.doRequest(request);
     }
 
-  
-    private ApiResponse<Void> deleteGroupWithHttpInfo(String id) {
-        okhttp3.Call call = deleteGroupValidateBeforeCall(id);
-        return apiClient.execute(call);
-    }
+    public GrantedAccessResponse getGrantedPermissions(String groupId) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/groups/{groupId}/permissions")
+                .addPathParam("groupId", groupId)
+                .build();
 
-  
-    public okhttp3.Call getGrantedPermissions1Call(
-            String groupId)
-            {
-        Object localVarPostBody = null;
+        ApiResponse<GrantedAccessResponse> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
-        // create path and map variables
-        String localVarPath =
-                "/groups/{groupId}/permissions"
-                        .replaceAll(
-                                "\\{" + "groupId" + "\\}",
-                                apiClient.escapeString(groupId));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call getGrantedPermissions1ValidateBeforeCall(
-            String groupId)
-            {
-        // verify the required parameter 'groupId' is set
-        if (groupId == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'groupId' when calling getGrantedPermissions1(Async)");
-        }
-
-        return getGrantedPermissions1Call(groupId);
-    }
-
-  
-    public GrantedAccessResponse getGrantedPermissions1(String groupId) {
-        ApiResponse<GrantedAccessResponse> resp = getGrantedPermissions1WithHttpInfo(groupId);
         return resp.getData();
     }
 
-  
-    private ApiResponse<GrantedAccessResponse> getGrantedPermissions1WithHttpInfo(String groupId)
-            {
-        okhttp3.Call call =
-                getGrantedPermissions1ValidateBeforeCall(groupId);
-        Type localVarReturnType = new TypeReference<GrantedAccessResponse>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
-    }
-
-  
-    public okhttp3.Call getGroupCall(
-            String id)
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath =
-                "/groups/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call getGroupValidateBeforeCall(
-            String id)
-            {
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'id' when calling getGroup(Async)");
-        }
-
-        return getGroupCall(id);
-    }
-
-  
     public Group getGroup(String id) {
-        ApiResponse<Group> resp = getGroupWithHttpInfo(id);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/groups/{id}")
+                .addPathParam("id", id)
+                .build();
+
+        ApiResponse<Group> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
         return resp.getData();
     }
 
-  
-    private ApiResponse<Group> getGroupWithHttpInfo(String id) {
-        okhttp3.Call call = getGroupValidateBeforeCall(id);
-        Type localVarReturnType = new TypeReference<Group>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
-    }
-
-  
-    public okhttp3.Call getUsersInGroupCall(
-            String id)
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath =
-                "/groups/{id}/users"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call getUsersInGroupValidateBeforeCall(
-            String id)
-            {
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'id' when calling getUsersInGroup(Async)");
-        }
-
-        return getUsersInGroupCall(id);
-    }
-
-  
     public List<ConductorUser> getUsersInGroup(String id) {
-        ApiResponse<List<ConductorUser>> resp = getUsersInGroupWithHttpInfo(id);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/groups/{id}/users")
+                .addPathParam("id", id)
+                .build();
+
+        ApiResponse<List<ConductorUser>> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
         return resp.getData();
     }
 
-  
-    private ApiResponse<List<ConductorUser>> getUsersInGroupWithHttpInfo(String id)
-            {
-        okhttp3.Call call = getUsersInGroupValidateBeforeCall(id);
-        Type localVarReturnType = new TypeReference<List<ConductorUser>>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
-    }
-
-  
-    public okhttp3.Call listGroupsCall()
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath = "/groups";
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
-                localVarPath,
-                "GET",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call listGroupsValidateBeforeCall()
-            {
-
-        return listGroupsCall();
-    }
-
-  
     public List<Group> listGroups() {
-        ApiResponse<List<Group>> resp = listGroupsWithHttpInfo();
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/groups")
+                .build();
+
+        ApiResponse<List<Group>> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
         return resp.getData();
     }
 
-  
-    private ApiResponse<List<Group>> listGroupsWithHttpInfo() {
-        okhttp3.Call call = listGroupsValidateBeforeCall();
-        Type localVarReturnType = new TypeReference<List<Group>>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
-    }
-
-  
-    public okhttp3.Call removeUserFromGroupCall(
-            String groupId,
-            String userId)
-            {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath =
-                "/groups/{groupId}/users/{userId}"
-                        .replaceAll(
-                                "\\{" + "groupId" + "\\}",
-                                apiClient.escapeString(groupId))
-                        .replaceAll(
-                                "\\{" + "userId" + "\\}",
-                                apiClient.escapeString(userId));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {};
-
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {};
-
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
-                localVarPath,
-                "DELETE",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                localVarPostBody,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call removeUserFromGroupValidateBeforeCall(
-            String groupId,
-            String userId)
-            {
-        // verify the required parameter 'groupId' is set
-        if (groupId == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'groupId' when calling removeUserFromGroup(Async)");
-        }
-        // verify the required parameter 'userId' is set
-        if (userId == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'userId' when calling removeUserFromGroup(Async)");
-        }
-
-        return removeUserFromGroupCall(groupId, userId);
-    }
-
-  
     public void removeUserFromGroup(String groupId, String userId) {
-        removeUserFromGroupWithHttpInfo(groupId, userId);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.DELETE)
+                .path("/groups/{groupId}/users/{userId}")
+                .addPathParam("groupId", groupId)
+                .addPathParam("userId", userId)
+                .build();
+
+        httpClient.doRequest(request);
     }
 
-  
-    private ApiResponse<Void> removeUserFromGroupWithHttpInfo(String groupId, String userId)
-            {
-        okhttp3.Call call =
-                removeUserFromGroupValidateBeforeCall(groupId, userId);
-        return apiClient.execute(call);
-    }
-
-  
-    public okhttp3.Call upsertGroupCall(
-            UpsertGroupRequest upsertGroupRequest,
-            String id)
-            {
-
-        // create path and map variables
-        String localVarPath =
-                "/groups/{id}"
-                        .replaceAll("\\{" + "id" + "\\}", apiClient.escapeString(id));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[] {"api_key"};
-        return apiClient.buildCall(
-                localVarPath,
-                "PUT",
-                localVarQueryParams,
-                localVarCollectionQueryParams,
-                upsertGroupRequest,
-                localVarHeaderParams,
-                localVarFormParams,
-                localVarAuthNames);
-    }
-
-    private okhttp3.Call upsertGroupValidateBeforeCall(
-            UpsertGroupRequest upsertGroupRequest,
-            String id)
-            {
-        // verify the required parameter 'body' is set
-        if (upsertGroupRequest == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'upsertGroupRequest' when calling upsertGroup(Async)");
-        }
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException(
-                    "Missing the required parameter 'id' when calling upsertGroup(Async)");
-        }
-
-        return upsertGroupCall(upsertGroupRequest, id);
-    }
-
-  
     public Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id) {
-        ApiResponse<Group> resp = upsertGroupWithHttpInfo(upsertGroupRequest, id);
-        return resp.getData();
-    }
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.PUT)
+                .path("/groups/{id}")
+                .addPathParam("id", id)
+                .body(upsertGroupRequest)
+                .build();
 
-  
-    private ApiResponse<Group> upsertGroupWithHttpInfo(
-            UpsertGroupRequest upsertGroupRequest, String id) {
-        okhttp3.Call call =
-                upsertGroupValidateBeforeCall(upsertGroupRequest, id);
-        Type localVarReturnType = new TypeReference<Group>() {}.getType();
-        return apiClient.execute(call, localVarReturnType);
+        ApiResponse<Group> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
+        return resp.getData();
     }
 }

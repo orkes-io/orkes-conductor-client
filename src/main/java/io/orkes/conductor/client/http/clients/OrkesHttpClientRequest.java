@@ -57,8 +57,8 @@ public class OrkesHttpClientRequest {
         private Object body;
 
         public Builder method(Method method) {
-            if (path == null || path.isEmpty()) {
-                throw new IllegalArgumentException("Path cannot be null or empty");
+            if (method == null) {
+                throw new IllegalArgumentException("Method cannot be null");
             }
             this.method = method;
             return this;
@@ -70,6 +70,10 @@ public class OrkesHttpClientRequest {
             }
             this.path = path;
             return this;
+        }
+
+        public Builder addPathParam(String name, Integer value) {
+            return addPathParam(name, Integer.toString(value));
         }
 
         public Builder addPathParam(String name, String value) {

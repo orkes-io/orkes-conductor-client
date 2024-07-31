@@ -12,13 +12,14 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.model.metadata.events.EventHandler;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.model.metadata.events.EventHandler;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
@@ -39,7 +40,7 @@ class EventResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     void updateEventHandler(EventHandler body) {
@@ -50,7 +51,7 @@ class EventResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     List<EventHandler> getEventHandlersForEvent(String event, Boolean activeOnly) {
@@ -86,7 +87,7 @@ class EventResource extends Resource {
                 .path("/event/handleIncomingEvent")
                 .body(body)
                 .build();
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     void removeEventHandlerStatus(String name) {
@@ -95,7 +96,7 @@ class EventResource extends Resource {
                 .path("/event/{name}")
                 .addPathParam("name", name)
                 .build();
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     Map<String, Object> getQueueConfig(String queueType, String queueName) {

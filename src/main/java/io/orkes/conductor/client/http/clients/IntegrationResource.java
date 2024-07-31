@@ -12,7 +12,10 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.integration.Integration;
@@ -21,9 +24,7 @@ import io.orkes.conductor.client.model.integration.IntegrationApiUpdate;
 import io.orkes.conductor.client.model.integration.IntegrationUpdate;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
@@ -47,7 +48,7 @@ class IntegrationResource {
                 .addPathParam("promptName", promptName)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void deleteIntegrationApi(String integrationProvider, String integrationName) {
@@ -58,7 +59,7 @@ class IntegrationResource {
                 .addPathParam("integrationName", integrationName)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void deleteIntegrationProvider(String integrationProvider) {
@@ -68,7 +69,7 @@ class IntegrationResource {
                 .addPathParam("integrationProvider", integrationProvider)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void deleteTagForIntegrationProvider(List<TagObject> body, String integrationProvider) {
@@ -80,7 +81,7 @@ class IntegrationResource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public IntegrationApi getIntegrationApi(String integrationProvider, String integrationName) {
@@ -197,7 +198,7 @@ class IntegrationResource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void saveIntegrationApi(IntegrationApiUpdate body, String integrationProvider, String integrationName) {
@@ -209,7 +210,7 @@ class IntegrationResource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void saveIntegrationProvider(IntegrationUpdate body, String integrationProvider) {
@@ -220,6 +221,6 @@ class IntegrationResource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 }

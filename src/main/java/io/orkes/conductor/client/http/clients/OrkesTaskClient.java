@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import io.orkes.conductor.client.ObjectMapperProvider;
 import io.orkes.conductor.client.api.TaskClient;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
@@ -28,6 +27,7 @@ import io.orkes.conductor.client.model.run.SearchResult;
 import io.orkes.conductor.client.model.run.TaskSummary;
 import io.orkes.conductor.client.model.run.Workflow;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class OrkesTaskClient extends OrkesClient implements TaskClient {

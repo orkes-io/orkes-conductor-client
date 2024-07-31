@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.http.clients.OrkesMetadataClient;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
@@ -39,8 +40,8 @@ public class MetadataClientTests extends ClientTest {
     void taskDefinition() {
         try {
             metadataClient.unregisterTaskDef(Commons.TASK_NAME);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
+        } catch (OrkesClientException e) {
+            if (e.getStatus() != 404) {
                 throw e;
             }
         }
@@ -55,8 +56,8 @@ public class MetadataClientTests extends ClientTest {
     void workflow() {
         try {
             metadataClient.unregisterWorkflowDef(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
+        } catch (OrkesClientException e) {
+            if (e.getStatus() != 404) {
                 throw e;
             }
         }
@@ -79,8 +80,8 @@ public class MetadataClientTests extends ClientTest {
         metadataClient.registerTaskDefs(List.of(Commons.getTaskDef()));
         try {
             metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
+        } catch (OrkesClientException e) {
+            if (e.getStatus() != 404) {
                 throw e;
             }
         }
@@ -104,8 +105,8 @@ public class MetadataClientTests extends ClientTest {
         TagObject tagObject = Commons.getTagObject();
         try {
             metadataClient.deleteWorkflowTag(Commons.getTagObject(), Commons.WORKFLOW_NAME);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
+        } catch (OrkesClientException e) {
+            if (e.getStatus() != 404) {
                 throw e;
             }
         }

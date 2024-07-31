@@ -13,10 +13,14 @@
 package io.orkes.conductor.client.http.clients;
 
 import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.model.ConductorUser;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 import io.orkes.conductor.client.model.TokenResponse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.POST;
 
 class TokenResource extends Resource {
 
@@ -26,7 +30,7 @@ class TokenResource extends Resource {
 
     public ApiResponse<TokenResponse> generate(GenerateTokenRequest body) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("POST")
+                .method(POST)
                 .path("/token")
                 .body(body)
                 .build();
@@ -35,10 +39,9 @@ class TokenResource extends Resource {
         });
     }
 
-
-    public ApiResponse<Object> getUserInfo() {
+    public ApiResponse<ConductorUser> getUserInfo() {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method("GET")
+                .method(GET)
                 .path("/token/userInfo")
                 .build();
 

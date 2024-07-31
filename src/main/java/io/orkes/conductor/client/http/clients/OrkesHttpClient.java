@@ -12,35 +12,6 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import io.orkes.conductor.client.OrkesClientException;
-import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.ConflictException;
-import io.orkes.conductor.client.http.JSON;
-import io.orkes.conductor.client.http.Param;
-import io.orkes.conductor.client.model.GenerateTokenRequest;
-import io.orkes.conductor.client.model.TokenResponse;
-import io.orkes.conductor.client.model.validation.ErrorResponse;
-import okhttp3.Call;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.internal.http.HttpMethod;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -68,6 +39,38 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.orkes.conductor.client.OrkesClientException;
+import io.orkes.conductor.client.http.ApiResponse;
+import io.orkes.conductor.client.http.ConflictException;
+import io.orkes.conductor.client.http.JSON;
+import io.orkes.conductor.client.http.Param;
+import io.orkes.conductor.client.model.GenerateTokenRequest;
+import io.orkes.conductor.client.model.TokenResponse;
+import io.orkes.conductor.client.model.validation.ErrorResponse;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import okhttp3.Call;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.internal.http.HttpMethod;
+
 public class OrkesHttpClient {
 
     public static final String PROP_TOKEN_REFRESH_INTERVAL = "CONDUCTOR_SECURITY_TOKEN_REFRESH_INTERVAL";
@@ -84,7 +87,7 @@ public class OrkesHttpClient {
     private final String keyId;
     private final String keySecret;
     private final JSON json;
-    private int executorThreadCount = 0;
+
     private long tokenRefreshInSeconds = 2700;  //45 minutes
 
     public static class Builder {
@@ -94,7 +97,6 @@ public class OrkesHttpClient {
         private KeyManager[] keyManagers;
         private String keyId;
         private String keySecret;
-        private int executorThreadCount;
         private long tokenRefreshInSeconds;
         private long connectTimeout = -1;
         private long readTimeout = -1;
@@ -153,15 +155,6 @@ public class OrkesHttpClient {
 
         public Builder keySecret(String keySecret) {
             this.keySecret = keySecret;
-            return this;
-        }
-
-        public int executorThreadCount() {
-            return executorThreadCount;
-        }
-
-        public Builder executorThreadCount(int executorThreadCount) {
-            this.executorThreadCount = executorThreadCount;
             return this;
         }
 
@@ -317,10 +310,6 @@ public class OrkesHttpClient {
         return basePath;
     }
 
-    public int getExecutorThreadCount() {
-        return executorThreadCount;
-    }
-
     public void shutdown() {
         okHttpClient.dispatcher().executorService().shutdown();
         okHttpClient.connectionPool().evictAll();
@@ -343,6 +332,10 @@ public class OrkesHttpClient {
 
     public boolean isVerifyingSsl() {
         return verifyingSsl;
+    }
+
+    public ApiResponse<Void> doRequest(OrkesHttpClientRequest req) {
+        return doRequest(req, null);
     }
 
     public <T> ApiResponse<T> doRequest(OrkesHttpClientRequest req, TypeReference<T> typeReference) {
@@ -405,7 +398,7 @@ public class OrkesHttpClient {
         return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 
-    private <T> T deserialize(Response response, Type returnType)  {
+    private <T> T deserialize(Response response, Type returnType) {
         if (returnType == null) {
             return null;
         }
@@ -446,7 +439,7 @@ public class OrkesHttpClient {
         }
     }
 
-    private RequestBody serialize(String contentType, Object obj)  {
+    private RequestBody serialize(String contentType, Object obj) {
         if (!isJsonMime(contentType)) {
             throw new OrkesClientException("Content type \"" + contentType + "\" is not supported");
         }
@@ -511,7 +504,7 @@ public class OrkesHttpClient {
                                  List<Param> pathParams,
                                  List<Param> queryParams,
                                  Map<String, String> headerParams,
-                                 Object body)  {
+                                 Object body) {
         if (!"/token".equalsIgnoreCase(path)) {
             addAuthHeader(headerParams);
         }
@@ -581,6 +574,7 @@ public class OrkesHttpClient {
         headerParams.put("X-Authorization", getToken());
     }
 
+    //TODO FIX no self signed cert support
     private void applySslSettings(OkHttpClient.Builder okhttpClientBuilder) {
         try {
             TrustManager[] trustManagers = null;
@@ -653,7 +647,7 @@ public class OrkesHttpClient {
         }
     }
 
-    private <T> ApiResponse<T> execute(Call call, Type returnType)  {
+    private <T> ApiResponse<T> execute(Call call, Type returnType) {
         try {
             Response response = call.execute();
             T data = handleResponse(response, returnType);

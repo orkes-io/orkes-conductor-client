@@ -12,13 +12,14 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.integration.PromptTemplateTestRequest;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
 
-import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
@@ -37,7 +38,7 @@ class PromptResource extends Resource {
                 .addPathParam("name", name)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void deleteTagForPromptTemplate(String name, List<TagObject> body) {
@@ -48,7 +49,7 @@ class PromptResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public PromptTemplate getPromptTemplate(String name) {
@@ -97,7 +98,7 @@ class PromptResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void savePromptTemplate(String name, String body, String description, List<String> models) {
@@ -109,7 +110,7 @@ class PromptResource extends Resource {
                 .addQueryParams("models", models)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public String testMessageTemplate(PromptTemplateTestRequest body) {

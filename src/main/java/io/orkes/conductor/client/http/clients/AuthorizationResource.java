@@ -12,14 +12,15 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.model.AuthorizationRequest;
 import io.orkes.conductor.client.model.Subject;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
@@ -52,7 +53,7 @@ class AuthorizationResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     void removePermissions(AuthorizationRequest body) {
@@ -63,6 +64,6 @@ class AuthorizationResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 }

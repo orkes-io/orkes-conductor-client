@@ -12,7 +12,9 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+import java.util.Objects;
+
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.model.AccessKeyResponse;
 import io.orkes.conductor.client.model.ConductorApplication;
@@ -20,8 +22,7 @@ import io.orkes.conductor.client.model.CreateAccessKeyResponse;
 import io.orkes.conductor.client.model.CreateOrUpdateApplicationRequest;
 import io.orkes.conductor.client.model.TagObject;
 
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
@@ -41,7 +42,7 @@ class ApplicationResource extends Resource {
                 .addPathParam("applicationId", applicationId)
                 .addPathParam("role", role)
                 .build();
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     CreateAccessKeyResponse createAccessKey(String applicationId)  {
@@ -56,11 +57,12 @@ class ApplicationResource extends Resource {
         return response.getData();
     }
 
-    ConductorApplication upsertApplication(CreateOrUpdateApplicationRequest body)  {
+    ConductorApplication upsertApplication(CreateOrUpdateApplicationRequest body, String id)  {
         Objects.requireNonNull(body, "CreateOrUpdateApplicationRequest cannot be null");
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
                 .method(POST)
-                .path("/applications")
+                .path("/applications" + (id != null ? "/{id}" : ""))
+                .addPathParam("id", id)
                 .body(body)
                 .build();
 
@@ -77,7 +79,7 @@ class ApplicationResource extends Resource {
                 .addPathParam("applicationId", applicationId)
                 .addPathParam("keyId", keyId)
                 .build();
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     void deleteApplication(String applicationId)  {
@@ -86,7 +88,7 @@ class ApplicationResource extends Resource {
                 .path("/applications/{applicationId}")
                 .addPathParam("applicationId", applicationId)
                 .build();
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     List<AccessKeyResponse> getAccessKeys(String applicationId)  {
@@ -131,7 +133,7 @@ class ApplicationResource extends Resource {
                 .addPathParam("applicationId", applicationId)
                 .addPathParam("role", role)
                 .build();
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId)  {
@@ -157,7 +159,7 @@ class ApplicationResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     List<TagObject> getTags(String applicationId)  {
@@ -182,6 +184,6 @@ class ApplicationResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 }

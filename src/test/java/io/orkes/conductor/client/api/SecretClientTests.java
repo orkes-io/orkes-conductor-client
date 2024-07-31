@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.model.TagObject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,8 +36,8 @@ public class SecretClientTests extends ClientTest {
     void testMethods() {
         try {
             secretClient.deleteSecret(SECRET_KEY);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 500) {
+        } catch (OrkesClientException e) {
+            if (e.getStatus() != 500) {
                 throw e;
             }
         }

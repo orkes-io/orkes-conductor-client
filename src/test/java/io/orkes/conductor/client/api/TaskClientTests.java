@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.testcontainers.shaded.com.google.common.util.concurrent.Uninterruptibles;
 
 import io.orkes.conductor.client.ObjectMapperProvider;
+import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;
@@ -129,10 +130,10 @@ public class TaskClientTests extends ClientTest {
                 try {
                     workflow = taskClient.updateTaskSync(workflowId, referenceName, TaskResult.Status.COMPLETED, new TaskOutput());
                     System.out.println("Workflow: " + workflow);
-                } catch (ApiException apiException) {
+                } catch (OrkesClientException OrkesClientException) {
                     // 404 == task was updated already and there are no pending tasks
-                    if (apiException.getStatusCode() != 404) {
-                        fail(apiException);
+                    if (OrkesClientException.getStatus() != 404) {
+                        fail(OrkesClientException);
                     }
                 }
             }

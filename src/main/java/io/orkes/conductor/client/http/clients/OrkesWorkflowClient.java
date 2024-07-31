@@ -44,30 +44,33 @@ import io.orkes.conductor.client.model.run.WorkflowTestRequest;
 
 import com.google.common.base.Preconditions;
 
+//TODO reset workflow?
 public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, WorkflowClient {
 
-    private final WorkflowResource httpClient;
+    private final WorkflowResource workflowResource;
 
     private final WorkflowBulkResource bulkResource;
 
-    private ExecutorService executorService;
+    private final ExecutorService executorService;
 
     public OrkesWorkflowClient(OrkesHttpClient httpClient) {
-        super(httpClient);
-        this.httpClient = new WorkflowResource(httpClient);
-        this.bulkResource = new WorkflowBulkResource(httpClient);
+        this(httpClient, 0);
+    }
 
-        int threadCount = httpClient.getExecutorThreadCount();
-        if (threadCount < 1) {
+    public OrkesWorkflowClient(OrkesHttpClient httpClient, int executorThreadCount) {
+        super(httpClient);
+        this.workflowResource = new WorkflowResource(httpClient);
+        this.bulkResource = new WorkflowBulkResource(httpClient);
+        if (executorThreadCount < 1) {
             this.executorService = Executors.newCachedThreadPool();
         } else {
-            this.executorService = Executors.newFixedThreadPool(threadCount);
+            this.executorService = Executors.newFixedThreadPool(executorThreadCount);
         }
     }
 
     @Override
     public String startWorkflow(StartWorkflowRequest startWorkflowRequest) throws ConflictException {
-        return httpClient.startWorkflow(startWorkflowRequest);
+        return workflowResource.startWorkflow(startWorkflowRequest);
     }
 
     @Override
@@ -92,13 +95,12 @@ public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, W
         executorService.submit(
                 () -> {
                     try {
-                        WorkflowRun response =
-                                httpClient.executeWorkflow(
-                                        startWorkflowRequest,
-                                        startWorkflowRequest.getName(),
-                                        startWorkflowRequest.getVersion(),
-                                        waitUntilTask,
-                                        requestId);
+                        WorkflowRun response = workflowResource.executeWorkflow(
+                                startWorkflowRequest,
+                                startWorkflowRequest.getName(),
+                                startWorkflowRequest.getVersion(),
+                                waitUntilTask,
+                                requestId);
                         future.complete(response);
                     } catch (Throwable t) {
                         future.completeExceptionally(t);
@@ -114,8 +116,7 @@ public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, W
         executorService.submit(
                 () -> {
                     try {
-                        WorkflowRun response =
-                                httpClient.executeWorkflow(
+                        WorkflowRun response = workflowResource.executeWorkflow(
                                         startWorkflowRequest,
                                         startWorkflowRequest.getName(),
                                         startWorkflowRequest.getVersion(),
@@ -133,50 +134,49 @@ public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, W
 
     @Override
     public Workflow getWorkflow(String workflowId, boolean includeTasks) {
-        return httpClient.getExecutionStatus(workflowId, includeTasks);
+        return workflowResource.getExecutionStatus(workflowId, includeTasks);
     }
 
     @Override
-    public List<Workflow> getWorkflows(
-            String name, String correlationId, boolean includeClosed, boolean includeTasks) {
-        return httpClient.getWorkflowsByCorrelationId(
-                name, correlationId, includeClosed, includeTasks);
+    public List<Workflow> getWorkflows(String name, String correlationId, boolean includeClosed, boolean includeTasks) {
+        return workflowResource.getWorkflowsByCorrelationId(name, correlationId, includeClosed, includeTasks);
     }
 
     @Override
     public void deleteWorkflow(String workflowId, boolean archiveWorkflow) {
-        httpClient.delete(workflowId, archiveWorkflow);
+        workflowResource.delete(workflowId, archiveWorkflow);
     }
 
     @Override
     public BulkResponse terminateWorkflows(List<String> workflowIds, String reason) {
+        //FIXME should we use Preconditions across the board?
         Preconditions.checkArgument(!workflowIds.isEmpty(), "workflow id cannot be blank");
-        return bulkResource.terminate(workflowIds, reason, false);
+        return bulkResource.terminateWorkflows(workflowIds, reason, false);
     }
 
     @Override
     public List<String> getRunningWorkflow(String workflowName, Integer version) {
-        return httpClient.getRunningWorkflow(workflowName, version, null, null);
+        return workflowResource.getRunningWorkflow(workflowName, version, null, null);
     }
 
     @Override
     public List<String> getWorkflowsByTimePeriod(String workflowName, int version, Long startTime, Long endTime) {
-        return httpClient.getRunningWorkflow(workflowName, version, startTime, endTime);
+        return workflowResource.getRunningWorkflow(workflowName, version, startTime, endTime);
     }
 
     @Override
     public void runDecider(String workflowId) {
-        httpClient.decide(workflowId);
+        workflowResource.decide(workflowId);
     }
 
     @Override
     public void pauseWorkflow(String workflowId) {
-        httpClient.pauseWorkflow(workflowId);
+        workflowResource.pauseWorkflow(workflowId);
     }
 
     @Override
     public void resumeWorkflow(String workflowId) {
-        httpClient.resumeWorkflow(workflowId);
+        workflowResource.resumeWorkflow(workflowId);
     }
 
     @Override
@@ -186,24 +186,25 @@ public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, W
         Preconditions.checkArgument(
                 StringUtils.isNotBlank(taskReferenceName), "Task reference name cannot be blank");
         SkipTaskRequest skipTaskRequest = new SkipTaskRequest();
-        httpClient.skipTaskFromWorkflow(workflowId, taskReferenceName, skipTaskRequest);
+        workflowResource.skipTaskFromWorkflow(workflowId, taskReferenceName, skipTaskRequest);
     }
 
     @Override
     public String rerunWorkflow(String workflowId, RerunWorkflowRequest rerunWorkflowRequest) {
-        return httpClient.rerun(rerunWorkflowRequest, workflowId);
+        return workflowResource.rerun(rerunWorkflowRequest, workflowId);
     }
 
     @Override
     public void restart(String workflowId, boolean useLatestDefinitions) {
-        httpClient.restart(workflowId, useLatestDefinitions);
+        workflowResource.restart(workflowId, useLatestDefinitions);
     }
 
     @Override
     public void retryLastFailedTask(String workflowId) {
-        httpClient.retry(workflowId, true);
+        workflowResource.retry(workflowId, true);
     }
 
+    //FIXME why keep this?
     @Override
     public void resetCallbacksForInProgressTasks(String workflowId) {
         throw new UnsupportedOperationException("This call is not required");
@@ -211,19 +212,20 @@ public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, W
 
     @Override
     public void terminateWorkflow(String workflowId, String reason) {
-        httpClient.terminateWithAReason(workflowId, reason, false);
+        workflowResource.terminateWithAReason(workflowId, reason, false);
     }
 
     @Override
     public void terminateWorkflowWithFailure(String workflowId, String reason, boolean triggerFailureWorkflow) {
-        httpClient.terminateWithAReason(workflowId, reason, triggerFailureWorkflow);
+        workflowResource.terminateWithAReason(workflowId, reason, triggerFailureWorkflow);
     }
 
     @Override
     public SearchResult<WorkflowSummary> search(String query) {
-        return httpClient.search(null, null, null, null, "", query, null);
+        return workflowResource.search(null, null, null, null, "", query, null);
     }
 
+    //FIXME why keep this?
     @Override
     public SearchResult<Workflow> searchV2(String query) {
         throw new UnsupportedOperationException("Please use search() API");
@@ -232,9 +234,10 @@ public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, W
     @Override
     public SearchResult<WorkflowSummary> search(
             Integer start, Integer size, String sort, String freeText, String query) {
-        return httpClient.search(null, start, size, sort, freeText, query, null);
+        return workflowResource.search(null, start, size, sort, freeText, query, null);
     }
 
+    //FIXME why keep this?
     @Override
     public SearchResult<Workflow> searchV2(
             Integer start, Integer size, String sort, String freeText, String query) {
@@ -243,75 +246,65 @@ public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, W
 
     @Override
     public BulkResponse pauseWorkflow(List<String> workflowIds) {
-        return bulkResource.pauseWorkflow1(workflowIds);
+        return bulkResource.pauseWorkflows(workflowIds);
     }
 
     @Override
-    public BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
-            {
-        return bulkResource.restart1(workflowIds, useLatestDefinitions);
+    public BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions) {
+        return bulkResource.restartWorkflows(workflowIds, useLatestDefinitions);
     }
 
     @Override
     public BulkResponse resumeWorkflow(List<String> workflowIds) {
-        return bulkResource.resumeWorkflow1(workflowIds);
+        return bulkResource.resumeWorkflows(workflowIds);
     }
 
     @Override
     public BulkResponse retryWorkflow(List<String> workflowIds) {
-        return bulkResource.retry1(workflowIds);
+        return bulkResource.retryWorkflows(workflowIds);
     }
 
     @Override
-    public BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
-            {
-        return bulkResource.terminate(workflowIds, reason, false);
+    public BulkResponse terminateWorkflow(List<String> workflowIds, String reason) {
+        return bulkResource.terminateWorkflows(workflowIds, reason, false);
     }
 
     @Override
-    public BulkResponse terminateWorkflowsWithFailure(List<String> workflowIds, String reason, boolean triggerFailureWorkflow)
-            {
-        return bulkResource.terminate(workflowIds, reason, triggerFailureWorkflow);
+    public BulkResponse terminateWorkflowsWithFailure(List<String> workflowIds, String reason, boolean triggerFailureWorkflow) {
+        return bulkResource.terminateWorkflows(workflowIds, reason, triggerFailureWorkflow);
     }
 
     @Override
     public WorkflowStatus getWorkflowStatusSummary(
             String workflowId, Boolean includeOutput, Boolean includeVariables) {
-        return httpClient.getWorkflowStatusSummary(workflowId, includeOutput, includeVariables);
+        return workflowResource.getWorkflowStatusSummary(workflowId, includeOutput, includeVariables);
     }
 
     @Override
     public void uploadCompletedWorkflows() {
-        httpClient.uploadCompletedWorkflows();
+        workflowResource.uploadCompletedWorkflows();
     }
 
     @Override
     public Map<String, List<Workflow>> getWorkflowsByNamesAndCorrelationIds(
             List<String> correlationIds, List<String> workflowNames, Boolean includeClosed, Boolean includeTasks) {
         CorrelationIdsSearchRequest request = new CorrelationIdsSearchRequest(correlationIds, workflowNames);
-        return httpClient.getWorkflowsByNamesAndCorrelationIds(request, includeClosed, includeTasks);
+        return workflowResource.getWorkflowsByNamesAndCorrelationIds(request, includeClosed, includeTasks);
     }
 
     @Override
     public Workflow testWorkflow(WorkflowTestRequest testRequest) {
-        return httpClient.testWorkflow(testRequest);
+        return workflowResource.testWorkflow(testRequest);
     }
 
     @Override
     public Workflow updateVariables(String workflowId, Map<String, Object> variables) {
-        return httpClient.updateVariables(workflowId, variables);
-    }
-
-    @Override
-    public void shutdown() {
-        if (executorService != null) {
-            executorService.shutdown();
-        }
+        return workflowResource.updateVariables(workflowId, variables);
     }
 
     @Override
     public void upgradeRunningWorkflow(String workflowId, UpgradeWorkflowRequest upgradeWorkflowRequest) {
-        httpClient.upgradeRunningWorkflow(upgradeWorkflowRequest, workflowId);
+        workflowResource.upgradeRunningWorkflow(upgradeWorkflowRequest, workflowId);
     }
 
     @Override
@@ -320,11 +313,18 @@ public class OrkesWorkflowClient extends OrkesClient implements AutoCloseable, W
         if (waitUntilTaskRefNames != null) {
             joinedReferenceNames = String.join(",", waitUntilTaskRefNames);
         }
-        return httpClient.updateWorkflowState(updateRequest, UUID.randomUUID().toString(), workflowId, joinedReferenceNames, waitForSeconds);
+        return workflowResource.updateWorkflowState(updateRequest, UUID.randomUUID().toString(), workflowId, joinedReferenceNames, waitForSeconds);
     }
 
     @Override
     public void close() {
         shutdown();
+    }
+
+    @Override
+    public void shutdown() {
+        if (executorService != null) {
+            executorService.shutdown();
+        }
     }
 }

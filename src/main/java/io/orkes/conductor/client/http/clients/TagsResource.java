@@ -12,16 +12,13 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
@@ -40,7 +37,7 @@ class TagsResource extends Resource {
                 .body(tagObject)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void addWorkflowTag(TagObject tagObject, String workflow) {
@@ -51,7 +48,7 @@ class TagsResource extends Resource {
                 .body(tagObject)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void deleteTaskTag(TagString tagString, String taskName) {
@@ -62,7 +59,7 @@ class TagsResource extends Resource {
                 .body(tagString)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void deleteWorkflowTag(TagObject tagObject, String workflow) {
@@ -73,7 +70,7 @@ class TagsResource extends Resource {
                 .body(tagObject)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public List<TagObject> getTags() {
@@ -122,7 +119,7 @@ class TagsResource extends Resource {
                 .body(tagObjects)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void setWorkflowTags(List<TagObject> tagObjects, String workflow) {
@@ -133,6 +130,6 @@ class TagsResource extends Resource {
                 .body(tagObjects)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 }

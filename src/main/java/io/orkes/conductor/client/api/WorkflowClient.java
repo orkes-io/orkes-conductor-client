@@ -47,28 +47,23 @@ public interface WorkflowClient  {
 
     SearchResult<Workflow> searchV2(String query);
 
-    SearchResult<WorkflowSummary> search(
-            Integer start, Integer size, String sort, String freeText, String query);
+    SearchResult<WorkflowSummary> search(Integer start, Integer size, String sort, String freeText, String query);
 
-    SearchResult<Workflow> searchV2(
-            Integer start, Integer size, String sort, String freeText, String query);
+    SearchResult<Workflow> searchV2(Integer start, Integer size, String sort, String freeText, String query);
 
-    BulkResponse pauseWorkflow(List<String> workflowIds) throws ApiException;
+    BulkResponse pauseWorkflow(List<String> workflowIds);
 
-    BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
-            throws ApiException;
+    BulkResponse restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions);
 
-    BulkResponse resumeWorkflow(List<String> workflowIds) throws ApiException;
+    BulkResponse resumeWorkflow(List<String> workflowIds);
 
-    BulkResponse retryWorkflow(List<String> workflowIds) throws ApiException;
+    BulkResponse retryWorkflow(List<String> workflowIds);
 
-    BulkResponse terminateWorkflow(List<String> workflowIds, String reason)
-            throws ApiException;
+    BulkResponse terminateWorkflow(List<String> workflowIds, String reason);
 
     Workflow getWorkflow(String workflowId, boolean includeTasks);
 
-    List<Workflow> getWorkflows(
-            String name, String correlationId, boolean includeClosed, boolean includeTasks);
+    List<Workflow> getWorkflows(String name, String correlationId, boolean includeClosed, boolean includeTasks);
 
     void deleteWorkflow(String workflowId, boolean archiveWorkflow);
 
@@ -76,8 +71,7 @@ public interface WorkflowClient  {
 
     List<String> getRunningWorkflow(String workflowName, Integer version);
 
-    List<String> getWorkflowsByTimePeriod(
-            String workflowName, int version, Long startTime, Long endTime);
+    List<String> getWorkflowsByTimePeriod(String workflowName, int version, Long startTime, Long endTime);
 
     void runDecider(String workflowId);
 
@@ -98,10 +92,10 @@ public interface WorkflowClient  {
     void terminateWorkflow(String workflowId, String reason);
 
     void terminateWorkflowWithFailure(String workflowId, String reason, boolean triggerWorkflowFailure)
-            throws ApiException;
+           ;
 
     BulkResponse terminateWorkflowsWithFailure(List<String> workflowIds, String reason, boolean triggerWorkflowFailure)
-            throws ApiException;
+           ;
 
     WorkflowStatus getWorkflowStatusSummary(String workflowId, Boolean includeOutput, Boolean includeVariables);
 

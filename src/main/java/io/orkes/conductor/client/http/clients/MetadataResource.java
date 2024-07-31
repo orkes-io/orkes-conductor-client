@@ -12,13 +12,14 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+import java.util.Objects;
+
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.POST;
@@ -38,7 +39,7 @@ class MetadataResource extends Resource {
                 .body(workflowDef)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public WorkflowDef getWorkflow(String name, Integer version, Boolean metadata) {
@@ -59,7 +60,7 @@ class MetadataResource extends Resource {
     public List<WorkflowDef> getAllWorkflows(
             String access, Boolean metadata, String tagKey, String tagValue) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.GET)
+                .method(GET)
                 .path("/metadata/workflow")
                 .addQueryParam("access", access)
                 .addQueryParam("metadata", metadata)
@@ -75,7 +76,7 @@ class MetadataResource extends Resource {
 
     public TaskDef getTaskDef(String taskType, Boolean metadata) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.GET)
+                .method(GET)
                 .path("/metadata/taskdefs/{taskType}")
                 .addPathParam("taskType", taskType)
                 .addQueryParam("metadata", metadata)
@@ -110,7 +111,7 @@ class MetadataResource extends Resource {
                 .body(taskDefs)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void unregisterTaskDef(String taskType) {
@@ -120,7 +121,7 @@ class MetadataResource extends Resource {
                 .addPathParam("taskType", taskType)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void unregisterWorkflowDef(String name, Integer version) {
@@ -131,7 +132,7 @@ class MetadataResource extends Resource {
                 .addPathParam("version", Integer.toString(version))
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void updateWorkflows(List<WorkflowDef> workflowDefs, Boolean overwrite) {
@@ -142,7 +143,7 @@ class MetadataResource extends Resource {
                 .body(workflowDefs)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void updateTaskDef(TaskDef taskDef) {
@@ -152,6 +153,6 @@ class MetadataResource extends Resource {
                 .body(taskDef)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 }

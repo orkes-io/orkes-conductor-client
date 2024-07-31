@@ -12,7 +12,9 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+import java.util.Map;
+
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.model.SaveScheduleRequest;
 import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecution;
@@ -20,8 +22,7 @@ import io.orkes.conductor.client.model.SearchResultWorkflowScheduleExecutionMode
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
@@ -40,7 +41,7 @@ class SchedulerResource extends Resource {
                 .addPathParam("name", name)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public List<WorkflowSchedule> getAllSchedules(String workflowName) {
@@ -107,7 +108,7 @@ class SchedulerResource extends Resource {
                 .addPathParam("name", name)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public Map<String, Object> requeueAllExecutionRecords() {
@@ -141,7 +142,7 @@ class SchedulerResource extends Resource {
                 .addPathParam("name", name)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void saveSchedule(SaveScheduleRequest saveScheduleRequest) {
@@ -151,7 +152,7 @@ class SchedulerResource extends Resource {
                 .body(saveScheduleRequest)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     //FIXME Why do we even have search and searchV22?
@@ -199,7 +200,7 @@ class SchedulerResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public void putTagForSchedule(String name, List<TagObject> body) {
@@ -210,7 +211,7 @@ class SchedulerResource extends Resource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public List<TagObject> getTagsForSchedule(String name) {

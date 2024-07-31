@@ -13,11 +13,11 @@
 package io.orkes.conductor.client.api;
 
 
-import io.orkes.conductor.client.model.event.QueueConfiguration;
-import io.orkes.conductor.client.model.metadata.events.EventHandler;
-
 import java.util.List;
 import java.util.Map;
+
+import io.orkes.conductor.client.model.event.QueueConfiguration;
+import io.orkes.conductor.client.model.metadata.events.EventHandler;
 
 public interface EventClient {
     void unregisterEventHandler(String name);

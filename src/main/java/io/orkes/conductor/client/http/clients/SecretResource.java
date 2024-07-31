@@ -12,12 +12,13 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+import java.util.Set;
+
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.model.TagObject;
 
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 class SecretResource {
     private OrkesHttpClient httpClient;
@@ -33,7 +34,7 @@ class SecretResource {
                 .addPathParam("key", key)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public String getSecret(String key) {
@@ -84,7 +85,7 @@ class SecretResource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
     public Boolean secretExists(String key) {
@@ -108,7 +109,7 @@ class SecretResource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
 
     }
 
@@ -120,7 +121,7 @@ class SecretResource {
                 .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        httpClient.doRequest(request);
     }
 
 

@@ -12,6 +12,9 @@
  */
 package io.orkes.conductor.client.api;
 
+import java.util.List;
+import java.util.Map;
+
 import io.orkes.conductor.client.model.AccessKeyResponse;
 import io.orkes.conductor.client.model.AuthorizationRequest;
 import io.orkes.conductor.client.model.ConductorApplication;
@@ -24,9 +27,6 @@ import io.orkes.conductor.client.model.Subject;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.UpsertGroupRequest;
 import io.orkes.conductor.client.model.UpsertUserRequest;
-
-import java.util.List;
-import java.util.Map;
 
 public interface AuthorizationClient {
 
@@ -47,7 +47,7 @@ public interface AuthorizationClient {
 
     List<ConductorUser> listUsers(Boolean apps);
 
-    void sendInviteEmail(String id, ConductorUser conductorUser);
+    void sendInviteEmail(String email);
 
     ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id);
 
@@ -72,8 +72,6 @@ public interface AuthorizationClient {
     void addRoleToApplicationUser(String applicationId, String role);
 
     CreateAccessKeyResponse createAccessKey(String id);
-
-    void createAccessKey(String id, SecretsManager secretsManager, String secretPath);
 
     ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
 
