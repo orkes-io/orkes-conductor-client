@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.orkes.conductor.client.api.AuthorizationClient;
-import io.orkes.conductor.client.api.SecretsManager;
 import io.orkes.conductor.client.model.*;
 
 public class OrkesAuthorizationClient extends OrkesClient implements AuthorizationClient {

@@ -80,6 +80,15 @@ public class OrkesHttpClientRequest {
             return this;
         }
 
+        public Builder addQueryParam(String name, Long value) {
+            if (value == null) {
+                return this;
+            }
+
+            addQueryParam(name, Long.toString(value));
+            return this;
+        }
+
         public Builder addQueryParam(String name, Integer value) {
             if (value == null) {
                 return this;

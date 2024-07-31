@@ -59,7 +59,7 @@ public class OrkesSecretClient extends OrkesClient implements SecretClient {
 
     @Override
     public void setSecretTags(List<TagObject> tags, String key) {
-        secretResource.putTagForSecret(tags, key);
+        secretResource.putTagForSecret(key, tags);
     }
 
     @Override

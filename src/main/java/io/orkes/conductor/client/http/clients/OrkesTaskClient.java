@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.orkes.conductor.client.ObjectMapperProvider;
 import io.orkes.conductor.client.api.TaskClient;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
@@ -29,14 +30,16 @@ import io.orkes.conductor.client.model.run.Workflow;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class OrkesTaskClient implements TaskClient {
+public class OrkesTaskClient extends OrkesClient implements TaskClient {
 
     private final TaskResource taskResource;
 
-    private final ObjectMapper objectMapper = new ObjectMapperProvider().getObjectMapper();
+    private final ObjectMapper objectMapper;
 
-    public OrkesTaskClient(OrkesHttpClient apiClient) {
-        this.taskResource = new TaskResource(apiClient);
+    public OrkesTaskClient(OrkesHttpClient httpClient) {
+        super(httpClient);
+        taskResource = new TaskResource(httpClient);
+        objectMapper = new ObjectMapperProvider().getObjectMapper();
     }
 
     @Override
@@ -45,18 +48,21 @@ public class OrkesTaskClient implements TaskClient {
         if (tasks == null || tasks.isEmpty()) {
             return null;
         }
+
         return tasks.get(0);
     }
 
     @Override
-    public List<Task> batchPollTasksByTaskType(
-            String taskType, String workerId, int count, int timeoutInMillisecond) {
+    public List<Task> batchPollTasksByTaskType(String taskType, String workerId, int count, int timeoutInMillisecond) {
         return batchPollTasksInDomain(taskType, null, workerId, count, timeoutInMillisecond);
     }
 
     @Override
-    public List<Task> batchPollTasksInDomain(
-            String taskType, String domain, String workerId, int count, int timeoutInMillisecond) {
+    public List<Task> batchPollTasksInDomain(String taskType,
+                                             String domain,
+                                             String workerId,
+                                             int count,
+                                             int timeoutInMillisecond) {
         return taskResource.batchPoll(taskType, workerId, domain, count, timeoutInMillisecond);
     }
 
@@ -65,35 +71,21 @@ public class OrkesTaskClient implements TaskClient {
         taskResource.updateTask(taskResult);
     }
 
-
-  
     public void updateTask(String workflowId, String taskReferenceName, TaskResult.Status status, Object output) {
-        Map<String, Object> outputMap = new HashMap<>();
-        try {
-            outputMap = objectMapper.convertValue(output, Map.class);
-        } catch (Exception e) {
-            outputMap.put("result", output);
-        }
-        taskResource.updateTaskByRefName(outputMap, workflowId, taskReferenceName, status.toString());
+        taskResource.updateTaskByRefName(getOutputMap(output), workflowId, taskReferenceName, status.toString());
     }
 
-  
     public Workflow updateTaskSync(String workflowId, String taskReferenceName, TaskResult.Status status, Object output) {
-        Map<String, Object> outputMap = new HashMap<>();
-        try {
-            outputMap = objectMapper.convertValue(output, Map.class);
-        } catch (Exception e) {
-            outputMap.put("result", output);
-        }
-        return taskResource.updateTaskSync(outputMap, workflowId, taskReferenceName, status.toString());
+        return taskResource.updateTaskSync(getOutputMap(output), workflowId, taskReferenceName, status.toString());
     }
 
+    //FIXME why keep this?
     @Override
-    public Optional<String> evaluateAndUploadLargePayload(
-            Map<String, Object> taskOutputData, String taskType) {
+    public Optional<String> evaluateAndUploadLargePayload(Map<String, Object> taskOutputData, String taskType) {
         return Optional.empty();
     }
 
+    //FIXME why keep this?
     @Override
     public Boolean ack(String taskId, String workerId) {
         throw new UnsupportedOperationException("ack is no longer required");
@@ -114,6 +106,7 @@ public class OrkesTaskClient implements TaskClient {
         return taskResource.getTask(taskId);
     }
 
+    //FIXME why keep this?
     @Override
     public void removeTaskFromQueue(String taskType, String taskId) {
         throw new UnsupportedOperationException("remove task from queue is no longer supported");
@@ -129,16 +122,19 @@ public class OrkesTaskClient implements TaskClient {
         return taskResource.size(List.of(taskType)).get(taskType);
     }
 
+    //FIXME why keep this?
     @Override
     public List<PollData> getPollData(String taskType) {
         throw new UnsupportedOperationException("get poll data is no longer supported");
     }
 
+    //FIXME why keep this?
     @Override
     public List<PollData> getAllPollData() {
         throw new UnsupportedOperationException("get poll data is no longer supported");
     }
 
+    //FIXME why keep this?
     @Override
     public String requeueAllPendingTasks() {
         throw new UnsupportedOperationException("requeue all pending task is no longer supported");
@@ -149,11 +145,13 @@ public class OrkesTaskClient implements TaskClient {
         return taskResource.requeuePendingTask(taskType);
     }
 
+    //FIXME why keep this?
     @Override
     public SearchResult<TaskSummary> search(String query) {
         throw new UnsupportedOperationException("search operation on tasks is not supported");
     }
 
+    //FIXME why keep this?
     @Override
     public SearchResult<Task> searchV2(String query) {
         throw new UnsupportedOperationException("search operation on tasks is not supported");
@@ -164,8 +162,20 @@ public class OrkesTaskClient implements TaskClient {
         return taskResource.searchTasks(start, size, sort, freeText, query);
     }
 
+    //FIXME why keep this?
     @Override
     public SearchResult<Task> searchV2(Integer start, Integer size, String sort, String freeText, String query) {
         throw new UnsupportedOperationException("search operation on tasks is not supported");
+    }
+
+    private Map<String, Object> getOutputMap(Object output) {
+        try {
+            return objectMapper.convertValue(output, new TypeReference<>() {
+            });
+        } catch (Exception e) {
+            Map<String, Object> outputMap = new HashMap<>();
+            outputMap.put("result", output);
+            return outputMap;
+        }
     }
 }

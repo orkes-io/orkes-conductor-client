@@ -12,20 +12,17 @@
  */
 package io.orkes.conductor.client.http.clients;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.orkes.conductor.client.http.ApiResponse;
-import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.integration.PromptTemplateTestRequest;
 import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import okhttp3.Call;
+import java.util.List;
+
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.POST;
 
 class PromptResource extends Resource {
 
@@ -33,440 +30,98 @@ class PromptResource extends Resource {
         super(httpClient);
     }
 
-  
-    public Call deletePromptTemplateCall(String name) {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath = "/prompts/{name}".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {
-
-        };
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {
-
-        };
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[]{"api_key"};
-        return httpClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-                localVarFormParams, localVarAuthNames);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private Call deletePromptTemplateValidateBeforeCall(String name) {
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException("Missing the required parameter 'name' when calling deletePromptTemplate(Async)");
-        }
-
-        return deletePromptTemplateCall(name);
-    }
-
-  
     public void deletePromptTemplate(String name) {
-        deletePromptTemplateWithHttpInfo(name);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(DELETE)
+                .path("/prompts/{name}")
+                .addPathParam("name", name)
+                .build();
+
+        httpClient.doRequest(request, null);
     }
 
-  
-    public ApiResponse<Void> deletePromptTemplateWithHttpInfo(String name) {
-        Call call = deletePromptTemplateValidateBeforeCall(name);
-        return httpClient.execute(call);
+    public void deleteTagForPromptTemplate(String name, List<TagObject> body) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(DELETE)
+                .path("/prompts/{name}/tags")
+                .addPathParam("name", name)
+                .body(body)
+                .build();
+
+        httpClient.doRequest(request, null);
     }
 
-  
-    public Call deleteTagForPromptTemplateCall(List<TagObject> body, String name) {
-
-        // create path and map variables
-        String localVarPath = "/prompts/{name}/tags".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {
-
-        };
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[]{"api_key"};
-        return httpClient.buildCall(localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, body, localVarHeaderParams,
-                localVarFormParams, localVarAuthNames);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private Call deleteTagForPromptTemplateValidateBeforeCall(List<TagObject> body, String name) {
-        // verify the required parameter 'body' is set
-        if (body == null) {
-            throw new ApiException("Missing the required parameter 'body' when calling deleteTagForPromptTemplate(Async)");
-        }
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException("Missing the required parameter 'name' when calling deleteTagForPromptTemplate(Async)");
-        }
-
-        return deleteTagForPromptTemplateCall(body, name);
-
-    }
-
-  
-    public void deleteTagForPromptTemplate(List<TagObject> body, String name) {
-        deleteTagForPromptTemplateWithHttpInfo(body, name);
-    }
-
-  
-    public ApiResponse<Void> deleteTagForPromptTemplateWithHttpInfo(List<TagObject> body, String name) {
-        Call call = deleteTagForPromptTemplateValidateBeforeCall(body, name);
-        return httpClient.execute(call);
-    }
-
-  
-    public Call getPromptTemplateCall(String name) {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath = "/prompts/{name}".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {
-
-        };
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[]{"api_key"};
-        return httpClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-                localVarFormParams, localVarAuthNames);
-    }
-
-    private Call getPromptTemplateValidateBeforeCall(String name) {
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException("Missing the required parameter 'name' when calling getPromptTemplate(Async)");
-        }
-
-        return getPromptTemplateCall(name);
-
-    }
-
-  
     public PromptTemplate getPromptTemplate(String name) {
-        ApiResponse<PromptTemplate> resp = getPromptTemplateWithHttpInfo(name);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(GET)
+                .path("/prompts/{name}")
+                .addPathParam("name", name)
+                .build();
+
+        ApiResponse<PromptTemplate> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
         return resp.getData();
     }
 
-  
-    public ApiResponse<PromptTemplate> getPromptTemplateWithHttpInfo(String name) {
-        Call call = getPromptTemplateValidateBeforeCall(name);
-        Type localVarReturnType = new TypeReference<PromptTemplate>() {
-        }.getType();
-        return httpClient.execute(call, localVarReturnType);
-    }
-
-  
-    public Call getPromptTemplatesCall() {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath = "/prompts";
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {
-
-        };
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[]{"api_key"};
-        return httpClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-                localVarFormParams, localVarAuthNames);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private Call getPromptTemplatesValidateBeforeCall() {
-        return getPromptTemplatesCall();
-    }
-
-  
     public List<PromptTemplate> getPromptTemplates() {
-        ApiResponse<List<PromptTemplate>> resp = getPromptTemplatesWithHttpInfo();
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(GET)
+                .path("/prompts")
+                .build();
+
+        ApiResponse<List<PromptTemplate>> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
         return resp.getData();
     }
 
-  
-    public ApiResponse<List<PromptTemplate>> getPromptTemplatesWithHttpInfo() {
-        Call call = getPromptTemplatesValidateBeforeCall();
-        Type localVarReturnType = new TypeReference<List<PromptTemplate>>() {
-        }.getType();
-        return httpClient.execute(call, localVarReturnType);
-    }
-
-  
-    public Call getTagsForPromptTemplateCall(String name) {
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath = "/prompts/{name}/tags".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {
-
-        };
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[]{"api_key"};
-        return httpClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams,
-                localVarFormParams, localVarAuthNames);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private Call getTagsForPromptTemplateValidateBeforeCall(String name) {
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException("Missing the required parameter 'name' when calling getTagsForPromptTemplate(Async)");
-        }
-
-        return getTagsForPromptTemplateCall(name);
-
-    }
-
-  
     public List<TagObject> getTagsForPromptTemplate(String name) {
-        ApiResponse<List<TagObject>> resp = getTagsForPromptTemplateWithHttpInfo(name);
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.GET)
+                .path("/prompts/{name}/tags")
+                .addPathParam("name", name)
+                .build();
+
+        ApiResponse<List<TagObject>> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
+
         return resp.getData();
     }
 
-  
-    public ApiResponse<List<TagObject>> getTagsForPromptTemplateWithHttpInfo(String name) {
-        Call call = getTagsForPromptTemplateValidateBeforeCall(name);
-        Type localVarReturnType = new TypeReference<List<TagObject>>() {
-        }.getType();
-        return httpClient.execute(call, localVarReturnType);
+    public void putTagForPromptTemplate(String name, List<TagObject> body) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.PUT)
+                .path("/prompts/{name}/tags")
+                .addPathParam("name", name)
+                .body(body)
+                .build();
+
+        httpClient.doRequest(request, null);
     }
 
-  
-    public Call putTagForPromptTemplateCall(List<TagObject> body, String name) {
-
-        // create path and map variables
-        String localVarPath = "/prompts/{name}/tags".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {
-
-        };
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[]{"api_key"};
-        return httpClient.buildCall(localVarPath, "PUT", localVarQueryParams, localVarCollectionQueryParams, body, localVarHeaderParams,
-                localVarFormParams, localVarAuthNames);
-    }
-
-    private Call putTagForPromptTemplateValidateBeforeCall(List<TagObject> body, String name) {
-        // verify the required parameter 'body' is set
-        if (body == null) {
-            throw new ApiException("Missing the required parameter 'body' when calling putTagForPromptTemplate(Async)");
-        }
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException("Missing the required parameter 'name' when calling putTagForPromptTemplate(Async)");
-        }
-
-        return putTagForPromptTemplateCall(body, name);
-    }
-
-  
-    public void putTagForPromptTemplate(List<TagObject> body, String name) {
-        putTagForPromptTemplateWithHttpInfo(body, name);
-    }
-
-  
-    public ApiResponse<Void> putTagForPromptTemplateWithHttpInfo(List<TagObject> body, String name) {
-        Call call = putTagForPromptTemplateValidateBeforeCall(body, name);
-        return httpClient.execute(call);
-    }
-
-  
-
-  
-    public Call savePromptTemplateCall(String body, String description, String name, List<String> models)
-            {
-
-        // create path and map variables
-        String localVarPath = "/prompts/{name}".replaceAll("\\{" + "name" + "\\}", httpClient.escapeString(name));
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-        if (description != null) {
-            localVarQueryParams.addAll(httpClient.parameterToPair("description", description));
-        }
-        if (models != null) {
-            localVarCollectionQueryParams.addAll(httpClient.parameterToPairs("multi", "models", models));
-        }
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {
-
-        };
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[]{"api_key"};
-        return httpClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, body, localVarHeaderParams,
-                localVarFormParams, localVarAuthNames);
-    }
-
-  
     public void savePromptTemplate(String name, String body, String description, List<String> models) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/prompts/{name}")
                 .addPathParam("name", name)
                 .addQueryParam("description", description)
                 .addQueryParams("models", models)
                 .build();
 
+        httpClient.doRequest(request, null);
+    }
 
-
-        request.body(body)
+    public String testMessageTemplate(PromptTemplateTestRequest body) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.POST)
+                .path("/prompts/test")
+                .body(body)
                 .build();
 
-        httpClient.doRequest(request, null);
+        ApiResponse<String> resp = httpClient.doRequest(request, new TypeReference<>() {
+        });
 
-    }
-
-
-    @SuppressWarnings("rawtypes")
-    private Call testMessageTemplateValidateBeforeCall(PromptTemplateTestRequest body) {
-        // verify the required parameter 'body' is set
-        if (body == null) {
-            throw new ApiException("Missing the required parameter 'body' when calling testMessageTemplate(Async)");
-        }
-
-        return testMessageTemplateCall(body);
-
-    }
-
-    public Call testMessageTemplateCall(PromptTemplateTestRequest body) {
-
-        // create path and map variables
-        String localVarPath = "/prompts/test";
-
-        List<Param> localVarQueryParams = new ArrayList<>();
-        List<Param> localVarCollectionQueryParams = new ArrayList<>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = {"application/json"};
-        final String localVarAccept = httpClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {"application/json"};
-        final String localVarContentType = httpClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        String[] localVarAuthNames = new String[]{"api_key"};
-        return httpClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, body, localVarHeaderParams,
-                localVarFormParams, localVarAuthNames);
-    }
-
-  
-    public String testMessageTemplate(PromptTemplateTestRequest body) {
-        ApiResponse<String> resp = testMessageTemplateWithHttpInfo(body);
         return resp.getData();
     }
-
-  
-    public ApiResponse<String> testMessageTemplateWithHttpInfo(PromptTemplateTestRequest body) {
-        Call call = testMessageTemplateValidateBeforeCall(body);
-        Type localVarReturnType = new TypeReference<String>() {
-        }.getType();
-        return httpClient.execute(call, localVarReturnType);
-    }
-
 }

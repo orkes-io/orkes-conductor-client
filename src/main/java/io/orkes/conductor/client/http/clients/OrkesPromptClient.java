@@ -55,12 +55,12 @@ public class OrkesPromptClient implements PromptClient {
 
     @Override
     public void updateTagForPromptTemplate(String promptName, List<TagObject> tags) {
-        promptResourceApi.putTagForPromptTemplate(tags, promptName);
+        promptResourceApi.putTagForPromptTemplate(promptName, tags);
     }
 
     @Override
     public void deleteTagForPromptTemplate(String promptName, List<TagObject> tags) {
-        promptResourceApi.deleteTagForPromptTemplate(tags, promptName);
+        promptResourceApi.deleteTagForPromptTemplate(promptName, tags);
     }
 
     @Override

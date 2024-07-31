@@ -41,9 +41,10 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public List<Long> getNextFewSchedules(
-            String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit)
-            {
+    public List<Long> getNextFewSchedules(String cronExpression,
+                                          Long scheduleStartTime,
+                                          Long scheduleEndTime,
+                                          Integer limit) {
         return schedulerResource.getNextFewSchedules(
                 cronExpression, scheduleStartTime, scheduleEndTime, limit);
     }
@@ -84,25 +85,27 @@ public class OrkesSchedulerClient extends OrkesClient implements SchedulerClient
     }
 
     @Override
-    public SearchResultWorkflowScheduleExecutionModel searchV22(
-            Integer start, Integer size, String sort, String freeText, String query)
-            {
+    public SearchResultWorkflowScheduleExecutionModel searchV22(Integer start,
+                                                                Integer size,
+                                                                String sort,
+                                                                String freeText,
+                                                                String query) {
         return schedulerResource.searchV22(start, size, sort, freeText, query);
     }
+
     @Override
-    public SearchResultWorkflowScheduleExecution search(Integer start, Integer size, String sort, String freeText, String query)
-        {
+    public SearchResultWorkflowScheduleExecution search(Integer start, Integer size, String sort, String freeText, String query) {
         return schedulerResource.search(start, size, sort, freeText, query);
     }
 
     @Override
     public void setSchedulerTags(List<TagObject> body, String name) {
-        schedulerResource.putTagForSchedule(body, name);
+        schedulerResource.putTagForSchedule(name, body);
     }
 
     @Override
     public void deleteSchedulerTags(List<TagObject> body, String name) {
-        schedulerResource.deleteTagForSchedule(body, name);
+        schedulerResource.deleteTagForSchedule(name, body);
     }
 
     @Override
