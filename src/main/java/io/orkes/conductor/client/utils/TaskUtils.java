@@ -12,7 +12,7 @@
  */
 package io.orkes.conductor.client.utils;
 
-import io.orkes.conductor.client.ObjectMapperProvider;
+import io.orkes.conductor.client.config.ObjectMapperProvider;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 
 import com.fasterxml.jackson.core.type.TypeReference;

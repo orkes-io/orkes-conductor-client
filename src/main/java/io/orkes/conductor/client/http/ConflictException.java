@@ -17,8 +17,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.orkes.conductor.client.OrkesClientException;
-
 public class ConflictException extends OrkesClientException {
 
     private final Map<String, List<String>> responseHeaders;

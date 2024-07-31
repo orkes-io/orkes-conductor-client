@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import io.orkes.conductor.client.ObjectMapperProvider;
 import io.orkes.conductor.client.api.TaskClient;
+import io.orkes.conductor.client.config.ObjectMapperProvider;
 import io.orkes.conductor.client.model.metadata.tasks.PollData;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskExecLog;

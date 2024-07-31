@@ -19,7 +19,7 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.orkes.conductor.client.ObjectMapperProvider;
+import io.orkes.conductor.client.config.ObjectMapperProvider;
 import io.orkes.conductor.client.model.metadata.tasks.TaskType;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
 

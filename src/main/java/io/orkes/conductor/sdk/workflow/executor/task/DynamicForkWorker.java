@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.function.Function;
 
-import io.orkes.conductor.client.ObjectMapperProvider;
+import io.orkes.conductor.client.config.ObjectMapperProvider;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;

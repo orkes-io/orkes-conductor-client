@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import io.orkes.conductor.client.ObjectMapperProvider;
-import io.orkes.conductor.client.OrkesClientException;
+import io.orkes.conductor.client.config.ObjectMapperProvider;
+import io.orkes.conductor.client.http.OrkesClientException;
 import io.orkes.conductor.client.model.metadata.tasks.TaskDef;
 import io.orkes.conductor.client.model.metadata.tasks.TaskType;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;

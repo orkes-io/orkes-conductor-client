@@ -19,8 +19,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.OrkesClientException;
-import io.orkes.conductor.client.OrkesClients;
+import io.orkes.conductor.client.http.OrkesClientException;
+import io.orkes.conductor.client.http.OrkesClients;
 import io.orkes.conductor.client.model.*;
 import io.orkes.conductor.client.model.TargetRef.TypeEnum;
 import io.orkes.conductor.client.model.UpsertGroupRequest.RolesEnum;

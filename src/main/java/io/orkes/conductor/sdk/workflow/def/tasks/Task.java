@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.ObjectMapperProvider;
+import io.orkes.conductor.client.config.ObjectMapperProvider;
 import io.orkes.conductor.client.model.metadata.tasks.TaskType;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
 import io.orkes.conductor.sdk.workflow.utils.InputOutputGetter;

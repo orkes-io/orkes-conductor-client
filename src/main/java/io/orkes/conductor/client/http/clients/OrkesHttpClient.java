@@ -50,10 +50,10 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.http.ApiResponse;
 import io.orkes.conductor.client.http.ConflictException;
 import io.orkes.conductor.client.http.JSON;
+import io.orkes.conductor.client.http.OrkesClientException;
 import io.orkes.conductor.client.http.Param;
 import io.orkes.conductor.client.model.GenerateTokenRequest;
 import io.orkes.conductor.client.model.TokenResponse;
@@ -245,7 +245,7 @@ public class OrkesHttpClient {
         }
     }
 
-    public Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 

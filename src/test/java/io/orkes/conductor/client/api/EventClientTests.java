@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.OrkesClientException;
+import io.orkes.conductor.client.http.OrkesClientException;
 import io.orkes.conductor.client.model.metadata.events.EventHandler;
 import io.orkes.conductor.client.util.Commons;
 

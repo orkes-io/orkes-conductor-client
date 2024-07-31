@@ -20,7 +20,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.OrkesClients;
+import io.orkes.conductor.client.http.OrkesClients;
 import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.model.run.Workflow;
 import io.orkes.conductor.client.util.ApiUtil;

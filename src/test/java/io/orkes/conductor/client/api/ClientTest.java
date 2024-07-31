@@ -12,7 +12,7 @@
  */
 package io.orkes.conductor.client.api;
 
-import io.orkes.conductor.client.OrkesClients;
+import io.orkes.conductor.client.http.OrkesClients;
 import io.orkes.conductor.client.util.ApiUtil;
 
 public abstract class ClientTest {

@@ -15,8 +15,8 @@ package io.orkes.conductor.client.http.clients;
 import java.util.List;
 import java.util.Map;
 
-import io.orkes.conductor.client.OrkesClientException;
 import io.orkes.conductor.client.api.IntegrationClient;
+import io.orkes.conductor.client.http.OrkesClientException;
 import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.integration.Integration;
 import io.orkes.conductor.client.model.integration.IntegrationApi;

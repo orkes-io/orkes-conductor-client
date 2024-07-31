@@ -22,10 +22,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.api.TaskClient;
 import io.orkes.conductor.client.api.WorkflowClient;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
+import io.orkes.conductor.client.http.OrkesClients;
 import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.model.WorkflowStatus;
 import io.orkes.conductor.client.model.metadata.workflow.StartWorkflowRequest;

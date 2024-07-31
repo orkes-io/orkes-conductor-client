@@ -21,7 +21,7 @@ ext {
             okHttp        : '4.12.0',
             guava         : '32.1.2-jre',
             jackson       : '2.17.1',
-            archaius      : '0.7.6',
+            archaius      : '0.7.12',
             slf4j         : '1.7.36',
             log4j         : '2.23.1',
             lombok        : '1.18.30',
@@ -37,8 +37,9 @@ ext {
 group = 'io.orkes.conductor'
 
 dependencies {
-    // ### candidates to be shadowed ###
+    // ### candidates to be removed  ###
     implementation "com.netflix.archaius:archaius-core:${versions.archaius}"
+    // ### candidates to be shadowed ###
     implementation "com.google.guava:guava:${versions.guava}"
     // #################################
     implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
@@ -190,7 +191,9 @@ tasks.withType(Test) {
     maxParallelForks = 1
 }
 
-sourceSets.main.java.srcDirs += ['example/java', 'example/resources']
+sourceSets.main.java.srcDirs += ['examples/main/java']
+sourceSets.main.resources.srcDirs += ['examples/main/resources']
+
 
 shadowJar {
     archiveFileName = "orkes-conductor-client-$version-all.jar"

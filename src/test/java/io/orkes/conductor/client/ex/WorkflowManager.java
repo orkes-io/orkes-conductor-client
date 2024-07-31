@@ -15,9 +15,9 @@ package io.orkes.conductor.client.ex;
 import java.time.Duration;
 import java.util.Map;
 
-import io.orkes.conductor.client.OrkesClients;
 import io.orkes.conductor.client.api.TaskClient;
 import io.orkes.conductor.client.api.WorkflowClient;
+import io.orkes.conductor.client.http.OrkesClients;
 import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 import io.orkes.conductor.client.model.metadata.tasks.Task;
 import io.orkes.conductor.client.model.metadata.tasks.TaskResult;

@@ -68,7 +68,6 @@ class WorkflowResource {
         });
 
         return resp.getData();
-
     }
 
     public void decide(String workflowId) {

@@ -12,7 +12,7 @@
  */
 package io.orkes.conductor.client.util;
 
-import io.orkes.conductor.client.OrkesClients;
+import io.orkes.conductor.client.http.OrkesClients;
 import io.orkes.conductor.client.http.clients.OrkesHttpClient;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,7 +36,7 @@ public class ApiUtil {
         String keySecret = getKeySecret();
         assertNotNull(keySecret, ENV_SECRET + " env not set");
 
-        return new OrkesHttpClient.Builder()
+        return OrkesHttpClient.builder()
                 .basePath(basePath)
                 .keyId(keyId)
                 .keySecret(keySecret)

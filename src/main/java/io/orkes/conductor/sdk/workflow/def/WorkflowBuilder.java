@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.orkes.conductor.client.ObjectMapperProvider;
+import io.orkes.conductor.client.config.ObjectMapperProvider;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
 import io.orkes.conductor.sdk.workflow.def.tasks.*;

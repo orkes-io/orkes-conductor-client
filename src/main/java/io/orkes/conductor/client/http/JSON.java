@@ -14,7 +14,7 @@ package io.orkes.conductor.client.http;
 
 import java.lang.reflect.Type;
 
-import io.orkes.conductor.client.ObjectMapperProvider;
+import io.orkes.conductor.client.config.ObjectMapperProvider;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
