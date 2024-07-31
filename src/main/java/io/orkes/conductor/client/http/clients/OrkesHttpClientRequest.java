@@ -27,6 +27,7 @@ public class OrkesHttpClientRequest {
     public enum Method {
         GET, POST, PUT, DELETE, PATCH
     }
+
     private final Method method;
     private final String path;
     private final List<Param> pathParams;
@@ -94,6 +95,11 @@ public class OrkesHttpClientRequest {
             }
 
             addQueryParam(name, Boolean.toString(value));
+            return this;
+        }
+
+        public Builder addQueryParams(String name, List<String> values) {
+            values.forEach(it -> addQueryParam(name, it));
             return this;
         }
 

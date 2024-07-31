@@ -27,12 +27,10 @@ import io.orkes.conductor.client.model.integration.ai.PromptTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Call;
 
-class PromptResource {
-
-    private final OrkesHttpClient httpClient;
+class PromptResource extends Resource {
 
     public PromptResource(OrkesHttpClient httpClient) {
-        this.httpClient = httpClient;
+        super(httpClient);
     }
 
   
@@ -399,36 +397,25 @@ class PromptResource {
                 localVarFormParams, localVarAuthNames);
     }
 
-    @SuppressWarnings("rawtypes")
-    private Call savePromptTemplateValidateBeforeCall(String body, String description, String name, List<String> models)
-            {
-        // verify the required parameter 'body' is set
-        if (body == null) {
-            throw new ApiException("Missing the required parameter 'body' when calling savePromptTemplate(Async)");
-        }
-        // verify the required parameter 'description' is set
-        if (description == null) {
-            throw new ApiException("Missing the required parameter 'description' when calling savePromptTemplate(Async)");
-        }
-        // verify the required parameter 'name' is set
-        if (name == null) {
-            throw new ApiException("Missing the required parameter 'name' when calling savePromptTemplate(Async)");
-        }
-
-        return savePromptTemplateCall(body, description, name, models);
-
-    }
-
   
-    public void savePromptTemplate(String body, String description, String name, List<String> models) {
-        savePromptTemplateWithHttpInfo(body, description, name, models);
+    public void savePromptTemplate(String name, String body, String description, List<String> models) {
+        OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
+                .method(OrkesHttpClientRequest.Method.POST)
+                .path("/prompts/{name}")
+                .addPathParam("name", name)
+                .addQueryParam("description", description)
+                .addQueryParams("models", models)
+                .build();
+
+
+
+        request.body(body)
+                .build();
+
+        httpClient.doRequest(request, null);
+
     }
 
-  
-    public ApiResponse<Void> savePromptTemplateWithHttpInfo(String body, String description, String name, List<String> models) {
-        Call call = savePromptTemplateValidateBeforeCall(body, description, name, models);
-        return httpClient.execute(call);
-    }
 
     @SuppressWarnings("rawtypes")
     private Call testMessageTemplateValidateBeforeCall(PromptTemplateTestRequest body) {

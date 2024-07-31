@@ -30,7 +30,7 @@ public class OrkesPromptClient implements PromptClient {
 
     @Override
     public void savePrompt(String promptName, String description, String promptTemplate) {
-        promptResourceApi.savePromptTemplate(promptTemplate, description, promptName, List.of());
+        promptResourceApi.savePromptTemplate(promptName, promptTemplate, description, List.of());
     }
 
     @Override
