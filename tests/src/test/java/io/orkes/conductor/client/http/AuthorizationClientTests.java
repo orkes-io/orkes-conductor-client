@@ -12,16 +12,8 @@
  */
 package io.orkes.conductor.client.http;
 
-import java.util.*;
-
 import io.orkes.conductor.client.api.AuthorizationClient;
 import io.orkes.conductor.client.api.MetadataClient;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import io.orkes.conductor.client.model.AccessKeyResponse;
 import io.orkes.conductor.client.model.AuthorizationRequest;
 import io.orkes.conductor.client.model.ConductorApplication;
@@ -40,8 +32,19 @@ import io.orkes.conductor.client.model.metadata.workflow.WorkflowDef;
 import io.orkes.conductor.client.model.metadata.workflow.WorkflowTask;
 import io.orkes.conductor.client.util.ApiUtil;
 import io.orkes.conductor.client.util.Commons;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class AuthorizationClientTests extends ClientTest {
     private static AuthorizationClient authorizationClient;
@@ -55,7 +58,7 @@ public class AuthorizationClientTests extends ClientTest {
         authorizationClient = orkesClients.getAuthorizationClient();
         metadataClient = orkesClients.getMetadataClient();
         CreateOrUpdateApplicationRequest request = new CreateOrUpdateApplicationRequest();
-        request.setName("test-" + UUID.randomUUID().toString());
+        request.setName("test-" + UUID.randomUUID());
         ConductorApplication app = authorizationClient.createApplication(request);
         applicationId = app.getId();
     }

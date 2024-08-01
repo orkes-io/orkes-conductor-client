@@ -24,6 +24,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.DELETE;
 import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.GET;
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.POST;
 
 class AuthorizationResource extends Resource {
 
@@ -48,7 +49,7 @@ class AuthorizationResource extends Resource {
     void grantPermissions(AuthorizationRequest body) {
         Objects.requireNonNull(body, "AuthorizationRequest cannot be null");
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(GET)
+                .method(POST)
                 .path("/auth/authorization")
                 .body(body)
                 .build();

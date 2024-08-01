@@ -21,6 +21,8 @@ import io.orkes.conductor.client.model.UpsertUserRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.POST;
+
 class UserResource {
     private OrkesHttpClient httpClient;
 
@@ -80,9 +82,9 @@ class UserResource {
 
     public void sendInviteEmail(String email) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/users/{email}/sendInviteEmail")
-                .addPathParam("id", email)
+                .addPathParam("email", email)
                 .build();
 
         httpClient.doRequest(request);
