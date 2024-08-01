@@ -15,10 +15,6 @@ plugins {
 }
 
 dependencies {
-    // ### To be removed  ###
-    implementation "com.netflix.archaius:archaius-core:${versions.archaius}"
-    // #################################
-
     implementation "com.squareup.okhttp3:okhttp:${versions.okHttp}"
     implementation "com.squareup.okhttp3:logging-interceptor:${versions.okHttp}"
 

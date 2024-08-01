@@ -14,7 +14,11 @@ package io.orkes.conductor.client.automator;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -42,31 +46,29 @@ class TaskRunner {
     private final Map<String /* taskType */, String /* domain */> taskToDomain;
     private final int taskPollTimeout;
     public static final String DOMAIN = "domain";
-    private static final String OVERRIDE_DISCOVERY = "pollOutOfDiscovery";
     public static final String ALL_WORKERS = "all";
 
     private final Semaphore permits;
 
     private final Worker worker;
 
-    private int pollingIntervalInMillis;
-
-    private String domain;
+    private final int pollingIntervalInMillis;
 
     private final String taskType;
 
-    private int errorAt;
+    private final int errorAt;
 
     private int pollingErrorCount = 0;
 
-    TaskRunner(
-            Worker worker,
-            TaskClient taskClient,
-            int updateRetryCount,
-            Map<String, String> taskToDomain,
-            String workerNamePrefix,
-            int threadCount,
-            int taskPollTimeout) {
+    private String domain;
+
+    TaskRunner(Worker worker,
+               TaskClient taskClient,
+               int updateRetryCount,
+               Map<String, String> taskToDomain,
+               String workerNamePrefix,
+               int threadCount,
+               int taskPollTimeout) {
         this.worker = worker;
         this.taskClient = taskClient;
         this.updateRetryCount = updateRetryCount;
@@ -173,7 +175,7 @@ class TaskRunner {
         try {
             LOGGER.trace("Polling task of type: {} in domain: '{}' with size {}", taskType, domain, pollCount);
             Stopwatch stopwatch = Stopwatch.createStarted();
-            tasks =  pollTask(domain, pollCount);
+            tasks = pollTask(domain, pollCount);
             stopwatch.stop();
             permits.release(pollCount - tasks.size());        //release extra permits
             LOGGER.debug("Time taken to poll {} task with a batch size of {} is {} ms", taskType, tasks.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));

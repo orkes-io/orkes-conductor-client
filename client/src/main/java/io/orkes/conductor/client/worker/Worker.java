@@ -58,6 +58,8 @@ public interface Worker {
         return PropertyFactory.getBoolean(getTaskDefName(), "paused", false);
     }
 
+    //TODO extract this from here. Provide an interface/strategy to get the identity and use that.
+    // This should not be coupled to EC2 or any other.
     /**
      * Override this method to app specific rules.
      *

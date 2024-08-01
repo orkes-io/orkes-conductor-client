@@ -12,33 +12,76 @@
  */
 package io.orkes.conductor.client.config;
 
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.netflix.config.DynamicProperty;
+import lombok.SneakyThrows;
 
-/** Used to configure the Conductor workers using properties. */
+/**
+ * Used to configure the Conductor workers using conductor-workers.properties.
+ */
 public class PropertyFactory {
 
-    private final DynamicProperty global;
-    private final DynamicProperty local;
+    private static final Properties PROPERTIES = loadProperties("conductor-workers.properties");
 
     private static final String PROPERTY_PREFIX = "conductor.worker";
+
+    private record WorkerProperty(String key) {
+
+        String getString(String defaultValue) {
+            if (PROPERTIES == null) {
+                return defaultValue;
+            }
+
+            String value = PROPERTIES.getProperty(key);
+            if (value == null) {
+                return defaultValue;
+            }
+
+            return value;
+        }
+
+        Integer getInteger(Integer defaultValue) {
+            String value = getString(null);
+            if (value == null) {
+                return defaultValue;
+            }
+
+            // Handle potential parsing exceptions ?
+            return Integer.parseInt(value);
+        }
+
+        Boolean getBoolean(Boolean defaultValue) {
+            String value = getString(null);
+            if (value == null) {
+                return defaultValue;
+            }
+
+            // Handle potential parsing exceptions ?
+            return Boolean.parseBoolean(value);
+        }
+    }
+
+    private final WorkerProperty global;
+
+    private final WorkerProperty local;
 
     private static final ConcurrentHashMap<String, PropertyFactory> PROPERTY_FACTORY_MAP =
             new ConcurrentHashMap<>();
 
     private PropertyFactory(String prefix, String propName, String workerName) {
-        this.global = DynamicProperty.getInstance(prefix + "." + propName);
-        this.local = DynamicProperty.getInstance(prefix + "." + workerName + "." + propName);
+        this.global = new WorkerProperty(prefix + "." + propName);
+        this.local = new WorkerProperty(prefix + "." + workerName + "." + propName);
     }
 
     /**
      * @param defaultValue Default Value
      * @return Returns the value as integer. If not value is set (either global or worker specific),
-     *     then returns the default value.
+     * then returns the default value.
      */
     public Integer getInteger(int defaultValue) {
-        Integer value = local.getInteger();
+        Integer value = local.getInteger(defaultValue);
         if (value == null) {
             value = global.getInteger(defaultValue);
         }
@@ -48,10 +91,10 @@ public class PropertyFactory {
     /**
      * @param defaultValue Default Value
      * @return Returns the value as String. If not value is set (either global or worker specific),
-     *     then returns the default value.
+     * then returns the default value.
      */
     public String getString(String defaultValue) {
-        String value = local.getString();
+        String value = local.getString(defaultValue);
         if (value == null) {
             value = global.getString(defaultValue);
         }
@@ -61,10 +104,10 @@ public class PropertyFactory {
     /**
      * @param defaultValue Default Value
      * @return Returns the value as Boolean. If not value is set (either global or worker specific),
-     *     then returns the default value.
+     * then returns the default value.
      */
     public Boolean getBoolean(Boolean defaultValue) {
-        Boolean value = local.getBoolean();
+        Boolean value = local.getBoolean(defaultValue);
         if (value == null) {
             value = global.getBoolean(defaultValue);
         }
@@ -87,5 +130,18 @@ public class PropertyFactory {
         String key = property + "." + workerName;
         return PROPERTY_FACTORY_MAP.computeIfAbsent(
                 key, t -> new PropertyFactory(PROPERTY_PREFIX, property, workerName));
+    }
+
+    @SneakyThrows
+    private static Properties loadProperties(String file) {
+        Properties properties = new Properties();
+        try (InputStream input = PropertyFactory.class.getClassLoader().getResourceAsStream(file)) {
+            if (input == null) {
+                return null;
+            }
+            properties.load(input);
+        }
+
+        return properties;
     }
 }
