@@ -120,8 +120,8 @@ public class TaskClientTests extends ClientTest {
             workflow = workflowClient.getWorkflow(workflowId, true);
             List<String> runningTasks = workflow.getTasks().stream()
                     .filter(task -> !task.getStatus().isTerminal() && task.getTaskType().equals("there_is_no_worker"))
-                    .map(t -> t.getReferenceTaskName())
-                    .collect(Collectors.toList());
+                    .map(Task::getReferenceTaskName)
+                    .toList();
             System.out.println("Running tasks: " + runningTasks);
             if (runningTasks.isEmpty()) {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);

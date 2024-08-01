@@ -65,7 +65,7 @@ class ApplicationResource extends Resource {
         if (id == null) {
             builder.method(POST).path("/applications");
         } else {
-            builder.method(POST)
+            builder.method(PUT)
                     .path("/applications/{id}")
                     .addPathParam("id", id);
         }

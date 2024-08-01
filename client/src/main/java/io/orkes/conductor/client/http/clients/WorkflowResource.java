@@ -32,6 +32,8 @@ import io.orkes.conductor.client.model.run.WorkflowTestRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import static io.orkes.conductor.client.http.clients.OrkesHttpClientRequest.Method.POST;
+
 class WorkflowResource {
     private final OrkesHttpClient httpClient;
 
@@ -54,7 +56,7 @@ class WorkflowResource {
                                        String requestId,
                                        Integer waitForSeconds) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/execute/{name}/{version}")
                 .addPathParam("name", name)
                 .addPathParam("version", version)
@@ -141,7 +143,7 @@ class WorkflowResource {
                                                                             Boolean includeClosed,
                                                                             Boolean includeTasks) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/correlated/batch")
                 .addQueryParam("includeClosed", includeClosed)
                 .addQueryParam("includeTasks", includeTasks)
@@ -185,7 +187,7 @@ class WorkflowResource {
 
     public String rerun(RerunWorkflowRequest rerunWorkflowRequest, String workflowId) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/{workflowId}/rerun")
                 .addPathParam("workflowId", workflowId)
                 .body(rerunWorkflowRequest)
@@ -200,7 +202,7 @@ class WorkflowResource {
 
     public void restart(String workflowId, Boolean useLatestDefinitions) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/{workflowId}/restart")
                 .addPathParam("workflowId", workflowId)
                 .addQueryParam("useLatestDefinitions", useLatestDefinitions)
@@ -221,7 +223,7 @@ class WorkflowResource {
 
     public void retry(String workflowId, Boolean resumeSubworkflowTasks) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/{workflowId}/retry")
                 .addPathParam("workflowId", workflowId)
                 .addQueryParam("resumeSubworkflowTasks", resumeSubworkflowTasks)
@@ -271,7 +273,7 @@ class WorkflowResource {
 
     public Workflow testWorkflow(WorkflowTestRequest testRequest) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/test")
                 .body(testRequest)
                 .build();
@@ -286,7 +288,7 @@ class WorkflowResource {
         // might require accepts "text/plain"
         Objects.requireNonNull(startWorkflowRequest, "StartWorkflowRequest cannot be null");
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow")
                 .body(startWorkflowRequest)
                 .build();
@@ -311,7 +313,7 @@ class WorkflowResource {
 
     public void uploadCompletedWorkflows() {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/document-store/upload")
                 .build();
 
@@ -320,7 +322,7 @@ class WorkflowResource {
 
     public Workflow updateVariables(String workflowId, Map<String, Object> variables) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/{workflowId}/variables")
                 .addPathParam("workflowId", workflowId)
                 .body(variables)
@@ -335,7 +337,7 @@ class WorkflowResource {
 
     public void upgradeRunningWorkflow(UpgradeWorkflowRequest body, String workflowId) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/{workflowId}/upgrade")
                 .addPathParam("workflowId", workflowId)
                 .body(body)
@@ -350,7 +352,7 @@ class WorkflowResource {
                                            String waitUntilTaskRef,
                                            Integer waitForSeconds) {
         OrkesHttpClientRequest request = OrkesHttpClientRequest.builder()
-                .method(OrkesHttpClientRequest.Method.POST)
+                .method(POST)
                 .path("/workflow/{workflowId}/state")
                 .addPathParam("workflowId", workflowId)
                 .addQueryParam("requestId", requestId)
