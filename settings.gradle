@@ -1,1 +1,6 @@
 rootProject.name = 'orkes-conductor-client'
+include 'client'
+include 'sdk'
+include 'examples'
+include 'tests'
+

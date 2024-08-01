@@ -1,206 +1,35 @@
-buildscript {
-    dependencies {
-        classpath 'com.diffplug.spotless:spotless-plugin-gradle:6.+'
-        classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
-    }
-}
-
-plugins {
-    id 'java'
-    id 'maven-publish'
-    id 'signing'
-    id 'java-library'
-    id "com.diffplug.spotless" version "5.0.0"
-    id 'jacoco'
-    id 'idea'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
-}
-
-ext {
-    versions = [
-            okHttp        : '4.12.0',
-            guava         : '32.1.2-jre',
-            jackson       : '2.17.1',
-            archaius      : '0.7.12',
-            slf4j         : '1.7.36',
-            log4j         : '2.23.1',
-            lombok        : '1.18.30',
-            commonsLang   : '3.12.0',
-            junit         : '5.10.3',
-            awaitility    : '4.2.0',
-            wiremock      : '2.33.2',
-            mockito       : '5.12.0',
-            testContainers: '1.19.8',
-    ]
-}
-
 group = 'io.orkes.conductor'
 
-dependencies {
-    // ### candidates to be removed  ###
-    implementation "com.netflix.archaius:archaius-core:${versions.archaius}"
-    // ### candidates to be shadowed ###
-    implementation "com.google.guava:guava:${versions.guava}"
-    // #################################
-    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
+apply from: "$rootDir/versions.gradle"
 
-    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
-    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+subprojects {
+    apply plugin: 'java'
+    group = 'io.orkes.conductor'
 
-    implementation "com.squareup.okhttp3:okhttp:${versions.okHttp}"
-    implementation "com.squareup.okhttp3:logging-interceptor:${versions.okHttp}"
-
-    implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
-
-    // logging
-    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
-
-    // test dependencies
-    testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
-    testCompileOnly "org.projectlombok:lombok:${versions.lombok}"
-
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
-    testImplementation "ch.qos.logback:logback-classic:1.5.6"
-    testImplementation "org.mockito:mockito-core:${versions.mockito}"
-    testImplementation "org.testcontainers:localstack:${versions.testContainers}"
-    testImplementation "org.testcontainers:testcontainers:${versions.testContainers}"
-}
-
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven {
-        url "https://s01.oss.sonatype.org/content/repositories/releases/"
+    compileJava {
+        sourceCompatibility = 17
+        targetCompatibility = 17
     }
-}
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
+    dependencies {
+        // ### candidates to be shadowed ###
+        implementation "com.google.guava:guava:${versions.guava}"
+        // #################################
+        implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
+        implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
 
-jar {
-    exclude 'io/orkes/conductor/sdk/examples'
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            pom {
-                name = 'Orkes Conductor Client'
-                description = 'Netflix Conductor client that provides support for Orkes Conductor features'
-                url = 'https://github.com/orkes-io/orkes-conductor-client'
-                scm {
-                    connection = 'scm:git:git://github.com/orkes-io/orkes-conductor-client.git'
-                    developerConnection = 'scm:git:ssh://github.com:orkes-io/orkes-conductor-client.git'
-                    url = 'https://github.com/orkes-io/orkes-conductor-client'
-                }
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        organization = 'Orkes'
-                        organizationUrl = 'https://orkes.io'
-                        name = 'Orkes Development Team'
-                        email = 'developers@orkes.io'
-                    }
-                }
-            }
-        }
-//        shadow(MavenPublication) {
-//            from components.java
-//            artifact shadowJar
-//        }
+        implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+        implementation "org.apache.commons:commons-lang3:${versions.commonsLang}"
+        annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+        compileOnly "org.projectlombok:lombok:${versions.lombok}"
     }
 
     repositories {
+        mavenCentral()
+        mavenLocal()
         maven {
-            if (project.hasProperty("mavenCentral")) {
-                println "Publishing to Sonatype Repository"
-                url = "https://s01.oss.sonatype.org/${project.version.endsWith('-SNAPSHOT') ? "content/repositories/snapshots/" : "service/local/staging/deploy/maven2/"}"
-                credentials {
-                    username project.properties.username
-                    password project.properties.password
-                }
-            } else {
-                url = "s3://orkes-artifacts-repo/${project.version.endsWith('-SNAPSHOT') ? "snapshots" : "releases"}"
-                authentication {
-                    awsIm(AwsImAuthentication)
-                }
-            }
+            url "https://s01.oss.sonatype.org/content/repositories/releases/"
         }
     }
-}
-
-test {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport // report is always generated after tests run
-    testLogging {
-        events = ["SKIPPED", "FAILED"]
-        exceptionFormat = "full"
-        showStandardStreams = true
-    }
-}
-
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-}
-
-allprojects {
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-    }
-}
-compileJava {
-    sourceCompatibility = 17
-    targetCompatibility = 17
-}
-
-spotless {
-    java {
-        removeUnusedImports()
-        importOrder('java', 'javax', 'org', 'com.netflix', 'io.orkes', '', '\\#com.netflix', '\\#')
-        licenseHeaderFile("$rootDir/licenseheader.txt")
-    }
-}
-
-signing {
-    def signingKeyId = findProperty('signingKeyId')
-    if (signingKeyId) {
-        println 'Signing the artifact with keys'
-        signing {
-            def signingKey = findProperty('signingKey')
-            def signingPassword = findProperty('signingPassword')
-            if (signingKeyId && signingKey && signingPassword) {
-                useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-            }
-
-            sign publishing.publications
-        }
-    }
-}
-
-tasks.withType(Test) {
-    maxParallelForks = 1
-}
-
-sourceSets.main.java.srcDirs += ['examples/main/java']
-sourceSets.main.resources.srcDirs += ['examples/main/resources']
-
-
-shadowJar {
-    archiveFileName = "orkes-conductor-client-$version-all.jar"
-    mergeServiceFiles()
-}
-
-tasks.build {
-    dependsOn shadowJar
 }
 

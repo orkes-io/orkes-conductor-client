@@ -1,0 +1,80 @@
+
+buildscript {
+    dependencies {
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:6.+'
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
+    }
+}
+
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'maven-publish'
+    id 'signing'
+    id "com.diffplug.spotless" version "5.0.0"
+    id 'jacoco'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":client")
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = 'Orkes Conductor Client'
+                description = 'Netflix Conductor client that provides support for Orkes Conductor features'
+                url = 'https://github.com/orkes-io/orkes-conductor-client'
+                scm {
+                    connection = 'scm:git:git://github.com/orkes-io/orkes-conductor-client.git'
+                    developerConnection = 'scm:git:ssh://github.com:orkes-io/orkes-conductor-client.git'
+                    url = 'https://github.com/orkes-io/orkes-conductor-client'
+                }
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        organization = 'Orkes'
+                        organizationUrl = 'https://orkes.io'
+                        name = 'Orkes Development Team'
+                        email = 'developers@orkes.io'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            if (project.hasProperty("mavenCentral")) {
+                println "Publishing to Sonatype Repository"
+                url = "https://s01.oss.sonatype.org/${project.version.endsWith('-SNAPSHOT') ? "content/repositories/snapshots/" : "service/local/staging/deploy/maven2/"}"
+                credentials {
+                    username project.properties.username
+                    password project.properties.password
+                }
+            } else {
+                url = "s3://orkes-artifacts-repo/${project.version.endsWith('-SNAPSHOT') ? "snapshots" : "releases"}"
+                authentication {
+                    awsIm(AwsImAuthentication)
+                }
+            }
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
