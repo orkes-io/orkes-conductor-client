@@ -14,22 +14,20 @@ plugins {
     id 'jacoco'
 }
 
-dependencies {
-    // ### To be removed  ###
-    implementation "com.netflix.archaius:archaius-core:${versions.archaius}"
-    // #################################
-
-    implementation "com.squareup.okhttp3:okhttp:${versions.okHttp}"
-    implementation "com.squareup.okhttp3:logging-interceptor:${versions.okHttp}"
-
-    // test dependencies
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+repositories {
+    mavenCentral()
 }
 
-java {
-    withSourcesJar()
-    withJavadocJar()
+dependencies {
+    implementation project(":client")
+    implementation project(":sdk")
+
+    implementation 'org.springframework:spring-context:5.3.36'
+    implementation 'org.springframework:spring-core:5.3.36'
+    implementation 'org.springframework:spring-beans:5.3.36'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 publishing {
@@ -84,44 +82,4 @@ publishing {
 
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport // report is always generated after tests run
-    testLogging {
-        events = ["SKIPPED", "FAILED"]
-        exceptionFormat = "full"
-        showStandardStreams = true
-    }
-}
-
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-}
-
-allprojects {
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-    }
-}
-
-spotless {
-    java {
-        removeUnusedImports()
-        importOrder('java', 'javax', 'org', 'com.netflix', 'io.orkes', '', '\\#com.netflix', '\\#')
-        licenseHeaderFile("$rootDir/licenseheader.txt")
-    }
-}
-
-signing {
-    def signingKeyId = findProperty('signingKeyId')
-    if (signingKeyId) {
-        println 'Signing the artifact with keys'
-        signing {
-            def signingKey = findProperty('signingKey')
-            def signingPassword = findProperty('signingPassword')
-            if (signingKeyId && signingKey && signingPassword) {
-                useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-            }
-
-            sign publishing.publications
-        }
-    }
 }

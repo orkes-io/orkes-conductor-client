@@ -3,4 +3,5 @@ include 'client'
 include 'sdk'
 include 'examples'
 include 'tests'
+include 'spring'
 
