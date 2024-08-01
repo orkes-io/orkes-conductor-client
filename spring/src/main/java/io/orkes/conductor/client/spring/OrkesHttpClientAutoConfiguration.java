@@ -24,9 +24,9 @@ import org.springframework.core.env.Environment;
 public class OrkesHttpClientAutoConfiguration {
 
     //TODO add more properties e.g.: ssl off, timeout settings, etc. and these should be client properties!!!
-    public static final String CONDUCTOR_SERVER_URL = "conductor.server.url";
-    public static final String CONDUCTOR_CLIENT_KEY_ID = "conductor.security.client.key-id";
-    public static final String CONDUCTOR_CLIENT_SECRET = "conductor.security.client.secret";
+    public static final String CONDUCTOR_SERVER_URL = "conductor.client.basepath";
+    public static final String CONDUCTOR_CLIENT_KEY_ID = "conductor.client.key-id";
+    public static final String CONDUCTOR_CLIENT_SECRET = "conductor.client.secret";
 
     @Bean
     public OrkesHttpClient getApiClient(Environment env) {
