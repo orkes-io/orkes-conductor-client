@@ -27,39 +27,41 @@ public class PropertyFactory {
 
     private static final String PROPERTY_PREFIX = "conductor.worker";
 
+    // Handle potential parsing exceptions ?
     private record WorkerProperty(String key) {
 
-        String getString(String defaultValue) {
+        String getString() {
             if (PROPERTIES == null) {
-                return defaultValue;
+                return null;
             }
 
-            String value = PROPERTIES.getProperty(key);
-            if (value == null) {
-                return defaultValue;
-            }
+            return PROPERTIES.getProperty(key);
+        }
 
-            return value;
+        Integer getInteger() {
+            String value = getString();
+            return value == null ? null : Integer.parseInt(value);
+        }
+
+        Boolean getBoolean() {
+            String value = getString();
+
+            return value == null ? null : Boolean.parseBoolean(value);
+        }
+
+        String getString(String defaultValue) {
+            String value = getString();
+            return value == null ? defaultValue : value;
         }
 
         Integer getInteger(Integer defaultValue) {
-            String value = getString(null);
-            if (value == null) {
-                return defaultValue;
-            }
-
-            // Handle potential parsing exceptions ?
-            return Integer.parseInt(value);
+            String value = getString();
+            return value == null ? defaultValue : Integer.parseInt(value);
         }
 
         Boolean getBoolean(Boolean defaultValue) {
-            String value = getString(null);
-            if (value == null) {
-                return defaultValue;
-            }
-
-            // Handle potential parsing exceptions ?
-            return Boolean.parseBoolean(value);
+            String value = getString();
+            return value == null ? defaultValue : Boolean.parseBoolean(value);
         }
     }
 
@@ -81,7 +83,7 @@ public class PropertyFactory {
      * then returns the default value.
      */
     public Integer getInteger(int defaultValue) {
-        Integer value = local.getInteger(defaultValue);
+        Integer value = local.getInteger();
         if (value == null) {
             value = global.getInteger(defaultValue);
         }
@@ -94,7 +96,7 @@ public class PropertyFactory {
      * then returns the default value.
      */
     public String getString(String defaultValue) {
-        String value = local.getString(defaultValue);
+        String value = local.getString();
         if (value == null) {
             value = global.getString(defaultValue);
         }
@@ -107,7 +109,7 @@ public class PropertyFactory {
      * then returns the default value.
      */
     public Boolean getBoolean(Boolean defaultValue) {
-        Boolean value = local.getBoolean(defaultValue);
+        Boolean value = local.getBoolean();
         if (value == null) {
             value = global.getBoolean(defaultValue);
         }
