@@ -226,9 +226,8 @@ public class SaveScheduleRequest {
         return zoneId;
     }
 
-    public SaveScheduleRequest setZoneId(String zoneId) {
+    public void setZoneId(String zoneId) {
         this.zoneId = zoneId;
-        return this;
     }
 
     public SaveScheduleRequest zoneId(String zoneId) {

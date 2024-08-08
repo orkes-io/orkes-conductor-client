@@ -270,9 +270,8 @@ public class WorkflowSchedule {
         return zoneId;
     }
 
-    public WorkflowSchedule setZoneId(String zoneId) {
+    public void setZoneId(String zoneId) {
         this.zoneId = zoneId;
-        return this;
     }
 
     public WorkflowSchedule zoneId(String zoneId) {
