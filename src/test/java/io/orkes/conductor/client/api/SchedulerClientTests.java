@@ -83,7 +83,7 @@ public class SchedulerClientTests extends ClientTest {
                 .name(NAME)
                 .cronExpression(CRON_EXPRESSION)
                 .startWorkflowRequest(Commons.getStartWorkflowRequest())
-                .setZoneId("Europe/Madrid");
+                .zoneId("Europe/Madrid");
         schedulerClient.saveSchedule(schedule);
         var savedSchedule = schedulerClient.getSchedule(NAME);
         assertEquals("Europe/Madrid", savedSchedule.getZoneId());
