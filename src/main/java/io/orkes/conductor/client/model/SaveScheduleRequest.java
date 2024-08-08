@@ -230,6 +230,12 @@ public class SaveScheduleRequest {
         this.zoneId = zoneId;
         return this;
     }
+
+    public SaveScheduleRequest zoneId(String zoneId) {
+        this.zoneId = zoneId;
+        return this;
+    }
+
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -250,7 +256,8 @@ public class SaveScheduleRequest {
                 && Objects.equals(this.scheduleStartTime, saveScheduleRequest.scheduleStartTime)
                 && Objects.equals(
                         this.startWorkflowRequest, saveScheduleRequest.startWorkflowRequest)
-                && Objects.equals(this.updatedBy, saveScheduleRequest.updatedBy);
+                && Objects.equals(this.updatedBy, saveScheduleRequest.updatedBy)
+                && Objects.equals(this.zoneId, saveScheduleRequest.zoneId);
     }
 
     @Override
@@ -264,7 +271,8 @@ public class SaveScheduleRequest {
                 scheduleEndTime,
                 scheduleStartTime,
                 startWorkflowRequest,
-                updatedBy);
+                updatedBy,
+                zoneId);
     }
 
     @Override
@@ -287,6 +295,7 @@ public class SaveScheduleRequest {
                 .append(toIndentedString(startWorkflowRequest))
                 .append("\n");
         sb.append("    updatedBy: ").append(toIndentedString(updatedBy)).append("\n");
+        sb.append("    zoneId: ").append(toIndentedString(zoneId)).append("\n");
         sb.append("}");
         return sb.toString();
     }
