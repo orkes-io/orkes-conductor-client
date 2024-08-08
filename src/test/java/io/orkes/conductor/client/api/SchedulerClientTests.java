@@ -14,6 +14,10 @@ package io.orkes.conductor.client.api;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import io.orkes.conductor.client.SchedulerClient;
@@ -34,9 +38,18 @@ public class SchedulerClientTests extends ClientTest {
         schedulerClient = orkesClients.getSchedulerClient();
     }
 
+    @BeforeEach
+    void beforeEach() {
+        schedulerClient.deleteSchedule(NAME);
+    }
+
+    @AfterEach
+    void afterEach() {
+        schedulerClient.deleteSchedule(NAME);
+    }
+
     @Test
     void testMethods() {
-        schedulerClient.deleteSchedule(NAME);
         assertTrue(schedulerClient.getNextFewSchedules(CRON_EXPRESSION, 0L, 0L, 0).isEmpty());
         schedulerClient.saveSchedule(getSaveScheduleRequest());
         assertTrue(schedulerClient.getAllSchedules(Commons.WORKFLOW_NAME).size() > 0);
@@ -54,7 +67,6 @@ public class SchedulerClientTests extends ClientTest {
         schedulerClient.resumeSchedule(NAME);
         workflowSchedule = schedulerClient.getSchedule(NAME);
         assertFalse(workflowSchedule.isPaused());
-        schedulerClient.deleteSchedule(NAME);
     }
 
     @Test
@@ -62,6 +74,19 @@ public class SchedulerClientTests extends ClientTest {
         schedulerClient.pauseAllSchedules();
         schedulerClient.resumeAllSchedules();
         schedulerClient.requeueAllExecutionRecords();
+    }
+
+    @Test
+    @DisplayName("It should set the timezone to Europe/Madrid")
+    void testTimeZoneId() {
+        var schedule = new SaveScheduleRequest()
+                .name(NAME)
+                .cronExpression(CRON_EXPRESSION)
+                .startWorkflowRequest(Commons.getStartWorkflowRequest())
+                .setZoneId("Europe/Madrid");
+        schedulerClient.saveSchedule(schedule);
+        var savedSchedule = schedulerClient.getSchedule(NAME);
+        assertEquals("Europe/Madrid", savedSchedule.getZoneId());
     }
 
     SaveScheduleRequest getSaveScheduleRequest() {

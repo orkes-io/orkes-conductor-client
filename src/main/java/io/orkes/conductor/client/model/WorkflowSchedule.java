@@ -54,6 +54,9 @@ public class WorkflowSchedule {
     @SerializedName("updatedTime")
     private Long updatedTime = null;
 
+    @SerializedName("zoneId") // This is just a leftover having used GSON.
+    private String zoneId;
+
     public WorkflowSchedule createTime(Long createTime) {
         this.createTime = createTime;
         return this;
@@ -261,6 +264,15 @@ public class WorkflowSchedule {
 
     public void setUpdatedTime(Long updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    public String getZoneId() {
+        return zoneId;
+    }
+
+    public WorkflowSchedule setZoneId(String zoneId) {
+        this.zoneId = zoneId;
+        return this;
     }
 
     @Override
