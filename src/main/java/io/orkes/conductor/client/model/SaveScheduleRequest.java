@@ -48,6 +48,9 @@ public class SaveScheduleRequest {
     @SerializedName("updatedBy")
     private String updatedBy = null;
 
+    @SerializedName("zoneId") // This is just a leftover having used GSON.
+    private String zoneId;
+
     public SaveScheduleRequest createdBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
@@ -219,6 +222,14 @@ public class SaveScheduleRequest {
         this.updatedBy = updatedBy;
     }
 
+    public String getZoneId() {
+        return zoneId;
+    }
+
+    public SaveScheduleRequest setZoneId(String zoneId) {
+        this.zoneId = zoneId;
+        return this;
+    }
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
