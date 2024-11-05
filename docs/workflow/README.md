@@ -44,7 +44,7 @@ Using Java as code to define and execute workflows lets you build extremely powe
 
 When the workflows are relatively static, they can be designed using the Orkes UI (available when using Orkes Conductor) and APIs or SDKs to register and run the workflows.
 
-Both the code and configuration approaches are equally powerful and similar in nature to how you treat Infrastructure as Code.
+The code and configuration approaches are equally powerful and similar to how you treat Infrastructure as Code.
 
 ### Execute Dynamic Workflows Using Code
 
@@ -178,7 +178,7 @@ setVariables(Map<String, Object> variables)
 
 ### Terminate Running Workflows
 
-Used to terminate a running workflow. Any pending tasks are canceled, and no further work is scheduled for this workflow upon termination. 
+Used to terminate a running workflow. Any pending tasks are canceled, and no further work is scheduled for this workflow upon termination.
 
 ```java
 terminateWorkflow(List<String> workflowIds, String reason)
@@ -207,7 +207,7 @@ restartWorkflow(List<String> workflowIds, Boolean useLatestDefinitions)
 
 ### Rerun Workflow from a Specific Task
 
-In the cases where a workflow needs to be restarted from a specific task rather than from the beginning, rerun provides that option. When issuing the rerun command to the workflow, you can specify the task ID from where the workflow should be restarted (as opposed to from the beginning), and optionally, the workflow's input can also be changed.
+Rerun provides an option for restarting a workflow from a specific task rather than from the beginning. When issuing the rerun command to the workflow, you can specify the task ID from which the workflow should be restarted (as opposed to from the beginning), and optionally, the workflow's input can also be changed.
 
 ```java
 setReRunFromTaskId(String reRunFromTaskId)
@@ -234,7 +234,7 @@ resumeWorkflow(List<String> workflowIds)
 
 ## Searching for Workflows
 
-Workflow executions are retained until removed from the Conductor. This gives complete visibility into all the executions an application has - regardless of the number of executions. Conductor has a powerful search API that allows you to search for workflow executions.
+Workflow executions remain stored in Conductor until explicitly removed, providing comprehensive visibility into all executions within an application, regardless of their volume. Conductor’s robust search API enables efficient querying of workflow executions.
 
 ```java
 searchWorkflows(queryId, start, size, sort, freeText, query, skipCache);
@@ -255,9 +255,7 @@ Here are the supported fields for the query:
 
 ## Handling Failures, Retries and Rate Limits
 
-Conductor lets you embrace failures rather than worry about the complexities introduced in the system to handle failures.
-
-All the aspects of handling failures, retries, rate limits, etc., are driven by the configuration that can be updated in real time without re-deploying your application.
+Conductor lets you embrace failures rather than worry about the complexities introduced in the system to handle failures. The configuration, which can be updated in real time without redeploying your application, drives all the aspects of handling failures, retries, rate limits, etc.
 
 ### Retries
 
