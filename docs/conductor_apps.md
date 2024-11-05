@@ -24,23 +24,27 @@ Conductor SDKs are lightweight and can easily be added to your existing or new J
 
 Add `orkes-conductor-client` dependency to your project.
 
+**Pre-requisites:**
+- Java 17 or greater
+- Gradle or Maven for dependency management
+
 ### Gradle
 
 For Gradle-based projects, modify the `build.gradle` file in the project directory by adding the following line to the dependencies block in that file:
 
 ```
-implementation 'io.orkes.conductor:orkes-conductor-client:2.0.1'
+implementation 'io.orkes.conductor:orkes-conductor-client:2.1.6'
 ```
 
 ### Maven
 
-For Maven-based projects, modify the `pom.xml` file in the project directory by adding the following XML snippet within the `dependencies` section:
+For Maven-based projects, modify the `pom.xml` file in the project directory by adding the following XML snippet within the dependencies section:
 
 ```
 <dependency>
   <groupId>io.orkes.conductor</groupId>
   <artifactId>orkes-conductor-client</artifactId>
-  <version>1.1.14</version>
+  <version>2.1.6</version>
 </dependency>
 ```
 

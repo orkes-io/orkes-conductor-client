@@ -30,21 +30,25 @@ A Workflow task represents a unit of business logic that achieves a specific goa
 
 ## Implementing Workers
 
-The workers can be implemented by writing a simple Java function and annotating the function with the `@worker_task`. Conductor workers are services (similar to microservices) that follow the [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle).
+The workers can be implemented by writing a simple Java function and annotating the function with the `@WorkerTask`. Conductor workers are services (similar to microservices) that follow the [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single_responsibility_principle).
 
-Workers can be hosted along with the workflow or run in a distributed environment where a single workflow uses workers deployed and running in different machines/VMs/containers. Whether to keep all the workers in the same application or run them as a distributed application is a design and architectural choice. Conductor is well suited for both kinds of scenarios.
+Workers can be hosted along with the workflow or run in a distributed environment where a single workflow uses workers deployed and running in different machines/VMs/containers. Keeping all the workers in the same application or running them as a distributed application is a design and architectural choice. Conductor is well suited for both kinds of scenarios.
 
 You can create or convert any existing Java function to a distributed worker by adding `@WorkerTask` annotation to it. Here is a simple worker that takes name as input and returns greetings:
 
 ```java
+package io.orkes.helloworld;
+
 import com.netflix.conductor.sdk.workflow.task.InputParam;
 import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 
 public class ConductorWorkers {
-    @WorkerTask("greetings")
-    public void greeting(@InputParam("name") String name) {
-        System.out.println("Hello my friend " + name);
+
+    @WorkerTask("greet")
+    public String greet(@InputParam("name") String name) {
+        return "Hello " + name;
     }
+
 }
 ```
 
@@ -67,7 +71,7 @@ Each worker embodies the design pattern and follows certain basic principles:
 1. Workers are stateless and do not implement a workflow-specific logic.
 2. Each worker executes a particular task and produces well-defined output given specific inputs.
 3. Workers are meant to be idempotent (Should handle cases where the partially executed task, due to timeouts, etc, gets rescheduled).
-4. Workers do not implement the logic to handle retries, etc., that is taken care of by the Conductor server.
+4. Workers do not implement the logic to handle retries, etc., that the Conductor server takes care of.
 
 ## System Task Workers
 
@@ -132,7 +136,7 @@ workflow.add(httptask);//workflow is an object of ConductorWorkflow<WorkflowInpu
 
 ### Javascript Executor Task
 
-Execute ECMA-compliant Javascript code. It is useful when writing a script for data mapping, calculations, etc.
+Execute ECMA-compliant JavaScript code. It is useful when writing a script for data mapping, calculations, etc.
 
 #### Using Code to Create Inline Task
 
@@ -194,13 +198,13 @@ workflow.add(jqtask);
 ## Worker vs. Microservice/HTTP Endpoints
 
 > [!tip] 
-> Workers are a lightweight alternative to exposing an HTTP endpoint and orchestrating using `HTTP` tasks. Using workers is a recommended approach if you do not need to expose the service over HTTP or gRPC endpoints.
+> Workers are a lightweight alternative to exposing an HTTP endpoint and orchestrating using HTTP tasks. They are recommended if you do not need to expose the service over HTTP or gRPC endpoints.
 
 There are several advantages to this approach:
 
 1. **No need for an API management layer**: Given there are no exposed endpoints and workers are self-load-balancing.
 2. **Reduced infrastructure footprint**: No need for an API gateway/load balancer.
-3. All the communication is initiated by workers using polling - avoiding the need to open up any incoming TCP ports.
+3. Workers initiate all communication using polling, avoiding the need to open any incoming TCP ports.
 4. Workers **self-regulate** when busy; they only poll as much as they can handle. Backpressure handling is done out of the box.
 5. Workers can be scaled up / down quickly based on the demand by increasing the number of processes.
 
