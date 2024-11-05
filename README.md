@@ -233,7 +233,7 @@ To execute the application:​
 2. The workflow will begin executing, and you can monitor its status through the Conductor UI at http://localhost:5000.
 3. Go to the **Executions** tab to view the details of the workflow execution.
 
-<img width="1431" alt="Screenshot 2024-04-01 at 15 53 02" src="https://github.com/RizaFarheen/orkes-conductor-client/assets/163816773/e413c828-5f47-4cdc-b113-bed3fefa63a4">
+<img width="1431" alt="Workflow execution" src="docs/images/workflow-execution.png">
 
 > [!NOTE]
 > That's it - you just created and executed your first distributed Java app!
