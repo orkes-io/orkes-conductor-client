@@ -1,36 +1,32 @@
 package io.orkes.conductor.client.model;
 
 import com.google.gson.annotations.SerializedName;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
 public class OrkesCircuitBreakerConfig {
-    @SerializedName("failureRateThreshold")
-    private float failureRateThreshold = 50.0f; // Percentage (e.g., 50.0 for 50%)
+    @SerializedName("circuitBreakerConfig")
+    private OrkesCircuitBreakerConfig circuitBreakerConfig = null;
 
-    @SerializedName("slidingWindowSize")
-    private int slidingWindowSize = 100;
+    public OrkesCircuitBreakerConfig circuitBreakerConfig(OrkesCircuitBreakerConfig circuitBreakerConfig) {
+        this.circuitBreakerConfig = circuitBreakerConfig;
+        return this;
+    }
 
-    @SerializedName("minimumNumberOfCalls")
-    private int minimumNumberOfCalls = 100;
+    /**
+     * Get circuitBreakerConfig
+     * @return circuitBreakerConfig
+     **/
+    @Schema(description = "")
+    public OrkesCircuitBreakerConfig getCircuitBreakerConfig() {
+        return circuitBreakerConfig;
+    }
 
-    @SerializedName("waitDurationInOpenState")
-    private long waitDurationInOpenState = 1000; // In millisec
+    public void setCircuitBreakerConfig(OrkesCircuitBreakerConfig circuitBreakerConfig) {
+        this.circuitBreakerConfig = circuitBreakerConfig;
+    }
 
-    @SerializedName("permittedNumberOfCallsInHalfOpenState")
-    private int permittedNumberOfCallsInHalfOpenState = 100;
-
-    @SerializedName("slowCallRateThreshold")
-    private float slowCallRateThreshold = 50.0f; // Percentage of slow calls
-
-    @SerializedName("slowCallDurationThreshold")
-    private long slowCallDurationThreshold = 100; // Defines "slow" call duration in milliSec
-
-    @SerializedName("automaticTransitionFromOpenToHalfOpenEnabled")
-    private boolean automaticTransitionFromOpenToHalfOpenEnabled = true; // Auto transition
-
-    @SerializedName("maxWaitDurationInHalfOpenState")
-    private long maxWaitDurationInHalfOpenState = 1; // Max time in HALF-OPEN state
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -40,46 +36,35 @@ public class OrkesCircuitBreakerConfig {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        OrkesCircuitBreakerConfig that = (OrkesCircuitBreakerConfig) o;
-        return Float.compare(that.failureRateThreshold, failureRateThreshold) == 0 &&
-                slidingWindowSize == that.slidingWindowSize &&
-                minimumNumberOfCalls == that.minimumNumberOfCalls &&
-                waitDurationInOpenState == that.waitDurationInOpenState &&
-                permittedNumberOfCallsInHalfOpenState == that.permittedNumberOfCallsInHalfOpenState &&
-                Float.compare(that.slowCallRateThreshold, slowCallRateThreshold) == 0 &&
-                slowCallDurationThreshold == that.slowCallDurationThreshold &&
-                automaticTransitionFromOpenToHalfOpenEnabled == that.automaticTransitionFromOpenToHalfOpenEnabled &&
-                maxWaitDurationInHalfOpenState == that.maxWaitDurationInHalfOpenState;
+        OrkesCircuitBreakerConfig config = (OrkesCircuitBreakerConfig) o;
+        return Objects.equals(this.circuitBreakerConfig, config.circuitBreakerConfig);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                Float.valueOf(failureRateThreshold),
-                Integer.valueOf(slidingWindowSize),
-                Integer.valueOf(minimumNumberOfCalls),
-                Long.valueOf(waitDurationInOpenState),
-                Integer.valueOf(permittedNumberOfCallsInHalfOpenState),
-                Float.valueOf(slowCallRateThreshold),
-                Long.valueOf(slowCallDurationThreshold),
-                Boolean.valueOf(automaticTransitionFromOpenToHalfOpenEnabled),
-                Long.valueOf(maxWaitDurationInHalfOpenState)
-        );
+        return Objects.hash(circuitBreakerConfig);
     }
+
 
     @Override
     public String toString() {
-        String sb = "class OrkesCircuitBreakerConfig {\n" +
-                "    failureRateThreshold: " + failureRateThreshold + "\n" +
-                "    slidingWindowSize: " + slidingWindowSize + "\n" +
-                "    minimumNumberOfCalls: " + minimumNumberOfCalls + "\n" +
-                "    waitDurationInOpenState: " + waitDurationInOpenState + "\n" +
-                "    permittedNumberOfCallsInHalfOpenState: " + permittedNumberOfCallsInHalfOpenState + "\n" +
-                "    slowCallRateThreshold: " + slowCallRateThreshold + "\n" +
-                "    slowCallDurationThreshold: " + slowCallDurationThreshold + "\n" +
-                "    automaticTransitionFromOpenToHalfOpenEnabled: " + automaticTransitionFromOpenToHalfOpenEnabled + "\n" +
-                "    maxWaitDurationInHalfOpenState: " + maxWaitDurationInHalfOpenState + "\n" +
-                "}";
-        return sb;
+        StringBuilder sb = new StringBuilder();
+        sb.append("class Config {\n");
+
+        sb.append("    circuitBreakerConfig: ").append(toIndentedString(circuitBreakerConfig)).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
+
 }
