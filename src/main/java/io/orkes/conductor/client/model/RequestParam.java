@@ -1,10 +1,12 @@
 package io.orkes.conductor.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestParam {
     @SerializedName("name")
     private String name = null;
@@ -12,8 +14,8 @@ public class RequestParam {
     @SerializedName("required")
     private Boolean required = null;
 
-    @SerializedName("schema")
-    private io.swagger.v3.oas.annotations.media.Schema schema = null;
+//    @SerializedName("schema")
+//    private io.swagger.v3.oas.annotations.media.Schema schema = null;
 
     @SerializedName("type")
     private String type = null;
@@ -25,6 +27,7 @@ public class RequestParam {
 
     /**
      * Get name
+     *
      * @return name
      **/
     @Schema(description = "")
@@ -43,6 +46,7 @@ public class RequestParam {
 
     /**
      * Get required
+     *
      * @return required
      **/
     @Schema(description = "")
@@ -54,24 +58,24 @@ public class RequestParam {
         this.required = required;
     }
 
-    public RequestParam schema(io.swagger.v3.oas.annotations.media.Schema schema) {
-        this.schema = schema;
-        return this;
-    }
+//    public RequestParam schema(io.swagger.v3.oas.annotations.media.Schema schema) {
+//        this.schema = schema;
+//        return this;
+//    }
 
     /**
      * Get schema
+     *
      * @return schema
      **/
-    @Schema(description = "")
-    public io.swagger.v3.oas.annotations.media.Schema getSchema() {
-        return schema;
-    }
-
-    public void setSchema(io.swagger.v3.oas.annotations.media.Schema schema) {
-        this.schema = schema;
-    }
-
+//    @Schema(description = "")
+//    public io.swagger.v3.oas.annotations.media.Schema getSchema() {
+//        return schema;
+//    }
+//
+//    public void setSchema(io.swagger.v3.oas.annotations.media.Schema schema) {
+//        this.schema = schema;
+//    }
     public RequestParam type(String type) {
         this.type = type;
         return this;
@@ -79,6 +83,7 @@ public class RequestParam {
 
     /**
      * Get type
+     *
      * @return type
      **/
     @Schema(description = "")
@@ -102,27 +107,28 @@ public class RequestParam {
         RequestParam requestParam = (RequestParam) o;
         return Objects.equals(this.name, requestParam.name) &&
                 Objects.equals(this.required, requestParam.required) &&
-                Objects.equals(this.schema, requestParam.schema) &&
+                //Objects.equals(this.schema, requestParam.schema) &&
                 Objects.equals(this.type, requestParam.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, required, schema, type);
+
+        //return Objects.hash(name, required, schema, type);
+        return Objects.hash(name, required, type);
     }
 
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class RequestParam {\n");
 
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    required: ").append(toIndentedString(required)).append("\n");
-        sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
-        sb.append("    type: ").append(toIndentedString(type)).append("\n");
-        sb.append("}");
-        return sb.toString();
+        String sb = "class RequestParam {\n" +
+                "    name: " + toIndentedString(name) + "\n" +
+                "    required: " + toIndentedString(required) + "\n" +
+                //sb.append("    schema: ").append(toIndentedString(schema)).append("\n");
+                "    type: " + toIndentedString(type) + "\n" +
+                "}";
+        return sb;
     }
 
     /**

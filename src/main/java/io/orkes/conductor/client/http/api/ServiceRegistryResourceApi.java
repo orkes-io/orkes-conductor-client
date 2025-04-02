@@ -41,10 +41,9 @@ public class ServiceRegistryResourceApi {
 
     /**
      * Build call for addOrUpdateMethod
-     *
-     * @param body                    (required)
-     * @param registryName            (required)
-     * @param progressListener        Progress listener
+     * @param body  (required)
+     * @param registryName  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -53,8 +52,8 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = body;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/{registryName}/methods"
-                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName));
+        String localVarPath = "/registry/service/{registryName}/methods"
+                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -75,7 +74,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -87,7 +86,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -109,11 +108,16 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param body         (required)
-     * @param registryName (required)
+     *
+     *
+     * @param body  (required)
+     * @param registryName  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void addOrUpdateMethod(ServiceMethod body, String registryName) throws ApiException {
@@ -121,8 +125,10 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param body         (required)
-     * @param registryName (required)
+     *
+     *
+     * @param body  (required)
+     * @param registryName  (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -132,11 +138,11 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param body         (required)
-     * @param registryName (required)
-     * @param callback     The callback to be executed when the API call finishes
+     * @param body  (required)
+     * @param registryName  (required)
+     * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
@@ -165,12 +171,10 @@ public class ServiceRegistryResourceApi {
         apiClient.executeAsync(call, callback);
         return call;
     }
-
     /**
      * Build call for addOrUpdateService
-     *
-     * @param body                    (required)
-     * @param progressListener        Progress listener
+     * @param body  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -179,7 +183,7 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = body;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service";
+        String localVarPath = "/registry/service";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -200,7 +204,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -212,7 +216,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -230,10 +234,15 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param body (required)
+     *
+     *
+     * @param body  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void addOrUpdateService(ServiceRegistry body) throws ApiException {
@@ -241,7 +250,9 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param body (required)
+     *
+     *
+     * @param body  (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -251,9 +262,9 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param body     (required)
+     * @param body  (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -283,12 +294,10 @@ public class ServiceRegistryResourceApi {
         apiClient.executeAsync(call, callback);
         return call;
     }
-
     /**
      * Build call for closeCircuitBreaker
-     *
-     * @param name                    (required)
-     * @param progressListener        Progress listener
+     * @param name  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -297,8 +306,8 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/{name}/circuit-breaker/close"
-                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name));
+        String localVarPath = "/registry/service/{name}/circuit-breaker/close"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -319,7 +328,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -331,7 +340,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -349,10 +358,15 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @return CircuitBreakerTransitionResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -362,21 +376,22 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @return ApiResponse&lt;CircuitBreakerTransitionResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<CircuitBreakerTransitionResponse> closeCircuitBreakerWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = closeCircuitBreakerValidateBeforeCall(name, null, null);
-        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param name     (required)
+     * @param name  (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -403,18 +418,15 @@ public class ServiceRegistryResourceApi {
         }
 
         com.squareup.okhttp.Call call = closeCircuitBreakerValidateBeforeCall(name, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
-
     /**
      * Build call for deleteProto
-     *
-     * @param registryName            (required)
-     * @param filename                (required)
-     * @param progressListener        Progress listener
+     * @param registryName  (required)
+     * @param filename  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -423,9 +435,9 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/protos/{registryName}/{filename}"
-                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName))
-                .replaceAll("\\{" + "filename" + "\\}", apiClient.escapeString(filename));
+        String localVarPath = "/registry/service/protos/{registryName}/{filename}"
+                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName.toString()))
+                .replaceAll("\\{" + "filename" + "\\}", apiClient.escapeString(filename.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -446,7 +458,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -458,7 +470,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -480,11 +492,16 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param registryName (required)
-     * @param filename     (required)
+     *
+     *
+     * @param registryName  (required)
+     * @param filename  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void deleteProto(String registryName, String filename) throws ApiException {
@@ -492,8 +509,10 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param registryName (required)
-     * @param filename     (required)
+     *
+     *
+     * @param registryName  (required)
+     * @param filename  (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -503,11 +522,11 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param registryName (required)
-     * @param filename     (required)
-     * @param callback     The callback to be executed when the API call finishes
+     * @param registryName  (required)
+     * @param filename  (required)
+     * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
@@ -536,13 +555,11 @@ public class ServiceRegistryResourceApi {
         apiClient.executeAsync(call, callback);
         return call;
     }
-
     /**
      * Build call for discover
-     *
-     * @param name                    (required)
-     * @param create                  (optional, default to false)
-     * @param progressListener        Progress listener
+     * @param name  (required)
+     * @param create  (optional, default to false)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -551,8 +568,8 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/{name}/discover"
-                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name));
+        String localVarPath = "/registry/service/{name}/discover"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -575,7 +592,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -587,7 +604,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -605,11 +622,16 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param name   (required)
-     * @param create (optional, default to false)
+     *
+     *
+     * @param name  (required)
+     * @param create  (optional, default to false)
      * @return List&lt;ServiceMethod&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -619,23 +641,24 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param name   (required)
-     * @param create (optional, default to false)
+     *
+     *
+     * @param name  (required)
+     * @param create  (optional, default to false)
      * @return ApiResponse&lt;List&lt;ServiceMethod&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<List<ServiceMethod>> discoverWithHttpInfo(String name, Boolean create) throws ApiException {
         com.squareup.okhttp.Call call = discoverValidateBeforeCall(name, create, null, null);
-        Type localVarReturnType = new TypeToken<List<ServiceMethod>>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<List<ServiceMethod>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param name     (required)
-     * @param create   (optional, default to false)
+     * @param name  (required)
+     * @param create  (optional, default to false)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -662,17 +685,14 @@ public class ServiceRegistryResourceApi {
         }
 
         com.squareup.okhttp.Call call = discoverValidateBeforeCall(name, create, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<List<ServiceMethod>>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<List<ServiceMethod>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
-
     /**
      * Build call for getAllProtos
-     *
-     * @param registryName            (required)
-     * @param progressListener        Progress listener
+     * @param registryName  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -681,8 +701,8 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/protos/{registryName}"
-                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName));
+        String localVarPath = "/registry/service/protos/{registryName}"
+                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -703,7 +723,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -715,7 +735,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -733,10 +753,15 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param registryName (required)
+     *
+     *
+     * @param registryName  (required)
      * @return List&lt;ProtoRegistryEntry&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -746,22 +771,23 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param registryName (required)
+     *
+     *
+     * @param registryName  (required)
      * @return ApiResponse&lt;List&lt;ProtoRegistryEntry&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<List<ProtoRegistryEntry>> getAllProtosWithHttpInfo(String registryName) throws ApiException {
         com.squareup.okhttp.Call call = getAllProtosValidateBeforeCall(registryName, null, null);
-        Type localVarReturnType = new TypeToken<List<ProtoRegistryEntry>>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<List<ProtoRegistryEntry>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param registryName (required)
-     * @param callback     The callback to be executed when the API call finishes
+     * @param registryName  (required)
+     * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
@@ -787,17 +813,14 @@ public class ServiceRegistryResourceApi {
         }
 
         com.squareup.okhttp.Call call = getAllProtosValidateBeforeCall(registryName, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<List<ProtoRegistryEntry>>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<List<ProtoRegistryEntry>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
-
     /**
      * Build call for getCircuitBreakerStatus
-     *
-     * @param name                    (required)
-     * @param progressListener        Progress listener
+     * @param name  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -806,8 +829,8 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/{name}/circuit-breaker/status"
-                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name));
+        String localVarPath = "/registry/service/{name}/circuit-breaker/status"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -828,7 +851,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -840,7 +863,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -858,10 +881,15 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @return CircuitBreakerTransitionResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -871,21 +899,22 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @return ApiResponse&lt;CircuitBreakerTransitionResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<CircuitBreakerTransitionResponse> getCircuitBreakerStatusWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = getCircuitBreakerStatusValidateBeforeCall(name, null, null);
-        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param name     (required)
+     * @param name  (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -912,18 +941,15 @@ public class ServiceRegistryResourceApi {
         }
 
         com.squareup.okhttp.Call call = getCircuitBreakerStatusValidateBeforeCall(name, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
-
     /**
      * Build call for getProtoData
-     *
-     * @param registryName            (required)
-     * @param filename                (required)
-     * @param progressListener        Progress listener
+     * @param registryName  (required)
+     * @param filename  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -932,9 +958,9 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/protos/{registryName}/{filename}"
-                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName))
-                .replaceAll("\\{" + "filename" + "\\}", apiClient.escapeString(filename));
+        String localVarPath = "/registry/service/protos/{registryName}/{filename}"
+                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName.toString()))
+                .replaceAll("\\{" + "filename" + "\\}", apiClient.escapeString(filename.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -955,7 +981,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -967,7 +993,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -989,11 +1015,16 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param registryName (required)
-     * @param filename     (required)
+     *
+     *
+     * @param registryName  (required)
+     * @param filename  (required)
      * @return byte[]
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1003,24 +1034,25 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param registryName (required)
-     * @param filename     (required)
+     *
+     *
+     * @param registryName  (required)
+     * @param filename  (required)
      * @return ApiResponse&lt;byte[]&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<byte[]> getProtoDataWithHttpInfo(String registryName, String filename) throws ApiException {
         com.squareup.okhttp.Call call = getProtoDataValidateBeforeCall(registryName, filename, null, null);
-        Type localVarReturnType = new TypeToken<byte[]>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<byte[]>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param registryName (required)
-     * @param filename     (required)
-     * @param callback     The callback to be executed when the API call finishes
+     * @param registryName  (required)
+     * @param filename  (required)
+     * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
@@ -1046,16 +1078,13 @@ public class ServiceRegistryResourceApi {
         }
 
         com.squareup.okhttp.Call call = getProtoDataValidateBeforeCall(registryName, filename, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<byte[]>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<byte[]>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
-
     /**
      * Build call for getRegisteredServices
-     *
-     * @param progressListener        Progress listener
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1064,7 +1093,7 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service";
+        String localVarPath = "/registry/service";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1085,7 +1114,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -1097,7 +1126,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -1111,9 +1140,14 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
+     *
+     *
      * @return List&lt;ServiceRegistry&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1123,18 +1157,19 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
+     *
+     *
      * @return ApiResponse&lt;List&lt;ServiceRegistry&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<List<ServiceRegistry>> getRegisteredServicesWithHttpInfo() throws ApiException {
         com.squareup.okhttp.Call call = getRegisteredServicesValidateBeforeCall(null, null);
-        Type localVarReturnType = new TypeToken<List<ServiceRegistry>>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<List<ServiceRegistry>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
@@ -1162,17 +1197,14 @@ public class ServiceRegistryResourceApi {
         }
 
         com.squareup.okhttp.Call call = getRegisteredServicesValidateBeforeCall(progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<List<ServiceRegistry>>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<List<ServiceRegistry>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
-
     /**
      * Build call for getService
-     *
-     * @param name                    (required)
-     * @param progressListener        Progress listener
+     * @param name  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1181,8 +1213,8 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/{name}"
-                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name));
+        String localVarPath = "/registry/service/{name}"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1203,7 +1235,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -1215,7 +1247,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -1233,10 +1265,15 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @return ServiceRegistry
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1246,21 +1283,22 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @return ApiResponse&lt;ServiceRegistry&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<ServiceRegistry> getServiceWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = getServiceValidateBeforeCall(name, null, null);
-        Type localVarReturnType = new TypeToken<ServiceRegistry>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<ServiceRegistry>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param name     (required)
+     * @param name  (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -1287,17 +1325,14 @@ public class ServiceRegistryResourceApi {
         }
 
         com.squareup.okhttp.Call call = getServiceValidateBeforeCall(name, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<ServiceRegistry>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<ServiceRegistry>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
-
     /**
      * Build call for openCircuitBreaker
-     *
-     * @param name                    (required)
-     * @param progressListener        Progress listener
+     * @param name  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1306,8 +1341,8 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/{name}/circuit-breaker/open"
-                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name));
+        String localVarPath = "/registry/service/{name}/circuit-breaker/open"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1328,7 +1363,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -1340,7 +1375,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -1358,10 +1393,15 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @return CircuitBreakerTransitionResponse
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1371,21 +1411,22 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @return ApiResponse&lt;CircuitBreakerTransitionResponse&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<CircuitBreakerTransitionResponse> openCircuitBreakerWithHttpInfo(String name) throws ApiException {
         com.squareup.okhttp.Call call = openCircuitBreakerValidateBeforeCall(name, null, null);
-        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param name     (required)
+     * @param name  (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -1412,20 +1453,17 @@ public class ServiceRegistryResourceApi {
         }
 
         com.squareup.okhttp.Call call = openCircuitBreakerValidateBeforeCall(name, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>() {
-        }.getType();
+        Type localVarReturnType = new TypeToken<CircuitBreakerTransitionResponse>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
-
     /**
      * Build call for removeMethod
-     *
-     * @param registryName            (required)
-     * @param serviceName             (required)
-     * @param method                  (required)
-     * @param methodType              (required)
-     * @param progressListener        Progress listener
+     * @param registryName  (required)
+     * @param serviceName  (required)
+     * @param method  (required)
+     * @param methodType  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1434,8 +1472,8 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/{registryName}/methods"
-                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName));
+        String localVarPath = "/registry/service/{registryName}/methods"
+                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1462,7 +1500,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -1474,7 +1512,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -1504,13 +1542,18 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param registryName (required)
+     *
+     *
+     * @param registryName  (required)
      * @param serviceName  (required)
-     * @param method       (required)
-     * @param methodType   (required)
+     * @param method  (required)
+     * @param methodType  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void removeMethod(String registryName, String serviceName, String method, String methodType) throws ApiException {
@@ -1518,10 +1561,12 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param registryName (required)
+     *
+     *
+     * @param registryName  (required)
      * @param serviceName  (required)
-     * @param method       (required)
-     * @param methodType   (required)
+     * @param method  (required)
+     * @param methodType  (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1531,13 +1576,13 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param registryName (required)
+     * @param registryName  (required)
      * @param serviceName  (required)
-     * @param method       (required)
-     * @param methodType   (required)
-     * @param callback     The callback to be executed when the API call finishes
+     * @param method  (required)
+     * @param methodType  (required)
+     * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
@@ -1566,12 +1611,10 @@ public class ServiceRegistryResourceApi {
         apiClient.executeAsync(call, callback);
         return call;
     }
-
     /**
      * Build call for removeService
-     *
-     * @param name                    (required)
-     * @param progressListener        Progress listener
+     * @param name  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1580,8 +1623,8 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/{name}"
-                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name));
+        String localVarPath = "/registry/service/{name}"
+                .replaceAll("\\{" + "name" + "\\}", apiClient.escapeString(name.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1602,7 +1645,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -1614,7 +1657,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -1632,10 +1675,15 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void removeService(String name) throws ApiException {
@@ -1643,7 +1691,9 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param name (required)
+     *
+     *
+     * @param name  (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
@@ -1653,9 +1703,9 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param name     (required)
+     * @param name  (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -1685,14 +1735,12 @@ public class ServiceRegistryResourceApi {
         apiClient.executeAsync(call, callback);
         return call;
     }
-
     /**
      * Build call for setProtoData
-     *
-     * @param body                    (required)
-     * @param registryName            (required)
-     * @param filename                (required)
-     * @param progressListener        Progress listener
+     * @param body  (required)
+     * @param registryName  (required)
+     * @param filename  (required)
+     * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -1701,9 +1749,9 @@ public class ServiceRegistryResourceApi {
         Object localVarPostBody = body;
 
         // create path and map variables
-        String localVarPath = "/api/registry/service/protos/{registryName}/{filename}"
-                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName))
-                .replaceAll("\\{" + "filename" + "\\}", apiClient.escapeString(filename));
+        String localVarPath = "/registry/service/protos/{registryName}/{filename}"
+                .replaceAll("\\{" + "registryName" + "\\}", apiClient.escapeString(registryName.toString()))
+                .replaceAll("\\{" + "filename" + "\\}", apiClient.escapeString(filename.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -1724,7 +1772,7 @@ public class ServiceRegistryResourceApi {
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
                 @Override
                 public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
@@ -1736,7 +1784,7 @@ public class ServiceRegistryResourceApi {
             });
         }
 
-        String[] localVarAuthNames = new String[]{"api_key"};
+        String[] localVarAuthNames = new String[] { "api_key" };
         if (headers != null) {
             localVarHeaderParams.putAll(headers);
         }
@@ -1762,12 +1810,17 @@ public class ServiceRegistryResourceApi {
         return call;
 
 
+
+
+
     }
 
     /**
-     * @param body         (required)
-     * @param registryName (required)
-     * @param filename     (required)
+     *
+     *
+     * @param body  (required)
+     * @param registryName  (required)
+     * @param filename  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public void setProtoData(byte[] body, String registryName, String filename) throws ApiException {
@@ -1775,24 +1828,26 @@ public class ServiceRegistryResourceApi {
     }
 
     /**
-     * @param body         (required)
-     * @param registryName (required)
-     * @param filename     (required)
+     *
+     *
+     * @param body  (required)
+     * @param registryName  (required)
+     * @param filename  (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public io.orkes.conductor.client.http.ApiResponse<Void> setProtoDataWithHttpInfo(byte[] body, String registryName, String filename) throws ApiException {
+    public ApiResponse<Void> setProtoDataWithHttpInfo(byte[] body, String registryName, String filename) throws ApiException {
         com.squareup.okhttp.Call call = setProtoDataValidateBeforeCall(body, registryName, filename, null, null);
         return apiClient.execute(call);
     }
 
     /**
-     * (asynchronously)
+     *  (asynchronously)
      *
-     * @param body         (required)
-     * @param registryName (required)
-     * @param filename     (required)
-     * @param callback     The callback to be executed when the API call finishes
+     * @param body  (required)
+     * @param registryName  (required)
+     * @param filename  (required)
+     * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */

@@ -1,8 +1,11 @@
 package io.orkes.conductor.client.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.gson.annotations.SerializedName;
 import com.nimbusds.jose.shaded.gson.TypeAdapter;
 import com.nimbusds.jose.shaded.gson.annotations.JsonAdapter;
+import com.nimbusds.jose.shaded.gson.stream.JsonReader;
+import com.nimbusds.jose.shaded.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.IOException;
@@ -12,7 +15,7 @@ import java.util.Objects;
 
 public class ServiceRegistry {
     @SerializedName("config")
-    private OrkesCircuitBreakerConfig config = null;
+    private Config config = null;
 
     @SerializedName("methods")
     private List<ServiceMethod> methods = null;
@@ -28,7 +31,7 @@ public class ServiceRegistry {
     @SerializedName("type")
     private TypeEnum type = null;
 
-    public ServiceRegistry config(OrkesCircuitBreakerConfig config) {
+    public ServiceRegistry config(Config config) {
         this.config = config;
         return this;
     }
@@ -39,11 +42,11 @@ public class ServiceRegistry {
      * @return config
      **/
     @Schema(description = "")
-    public OrkesCircuitBreakerConfig getConfig() {
+    public Config getConfig() {
         return config;
     }
 
-    public void setConfig(OrkesCircuitBreakerConfig config) {
+    public void setConfig(Config config) {
         this.config = config;
     }
 
@@ -221,9 +224,10 @@ public class ServiceRegistry {
             this.value = value;
         }
 
+        @JsonCreator
         public static TypeEnum fromValue(String input) {
             for (TypeEnum b : TypeEnum.values()) {
-                if (b.value.equals(input)) {
+                if (b.value.equalsIgnoreCase(input)) {
                     return b;
                 }
             }
@@ -240,15 +244,16 @@ public class ServiceRegistry {
         }
 
         public static class Adapter extends TypeAdapter<TypeEnum> {
+
             @Override
-            public void write(com.nimbusds.jose.shaded.gson.stream.JsonWriter jsonWriter, TypeEnum typeEnum) throws IOException {
-                jsonWriter.value(String.valueOf(typeEnum.getValue()));
+            public TypeEnum read(JsonReader jsonReader) throws IOException {
+                Object value = jsonReader.nextString();
+                return TypeEnum.fromValue((String) (value));
             }
 
             @Override
-            public TypeEnum read(com.nimbusds.jose.shaded.gson.stream.JsonReader jsonReader) throws IOException {
-                Object value = jsonReader.nextString();
-                return TypeEnum.fromValue((String) (value));
+            public void write(JsonWriter jsonWriter, TypeEnum typeEnum) throws IOException {
+                jsonWriter.value(String.valueOf(typeEnum.getValue()));
             }
         }
     }

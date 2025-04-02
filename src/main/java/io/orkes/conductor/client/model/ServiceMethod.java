@@ -1,10 +1,14 @@
 package io.orkes.conductor.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.Setter;
 
 import java.util.*;
 
+@Setter
 public class ServiceMethod {
     @SerializedName("exampleInput")
     private Map<String, Object> exampleInput = null;
@@ -45,7 +49,6 @@ public class ServiceMethod {
 
     /**
      * Get exampleInput
-     *
      * @return exampleInput
      **/
     @Schema(description = "")
@@ -64,7 +67,6 @@ public class ServiceMethod {
 
     /**
      * Get id
-     *
      * @return id
      **/
     @Schema(description = "")
@@ -83,7 +85,6 @@ public class ServiceMethod {
 
     /**
      * Get inputType
-     *
      * @return inputType
      **/
     @Schema(description = "")
@@ -102,7 +103,6 @@ public class ServiceMethod {
 
     /**
      * Get methodName
-     *
      * @return methodName
      **/
     @Schema(description = "")
@@ -121,7 +121,6 @@ public class ServiceMethod {
 
     /**
      * Get methodType
-     *
      * @return methodType
      **/
     @Schema(description = "")
@@ -140,7 +139,6 @@ public class ServiceMethod {
 
     /**
      * Get operationName
-     *
      * @return operationName
      **/
     @Schema(description = "")
@@ -159,7 +157,6 @@ public class ServiceMethod {
 
     /**
      * Get outputType
-     *
      * @return outputType
      **/
     @Schema(description = "")
@@ -186,7 +183,6 @@ public class ServiceMethod {
 
     /**
      * Get requestParams
-     *
      * @return requestParams
      **/
     @Schema(description = "")
@@ -226,18 +222,19 @@ public class ServiceMethod {
 
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class ServiceMethod {\n");
 
-        String sb = "class ServiceMethod {\n" +
-                "    exampleInput: " + toIndentedString(exampleInput) + "\n" +
-                "    id: " + toIndentedString(id) + "\n" +
-                "    inputType: " + toIndentedString(inputType) + "\n" +
-                "    methodName: " + toIndentedString(methodName) + "\n" +
-                "    methodType: " + toIndentedString(methodType) + "\n" +
-                "    operationName: " + toIndentedString(operationName) + "\n" +
-                "    outputType: " + toIndentedString(outputType) + "\n" +
-                "    requestParams: " + toIndentedString(requestParams) + "\n" +
-                "}";
-        return sb;
+        sb.append("    exampleInput: ").append(toIndentedString(exampleInput)).append("\n");
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    inputType: ").append(toIndentedString(inputType)).append("\n");
+        sb.append("    methodName: ").append(toIndentedString(methodName)).append("\n");
+        sb.append("    methodType: ").append(toIndentedString(methodType)).append("\n");
+        sb.append("    operationName: ").append(toIndentedString(operationName)).append("\n");
+        sb.append("    outputType: ").append(toIndentedString(outputType)).append("\n");
+        sb.append("    requestParams: ").append(toIndentedString(requestParams)).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
 
     /**
