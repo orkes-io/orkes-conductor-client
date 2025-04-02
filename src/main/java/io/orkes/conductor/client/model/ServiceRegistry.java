@@ -1,6 +1,7 @@
 package io.orkes.conductor.client.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gson.annotations.SerializedName;
 import com.nimbusds.jose.shaded.gson.TypeAdapter;
 import com.nimbusds.jose.shaded.gson.annotations.JsonAdapter;
@@ -231,9 +232,11 @@ public class ServiceRegistry {
                     return b;
                 }
             }
-            return null;
+            throw new IllegalArgumentException("Unexpected value '" + input + "'. " +
+                    "Allowed values are: HTTP, gRPC");
         }
 
+        @JsonValue
         public String getValue() {
             return value;
         }
