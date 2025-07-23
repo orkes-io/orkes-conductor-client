@@ -10,7 +10,7 @@ This repository provides a Java client for the Orkes Conductor Server.
 
 This Client (v2) is being deprecated and will be removed.
 
-It will be replaced by [Client v4](https://github.com/conductor-oss/conductor/tree/main/conductor-clients/java/conductor-java-sdk), which offers improved features, better performance, and other enhancements.
+It will be replaced by [Client v4](https://github.com/conductor-oss/java-sdk), which offers improved features, better performance, and other enhancements.
 
 We strongly encourage all users to migrate to Client v4. 
 
