@@ -28,6 +28,10 @@ public class OrkesClients {
         return new OrkesWorkflowClient(apiClient);
     }
 
+    public ServiceRegistryClient getServiceRegistryClient() {
+        return new OrkesServiceRegistryClient(apiClient);
+    }
+
     public AuthorizationClient getAuthorizationClient() {
         return new OrkesAuthorizationClient(apiClient);
     }
