@@ -42,202 +42,220 @@ import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 @Slf4j
 public class PooledPoller implements StreamObserver<TaskPb.Task> {
 
-    private final TaskServiceGrpc.TaskServiceStub taskPollClient;
-    private final Worker worker;
-    private final String domain;
-    private ThreadPoolExecutor executor;
-    private Integer threadCountForTask;
-    private final ArrayBlockingQueue<Holder> latchesForOrder = new ArrayBlockingQueue<>(10000);
-    private final AtomicBoolean runWorkers = new AtomicBoolean(true);
-    private final AtomicBoolean callAgain = new AtomicBoolean(true);
-    private final AtomicLong lastAskedForMessageCount = new AtomicLong(0);
-    private final Semaphore semaphore;
-    private final int taskPollCount;
-    private final ApiClient apiClient;
+  private final TaskServiceGrpc.TaskServiceStub taskPollClient;
+  private final Worker worker;
+  private final String domain;
+  private ThreadPoolExecutor executor;
+  private Integer threadCountForTask;
+  private final ArrayBlockingQueue<Holder> latchesForOrder = new ArrayBlockingQueue<>(10000);
+  private final AtomicBoolean runWorkers = new AtomicBoolean(true);
+  private final AtomicBoolean callAgain = new AtomicBoolean(true);
+  private final AtomicLong lastAskedForMessageCount = new AtomicLong(0);
+  private final Semaphore semaphore;
+  private final int taskPollCount;
+  private final ApiClient apiClient;
 
-    public PooledPoller(ApiClient apiClient, Worker worker, String domain, int taskPollCount, Integer taskPollTimeout, ThreadPoolExecutor executor, Integer threadCountForTask) {
+  public PooledPoller(
+      ApiClient apiClient,
+      Worker worker,
+      String domain,
+      int taskPollCount,
+      Integer taskPollTimeout,
+      ThreadPoolExecutor executor,
+      Integer threadCountForTask) {
 
-        this.apiClient = apiClient;
-        ManagedChannel channel = getChannel(apiClient);
-        this.taskPollClient = TaskServiceGrpc.newStub(channel).withInterceptors(new HeaderClientInterceptor(apiClient));
-        this.worker = worker;
-        this.domain = domain;
-        this.executor = executor;
-        this.threadCountForTask = threadCountForTask;
-        this.taskPollCount = taskPollCount;
-        this.semaphore = new Semaphore(threadCountForTask);;
-    }
+    this.apiClient = apiClient;
+    ManagedChannel channel = getChannel(apiClient);
+    this.taskPollClient =
+        TaskServiceGrpc.newStub(channel).withInterceptors(new HeaderClientInterceptor(apiClient));
+    this.worker = worker;
+    this.domain = domain;
+    this.executor = executor;
+    this.threadCountForTask = threadCountForTask;
+    this.taskPollCount = taskPollCount;
+    this.semaphore = new Semaphore(threadCountForTask);
+    ;
+  }
 
-    public void start() {
-        log.info("Starting {} worker with {} threads and polling interval at {} ms with pollCount at {}", worker.getTaskDefName(), this.threadCountForTask, this.worker.getPollingInterval(), this.taskPollCount);
-        Executors.newSingleThreadScheduledExecutor()
-                .scheduleWithFixedDelay(
-                        () -> {
-                            try {
-                                this.runAccumulatedRequests();
-                            } catch (Exception e) {
-                                log.warn("Unable to batch poll");
-                            }
-                        },
-                        worker.getPollingInterval(),
-                        worker.getPollingInterval(),
-                        TimeUnit.MILLISECONDS);
+  public void start() {
+    log.info(
+        "Starting {} worker with {} threads and polling interval at {} ms with pollCount at {}",
+        worker.getTaskDefName(),
+        this.threadCountForTask,
+        this.worker.getPollingInterval(),
+        this.taskPollCount);
+    Executors.newSingleThreadScheduledExecutor()
+        .scheduleWithFixedDelay(
+            () -> {
+              try {
+                this.runAccumulatedRequests();
+              } catch (Exception e) {
+                log.warn("Unable to batch poll");
+              }
+            },
+            worker.getPollingInterval(),
+            worker.getPollingInterval(),
+            TimeUnit.MILLISECONDS);
 
-        ManagedChannel channel = getChannel(apiClient);
-        TaskServiceGrpc.TaskServiceFutureStub taskServiceStub = TaskServiceGrpc.newFutureStub(channel).withInterceptors(new HeaderClientInterceptor(apiClient));
-        for (int i = 0; i < threadCountForTask; i++) {
-            PoolWorker poolWorker = new PoolWorker(taskServiceStub,this, worker, i, semaphore);
-            executor.execute(
-                    () -> {
-                        try {
-                            while (runWorkers.get()) {
-                                try {
-                                    poolWorker.run();
-                                } catch (Throwable e) {
-                                    log.warn("Unable to run", e);
-                                }
-                            }
-                        } finally {}
-                    });
-        }
-    }
-
-    public void stopWorkers() {
-        runWorkers.set(false);
-    }
-
-    @Getter
-    @Setter
-    static class Holder {
-        CountDownLatch myLatch;
-        TaskPb.Task task;
-
-        public Holder(CountDownLatch myLatch) {
-            this.myLatch = myLatch;
-        }
-    }
-
-    public TaskPb.Task getTask(int threadId) {
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        TaskPb.Task poll = null;
-        try {
-            CountDownLatch myLatch = new CountDownLatch(1);
-            Holder holder = new Holder(myLatch);
-            latchesForOrder.put(holder);
-            Uninterruptibles.awaitUninterruptibly(myLatch);
-            poll = holder.getTask();
-        } catch (InterruptedException e) {
-            log.error("ERROR WAITING --- ", e);
-        } finally {
-            long elapsed = stopwatch.elapsed(TimeUnit.MILLISECONDS);
-            if (elapsed > 9000) {
-                log.info(
-                        "Polled in {} ms - found task - {}",
-                        elapsed,
-                        (poll != null && !poll.getTaskId().equals("NO_OP")));
-            }
-        }
-        if (poll == null) { // Poll shouldn't be null in a regular flow, only happens when we time
-            // out on the blocking queue
-            semaphore.release();
-        }
-        return poll;
-    }
-
-    public void saveTask(TaskPb.Task task) {
-        if (task != null) {
+    ManagedChannel channel = getChannel(apiClient);
+    TaskServiceGrpc.TaskServiceFutureStub taskServiceStub =
+        TaskServiceGrpc.newFutureStub(channel)
+            .withInterceptors(new HeaderClientInterceptor(apiClient));
+    for (int i = 0; i < threadCountForTask; i++) {
+      PoolWorker poolWorker = new PoolWorker(taskServiceStub, this, worker, i, semaphore);
+      executor.execute(
+          () -> {
             try {
-                Holder holder = this.latchesForOrder.poll(1000, TimeUnit.MILLISECONDS);
-                if (holder == null) {
-                    throw new RuntimeException("Holder cannot be null!");
+              while (runWorkers.get()) {
+                try {
+                  poolWorker.run();
+                } catch (Throwable e) {
+                  log.warn("Unable to run", e);
                 }
-                holder.task = task;
-                holder.myLatch.countDown();
-            } catch (InterruptedException e) {
-                log.error("ERROR!", e);
+              }
+            } finally {
             }
-        }
+          });
     }
+  }
 
-    public void runAccumulatedRequests() {
-        int currentPending = this.threadCountForTask - semaphore.availablePermits();
-        if (currentPending <= 0) {
-            return;
-        }
-        if(currentPending > taskPollCount) {
-            currentPending = taskPollCount;
-        }
-        // Make GRPC call for these many
-        // Observe for results, add them to local queue
-        if (callAgain.get()) {
-            callAgain.set(false);
-            lastAskedForMessageCount.set(currentPending);
-            log.trace("Polling {} for {} tasks", worker.getTaskDefName(), currentPending);
-            TaskServicePb.BatchPollRequest request = buildPollRequest(currentPending, 1);
-            taskPollClient.batchPoll(request, this);
-        }
-    }
+  public void stopWorkers() {
+    runWorkers.set(false);
+  }
 
-    private TaskServicePb.BatchPollRequest buildPollRequest(int count, int timeoutInMillisecond) {
-        TaskServicePb.BatchPollRequest.Builder requestBuilder =
-                TaskServicePb.BatchPollRequest.newBuilder()
-                        .setCount(count)
-                        .setTaskType(worker.getTaskDefName())
-                        .setTimeout(timeoutInMillisecond)
-                        .setWorkerId(worker.getIdentity());
-        if (domain != null) {
-            requestBuilder = requestBuilder.setDomain(domain);
-        }
-        return requestBuilder.build();
-    }
+  @Getter
+  @Setter
+  static class Holder {
+    CountDownLatch myLatch;
+    TaskPb.Task task;
 
-    @Override
-    public void onNext(TaskPb.Task task) {
-        try {
-            saveTask(task);
-            semaphore.release();
-            lastAskedForMessageCount.decrementAndGet();
-        } catch (Throwable t) {
-            log.error(t.getMessage(), t);
-        }
+    public Holder(CountDownLatch myLatch) {
+      this.myLatch = myLatch;
     }
+  }
 
-    @Override
-    public void onError(Throwable t) {
-        Status status = Status.fromThrowable(t);
-        Status.Code code = status.getCode();
-        drain();
-        switch (code) {
-            case UNAVAILABLE:
-                log.trace("Server not available ");
-                break;
-            case UNAUTHENTICATED:
-                log.error("{} - Invalid or missing api key/secret", code);
-                break;
-            case CANCELLED:
-            case ABORTED:
-            case DATA_LOSS:
-            case DEADLINE_EXCEEDED:
-                break;
-            default:
-                log.error("Error from server when polling for the task {} - {}", worker.getTaskDefName(), code);
-        }
+  public TaskPb.Task getTask(int threadId) {
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    TaskPb.Task poll = null;
+    try {
+      CountDownLatch myLatch = new CountDownLatch(1);
+      Holder holder = new Holder(myLatch);
+      latchesForOrder.put(holder);
+      Uninterruptibles.awaitUninterruptibly(myLatch);
+      poll = holder.getTask();
+    } catch (InterruptedException e) {
+      log.error("ERROR WAITING --- ", e);
+    } finally {
+      long elapsed = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+      if (elapsed > 9000) {
+        log.info(
+            "Polled in {} ms - found task - {}",
+            elapsed,
+            (poll != null && !poll.getTaskId().equals("NO_OP")));
+      }
     }
+    if (poll == null) { // Poll shouldn't be null in a regular flow, only happens when we time
+      // out on the blocking queue
+      semaphore.release();
+    }
+    return poll;
+  }
 
-    @Override
-    public void onCompleted() {
-        drain();
-    }
-
-    private void drain() {
-        long didntGetMessageCount = lastAskedForMessageCount.get();
-        if (didntGetMessageCount > 0) {
-            log.debug("Didn't get {} messages from server as expected", didntGetMessageCount);
-            for (int i = 0; i < didntGetMessageCount; i++) {
-                this.saveTask(TaskPb.Task.newBuilder().setTaskId("NO_OP").build());
-                semaphore.release();
-            }
+  public void saveTask(TaskPb.Task task) {
+    if (task != null) {
+      try {
+        Holder holder = this.latchesForOrder.poll(1000, TimeUnit.MILLISECONDS);
+        if (holder == null) {
+          throw new RuntimeException("Holder cannot be null!");
         }
-        callAgain.set(true);
+        holder.task = task;
+        holder.myLatch.countDown();
+      } catch (InterruptedException e) {
+        log.error("ERROR!", e);
+      }
     }
+  }
+
+  public void runAccumulatedRequests() {
+    int currentPending = this.threadCountForTask - semaphore.availablePermits();
+    if (currentPending <= 0) {
+      return;
+    }
+    if (currentPending > taskPollCount) {
+      currentPending = taskPollCount;
+    }
+    // Make GRPC call for these many
+    // Observe for results, add them to local queue
+    if (callAgain.get()) {
+      callAgain.set(false);
+      lastAskedForMessageCount.set(currentPending);
+      log.trace("Polling {} for {} tasks", worker.getTaskDefName(), currentPending);
+      TaskServicePb.BatchPollRequest request = buildPollRequest(currentPending, 1);
+      taskPollClient.batchPoll(request, this);
+    }
+  }
+
+  private TaskServicePb.BatchPollRequest buildPollRequest(int count, int timeoutInMillisecond) {
+    TaskServicePb.BatchPollRequest.Builder requestBuilder =
+        TaskServicePb.BatchPollRequest.newBuilder()
+            .setCount(count)
+            .setTaskType(worker.getTaskDefName())
+            .setTimeout(timeoutInMillisecond)
+            .setWorkerId(worker.getIdentity());
+    if (domain != null) {
+      requestBuilder = requestBuilder.setDomain(domain);
+    }
+    return requestBuilder.build();
+  }
+
+  @Override
+  public void onNext(TaskPb.Task task) {
+    try {
+      saveTask(task);
+      semaphore.release();
+      lastAskedForMessageCount.decrementAndGet();
+    } catch (Throwable t) {
+      log.error(t.getMessage(), t);
+    }
+  }
+
+  @Override
+  public void onError(Throwable t) {
+    Status status = Status.fromThrowable(t);
+    Status.Code code = status.getCode();
+    drain();
+    switch (code) {
+      case UNAVAILABLE:
+        log.trace("Server not available ");
+        break;
+      case UNAUTHENTICATED:
+        log.error("{} - Invalid or missing api key/secret", code);
+        break;
+      case CANCELLED:
+      case ABORTED:
+      case DATA_LOSS:
+      case DEADLINE_EXCEEDED:
+        break;
+      default:
+        log.error(
+            "Error from server when polling for the task {} - {}", worker.getTaskDefName(), code);
+    }
+  }
+
+  @Override
+  public void onCompleted() {
+    drain();
+  }
+
+  private void drain() {
+    long didntGetMessageCount = lastAskedForMessageCount.get();
+    if (didntGetMessageCount > 0) {
+      log.debug("Didn't get {} messages from server as expected", didntGetMessageCount);
+      for (int i = 0; i < didntGetMessageCount; i++) {
+        this.saveTask(TaskPb.Task.newBuilder().setTaskId("NO_OP").build());
+        semaphore.release();
+      }
+    }
+    callAgain.set(true);
+  }
 }

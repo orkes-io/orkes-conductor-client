@@ -23,31 +23,31 @@ import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 
 public class LocalWorkerTest {
 
-    public static void main(String[] args) {
-        ApiClient apiClient = new ApiClient("http://localhost:8080/api");
-        OrkesClients clients = new OrkesClients(apiClient);
-        TaskClient taskClient = clients.getTaskClient();
+  public static void main(String[] args) {
+    ApiClient apiClient = new ApiClient("http://localhost:8080/api");
+    OrkesClients clients = new OrkesClients(apiClient);
+    TaskClient taskClient = clients.getTaskClient();
 
-        List<Worker> workers = new ArrayList<>();
-        Map<String, Integer> taskThreadCount = new HashMap<>();
+    List<Worker> workers = new ArrayList<>();
+    Map<String, Integer> taskThreadCount = new HashMap<>();
 
-        workers.add(new LoadTestWorker("x_test_worker_4"));
-        taskThreadCount.put("x_test_worker_4", 1000);
+    workers.add(new LoadTestWorker("x_test_worker_4"));
+    taskThreadCount.put("x_test_worker_4", 1000);
 
-        for (int i = 0; i < 4; i++) {
-            workers.add(new LoadTestWorker("x_test_worker_" + i));
-            taskThreadCount.put("x_test_worker_" + i, 100);
-        }
-
-        TaskRunnerConfigurer configurer =
-                new TaskRunnerConfigurer.Builder(taskClient, workers)
-                        .withSleepWhenRetry(10)
-                        .withTaskThreadCount(taskThreadCount)
-                        .withTaskPollTimeout(10)
-                        .withTaskPollCount(5)
-                        .build();
-        configurer.init();
-
-        System.out.println("Ready...");
+    for (int i = 0; i < 4; i++) {
+      workers.add(new LoadTestWorker("x_test_worker_" + i));
+      taskThreadCount.put("x_test_worker_" + i, 100);
     }
+
+    TaskRunnerConfigurer configurer =
+        new TaskRunnerConfigurer.Builder(taskClient, workers)
+            .withSleepWhenRetry(10)
+            .withTaskThreadCount(taskThreadCount)
+            .withTaskPollTimeout(10)
+            .withTaskPollCount(5)
+            .build();
+    configurer.init();
+
+    System.out.println("Ready...");
+  }
 }

@@ -22,56 +22,55 @@ import io.orkes.conductor.client.model.TagObject;
 
 public class OrkesSecretClient extends OrkesClient implements SecretClient {
 
+  private SecretResourceApi secretResourceApi;
 
-    private SecretResourceApi secretResourceApi;
+  public OrkesSecretClient(ApiClient apiClient) {
+    super(apiClient);
+    this.secretResourceApi = new SecretResourceApi(apiClient);
+  }
 
-    public OrkesSecretClient(ApiClient apiClient) {
-        super(apiClient);
-        this.secretResourceApi = new SecretResourceApi(apiClient);
-    }
+  @Override
+  public void deleteSecret(String key) throws ApiException {
+    secretResourceApi.deleteSecret(key);
+  }
 
-    @Override
-    public void deleteSecret(String key) throws ApiException {
-        secretResourceApi.deleteSecret(key);
-    }
+  @Override
+  public String getSecret(String key) throws ApiException {
+    return secretResourceApi.getSecret(key);
+  }
 
-    @Override
-    public String getSecret(String key) throws ApiException {
-        return secretResourceApi.getSecret(key);
-    }
+  @Override
+  public Set<String> listAllSecretNames() throws ApiException {
+    return secretResourceApi.listAllSecretNames();
+  }
 
-    @Override
-    public Set<String> listAllSecretNames() throws ApiException {
-        return secretResourceApi.listAllSecretNames();
-    }
+  @Override
+  public List<String> listSecretsThatUserCanGrantAccessTo() throws ApiException {
+    return secretResourceApi.listSecretsThatUserCanGrantAccessTo();
+  }
 
-    @Override
-    public List<String> listSecretsThatUserCanGrantAccessTo() throws ApiException {
-        return secretResourceApi.listSecretsThatUserCanGrantAccessTo();
-    }
+  @Override
+  public void putSecret(String value, String key) throws ApiException {
+    secretResourceApi.putSecret(value, key);
+  }
 
-    @Override
-    public void putSecret(String value, String key) throws ApiException {
-        secretResourceApi.putSecret(value, key);
-    }
+  @Override
+  public boolean secretExists(String key) throws ApiException {
+    return secretResourceApi.secretExists(key);
+  }
 
-    @Override
-    public boolean secretExists(String key) throws ApiException {
-        return secretResourceApi.secretExists(key);
-    }
+  @Override
+  public void setSecretTags(List<TagObject> tags, String key) {
+    secretResourceApi.putTagForSecret(tags, key);
+  }
 
-    @Override
-    public void setSecretTags(List<TagObject> tags, String key) {
-        secretResourceApi.putTagForSecret(tags, key);
-    }
+  @Override
+  public void deleteSecretTags(List<TagObject> tags, String key) {
+    secretResourceApi.deleteTagForSecret(tags, key);
+  }
 
-    @Override
-    public void deleteSecretTags(List<TagObject> tags, String key) {
-        secretResourceApi.deleteTagForSecret(tags, key);
-    }
-
-    @Override
-    public List<TagObject> getSecretTags(String key) {
-        return secretResourceApi.getTags(key);
-    }
+  @Override
+  public List<TagObject> getSecretTags(String key) {
+    return secretResourceApi.getTags(key);
+  }
 }

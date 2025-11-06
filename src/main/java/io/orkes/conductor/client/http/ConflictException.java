@@ -21,69 +21,69 @@ import io.orkes.conductor.client.OrkesClientException;
 
 public class ConflictException extends OrkesClientException {
 
-    private int code;
-    private Map<String, List<String>> responseHeaders;
+  private int code;
+  private Map<String, List<String>> responseHeaders;
 
-    private String responseBody;
+  private String responseBody;
 
-    private String message;
+  private String message;
 
-    public ConflictException(
-            String message,
-            Throwable throwable,
-            int code,
-            Map<String, List<String>> responseHeaders,
-            String responseBody) {
-        super(message, throwable);
-        super.setCode(String.valueOf(code));
-        super.setStatus(code);
-        this.code = code;
-        this.responseHeaders = responseHeaders;
-        this.responseBody = responseBody;
-        this.message = message;
-    }
+  public ConflictException(
+      String message,
+      Throwable throwable,
+      int code,
+      Map<String, List<String>> responseHeaders,
+      String responseBody) {
+    super(message, throwable);
+    super.setCode(String.valueOf(code));
+    super.setStatus(code);
+    this.code = code;
+    this.responseHeaders = responseHeaders;
+    this.responseBody = responseBody;
+    this.message = message;
+  }
 
-    public ConflictException(String message, int code, Map<String, List<String>> responseHeaders, String responseBody) {
-        this(message, null, code, responseHeaders, responseBody);
-        super.setCode(String.valueOf(code));
-        super.setStatus(code);
-        super.setMessage(message);
-        this.code = code;
-        this.message = message;
-        this.responseBody = responseBody;
-    }
+  public ConflictException(
+      String message, int code, Map<String, List<String>> responseHeaders, String responseBody) {
+    this(message, null, code, responseHeaders, responseBody);
+    super.setCode(String.valueOf(code));
+    super.setStatus(code);
+    super.setMessage(message);
+    this.code = code;
+    this.message = message;
+    this.responseBody = responseBody;
+  }
 
-    /**
-     *
-     * @return HTTP status code
-     */
-    public int getStatusCode() {
-        return code;
-    }
+  /**
+   * @return HTTP status code
+   */
+  public int getStatusCode() {
+    return code;
+  }
 
-    /**
-     * Get the HTTP response headers.
-     *
-     * @return A map of list of string
-     */
-    public Map<String, List<String>> getResponseHeaders() {
-        return responseHeaders;
-    }
+  /**
+   * Get the HTTP response headers.
+   *
+   * @return A map of list of string
+   */
+  public Map<String, List<String>> getResponseHeaders() {
+    return responseHeaders;
+  }
 
-    @Override
-    public String getMessage() {
-        return getStatusCode()
-                + ":"
-                + (StringUtils.isBlank(responseBody) ? super.getMessage() : responseBody);
-    }
+  @Override
+  public String getMessage() {
+    return getStatusCode()
+        + ":"
+        + (StringUtils.isBlank(responseBody) ? super.getMessage() : responseBody);
+  }
 
-    @Override
-    public String toString() {
-        return responseBody;
-    }
+  @Override
+  public String toString() {
+    return responseBody;
+  }
 
-    @Override
-    public boolean isClientError() {
-        return code > 399 && code < 499;
-    }
+  @Override
+  public boolean isClientError() {
+    return code > 399 && code < 499;
+  }
 }

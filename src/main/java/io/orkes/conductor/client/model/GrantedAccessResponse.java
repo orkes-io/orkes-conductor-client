@@ -21,71 +21,70 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /** GrantedAccessResponse */
 public class GrantedAccessResponse {
-    @SerializedName("grantedAccess")
-    private List<GrantedAccess> grantedAccess = null;
+  @SerializedName("grantedAccess")
+  private List<GrantedAccess> grantedAccess = null;
 
-    public GrantedAccessResponse grantedAccess(List<GrantedAccess> grantedAccess) {
-        this.grantedAccess = grantedAccess;
-        return this;
+  public GrantedAccessResponse grantedAccess(List<GrantedAccess> grantedAccess) {
+    this.grantedAccess = grantedAccess;
+    return this;
+  }
+
+  public GrantedAccessResponse addGrantedAccessItem(GrantedAccess grantedAccessItem) {
+    if (this.grantedAccess == null) {
+      this.grantedAccess = new ArrayList<GrantedAccess>();
     }
+    this.grantedAccess.add(grantedAccessItem);
+    return this;
+  }
 
-    public GrantedAccessResponse addGrantedAccessItem(GrantedAccess grantedAccessItem) {
-        if (this.grantedAccess == null) {
-            this.grantedAccess = new ArrayList<GrantedAccess>();
-        }
-        this.grantedAccess.add(grantedAccessItem);
-        return this;
+  /**
+   * Get grantedAccess
+   *
+   * @return grantedAccess
+   */
+  @Schema(description = "")
+  public List<GrantedAccess> getGrantedAccess() {
+    return grantedAccess;
+  }
+
+  public void setGrantedAccess(List<GrantedAccess> grantedAccess) {
+    this.grantedAccess = grantedAccess;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    /**
-     * Get grantedAccess
-     *
-     * @return grantedAccess
-     */
-    @Schema(description = "")
-    public List<GrantedAccess> getGrantedAccess() {
-        return grantedAccess;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    GrantedAccessResponse grantedAccessResponse = (GrantedAccessResponse) o;
+    return Objects.equals(this.grantedAccess, grantedAccessResponse.grantedAccess);
+  }
 
-    public void setGrantedAccess(List<GrantedAccess> grantedAccess) {
-        this.grantedAccess = grantedAccess;
+  @Override
+  public int hashCode() {
+    return Objects.hash(grantedAccess);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class GrantedAccessResponse {\n");
+
+    sb.append("    grantedAccess: ").append(toIndentedString(grantedAccess)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        GrantedAccessResponse grantedAccessResponse = (GrantedAccessResponse) o;
-        return Objects.equals(this.grantedAccess, grantedAccessResponse.grantedAccess);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(grantedAccess);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class GrantedAccessResponse {\n");
-
-        sb.append("    grantedAccess: ").append(toIndentedString(grantedAccess)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }

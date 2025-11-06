@@ -20,7 +20,7 @@ import lombok.Data;
 
 @Data
 public class WorkflowStateUpdate {
-    private String taskReferenceName;
-    private Map<String, Object> variables;
-    private TaskResult taskResult;
+  private String taskReferenceName;
+  private Map<String, Object> variables;
+  private TaskResult taskResult;
 }

@@ -16,9 +16,8 @@ import lombok.Data;
 
 @Data
 public class EmbeddingRequest {
-    private String llmProvider;
-    private String model;
-    private String text;
-    private Integer dimensions;
-
+  private String llmProvider;
+  private String model;
+  private String text;
+  private Integer dimensions;
 }

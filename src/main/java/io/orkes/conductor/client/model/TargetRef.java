@@ -17,129 +17,123 @@ import java.util.Objects;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/**
- * The object over which access is being granted or removed
- */
+/** The object over which access is being granted or removed */
 @Schema(description = "The object over which access is being granted or removed")
 public class TargetRef {
-    @SerializedName("id")
-    private String id = null;
+  @SerializedName("id")
+  private String id = null;
 
-    /**
-     * Gets or Sets type
-     */
-    public enum TypeEnum {
-        WORKFLOW_DEF("WORKFLOW_DEF"),
-        TASK_DEF("TASK_DEF"),
-        APPLICATION("APPLICATION"),
-        USER("USER"),
-        SECRET("SECRET_NAME"),
-        TAG("TAG"),
-        DOMAIN("DOMAIN");
+  /** Gets or Sets type */
+  public enum TypeEnum {
+    WORKFLOW_DEF("WORKFLOW_DEF"),
+    TASK_DEF("TASK_DEF"),
+    APPLICATION("APPLICATION"),
+    USER("USER"),
+    SECRET("SECRET_NAME"),
+    TAG("TAG"),
+    DOMAIN("DOMAIN");
 
-        private String value;
+    private String value;
 
-        TypeEnum(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        public static TypeEnum fromValue(String input) {
-            for (TypeEnum b : TypeEnum.values()) {
-                if (b.value.equals(input)) {
-                    return b;
-                }
-            }
-            return null;
-        }
+    TypeEnum(String value) {
+      this.value = value;
     }
 
-    @SerializedName("type")
-    private TypeEnum type = null;
-
-    public TargetRef id(String id) {
-        this.id = id;
-        return this;
-    }
-
-    /**
-     * Get id
-     * 
-     * @return id
-     **/
-    @Schema(required = true, description = "")
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public TargetRef type(TypeEnum type) {
-        this.type = type;
-        return this;
-    }
-
-    /**
-     * Get type
-     * 
-     * @return type
-     **/
-    @Schema(required = true, description = "")
-    public TypeEnum getType() {
-        return type;
-    }
-
-    public void setType(TypeEnum type) {
-        this.type = type;
-    }
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        TargetRef targetRef = (TargetRef) o;
-        return Objects.equals(this.id, targetRef.id) &&
-                Objects.equals(this.type, targetRef.type);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, type);
+    public String getValue() {
+      return value;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class TargetRef {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    type: ").append(toIndentedString(type)).append("\n");
-        sb.append("}");
-        return sb.toString();
+      return String.valueOf(value);
     }
 
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
+    public static TypeEnum fromValue(String input) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (b.value.equals(input)) {
+          return b;
         }
-        return o.toString().replace("\n", "\n    ");
+      }
+      return null;
     }
+  }
+
+  @SerializedName("type")
+  private TypeEnum type = null;
+
+  public TargetRef id(String id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Get id
+   *
+   * @return id
+   */
+  @Schema(required = true, description = "")
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public TargetRef type(TypeEnum type) {
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Get type
+   *
+   * @return type
+   */
+  @Schema(required = true, description = "")
+  public TypeEnum getType() {
+    return type;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    TargetRef targetRef = (TargetRef) o;
+    return Objects.equals(this.id, targetRef.id) && Objects.equals(this.type, targetRef.type);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, type);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class TargetRef {\n");
+
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }

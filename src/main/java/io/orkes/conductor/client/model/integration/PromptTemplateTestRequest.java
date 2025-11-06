@@ -20,12 +20,11 @@ import lombok.Data;
 @Data
 public class PromptTemplateTestRequest {
 
-    private String llmProvider;
-    private String model;
-    private String prompt;
-    private Map<String, Object> promptVariables;
-    private List<String> stopWords;
-    private Double temperature;
-    private Double topP;
-
+  private String llmProvider;
+  private String model;
+  private String prompt;
+  private Map<String, Object> promptVariables;
+  private List<String> stopWords;
+  private Double temperature;
+  private Double topP;
 }

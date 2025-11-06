@@ -19,32 +19,32 @@ import com.azure.security.keyvault.secrets.SecretClient;
 import com.azure.security.keyvault.secrets.SecretClientBuilder;
 
 public class AzureSecretsManager implements SecretsManager {
-    private static final String PROPERTY_NAME = "azure.keyvault.name";
+  private static final String PROPERTY_NAME = "azure.keyvault.name";
 
-    private final SecretClient client;
+  private final SecretClient client;
 
-    public AzureSecretsManager() {
-        this.client = createClient();
+  public AzureSecretsManager() {
+    this.client = createClient();
+  }
+
+  @Override
+  public String getSecret(String keyPath) {
+    return client.getSecret(keyPath).getValue();
+  }
+
+  @Override
+  public void storeSecret(String key, String secret) {
+    client.setSecret(key, secret);
+  }
+
+  private SecretClient createClient() {
+    String keyVaultName = getProperty(PROPERTY_NAME);
+    if (keyVaultName == null) {
+      throw new RuntimeException("Key Vault name is not specified, cannot create client");
     }
-
-    @Override
-    public String getSecret(String keyPath) {
-        return client.getSecret(keyPath).getValue();
-    }
-
-    @Override
-    public void storeSecret(String key, String secret) {
-        client.setSecret(key, secret);
-    }
-
-    private SecretClient createClient() {
-        String keyVaultName = getProperty(PROPERTY_NAME);
-        if (keyVaultName == null) {
-            throw new RuntimeException("Key Vault name is not specified, cannot create client");
-        }
-        return new SecretClientBuilder()
-                .vaultUrl(String.format("https://%s.vault.azure.net/", keyVaultName))
-                .credential(new DefaultAzureCredentialBuilder().build())
-                .buildClient();
-    }
+    return new SecretClientBuilder()
+        .vaultUrl(String.format("https://%s.vault.azure.net/", keyVaultName))
+        .credential(new DefaultAzureCredentialBuilder().build())
+        .buildClient();
+  }
 }

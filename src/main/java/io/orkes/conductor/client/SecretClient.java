@@ -18,19 +18,21 @@ import java.util.Set;
 import io.orkes.conductor.client.model.TagObject;
 
 public interface SecretClient {
-    void deleteSecret(String key);
+  void deleteSecret(String key);
 
-    String getSecret(String key);
+  String getSecret(String key);
 
-    Set<String> listAllSecretNames();
+  Set<String> listAllSecretNames();
 
-    List<String> listSecretsThatUserCanGrantAccessTo();
+  List<String> listSecretsThatUserCanGrantAccessTo();
 
-    void putSecret(String value, String key);
+  void putSecret(String value, String key);
 
-    boolean secretExists(String key);
-    void setSecretTags(List<TagObject> tags, String key);
+  boolean secretExists(String key);
 
-    void deleteSecretTags(List<TagObject> body, String key);
-    List<TagObject> getSecretTags(String key);
+  void setSecretTags(List<TagObject> tags, String key);
+
+  void deleteSecretTags(List<TagObject> body, String key);
+
+  List<TagObject> getSecretTags(String key);
 }

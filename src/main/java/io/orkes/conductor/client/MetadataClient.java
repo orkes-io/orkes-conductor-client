@@ -21,27 +21,27 @@ import io.orkes.conductor.client.model.TagString;
 
 public abstract class MetadataClient extends com.netflix.conductor.client.http.MetadataClient {
 
-    public abstract void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite);
+  public abstract void registerWorkflowDef(WorkflowDef workflowDef, boolean overwrite);
 
-    public abstract void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite);
+  public abstract void updateWorkflowDefs(List<WorkflowDef> workflowDefs, boolean overwrite);
 
-    public abstract void addTaskTag(TagObject tagObject, String taskName);
+  public abstract void addTaskTag(TagObject tagObject, String taskName);
 
-    public abstract void addWorkflowTag(TagObject tagObject, String name);
+  public abstract void addWorkflowTag(TagObject tagObject, String name);
 
-    public abstract void deleteTaskTag(TagString tagString, String taskName);
+  public abstract void deleteTaskTag(TagString tagString, String taskName);
 
-    public abstract void deleteWorkflowTag(TagObject tagObject, String name);
+  public abstract void deleteWorkflowTag(TagObject tagObject, String name);
 
-    public abstract List<TagObject> getTags();
+  public abstract List<TagObject> getTags();
 
-    public abstract List<TagObject> getTaskTags(String taskName);
+  public abstract List<TagObject> getTaskTags(String taskName);
 
-    public abstract List<TagObject> getWorkflowTags(String name);
+  public abstract List<TagObject> getWorkflowTags(String name);
 
-    public abstract void setTaskTags(List<TagObject> tagObjects, String taskName);
+  public abstract void setTaskTags(List<TagObject> tagObjects, String taskName);
 
-    public abstract void setWorkflowTags(List<TagObject> tagObjects, String name);
+  public abstract void setWorkflowTags(List<TagObject> tagObjects, String name);
 
-    public abstract List<WorkflowDef> getAllWorkflowDefs();
+  public abstract List<WorkflowDef> getAllWorkflowDefs();
 }

@@ -21,95 +21,94 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /** Role */
 public class Role {
-    @SerializedName("name")
-    private String name = null;
+  @SerializedName("name")
+  private String name = null;
 
-    @SerializedName("permissions")
-    private List<Permission> permissions = null;
+  @SerializedName("permissions")
+  private List<Permission> permissions = null;
 
-    public Role name(String name) {
-        this.name = name;
-        return this;
+  public Role name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  /**
+   * Get name
+   *
+   * @return name
+   */
+  @Schema(description = "")
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Role permissions(List<Permission> permissions) {
+    this.permissions = permissions;
+    return this;
+  }
+
+  public Role addPermissionsItem(Permission permissionsItem) {
+    if (this.permissions == null) {
+      this.permissions = new ArrayList<Permission>();
     }
+    this.permissions.add(permissionsItem);
+    return this;
+  }
 
-    /**
-     * Get name
-     *
-     * @return name
-     */
-    @Schema(description = "")
-    public String getName() {
-        return name;
+  /**
+   * Get permissions
+   *
+   * @return permissions
+   */
+  @Schema(description = "")
+  public List<Permission> getPermissions() {
+    return permissions;
+  }
+
+  public void setPermissions(List<Permission> permissions) {
+    this.permissions = permissions;
+  }
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public void setName(String name) {
-        this.name = name;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    Role role = (Role) o;
+    return Objects.equals(this.name, role.name)
+        && Objects.equals(this.permissions, role.permissions);
+  }
 
-    public Role permissions(List<Permission> permissions) {
-        this.permissions = permissions;
-        return this;
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, permissions);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class Role {\n");
+
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    permissions: ").append(toIndentedString(permissions)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
     }
-
-    public Role addPermissionsItem(Permission permissionsItem) {
-        if (this.permissions == null) {
-            this.permissions = new ArrayList<Permission>();
-        }
-        this.permissions.add(permissionsItem);
-        return this;
-    }
-
-    /**
-     * Get permissions
-     *
-     * @return permissions
-     */
-    @Schema(description = "")
-    public List<Permission> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
-    }
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Role role = (Role) o;
-        return Objects.equals(this.name, role.name)
-                && Objects.equals(this.permissions, role.permissions);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, permissions);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Role {\n");
-
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    permissions: ").append(toIndentedString(permissions)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }

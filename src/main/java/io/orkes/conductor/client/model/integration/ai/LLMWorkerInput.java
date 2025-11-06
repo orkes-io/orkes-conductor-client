@@ -19,15 +19,14 @@ import lombok.Data;
 @Data
 public class LLMWorkerInput {
 
-    private String llmProvider;
-    private String model;
-    private String embeddingModel;
-    private String embeddingModelProvider;
-    private String prompt;
-    private double temperature = 0.1;
-    private double topP = 0.9;
-    private List<String> stopWords;
-    private int maxTokens;
-    private int maxResults = 1;
-
+  private String llmProvider;
+  private String model;
+  private String embeddingModel;
+  private String embeddingModelProvider;
+  private String prompt;
+  private double temperature = 0.1;
+  private double topP = 0.9;
+  private List<String> stopWords;
+  private int maxTokens;
+  private int maxResults = 1;
 }

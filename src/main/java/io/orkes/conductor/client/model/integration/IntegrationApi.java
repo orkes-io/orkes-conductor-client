@@ -22,15 +22,14 @@ import lombok.Data;
 @Data
 public class IntegrationApi {
 
-    private String api;
-    private Map<String, Object> configuration;
-    private String createdBy;
-    private Long createdOn;
-    private String description;
-    private Boolean enabled;
-    private String integrationName;
-    private List<TagObject> tags;
-    private String updatedBy;
-    private Long updatedOn;
-
+  private String api;
+  private Map<String, Object> configuration;
+  private String createdBy;
+  private Long createdOn;
+  private String description;
+  private Boolean enabled;
+  private String integrationName;
+  private List<TagObject> tags;
+  private String updatedBy;
+  private Long updatedOn;
 }

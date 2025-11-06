@@ -25,57 +25,57 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HeaderClientInterceptor implements ClientInterceptor {
 
-    private static final Metadata.Key<String> AUTH_HEADER =
-            Metadata.Key.of("X-AUTHORIZATION", Metadata.ASCII_STRING_MARSHALLER);
+  private static final Metadata.Key<String> AUTH_HEADER =
+      Metadata.Key.of("X-AUTHORIZATION", Metadata.ASCII_STRING_MARSHALLER);
 
-    private static final Metadata.Key<String> CLIENT_ID_HEADER =
-            Metadata.Key.of("X-Client-Id", Metadata.ASCII_STRING_MARSHALLER);
+  private static final Metadata.Key<String> CLIENT_ID_HEADER =
+      Metadata.Key.of("X-Client-Id", Metadata.ASCII_STRING_MARSHALLER);
 
-    private final String clientId;
+  private final String clientId;
 
-    private final ApiClient apiClient;
+  private final ApiClient apiClient;
 
-    public HeaderClientInterceptor(ApiClient apiClient) {
-        this.clientId = getIdentity();
-        this.apiClient = apiClient;
-        log.info("Setting client id to {}", clientId);
-    }
+  public HeaderClientInterceptor(ApiClient apiClient) {
+    this.clientId = getIdentity();
+    this.apiClient = apiClient;
+    log.info("Setting client id to {}", clientId);
+  }
 
-    @Override
-    public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(
-            MethodDescriptor<ReqT, RespT> method, CallOptions callOptions, Channel next) {
-        return new ForwardingClientCall.SimpleForwardingClientCall<ReqT, RespT>(
-                next.newCall(method, callOptions)) {
+  @Override
+  public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(
+      MethodDescriptor<ReqT, RespT> method, CallOptions callOptions, Channel next) {
+    return new ForwardingClientCall.SimpleForwardingClientCall<ReqT, RespT>(
+        next.newCall(method, callOptions)) {
 
-            @Override
-            public void start(Listener<RespT> responseListener, Metadata headers) {
-                try {
-                    if (apiClient.useSecurity()) {
-                        headers.put(AUTH_HEADER, apiClient.getToken());
-                    }
-                    headers.put(CLIENT_ID_HEADER, clientId);
-                } catch (Throwable t) {
-                }
-                super.start(
-                        new ForwardingClientCallListener.SimpleForwardingClientCallListener<RespT>(
-                                responseListener) {},
-                        headers);
-            }
-        };
-    }
-
-    private String getIdentity() {
-        String serverId = System.getenv("LOCAL_HOST_IP");
-        if (StringUtils.isBlank(serverId)) {
-            try {
-                serverId = InetAddress.getLocalHost().getHostAddress();
-            } catch (UnknownHostException e) {
-            }
+      @Override
+      public void start(Listener<RespT> responseListener, Metadata headers) {
+        try {
+          if (apiClient.useSecurity()) {
+            headers.put(AUTH_HEADER, apiClient.getToken());
+          }
+          headers.put(CLIENT_ID_HEADER, clientId);
+        } catch (Throwable t) {
         }
+        super.start(
+            new ForwardingClientCallListener.SimpleForwardingClientCallListener<RespT>(
+                responseListener) {},
+            headers);
+      }
+    };
+  }
 
-        if (StringUtils.isBlank(serverId)) {
-            serverId = System.getenv("HOSTNAME");
-        }
-        return serverId;
+  private String getIdentity() {
+    String serverId = System.getenv("LOCAL_HOST_IP");
+    if (StringUtils.isBlank(serverId)) {
+      try {
+        serverId = InetAddress.getLocalHost().getHostAddress();
+      } catch (UnknownHostException e) {
+      }
     }
+
+    if (StringUtils.isBlank(serverId)) {
+      serverId = System.getenv("HOSTNAME");
+    }
+    return serverId;
+  }
 }

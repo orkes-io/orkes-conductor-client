@@ -17,39 +17,36 @@ import java.util.List;
 import com.netflix.conductor.common.metadata.events.EventHandler;
 
 // Client class for all Event Handler operations
-public abstract class EventClient{
+public abstract class EventClient {
 
-    /** Creates a default metadata client */
-    public EventClient() {
-    }
+  /** Creates a default metadata client */
+  public EventClient() {}
 
+  /**
+   * Register an event handler with the server.
+   *
+   * @param eventHandler the eventHandler definition.
+   */
+  public abstract void registerEventHandler(EventHandler eventHandler);
 
+  /**
+   * Updates an event handler with the server.
+   *
+   * @param eventHandler the eventHandler definition.
+   */
+  public abstract void updateEventHandler(EventHandler eventHandler);
 
-    /**
-     * Register an event handler with the server.
-     *
-     * @param eventHandler the eventHandler definition.
-     */
-    public abstract void registerEventHandler(EventHandler eventHandler);
+  /**
+   * @param event name of the event.
+   * @param activeOnly if true, returns only the active handlers.
+   * @return Returns the list of all the event handlers for a given event.
+   */
+  public abstract List<EventHandler> getEventHandlers(String event, boolean activeOnly);
 
-    /**
-     * Updates an event handler with the server.
-     *
-     * @param eventHandler the eventHandler definition.
-     */
-    public abstract void updateEventHandler(EventHandler eventHandler);
-
-    /**
-     * @param event name of the event.
-     * @param activeOnly if true, returns only the active handlers.
-     * @return Returns the list of all the event handlers for a given event.
-     */
-    public abstract List<EventHandler> getEventHandlers(String event, boolean activeOnly);
-
-    /**
-     * Removes the event handler definition from the conductor server
-     *
-     * @param name the name of the event handler to be unregistered
-     */
-    public abstract void unregisterEventHandler(String name);
+  /**
+   * Removes the event handler definition from the conductor server
+   *
+   * @param name the name of the event handler to be unregistered
+   */
+  public abstract void unregisterEventHandler(String name);
 }

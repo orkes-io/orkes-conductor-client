@@ -29,67 +29,66 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExecuteWorkflowStream {
 
-    private StreamObserver<StartWorkflowRequestPb.StartWorkflowRequest> requests;
+  private StreamObserver<StartWorkflowRequestPb.StartWorkflowRequest> requests;
 
-    private volatile boolean ready;
+  private volatile boolean ready;
 
-    private int reconnectBackoff = 10;
+  private int reconnectBackoff = 10;
 
-    public ExecuteWorkflowStream(ApiClient apiClient) {
-        if (apiClient.useSecurity()) {
-            apiClient.getToken();
-        }
-        connect();
+  public ExecuteWorkflowStream(ApiClient apiClient) {
+    if (apiClient.useSecurity()) {
+      apiClient.getToken();
     }
+    connect();
+  }
 
-    private synchronized void connect() {
-        log.debug("Attempting to reconnect to the server with backoff {} sec", reconnectBackoff);
-        backoff();
-        try {
-            Uninterruptibles.sleepUninterruptibly(reconnectBackoff, TimeUnit.MILLISECONDS);
-            // this.requests = this.stub.executeWorkflow(this);
-            this.ready = true;
-            System.out.println("Ready...");
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw new RuntimeException(t);
-        }
+  private synchronized void connect() {
+    log.debug("Attempting to reconnect to the server with backoff {} sec", reconnectBackoff);
+    backoff();
+    try {
+      Uninterruptibles.sleepUninterruptibly(reconnectBackoff, TimeUnit.MILLISECONDS);
+      // this.requests = this.stub.executeWorkflow(this);
+      this.ready = true;
+      System.out.println("Ready...");
+    } catch (Throwable t) {
+      t.printStackTrace();
+      throw new RuntimeException(t);
     }
+  }
 
-    // public void onNext(WorkflowServicePb.ExecuteWorkflowResponse result) {}
+  // public void onNext(WorkflowServicePb.ExecuteWorkflowResponse result) {}
 
-    // @Override
-    public void onError(Throwable t) {
-        System.out.println(t.getMessage());
-        t.printStackTrace();
-        ready = false;
-        Status status = Status.fromThrowable(t);
-        Status.Code code = status.getCode();
-        switch (code) {
-            case PERMISSION_DENIED:
-                log.error("Key/Secret does not have permission to execute the workflow");
-                break;
-        }
-        connect(); // connect on errors
+  // @Override
+  public void onError(Throwable t) {
+    System.out.println(t.getMessage());
+    t.printStackTrace();
+    ready = false;
+    Status status = Status.fromThrowable(t);
+    Status.Code code = status.getCode();
+    switch (code) {
+      case PERMISSION_DENIED:
+        log.error("Key/Secret does not have permission to execute the workflow");
+        break;
     }
+    connect(); // connect on errors
+  }
 
-    private void backoff() {
-        reconnectBackoff = reconnectBackoff << 1;
-        if (reconnectBackoff > 60_000) {
-            reconnectBackoff = 1;
-        }
+  private void backoff() {
+    reconnectBackoff = reconnectBackoff << 1;
+    if (reconnectBackoff > 60_000) {
+      reconnectBackoff = 1;
     }
+  }
 
-    // @Override
-    public void onCompleted() {}
+  // @Override
+  public void onCompleted() {}
 
-    public void executeWorkflow(StartWorkflowRequest request) {
-        if (!ready) {
-            connect();
-            throw new ApiException("Server not ready to accept the connection");
-        }
-        StartWorkflowRequestPb.StartWorkflowRequest requestPb =
-                ProtoMapper.INSTANCE.toProto(request);
-        this.requests.onNext(requestPb);
+  public void executeWorkflow(StartWorkflowRequest request) {
+    if (!ready) {
+      connect();
+      throw new ApiException("Server not ready to accept the connection");
     }
+    StartWorkflowRequestPb.StartWorkflowRequest requestPb = ProtoMapper.INSTANCE.toProto(request);
+    this.requests.onNext(requestPb);
+  }
 }

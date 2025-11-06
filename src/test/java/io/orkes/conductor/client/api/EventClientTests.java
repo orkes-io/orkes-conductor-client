@@ -28,64 +28,60 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 public class EventClientTests extends ClientTest {
-    private static final String EVENT_NAME = "test_sdk_java_event_name";
-    private static final String EVENT = "test_sdk_java_event";
+  private static final String EVENT_NAME = "test_sdk_java_event_name";
+  private static final String EVENT = "test_sdk_java_event";
 
-    private static final String KAFKA_QUEUE_TOPIC_NAME = "test_sdk_java_kafka_queue_name";
-    private static final String KAFKA_BOOTSTRAP_SERVERS_CONFIG = "localhost:9092";
+  private static final String KAFKA_QUEUE_TOPIC_NAME = "test_sdk_java_kafka_queue_name";
+  private static final String KAFKA_BOOTSTRAP_SERVERS_CONFIG = "localhost:9092";
 
-    private final EventClient eventClient;
+  private final EventClient eventClient;
 
-    public EventClientTests() {
-        eventClient = super.orkesClients.getEventClient();
+  public EventClientTests() {
+    eventClient = super.orkesClients.getEventClient();
+  }
+
+  @Test
+  void testEventHandler() {
+    try {
+      eventClient.unregisterEventHandler(EVENT_NAME);
+    } catch (ApiException e) {
+      if (e.getStatusCode() != 404) {
+        throw e;
+      }
     }
+    EventHandler eventHandler = getEventHandler();
+    eventClient.registerEventHandler(eventHandler);
+    eventClient.updateEventHandler(eventHandler);
+    List<EventHandler> events = eventClient.getEventHandlers(EVENT, false);
+    assertEquals(1, events.size());
+    events.forEach(
+        event -> {
+          assertEquals(eventHandler.getName(), event.getName());
+          assertEquals(eventHandler.getEvent(), event.getEvent());
+        });
+    eventClient.unregisterEventHandler(EVENT_NAME);
+    assertIterableEquals(List.of(), eventClient.getEventHandlers(EVENT, false));
+  }
 
-    @Test
-    void testEventHandler() {
-        try {
-            eventClient.unregisterEventHandler(EVENT_NAME);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
-                throw e;
-            }
-        }
-        EventHandler eventHandler = getEventHandler();
-        eventClient.registerEventHandler(eventHandler);
-        eventClient.updateEventHandler(eventHandler);
-        List<EventHandler> events = eventClient.getEventHandlers(EVENT, false);
-        assertEquals(1, events.size());
-        events.forEach(
-                event -> {
-                    assertEquals(eventHandler.getName(), event.getName());
-                    assertEquals(eventHandler.getEvent(), event.getEvent());
-                });
-        eventClient.unregisterEventHandler(EVENT_NAME);
-        assertIterableEquals(List.of(), eventClient.getEventHandlers(EVENT, false));
-    }
+  EventHandler getEventHandler() {
+    EventHandler eventHandler = new EventHandler();
+    eventHandler.setName(EVENT_NAME);
+    eventHandler.setEvent(EVENT);
+    eventHandler.setActions(List.of(getEventHandlerAction()));
+    return eventHandler;
+  }
 
+  Action getEventHandlerAction() {
+    Action action = new Action();
+    action.setAction(Action.Type.start_workflow);
+    action.setStart_workflow(getStartWorkflowAction());
+    return action;
+  }
 
-
-
-
-    EventHandler getEventHandler() {
-        EventHandler eventHandler = new EventHandler();
-        eventHandler.setName(EVENT_NAME);
-        eventHandler.setEvent(EVENT);
-        eventHandler.setActions(List.of(getEventHandlerAction()));
-        return eventHandler;
-    }
-
-    Action getEventHandlerAction() {
-        Action action = new Action();
-        action.setAction(Action.Type.start_workflow);
-        action.setStart_workflow(getStartWorkflowAction());
-        return action;
-    }
-
-    StartWorkflow getStartWorkflowAction() {
-        StartWorkflow startWorkflow = new StartWorkflow();
-        startWorkflow.setName(Commons.WORKFLOW_NAME);
-        startWorkflow.setVersion(Commons.WORKFLOW_VERSION);
-        return startWorkflow;
-    }
+  StartWorkflow getStartWorkflowAction() {
+    StartWorkflow startWorkflow = new StartWorkflow();
+    startWorkflow.setName(Commons.WORKFLOW_NAME);
+    startWorkflow.setVersion(Commons.WORKFLOW_VERSION);
+    return startWorkflow;
+  }
 }

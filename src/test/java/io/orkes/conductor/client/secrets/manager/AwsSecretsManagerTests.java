@@ -24,27 +24,27 @@ import io.orkes.conductor.client.util.secrets.manager.TestWithAwsContainer;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class AwsSecretsManagerTests extends TestWithAwsContainer {
-    @Test
-    void testAwsSecretsManagerWithoutCredentials() throws Exception {
-        AwsSecretsManager awsSecretsManager = getAwsSecretsManager();
-        ApiClient customApiClient =
-                new ApiClient(
-                        ApiUtil.getBasePath(),
-                        awsSecretsManager,
-                        Commons.SECRET_MANAGER_KEY_PATH,
-                        Commons.SECRET_MANAGER_SECRET_PATH);
-        assertNull(customApiClient.getToken());
-    }
+  @Test
+  void testAwsSecretsManagerWithoutCredentials() throws Exception {
+    AwsSecretsManager awsSecretsManager = getAwsSecretsManager();
+    ApiClient customApiClient =
+        new ApiClient(
+            ApiUtil.getBasePath(),
+            awsSecretsManager,
+            Commons.SECRET_MANAGER_KEY_PATH,
+            Commons.SECRET_MANAGER_SECRET_PATH);
+    assertNull(customApiClient.getToken());
+  }
 
-    @Test
-    void testAwsSecretsManager() throws Exception {
-        AwsSecretsManager awsSecretsManager = getAwsSecretsManager();
-        awsSecretsManager.storeSecret(Commons.SECRET_MANAGER_KEY_PATH, ApiUtil.getKeyId());
-        awsSecretsManager.storeSecret(Commons.SECRET_MANAGER_SECRET_PATH, ApiUtil.getKeySecret());
-        SecretsManagerUtil.validateApiClientWithSecretsManager(awsSecretsManager);
-    }
+  @Test
+  void testAwsSecretsManager() throws Exception {
+    AwsSecretsManager awsSecretsManager = getAwsSecretsManager();
+    awsSecretsManager.storeSecret(Commons.SECRET_MANAGER_KEY_PATH, ApiUtil.getKeyId());
+    awsSecretsManager.storeSecret(Commons.SECRET_MANAGER_SECRET_PATH, ApiUtil.getKeySecret());
+    SecretsManagerUtil.validateApiClientWithSecretsManager(awsSecretsManager);
+  }
 
-    AwsSecretsManager getAwsSecretsManager() {
-        return new AwsSecretsManager(awsContainer.getAWSSimpleSystemsManagement());
-    }
+  AwsSecretsManager getAwsSecretsManager() {
+    return new AwsSecretsManager(awsContainer.getAWSSimpleSystemsManagement());
+  }
 }

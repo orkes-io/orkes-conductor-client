@@ -31,45 +31,49 @@ import io.grpc.ManagedChannel;
 import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 
 public class GrpcTaskClient implements AutoCloseable {
-    private final ManagedChannel channel;
+  private final ManagedChannel channel;
 
-    private final TaskServiceGrpc.TaskServiceBlockingStub stub;
+  private final TaskServiceGrpc.TaskServiceBlockingStub stub;
 
-    private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
+  private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
 
-    public GrpcTaskClient(ApiClient apiClient) {
-        this.channel = getChannel(apiClient);
-        this.stub =
-                TaskServiceGrpc.newBlockingStub(this.channel)
-                        .withInterceptors(new HeaderClientInterceptor(apiClient));
+  public GrpcTaskClient(ApiClient apiClient) {
+    this.channel = getChannel(apiClient);
+    this.stub =
+        TaskServiceGrpc.newBlockingStub(this.channel)
+            .withInterceptors(new HeaderClientInterceptor(apiClient));
+  }
+
+  public List<Task> batchPoll(
+      String taskType, String workerId, String domain, int count, int timeoutInMillisecond) {
+    TaskServicePb.BatchPollRequest.Builder requestBuilder =
+        TaskServicePb.BatchPollRequest.newBuilder()
+            .setCount(count)
+            .setTaskType(taskType)
+            .setTimeout(timeoutInMillisecond)
+            .setWorkerId(workerId);
+    if (domain != null) {
+      requestBuilder = requestBuilder.setDomain(domain);
     }
+    TaskServicePb.BatchPollRequest request = requestBuilder.build();
+    Iterator<TaskPb.Task> tasks = this.stub.batchPoll(request);
+    return Lists.newArrayList(Iterators.transform(tasks, protoMapper::fromProto));
+  }
 
-    public List<Task> batchPoll(
-            String taskType, String workerId, String domain, int count, int timeoutInMillisecond) {
-        TaskServicePb.BatchPollRequest.Builder requestBuilder =
-                TaskServicePb.BatchPollRequest.newBuilder()
-                        .setCount(count)
-                        .setTaskType(taskType)
-                        .setTimeout(timeoutInMillisecond)
-                        .setWorkerId(workerId);
-        if (domain != null) {
-            requestBuilder = requestBuilder.setDomain(domain);
-        }
-        TaskServicePb.BatchPollRequest request = requestBuilder.build();
-        Iterator<TaskPb.Task> tasks = this.stub.batchPoll(request);
-        return Lists.newArrayList(Iterators.transform(tasks, protoMapper::fromProto));
-    }
+  public void updateTask(TaskResult taskResult) {
+    stub.updateTask(
+        TaskServicePb.UpdateTaskRequest.newBuilder()
+            .setResult(protoMapper.toProto(taskResult))
+            .build());
+  }
 
-    public void updateTask(TaskResult taskResult) {
-        stub.updateTask(TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build());
+  @Override
+  public void close() throws Exception {
+    if (this.channel != null) {
+      try {
+        this.channel.shutdown();
+      } catch (Throwable t) {
+      }
     }
-
-    @Override
-    public void close() throws Exception {
-        if(this.channel != null) {
-            try {
-                this.channel.shutdown();
-            }catch (Throwable t) {}
-        }
-    }
+  }
 }

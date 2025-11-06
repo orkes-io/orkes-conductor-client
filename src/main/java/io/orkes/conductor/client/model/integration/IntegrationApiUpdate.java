@@ -19,8 +19,7 @@ import lombok.Data;
 @Data
 public class IntegrationApiUpdate {
 
-    private Map<String, Object> configuration;
-    private String description;
-    private Boolean enabled;
-
+  private Map<String, Object> configuration;
+  private String description;
+  private Boolean enabled;
 }

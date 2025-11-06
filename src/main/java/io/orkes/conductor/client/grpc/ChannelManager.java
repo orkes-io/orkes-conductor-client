@@ -29,39 +29,42 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public abstract class ChannelManager {
 
-    private ChannelManager() {}
+  private ChannelManager() {}
 
-    public static ManagedChannel getChannel(ApiClient apiClient) {
-        String host = apiClient.getGrpcHost();
-        int port = apiClient.getGrpcPort();
-        boolean useSSL = apiClient.useSSL();
-        Map<String, Object> serviceConfig = new HashMap<>();
-        try {
-            serviceConfig = new ObjectMapperProvider().getObjectMapper().readValue(ChannelManager.class.getResourceAsStream("/service_config.json"), Map.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to find the service config", e);
-        }
-        NettyChannelBuilder channelBuilder =
-                NettyChannelBuilder.forAddress(host, port)
-                        .eventLoopGroup(new NioEventLoopGroup())
-                        .channelType(NioSocketChannel.class)
-                        .enableRetry()
-                        .withOption(
-                                ChannelOption.CONNECT_TIMEOUT_MILLIS,
-                                (int) TimeUnit.SECONDS.toMillis(5000))
-                        .defaultServiceConfig(serviceConfig)
-                        .keepAliveTime(10, TimeUnit.MINUTES)
-                        .defaultLoadBalancingPolicy("round_robin");
-        if(apiClient.getExecutorThreadCount() > 0) {
-            channelBuilder = channelBuilder.executor(Executors.newFixedThreadPool(apiClient.getExecutorThreadCount()));
-        }
-
-        if (!useSSL) {
-            channelBuilder = channelBuilder.usePlaintext();
-        } else {
-            channelBuilder = channelBuilder.useTransportSecurity();
-        }
-
-        return channelBuilder.build();
+  public static ManagedChannel getChannel(ApiClient apiClient) {
+    String host = apiClient.getGrpcHost();
+    int port = apiClient.getGrpcPort();
+    boolean useSSL = apiClient.useSSL();
+    Map<String, Object> serviceConfig = new HashMap<>();
+    try {
+      serviceConfig =
+          new ObjectMapperProvider()
+              .getObjectMapper()
+              .readValue(
+                  ChannelManager.class.getResourceAsStream("/service_config.json"), Map.class);
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to find the service config", e);
     }
+    NettyChannelBuilder channelBuilder =
+        NettyChannelBuilder.forAddress(host, port)
+            .eventLoopGroup(new NioEventLoopGroup())
+            .channelType(NioSocketChannel.class)
+            .enableRetry()
+            .withOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int) TimeUnit.SECONDS.toMillis(5000))
+            .defaultServiceConfig(serviceConfig)
+            .keepAliveTime(10, TimeUnit.MINUTES)
+            .defaultLoadBalancingPolicy("round_robin");
+    if (apiClient.getExecutorThreadCount() > 0) {
+      channelBuilder =
+          channelBuilder.executor(Executors.newFixedThreadPool(apiClient.getExecutorThreadCount()));
+    }
+
+    if (!useSSL) {
+      channelBuilder = channelBuilder.usePlaintext();
+    } else {
+      channelBuilder = channelBuilder.useTransportSecurity();
+    }
+
+    return channelBuilder.build();
+  }
 }

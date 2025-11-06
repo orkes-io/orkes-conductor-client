@@ -21,99 +21,97 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /** SearchResultWorkflowScheduleExecutionModel */
 public class SearchResultWorkflowScheduleExecutionModel {
-    @SerializedName("results")
-    private List<WorkflowScheduleExecutionModel> results = null;
+  @SerializedName("results")
+  private List<WorkflowScheduleExecutionModel> results = null;
 
-    @SerializedName("totalHits")
-    private Long totalHits = null;
+  @SerializedName("totalHits")
+  private Long totalHits = null;
 
-    public SearchResultWorkflowScheduleExecutionModel results(
-            List<WorkflowScheduleExecutionModel> results) {
-        this.results = results;
-        return this;
+  public SearchResultWorkflowScheduleExecutionModel results(
+      List<WorkflowScheduleExecutionModel> results) {
+    this.results = results;
+    return this;
+  }
+
+  public SearchResultWorkflowScheduleExecutionModel addResultsItem(
+      WorkflowScheduleExecutionModel resultsItem) {
+    if (this.results == null) {
+      this.results = new ArrayList<WorkflowScheduleExecutionModel>();
     }
+    this.results.add(resultsItem);
+    return this;
+  }
 
-    public SearchResultWorkflowScheduleExecutionModel addResultsItem(
-            WorkflowScheduleExecutionModel resultsItem) {
-        if (this.results == null) {
-            this.results = new ArrayList<WorkflowScheduleExecutionModel>();
-        }
-        this.results.add(resultsItem);
-        return this;
+  /**
+   * Get results
+   *
+   * @return results
+   */
+  @Schema(description = "")
+  public List<WorkflowScheduleExecutionModel> getResults() {
+    return results;
+  }
+
+  public void setResults(List<WorkflowScheduleExecutionModel> results) {
+    this.results = results;
+  }
+
+  public SearchResultWorkflowScheduleExecutionModel totalHits(Long totalHits) {
+    this.totalHits = totalHits;
+    return this;
+  }
+
+  /**
+   * Get totalHits
+   *
+   * @return totalHits
+   */
+  @Schema(description = "")
+  public Long getTotalHits() {
+    return totalHits;
+  }
+
+  public void setTotalHits(Long totalHits) {
+    this.totalHits = totalHits;
+  }
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
     }
-
-    /**
-     * Get results
-     *
-     * @return results
-     */
-    @Schema(description = "")
-    public List<WorkflowScheduleExecutionModel> getResults() {
-        return results;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    SearchResultWorkflowScheduleExecutionModel searchResultWorkflowScheduleExecutionModel =
+        (SearchResultWorkflowScheduleExecutionModel) o;
+    return Objects.equals(this.results, searchResultWorkflowScheduleExecutionModel.results)
+        && Objects.equals(this.totalHits, searchResultWorkflowScheduleExecutionModel.totalHits);
+  }
 
-    public void setResults(List<WorkflowScheduleExecutionModel> results) {
-        this.results = results;
+  @Override
+  public int hashCode() {
+    return Objects.hash(results, totalHits);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class SearchResultWorkflowScheduleExecutionModel {\n");
+
+    sb.append("    results: ").append(toIndentedString(results)).append("\n");
+    sb.append("    totalHits: ").append(toIndentedString(totalHits)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
     }
-
-    public SearchResultWorkflowScheduleExecutionModel totalHits(Long totalHits) {
-        this.totalHits = totalHits;
-        return this;
-    }
-
-    /**
-     * Get totalHits
-     *
-     * @return totalHits
-     */
-    @Schema(description = "")
-    public Long getTotalHits() {
-        return totalHits;
-    }
-
-    public void setTotalHits(Long totalHits) {
-        this.totalHits = totalHits;
-    }
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        SearchResultWorkflowScheduleExecutionModel searchResultWorkflowScheduleExecutionModel =
-                (SearchResultWorkflowScheduleExecutionModel) o;
-        return Objects.equals(this.results, searchResultWorkflowScheduleExecutionModel.results)
-                && Objects.equals(
-                        this.totalHits, searchResultWorkflowScheduleExecutionModel.totalHits);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(results, totalHits);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class SearchResultWorkflowScheduleExecutionModel {\n");
-
-        sb.append("    results: ").append(toIndentedString(results)).append("\n");
-        sb.append("    totalHits: ").append(toIndentedString(totalHits)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }

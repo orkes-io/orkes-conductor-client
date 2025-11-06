@@ -23,77 +23,75 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /** ScrollableSearchResultWorkflowSummary */
 public class ScrollableSearchResultWorkflowSummary extends SearchResult<WorkflowSummary> {
-    @SerializedName("queryId")
-    private String queryId = null;
+  @SerializedName("queryId")
+  private String queryId = null;
 
-    public ScrollableSearchResultWorkflowSummary queryId(String queryId) {
-        this.queryId = queryId;
-        return this;
+  public ScrollableSearchResultWorkflowSummary queryId(String queryId) {
+    this.queryId = queryId;
+    return this;
+  }
+
+  /**
+   * Get queryId
+   *
+   * @return queryId
+   */
+  @Schema(description = "")
+  public String getQueryId() {
+    return queryId;
+  }
+
+  public void setQueryId(String queryId) {
+    this.queryId = queryId;
+  }
+
+  public ScrollableSearchResultWorkflowSummary results(List<WorkflowSummary> results) {
+    setResults(results);
+    return this;
+  }
+
+  public ScrollableSearchResultWorkflowSummary addResultsItem(WorkflowSummary resultsItem) {
+    getResults().add(resultsItem);
+    return this;
+  }
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
     }
-
-    /**
-     * Get queryId
-     *
-     * @return queryId
-     */
-    @Schema(description = "")
-    public String getQueryId() {
-        return queryId;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    ScrollableSearchResultWorkflowSummary scrollableSearchResultWorkflowSummary =
+        (ScrollableSearchResultWorkflowSummary) o;
+    return Objects.equals(this.queryId, scrollableSearchResultWorkflowSummary.queryId)
+        && Objects.equals(this.getResults(), scrollableSearchResultWorkflowSummary.getResults());
+  }
 
-    public void setQueryId(String queryId) {
-        this.queryId = queryId;
+  @Override
+  public int hashCode() {
+    return Objects.hash(queryId, getResults());
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class ScrollableSearchResultWorkflowSummary {\n");
+
+    sb.append("    queryId: ").append(toIndentedString(queryId)).append("\n");
+    sb.append("    results: ").append(toIndentedString(getResults())).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
     }
-
-    public ScrollableSearchResultWorkflowSummary results(List<WorkflowSummary> results) {
-        setResults(results);
-        return this;
-    }
-
-    public ScrollableSearchResultWorkflowSummary addResultsItem(WorkflowSummary resultsItem) {
-        getResults().add(resultsItem);
-        return this;
-    }
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ScrollableSearchResultWorkflowSummary scrollableSearchResultWorkflowSummary =
-                (ScrollableSearchResultWorkflowSummary) o;
-        return Objects.equals(this.queryId, scrollableSearchResultWorkflowSummary.queryId)
-                && Objects.equals(
-                        this.getResults(), scrollableSearchResultWorkflowSummary.getResults());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(queryId, getResults());
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class ScrollableSearchResultWorkflowSummary {\n");
-
-        sb.append("    queryId: ").append(toIndentedString(queryId)).append("\n");
-        sb.append("    results: ").append(toIndentedString(getResults())).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }

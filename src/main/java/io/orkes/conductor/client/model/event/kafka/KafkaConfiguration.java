@@ -15,9 +15,9 @@ package io.orkes.conductor.client.model.event.kafka;
 import io.orkes.conductor.client.model.event.QueueConfiguration;
 
 public class KafkaConfiguration extends QueueConfiguration {
-    private static String QUEUE_NAME = "kafka";
+  private static String QUEUE_NAME = "kafka";
 
-    public KafkaConfiguration(String queueTopicName) {
-        super(QUEUE_NAME, queueTopicName);
-    }
+  public KafkaConfiguration(String queueTopicName) {
+    super(QUEUE_NAME, queueTopicName);
+  }
 }

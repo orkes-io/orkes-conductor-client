@@ -31,90 +31,90 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("unchecked")
 public class MetadataClientTests extends ClientTest {
-    private final MetadataClient metadataClient;
+  private final MetadataClient metadataClient;
 
-    public MetadataClientTests() {
-        metadataClient = orkesClients.getMetadataClient();
-        ((OrkesMetadataClient) metadataClient).withReadTimeout(45000);
-    }
+  public MetadataClientTests() {
+    metadataClient = orkesClients.getMetadataClient();
+    ((OrkesMetadataClient) metadataClient).withReadTimeout(45000);
+  }
 
-    @Test
-    void taskDefinition() {
-        try {
-            metadataClient.unregisterTaskDef(Commons.TASK_NAME);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
-                throw e;
-            }
-        }
-        TaskDef taskDef = Commons.getTaskDef();
-        metadataClient.registerTaskDefs(List.of(taskDef));
-        metadataClient.updateTaskDef(taskDef);
-        TaskDef receivedTaskDef = metadataClient.getTaskDef(Commons.TASK_NAME);
-        assertEquals(taskDef.getName(), receivedTaskDef.getName());
+  @Test
+  void taskDefinition() {
+    try {
+      metadataClient.unregisterTaskDef(Commons.TASK_NAME);
+    } catch (ApiException e) {
+      if (e.getStatusCode() != 404) {
+        throw e;
+      }
     }
+    TaskDef taskDef = Commons.getTaskDef();
+    metadataClient.registerTaskDefs(List.of(taskDef));
+    metadataClient.updateTaskDef(taskDef);
+    TaskDef receivedTaskDef = metadataClient.getTaskDef(Commons.TASK_NAME);
+    assertEquals(taskDef.getName(), receivedTaskDef.getName());
+  }
 
-    @Test
-    void workflow() {
-        try {
-            metadataClient.unregisterWorkflowDef(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
-                throw e;
-            }
-        }
-        metadataClient.registerTaskDefs(List.of(Commons.getTaskDef()));
-        WorkflowDef workflowDef = WorkflowUtil.getWorkflowDef();
-        metadataClient.registerWorkflowDef(workflowDef);
-        metadataClient.updateWorkflowDefs(List.of(workflowDef));
-        metadataClient.updateWorkflowDefs(List.of(workflowDef), true);
-        metadataClient.registerWorkflowDef(workflowDef, true);
-        ((OrkesMetadataClient) metadataClient)
-                .getWorkflowDefWithMetadata(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
-        WorkflowDef receivedWorkflowDef = metadataClient.getWorkflowDef(Commons.WORKFLOW_NAME,
-                Commons.WORKFLOW_VERSION);
-        assertEquals(receivedWorkflowDef.getName(), Commons.WORKFLOW_NAME);
-        assertEquals(receivedWorkflowDef.getVersion(), Commons.WORKFLOW_VERSION);
+  @Test
+  void workflow() {
+    try {
+      metadataClient.unregisterWorkflowDef(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
+    } catch (ApiException e) {
+      if (e.getStatusCode() != 404) {
+        throw e;
+      }
     }
+    metadataClient.registerTaskDefs(List.of(Commons.getTaskDef()));
+    WorkflowDef workflowDef = WorkflowUtil.getWorkflowDef();
+    metadataClient.registerWorkflowDef(workflowDef);
+    metadataClient.updateWorkflowDefs(List.of(workflowDef));
+    metadataClient.updateWorkflowDefs(List.of(workflowDef), true);
+    metadataClient.registerWorkflowDef(workflowDef, true);
+    ((OrkesMetadataClient) metadataClient)
+        .getWorkflowDefWithMetadata(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
+    WorkflowDef receivedWorkflowDef =
+        metadataClient.getWorkflowDef(Commons.WORKFLOW_NAME, Commons.WORKFLOW_VERSION);
+    assertEquals(receivedWorkflowDef.getName(), Commons.WORKFLOW_NAME);
+    assertEquals(receivedWorkflowDef.getVersion(), Commons.WORKFLOW_VERSION);
+  }
 
-    @Test
-    void tagTask() throws Exception {
-        metadataClient.registerTaskDefs(List.of(Commons.getTaskDef()));
-        try {
-            metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
-                throw e;
-            }
-        }
-        TagObject tagObject = Commons.getTagObject();
-        metadataClient.addTaskTag(tagObject, Commons.TASK_NAME);
-        metadataClient.setTaskTags(List.of(tagObject), Commons.TASK_NAME);
-        assertNotNull(
-                TestUtil.retryMethodCall(
-                        metadataClient::getTags));
-        List<TagObject> tags = (List<TagObject>) TestUtil.retryMethodCall(
-                () -> metadataClient.getTaskTags(Commons.TASK_NAME));
-        assertIterableEquals(List.of(tagObject), tags);
-        metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
-        tags = (List<TagObject>) TestUtil.retryMethodCall(
-                () -> metadataClient.getTaskTags(Commons.TASK_NAME));
-        assertIterableEquals(List.of(), tags);
+  @Test
+  void tagTask() throws Exception {
+    metadataClient.registerTaskDefs(List.of(Commons.getTaskDef()));
+    try {
+      metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
+    } catch (ApiException e) {
+      if (e.getStatusCode() != 404) {
+        throw e;
+      }
     }
+    TagObject tagObject = Commons.getTagObject();
+    metadataClient.addTaskTag(tagObject, Commons.TASK_NAME);
+    metadataClient.setTaskTags(List.of(tagObject), Commons.TASK_NAME);
+    assertNotNull(TestUtil.retryMethodCall(metadataClient::getTags));
+    List<TagObject> tags =
+        (List<TagObject>)
+            TestUtil.retryMethodCall(() -> metadataClient.getTaskTags(Commons.TASK_NAME));
+    assertIterableEquals(List.of(tagObject), tags);
+    metadataClient.deleteTaskTag(Commons.getTagString(), Commons.TASK_NAME);
+    tags =
+        (List<TagObject>)
+            TestUtil.retryMethodCall(() -> metadataClient.getTaskTags(Commons.TASK_NAME));
+    assertIterableEquals(List.of(), tags);
+  }
 
-    @Test
-    void tagWorkflow() {
-        TagObject tagObject = Commons.getTagObject();
-        try {
-            metadataClient.deleteWorkflowTag(Commons.getTagObject(), Commons.WORKFLOW_NAME);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 404) {
-                throw e;
-            }
-        }
-        metadataClient.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
-        metadataClient.setWorkflowTags(List.of(tagObject), Commons.WORKFLOW_NAME);
-        List<TagObject> tags = metadataClient.getWorkflowTags(Commons.WORKFLOW_NAME);
-        assertIterableEquals(List.of(tagObject), tags);
+  @Test
+  void tagWorkflow() {
+    TagObject tagObject = Commons.getTagObject();
+    try {
+      metadataClient.deleteWorkflowTag(Commons.getTagObject(), Commons.WORKFLOW_NAME);
+    } catch (ApiException e) {
+      if (e.getStatusCode() != 404) {
+        throw e;
+      }
     }
+    metadataClient.addWorkflowTag(tagObject, Commons.WORKFLOW_NAME);
+    metadataClient.setWorkflowTags(List.of(tagObject), Commons.WORKFLOW_NAME);
+    List<TagObject> tags = metadataClient.getWorkflowTags(Commons.WORKFLOW_NAME);
+    assertIterableEquals(List.of(tagObject), tags);
+  }
 }

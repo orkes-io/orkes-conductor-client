@@ -27,45 +27,40 @@ import io.orkes.conductor.client.TaskClient;
 import io.orkes.conductor.client.automator.TaskRunnerConfigurer;
 
 public class LocalServerWorkflowExecutionTests {
-    public static void main(String[] args) {
-        ApiClient apiClient = new ApiClient("http://localhost:8080/api");
-        TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
-        Iterable<Worker> workers = Arrays.asList(new MyWorker());
-        Map<String, String> taskToDomain = new HashMap<>();
-        taskToDomain.put("simple_task_0", "viren");
-        TaskRunnerConfigurer configurer =
-                new TaskRunnerConfigurer.Builder(taskClient, workers)
-                        .withSleepWhenRetry(100)
-                        .withThreadCount(10)
-                        .withWorkerNamePrefix("Hello")
-                        .withTaskToDomain(taskToDomain)
-                        .build();
-        configurer.init();
+  public static void main(String[] args) {
+    ApiClient apiClient = new ApiClient("http://localhost:8080/api");
+    TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
+    Iterable<Worker> workers = Arrays.asList(new MyWorker());
+    Map<String, String> taskToDomain = new HashMap<>();
+    taskToDomain.put("simple_task_0", "viren");
+    TaskRunnerConfigurer configurer =
+        new TaskRunnerConfigurer.Builder(taskClient, workers)
+            .withSleepWhenRetry(100)
+            .withThreadCount(10)
+            .withWorkerNamePrefix("Hello")
+            .withTaskToDomain(taskToDomain)
+            .build();
+    configurer.init();
+  }
+
+  private static class MyWorker implements Worker {
+    @Override
+    public String getTaskDefName() {
+      return "simple_task_0";
     }
 
-    private static class MyWorker implements Worker {
-        @Override
-        public String getTaskDefName() {
-            return "simple_task_0";
-        }
-
-        @Override
-        public TaskResult execute(Task task) {
-            System.out.println(
-                    "Executing "
-                            + task.getTaskId()
-                            + ":"
-                            + task.getPollCount()
-                            + "::"
-                            + new Date());
-            TaskResult result = new TaskResult(task);
-            result.getOutputData().put("a", "b");
-            if (task.getPollCount() < 2) {
-                result.setCallbackAfterSeconds(5);
-            } else {
-                result.setStatus(TaskResult.Status.COMPLETED);
-            }
-            return result;
-        }
+    @Override
+    public TaskResult execute(Task task) {
+      System.out.println(
+          "Executing " + task.getTaskId() + ":" + task.getPollCount() + "::" + new Date());
+      TaskResult result = new TaskResult(task);
+      result.getOutputData().put("a", "b");
+      if (task.getPollCount() < 2) {
+        result.setCallbackAfterSeconds(5);
+      } else {
+        result.setStatus(TaskResult.Status.COMPLETED);
+      }
+      return result;
     }
+  }
 }

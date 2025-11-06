@@ -16,19 +16,19 @@ import com.netflix.conductor.client.exception.ConductorClientException;
 
 public abstract class OrkesClientException extends ConductorClientException {
 
-    public OrkesClientException() {}
+  public OrkesClientException() {}
 
-    public OrkesClientException(String message) {
-        super(message);
-    }
+  public OrkesClientException(String message) {
+    super(message);
+  }
 
-    public OrkesClientException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public OrkesClientException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public OrkesClientException(int status, String message) {
-        super(status, message);
-    }
+  public OrkesClientException(int status, String message) {
+    super(status, message);
+  }
 
-    public abstract boolean isClientError();
+  public abstract boolean isClientError();
 }

@@ -11,9 +11,10 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'java-library'
-    id "com.diffplug.spotless" version "5.0.0"
+    id "com.diffplug.spotless" version "7.0.2"
     id 'jacoco'
     id 'idea'
+    id 'pmd'
 }
 
 ext {
@@ -227,9 +228,36 @@ configurations {
 
 spotless {
     java {
-        removeUnusedImports()
+        // Apply Google Java Format
+        googleJavaFormat()
         importOrder('java', 'javax', 'org', 'com.netflix', 'io.orkes','', '\\#com.netflix', '\\#')
         licenseHeaderFile("$rootDir/licenseheader.txt")
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+        // target is automatically inferred for Java files
+        custom 'noWildcardImports', {
+            if (it.contains('import *;')) {
+                throw new RuntimeException('No wildcard imports allowed')
+            }
+        }
+    }
+    // Format other file types
+    format 'properties', {
+        target 'src/**/*.properties'
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    format 'xml', {
+        target 'src/**/*.xml'
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    format 'misc', {
+        target '*.gradle', '*.md', '*.gitignore'
+        leadingTabsToSpaces(4)
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 }
 
@@ -253,3 +281,11 @@ tasks.withType(Test)  {
 }
 //sourceSets.main.java.srcDirs += ['examples/java', 'examples/resources']
 
+
+pmd {
+    toolVersion = '6.55.0'
+    consoleOutput = true
+    ignoreFailures = true
+    ruleSetFiles = files("pmd-ruleset.xml")
+    rulesMinimumPriority = 5
+}

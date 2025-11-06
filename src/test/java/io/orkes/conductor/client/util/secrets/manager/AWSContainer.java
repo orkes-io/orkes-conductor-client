@@ -24,47 +24,46 @@ import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;
 
 public class AWSContainer extends LocalStackContainer {
-    private static final String NETWORK_ALIAS = "localstack";
-    private static final String DOCKER_IMAGE_NAME = "localstack/localstack:0.14.2";
+  private static final String NETWORK_ALIAS = "localstack";
+  private static final String DOCKER_IMAGE_NAME = "localstack/localstack:0.14.2";
 
-    private final LocalStackContainer.Service[] services;
+  private final LocalStackContainer.Service[] services;
 
-    public AWSContainer(Network network, LocalStackContainer.Service... services) {
-        super(DockerImageName.parse(DOCKER_IMAGE_NAME));
-        this.services = services;
-        if (Objects.nonNull(network)) {
-            withNetwork(network);
-            withNetworkAliases(NETWORK_ALIAS);
-        }
-        withServices(services);
-        waitingFor(Wait.forLogMessage(".*Ready\\.\n", 1).withStartupTimeout(Duration.ofMinutes(3)));
+  public AWSContainer(Network network, LocalStackContainer.Service... services) {
+    super(DockerImageName.parse(DOCKER_IMAGE_NAME));
+    this.services = services;
+    if (Objects.nonNull(network)) {
+      withNetwork(network);
+      withNetworkAliases(NETWORK_ALIAS);
     }
+    withServices(services);
+    waitingFor(Wait.forLogMessage(".*Ready\\.\n", 1).withStartupTimeout(Duration.ofMinutes(3)));
+  }
 
-    public void start() {
-        super.start();
-        setProperties(services);
-    }
+  public void start() {
+    super.start();
+    setProperties(services);
+  }
 
-    public AWSSimpleSystemsManagement getAWSSimpleSystemsManagement() {
-        return AWSSimpleSystemsManagementClientBuilder.standard()
-                .withEndpointConfiguration(
-                        getEndpointConfiguration(LocalStackContainer.Service.SSM))
-                .withCredentials(getDefaultCredentialsProvider())
-                .build();
-    }
+  public AWSSimpleSystemsManagement getAWSSimpleSystemsManagement() {
+    return AWSSimpleSystemsManagementClientBuilder.standard()
+        .withEndpointConfiguration(getEndpointConfiguration(LocalStackContainer.Service.SSM))
+        .withCredentials(getDefaultCredentialsProvider())
+        .build();
+  }
 
-    void setProperties(LocalStackContainer.Service... services) {
-        System.setProperty("aws.region", getRegion());
-        System.setProperty("aws.accessKeyId", getAccessKey());
-        System.setProperty("aws.secretAccessKey", getSecretKey());
-        for (LocalStackContainer.Service service : services) {
-            setServiceProperty(service);
-        }
+  void setProperties(LocalStackContainer.Service... services) {
+    System.setProperty("aws.region", getRegion());
+    System.setProperty("aws.accessKeyId", getAccessKey());
+    System.setProperty("aws.secretAccessKey", getSecretKey());
+    for (LocalStackContainer.Service service : services) {
+      setServiceProperty(service);
     }
+  }
 
-    void setServiceProperty(LocalStackContainer.Service service) {
-        String propertyKey = String.format("aws.%s.endpoint", service.getName());
-        String propertyValue = this.getEndpointOverride(service).toString();
-        System.setProperty(propertyKey, propertyValue);
-    }
+  void setServiceProperty(LocalStackContainer.Service service) {
+    String propertyKey = String.format("aws.%s.endpoint", service.getName());
+    String propertyValue = this.getEndpointOverride(service).toString();
+    System.setProperty(propertyKey, propertyValue);
+  }
 }

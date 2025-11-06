@@ -19,10 +19,9 @@ import lombok.Data;
 @Data
 public class IntegrationUpdate {
 
-    private Category category;
-    private Map<String, String> configuration;
-    private String description;
-    private Boolean enabled;
-    private String type;
-
+  private Category category;
+  private Map<String, String> configuration;
+  private String description;
+  private Boolean enabled;
+  private String type;
 }

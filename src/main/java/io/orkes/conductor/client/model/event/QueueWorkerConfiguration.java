@@ -17,23 +17,23 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class QueueWorkerConfiguration {
-    private final Set<String> allowedConfigurationKeys;
-    private final Map<String, String> config;
+  private final Set<String> allowedConfigurationKeys;
+  private final Map<String, String> config;
 
-    public QueueWorkerConfiguration(Set<String> allowedConfigurationKeys) {
-        this.allowedConfigurationKeys = allowedConfigurationKeys;
-        config = new HashMap<>();
-    }
+  public QueueWorkerConfiguration(Set<String> allowedConfigurationKeys) {
+    this.allowedConfigurationKeys = allowedConfigurationKeys;
+    config = new HashMap<>();
+  }
 
-    public QueueWorkerConfiguration withConfiguration(String key, String value) throws Exception {
-        if (!allowedConfigurationKeys.contains(key)) {
-            throw new RuntimeException("key not valid for consumer");
-        }
-        this.config.put(key, value);
-        return this;
+  public QueueWorkerConfiguration withConfiguration(String key, String value) throws Exception {
+    if (!allowedConfigurationKeys.contains(key)) {
+      throw new RuntimeException("key not valid for consumer");
     }
+    this.config.put(key, value);
+    return this;
+  }
 
-    public Map<String, String> getConfiguration() {
-        return this.config;
-    }
+  public Map<String, String> getConfiguration() {
+    return this.config;
+  }
 }

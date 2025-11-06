@@ -19,40 +19,40 @@ import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.TagString;
 
 public class Commons {
-    public static String WORKFLOW_NAME = "test-sdk-java-workflow";
-    public static String TASK_NAME = "test-sdk-java-task";
-    public static String OWNER_EMAIL = "example@orkes.io";
-    public static int WORKFLOW_VERSION = 1;
-    public static String GROUP_ID = "sdk-test-group";
-    public static String USER_NAME = "Orkes User";
-    public static String USER_EMAIL = "user@orkes.io";
-    public static String APPLICATION_ID = "46f0bf10-b59d-4fbd-a053-935307c8cb86";
-    public static final String SECRET_MANAGER_KEY_PATH = "path/to/key";
-    public static final String SECRET_MANAGER_SECRET_PATH = "path/to/secret";
+  public static String WORKFLOW_NAME = "test-sdk-java-workflow";
+  public static String TASK_NAME = "test-sdk-java-task";
+  public static String OWNER_EMAIL = "example@orkes.io";
+  public static int WORKFLOW_VERSION = 1;
+  public static String GROUP_ID = "sdk-test-group";
+  public static String USER_NAME = "Orkes User";
+  public static String USER_EMAIL = "user@orkes.io";
+  public static String APPLICATION_ID = "46f0bf10-b59d-4fbd-a053-935307c8cb86";
+  public static final String SECRET_MANAGER_KEY_PATH = "path/to/key";
+  public static final String SECRET_MANAGER_SECRET_PATH = "path/to/secret";
 
-    public static TagObject getTagObject() {
-        TagObject tagObject = new TagObject();
-        tagObject.setType(null);
-        tagObject.setKey("a");
-        tagObject.setValue("b");
-        return tagObject;
-    }
+  public static TagObject getTagObject() {
+    TagObject tagObject = new TagObject();
+    tagObject.setType(null);
+    tagObject.setKey("a");
+    tagObject.setValue("b");
+    return tagObject;
+  }
 
-    public static TagString getTagString() {
-        TagString tagString = new TagString();
-        tagString.setType(null);
-        tagString.setKey("a");
-        tagString.setValue("b");
-        return tagString;
-    }
+  public static TagString getTagString() {
+    TagString tagString = new TagString();
+    tagString.setType(null);
+    tagString.setKey("a");
+    tagString.setValue("b");
+    return tagString;
+  }
 
-    public static TaskDef getTaskDef() {
-        TaskDef taskDef = new TaskDef();
-        taskDef.setName(Commons.TASK_NAME);
-        return taskDef;
-    }
+  public static TaskDef getTaskDef() {
+    TaskDef taskDef = new TaskDef();
+    taskDef.setName(Commons.TASK_NAME);
+    return taskDef;
+  }
 
-    public static StartWorkflowRequest getStartWorkflowRequest() {
-        return new StartWorkflowRequest().withName(WORKFLOW_NAME).withVersion(WORKFLOW_VERSION);
-    }
+  public static StartWorkflowRequest getStartWorkflowRequest() {
+    return new StartWorkflowRequest().withName(WORKFLOW_NAME).withVersion(WORKFLOW_VERSION);
+  }
 }

@@ -25,88 +25,88 @@ import io.orkes.conductor.client.MetadataClient;
 
 public class RegistrationUtil {
 
-    public static void registerWorkflowDef(String workflowName, String taskName1, String taskName2, MetadataClient metadataClient1) {
-        TaskDef taskDef = new TaskDef(taskName1);
-        taskDef.setRetryCount(0);
-        taskDef.setOwnerEmail("test@orkes.io");
-        TaskDef taskDef2 = new TaskDef(taskName2);
-        taskDef2.setRetryCount(0);
-        taskDef2.setOwnerEmail("test@orkes.io");
+  public static void registerWorkflowDef(
+      String workflowName, String taskName1, String taskName2, MetadataClient metadataClient1) {
+    TaskDef taskDef = new TaskDef(taskName1);
+    taskDef.setRetryCount(0);
+    taskDef.setOwnerEmail("test@orkes.io");
+    TaskDef taskDef2 = new TaskDef(taskName2);
+    taskDef2.setRetryCount(0);
+    taskDef2.setOwnerEmail("test@orkes.io");
 
+    WorkflowTask inline = new WorkflowTask();
+    inline.setTaskReferenceName("inline_" + taskName1);
+    inline.setName(taskName1);
+    inline.setTaskDefinition(taskDef);
+    inline.setWorkflowTaskType(TaskType.INLINE);
+    inline.setInputParameters(Map.of("evaluatorType", "graaljs", "expression", "true;"));
 
-        WorkflowTask inline = new WorkflowTask();
-        inline.setTaskReferenceName("inline_" + taskName1);
-        inline.setName(taskName1);
-        inline.setTaskDefinition(taskDef);
-        inline.setWorkflowTaskType(TaskType.INLINE);
-        inline.setInputParameters(Map.of("evaluatorType", "graaljs", "expression", "true;"));
+    WorkflowTask simpleTask = new WorkflowTask();
+    simpleTask.setTaskReferenceName(taskName2);
+    simpleTask.setName(taskName2);
+    simpleTask.setTaskDefinition(taskDef);
+    simpleTask.setWorkflowTaskType(TaskType.SIMPLE);
+    simpleTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
 
-        WorkflowTask simpleTask = new WorkflowTask();
-        simpleTask.setTaskReferenceName(taskName2);
-        simpleTask.setName(taskName2);
-        simpleTask.setTaskDefinition(taskDef);
-        simpleTask.setWorkflowTaskType(TaskType.SIMPLE);
-        simpleTask.setInputParameters(Map.of("value", "${workflow.input.value}", "order", "123"));
+    WorkflowDef workflowDef = new WorkflowDef();
+    workflowDef.setName(workflowName);
+    workflowDef.setOwnerEmail("test@orkes.io");
+    workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
+    workflowDef.setDescription("Workflow to monitor order state");
+    workflowDef.setTimeoutSeconds(600);
+    workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+    workflowDef.setTasks(Arrays.asList(inline, simpleTask));
+    metadataClient1.updateWorkflowDefs(Arrays.asList(workflowDef));
+    metadataClient1.registerTaskDefs(Arrays.asList(taskDef, taskDef2));
+  }
 
-        WorkflowDef workflowDef = new WorkflowDef();
-        workflowDef.setName(workflowName);
-        workflowDef.setOwnerEmail("test@orkes.io");
-        workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
-        workflowDef.setDescription("Workflow to monitor order state");
-        workflowDef.setTimeoutSeconds(600);
-        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
-        workflowDef.setTasks(Arrays.asList(inline, simpleTask));
-        metadataClient1.updateWorkflowDefs(Arrays.asList(workflowDef));
-        metadataClient1.registerTaskDefs(Arrays.asList(taskDef, taskDef2));
-    }
+  public static void registerWorkflowWithSubWorkflowDef(
+      String workflowName, String subWorkflowName, String taskName, MetadataClient metadataClient) {
+    TaskDef taskDef = new TaskDef(taskName);
+    taskDef.setRetryCount(0);
+    taskDef.setOwnerEmail("test@orkes.io");
+    TaskDef taskDef2 = new TaskDef(subWorkflowName);
+    taskDef2.setRetryCount(0);
+    taskDef2.setOwnerEmail("test@orkes.io");
 
-    public static void registerWorkflowWithSubWorkflowDef(String workflowName, String subWorkflowName, String taskName, MetadataClient metadataClient) {
-        TaskDef taskDef = new TaskDef(taskName);
-        taskDef.setRetryCount(0);
-        taskDef.setOwnerEmail("test@orkes.io");
-        TaskDef taskDef2 = new TaskDef(subWorkflowName);
-        taskDef2.setRetryCount(0);
-        taskDef2.setOwnerEmail("test@orkes.io");
+    WorkflowTask inline = new WorkflowTask();
+    inline.setTaskReferenceName(taskName);
+    inline.setName(taskName);
+    inline.setTaskDefinition(taskDef);
+    inline.setWorkflowTaskType(TaskType.SIMPLE);
+    inline.setInputParameters(Map.of("evaluatorType", "graaljs", "expression", "true;"));
 
-        WorkflowTask inline = new WorkflowTask();
-        inline.setTaskReferenceName(taskName);
-        inline.setName(taskName);
-        inline.setTaskDefinition(taskDef);
-        inline.setWorkflowTaskType(TaskType.SIMPLE);
-        inline.setInputParameters(Map.of("evaluatorType", "graaljs", "expression", "true;"));
+    WorkflowTask subworkflowTask = new WorkflowTask();
+    subworkflowTask.setTaskReferenceName(subWorkflowName);
+    subworkflowTask.setName(subWorkflowName);
+    subworkflowTask.setTaskDefinition(taskDef2);
+    subworkflowTask.setWorkflowTaskType(TaskType.SUB_WORKFLOW);
+    SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
+    subWorkflowParams.setName(subWorkflowName);
+    subWorkflowParams.setVersion(1);
+    subworkflowTask.setSubWorkflowParam(subWorkflowParams);
+    subworkflowTask.setInputParameters(
+        Map.of("subWorkflowName", subWorkflowName, "subWorkflowVersion", "1"));
 
-        WorkflowTask subworkflowTask = new WorkflowTask();
-        subworkflowTask.setTaskReferenceName(subWorkflowName);
-        subworkflowTask.setName(subWorkflowName);
-        subworkflowTask.setTaskDefinition(taskDef2);
-        subworkflowTask.setWorkflowTaskType(TaskType.SUB_WORKFLOW);
-        SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
-        subWorkflowParams.setName(subWorkflowName);
-        subWorkflowParams.setVersion(1);
-        subworkflowTask.setSubWorkflowParam(subWorkflowParams);
-        subworkflowTask.setInputParameters(Map.of("subWorkflowName", subWorkflowName, "subWorkflowVersion", "1"));
+    WorkflowDef subworkflowDef = new WorkflowDef();
+    subworkflowDef.setName(subWorkflowName);
+    subworkflowDef.setOwnerEmail("test@orkes.io");
+    subworkflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
+    subworkflowDef.setDescription("Sub Workflow to test retry");
+    subworkflowDef.setTimeoutSeconds(600);
+    subworkflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+    subworkflowDef.setTasks(Arrays.asList(inline));
 
-
-        WorkflowDef subworkflowDef = new WorkflowDef();
-        subworkflowDef.setName(subWorkflowName);
-        subworkflowDef.setOwnerEmail("test@orkes.io");
-        subworkflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
-        subworkflowDef.setDescription("Sub Workflow to test retry");
-        subworkflowDef.setTimeoutSeconds(600);
-        subworkflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
-        subworkflowDef.setTasks(Arrays.asList(inline));
-
-        WorkflowDef workflowDef = new WorkflowDef();
-        workflowDef.setName(workflowName);
-        workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
-        workflowDef.setDescription("Workflow to test retry");
-        workflowDef.setTimeoutSeconds(600);
-        workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
-        workflowDef.setTasks(Arrays.asList(subworkflowTask));
-        workflowDef.setOwnerEmail("test@orkes.io");
-        metadataClient.registerWorkflowDef(workflowDef);
-        metadataClient.registerWorkflowDef(subworkflowDef);
-        metadataClient.registerTaskDefs(Arrays.asList(taskDef, taskDef2));
-    }
-
+    WorkflowDef workflowDef = new WorkflowDef();
+    workflowDef.setName(workflowName);
+    workflowDef.setInputParameters(Arrays.asList("value", "inlineValue"));
+    workflowDef.setDescription("Workflow to test retry");
+    workflowDef.setTimeoutSeconds(600);
+    workflowDef.setTimeoutPolicy(WorkflowDef.TimeoutPolicy.TIME_OUT_WF);
+    workflowDef.setTasks(Arrays.asList(subworkflowTask));
+    workflowDef.setOwnerEmail("test@orkes.io");
+    metadataClient.registerWorkflowDef(workflowDef);
+    metadataClient.registerWorkflowDef(subworkflowDef);
+    metadataClient.registerTaskDefs(Arrays.asList(taskDef, taskDef2));
+  }
 }

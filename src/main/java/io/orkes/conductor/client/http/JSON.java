@@ -21,46 +21,46 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 
 public class JSON {
-    private final ObjectMapper objectMapper;
-    public JSON() {
-        objectMapper = new ObjectMapperProvider().getObjectMapper();
+  private final ObjectMapper objectMapper;
+
+  public JSON() {
+    objectMapper = new ObjectMapperProvider().getObjectMapper();
+  }
+
+  public JSON setLenientOnJson(boolean lenientOnJson) {
+    return this;
+  }
+
+  /**
+   * Serialize the given Java object into JSON string.
+   *
+   * @param obj Object
+   * @return String representation of the JSON
+   */
+  @SneakyThrows
+  public String serialize(Object obj) {
+    return objectMapper.writeValueAsString(obj);
+  }
+
+  /**
+   * Deserialize the given JSON string to Java object.
+   *
+   * @param <T> Type
+   * @param body The JSON string
+   * @param returnType The type to deserialize into
+   * @return The deserialized Java object
+   */
+  @SuppressWarnings("unchecked")
+  public <T> T deserialize(String body, Type returnType) {
+    try {
+      if (returnType.equals(String.class)) {
+        return (T) body;
+      }
+
+      JavaType javaType = objectMapper.getTypeFactory().constructType(returnType);
+      return objectMapper.readValue(body, javaType);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
-
-    public JSON setLenientOnJson(boolean lenientOnJson) {
-        return this;
-    }
-
-    /**
-     * Serialize the given Java object into JSON string.
-     *
-     * @param obj Object
-     * @return String representation of the JSON
-     */
-    @SneakyThrows
-    public String serialize(Object obj) {
-        return objectMapper.writeValueAsString(obj);
-    }
-
-    /**
-     * Deserialize the given JSON string to Java object.
-     *
-     * @param <T> Type
-     * @param body The JSON string
-     * @param returnType The type to deserialize into
-     * @return The deserialized Java object
-     */
-    @SuppressWarnings("unchecked")
-    public <T> T deserialize(String body, Type returnType) {
-        try {
-            if (returnType.equals(String.class)) {
-                return (T) body;
-            }
-
-            JavaType javaType = objectMapper.getTypeFactory().constructType(returnType);
-            return objectMapper.readValue(body, javaType);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+  }
 }

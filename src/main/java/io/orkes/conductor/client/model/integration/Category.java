@@ -13,15 +13,13 @@
 package io.orkes.conductor.client.model.integration;
 
 public enum Category {
+  API,
 
-    API,
+  AI_MODEL,
 
-    AI_MODEL,
+  VECTOR_DB,
 
-    VECTOR_DB,
+  RELATIONAL_DB,
 
-    RELATIONAL_DB,
-
-    MESSAGE_BROKER
-
+  MESSAGE_BROKER
 }

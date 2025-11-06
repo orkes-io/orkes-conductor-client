@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CorrelationIdsSearchRequest {
 
-    private List<String> correlationIds;
+  private List<String> correlationIds;
 
-    private List<String> workflowNames;
+  private List<String> workflowNames;
 }

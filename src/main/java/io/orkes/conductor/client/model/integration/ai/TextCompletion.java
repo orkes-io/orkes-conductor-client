@@ -19,6 +19,4 @@ import lombok.ToString;
 @Data
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class TextCompletion extends LLMWorkerInput {
-
-}
+public class TextCompletion extends LLMWorkerInput {}

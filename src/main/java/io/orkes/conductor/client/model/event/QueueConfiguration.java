@@ -17,63 +17,63 @@ import java.util.Map;
 import io.orkes.conductor.client.http.JSON;
 
 public abstract class QueueConfiguration {
-    private static final JSON json = new JSON();
+  private static final JSON json = new JSON();
 
-    private final String queueName;
-    private final String queueType;
+  private final String queueName;
+  private final String queueType;
 
-    private QueueWorkerConfiguration consumer;
-    private QueueWorkerConfiguration producer;
+  private QueueWorkerConfiguration consumer;
+  private QueueWorkerConfiguration producer;
 
-    public QueueConfiguration(String queueName, String queueType) {
-        this.queueName = queueName;
-        this.queueType = queueType;
+  public QueueConfiguration(String queueName, String queueType) {
+    this.queueName = queueName;
+    this.queueType = queueType;
+  }
+
+  public QueueConfiguration withConsumer(QueueWorkerConfiguration consumer) {
+    this.consumer = consumer;
+    return this;
+  }
+
+  public QueueConfiguration withProducer(QueueWorkerConfiguration producer) {
+    this.producer = producer;
+    return this;
+  }
+
+  public String getQueueType() {
+    return this.queueType;
+  }
+
+  public String getQueueName() {
+    return this.queueName;
+  }
+
+  @Deprecated
+  public String getConfiguration() throws Exception {
+    if (this.consumer == null) {
+      throw new RuntimeException("consumer must be set");
     }
-
-    public QueueConfiguration withConsumer(QueueWorkerConfiguration consumer) {
-        this.consumer = consumer;
-        return this;
+    if (this.producer == null) {
+      throw new RuntimeException("producer must be set");
     }
+    Map<String, Object> config =
+        Map.of(
+            "consumer", this.consumer.getConfiguration(),
+            "producer", this.producer.getConfiguration());
+    return json.serialize(config);
+  }
 
-    public QueueConfiguration withProducer(QueueWorkerConfiguration producer) {
-        this.producer = producer;
-        return this;
+  public Map<String, Object> getQueueConfiguration() throws Exception {
+    if (this.consumer == null) {
+      throw new RuntimeException("consumer must be set");
     }
-
-    public String getQueueType() {
-        return this.queueType;
+    if (this.producer == null) {
+      throw new RuntimeException("producer must be set");
     }
-
-    public String getQueueName() {
-        return this.queueName;
-    }
-
-    @Deprecated
-    public String getConfiguration() throws Exception {
-        if (this.consumer == null) {
-            throw new RuntimeException("consumer must be set");
-        }
-        if (this.producer == null) {
-            throw new RuntimeException("producer must be set");
-        }
-        Map<String, Object> config =
-                Map.of(
-                        "consumer", this.consumer.getConfiguration(),
-                        "producer", this.producer.getConfiguration());
-        return json.serialize(config);
-    }
-
-    public Map<String, Object> getQueueConfiguration() throws Exception {
-        if (this.consumer == null) {
-            throw new RuntimeException("consumer must be set");
-        }
-        if (this.producer == null) {
-            throw new RuntimeException("producer must be set");
-        }
-        Map<String, Object> config =
-                Map.of(
-                        "consumer", this.consumer.getConfiguration(),
-                        "producer", this.producer.getConfiguration());
-        return config;
-    }
+    Map<String, Object> config =
+        Map.of(
+            "consumer", this.consumer.getConfiguration(),
+            "producer", this.producer.getConfiguration());
+    return config;
+  }
 }

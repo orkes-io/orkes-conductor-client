@@ -1,0 +1,68 @@
+repos:
+  # Java formatting with Spotless
+  - repo: local
+    hooks:
+      - id: spotless-check
+        name: Spotless Check
+        entry: ./gradlew spotlessCheck
+        language: system
+        files: \.(java|properties|xml)$
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+
+      - id: spotless-apply
+        name: Spotless Apply
+        entry: ./gradlew spotlessApply
+        language: system
+        files: \.(java|properties|xml)$
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+
+      - id: pmd-main-check
+        name: PMD Check
+        entry: ./gradlew pmdMain
+        language: system
+        files: \.java$
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+
+      - id: pmd-test-check
+        name: PMD Check
+        entry: ./gradlew pmdTest
+        language: system
+        files: \.java$
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+        types: [text]
+        exclude: '\.(md)$'  # Exclude markdown files
+
+      - id: end-of-file-fixer
+        name: Fix End of Files
+        types: [text]
+
+      - id: check-yaml
+        name: Check YAML
+        types: [yaml]
+
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=1000']
+
+      - id: check-merge-conflict
+        name: Check for merge conflict markers
+        types: [text]
+
+      - id: check-case-conflict
+        name: Check for case conflicts
+        types: [text]

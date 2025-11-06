@@ -1,10 +1,10 @@
 # Conductor Java SDK
 
-[Conductor](https://www.conductor-oss.org/) is the leading open-source orchestration platform allowing developers to build highly scalable distributed applications. 
+[Conductor](https://www.conductor-oss.org/) is the leading open-source orchestration platform allowing developers to build highly scalable distributed applications.
 
 Check out the [official documentation for Conductor](https://orkes.io/content).
 
-This repository provides a Java client for the Orkes Conductor Server. 
+This repository provides a Java client for the Orkes Conductor Server.
 
 ## Deprecation Notice
 
@@ -12,7 +12,7 @@ This Client (v2) is being deprecated and will be removed.
 
 It will be replaced by [Client v4](https://github.com/conductor-oss/java-sdk), which offers improved features, better performance, and other enhancements.
 
-We strongly encourage all users to migrate to Client v4. 
+We strongly encourage all users to migrate to Client v4.
 
 ## ⭐ Conductor OSS
 
@@ -159,7 +159,7 @@ Next, write the main application, which will execute the workflow.
 ### Step 3: Running Application​ in Conductor
 
 Let’s write the application first. To implement this step, we’ll create a `Main` class in the `io.orkes.helloworld` package. This class will contain the` main` method, which serves as the entry point to our application. The main method will initiate our Conductor client and use it to set up and execute the `Greetings` workflow we defined in previous steps.
-By creating this entry point, we allow our application to run independently, connecting to the Conductor server and executing workflows. 
+By creating this entry point, we allow our application to run independently, connecting to the Conductor server and executing workflows.
 
 ```java
 package io.orkes.helloworld;
@@ -237,7 +237,7 @@ To execute the application:​
 
 > [!NOTE]
 > That's it - you just created and executed your first distributed Java app!
-> 
+>
 
 ## Learn More about Conductor Java SDK
 

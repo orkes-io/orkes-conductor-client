@@ -29,101 +29,110 @@ import io.orkes.conductor.proto.ProtoMappingHelper;
 import com.google.common.util.concurrent.ListenableFuture;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 public class PoolWorker {
 
-    private final PooledPoller pooledPoller;
-    private final Worker worker;
+  private final PooledPoller pooledPoller;
+  private final Worker worker;
 
-    private final TaskServiceGrpc.TaskServiceFutureStub taskServiceStub;
-    private int threadId;
-    private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
-    private final Semaphore semaphore;
+  private final TaskServiceGrpc.TaskServiceFutureStub taskServiceStub;
+  private int threadId;
+  private final ProtoMappingHelper protoMapper = ProtoMappingHelper.INSTANCE;
+  private final Semaphore semaphore;
 
-    public PoolWorker(TaskServiceGrpc.TaskServiceFutureStub taskServiceStub, PooledPoller pooledPoller, Worker worker, int threadId, Semaphore semaphore) {
-        this.taskServiceStub = taskServiceStub;
-        this.pooledPoller = pooledPoller;
-        this.worker = worker;
-        this.threadId = threadId;
-        this.semaphore = semaphore;
-    }
+  public PoolWorker(
+      TaskServiceGrpc.TaskServiceFutureStub taskServiceStub,
+      PooledPoller pooledPoller,
+      Worker worker,
+      int threadId,
+      Semaphore semaphore) {
+    this.taskServiceStub = taskServiceStub;
+    this.pooledPoller = pooledPoller;
+    this.worker = worker;
+    this.threadId = threadId;
+    this.semaphore = semaphore;
+  }
 
-    public void run() {
+  public void run() {
+    try {
+      semaphore.acquireUninterruptibly();
+      TaskPb.Task task = pooledPoller.getTask(threadId);
+      if (task != null && !"NO_OP".equals(task.getTaskId())) {
+        log.debug("Executing task {}", task.getTaskId());
+        Task taskModel = protoMapper.fromProto(task);
         try {
-            semaphore.acquireUninterruptibly();
-            TaskPb.Task task = pooledPoller.getTask(threadId);
-            if (task != null && !"NO_OP".equals(task.getTaskId())) {
-                log.debug("Executing task {}", task.getTaskId());
-                Task taskModel = protoMapper.fromProto(task);
-                try {
-                    if (taskModel.getOutputData().containsKey("_severSendTime")) {
-                        long serverSentTime =
-                                ((Number) taskModel.getOutputData().get("_severSendTime"))
-                                        .longValue();
-                        long networkLatency = System.currentTimeMillis() - serverSentTime;
-                        taskModel.getOutputData().put("_pollNetworkLatency", networkLatency);
-                    }
-                } catch (Exception e) {
-                    log.warn("Error", e);
-                }
-                TaskResult result = worker.execute(taskModel);
-                log.debug("Executed task {}", task.getTaskId());
-                updateTaskResult(3, taskModel, result, worker);
-            }
-        } catch (Throwable e) {
-            log.error("Error executing task: {}", e.getMessage(), e);
-        }
-    }
-
-
-    private void updateTaskResult(int count, Task task, TaskResult result, Worker worker) {
-        try {
-
-            retryOperation(
-                    (TaskResult taskResult) -> {
-                        _updateTask(taskResult);
-                        return null;
-                    },
-                    count,
-                    result,
-                    "updateTask");
+          if (taskModel.getOutputData().containsKey("_severSendTime")) {
+            long serverSentTime =
+                ((Number) taskModel.getOutputData().get("_severSendTime")).longValue();
+            long networkLatency = System.currentTimeMillis() - serverSentTime;
+            taskModel.getOutputData().put("_pollNetworkLatency", networkLatency);
+          }
         } catch (Exception e) {
-            worker.onErrorUpdate(task);
-            MetricsContainer.incrementTaskUpdateErrorCount(worker.getTaskDefName(), e);
-            log.error("Failed to update result: {} for task: {} in worker: {}", result.toString(), task.getTaskDefName(), worker.getIdentity(),e);
+          log.warn("Error", e);
         }
+        TaskResult result = worker.execute(taskModel);
+        log.debug("Executed task {}", task.getTaskId());
+        updateTaskResult(3, taskModel, result, worker);
+      }
+    } catch (Throwable e) {
+      log.error("Error executing task: {}", e.getMessage(), e);
     }
+  }
 
-    private void _updateTask(TaskResult taskResult) {
-        long now = System.currentTimeMillis();
-        taskResult.getOutputData().put("_clientSendTime", now);
-        TaskServicePb.UpdateTaskRequest request = TaskServicePb.UpdateTaskRequest.newBuilder().setResult(protoMapper.toProto(taskResult)).build();
-        ListenableFuture<TaskServicePb.UpdateTaskResponse> future = taskServiceStub.updateTask(request);
+  private void updateTaskResult(int count, Task task, TaskResult result, Worker worker) {
+    try {
+
+      retryOperation(
+          (TaskResult taskResult) -> {
+            _updateTask(taskResult);
+            return null;
+          },
+          count,
+          result,
+          "updateTask");
+    } catch (Exception e) {
+      worker.onErrorUpdate(task);
+      MetricsContainer.incrementTaskUpdateErrorCount(worker.getTaskDefName(), e);
+      log.error(
+          "Failed to update result: {} for task: {} in worker: {}",
+          result.toString(),
+          task.getTaskDefName(),
+          worker.getIdentity(),
+          e);
+    }
+  }
+
+  private void _updateTask(TaskResult taskResult) {
+    long now = System.currentTimeMillis();
+    taskResult.getOutputData().put("_clientSendTime", now);
+    TaskServicePb.UpdateTaskRequest request =
+        TaskServicePb.UpdateTaskRequest.newBuilder()
+            .setResult(protoMapper.toProto(taskResult))
+            .build();
+    ListenableFuture<TaskServicePb.UpdateTaskResponse> future = taskServiceStub.updateTask(request);
+    try {
+      future.get(30_000, TimeUnit.MILLISECONDS);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      log.info("Took {} ms to update task", (System.currentTimeMillis() - now));
+    }
+  }
+
+  private <T, R> R retryOperation(Function<T, R> operation, int count, T input, String opName) {
+    int index = 0;
+    while (index < count) {
+      try {
+        return operation.apply(input);
+      } catch (Exception e) {
+        index++;
         try {
-            future.get(30_000,  TimeUnit.MILLISECONDS);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            log.info("Took {} ms to update task", (System.currentTimeMillis() - now));
+          Thread.sleep(500L * (index + 1));
+        } catch (InterruptedException ie) {
+          log.error("Retry interrupted", ie);
         }
-
+      }
     }
-
-    private <T, R> R retryOperation(Function<T, R> operation, int count, T input, String opName) {
-        int index = 0;
-        while (index < count) {
-            try {
-                return operation.apply(input);
-            } catch (Exception e) {
-                index++;
-                try {
-                    Thread.sleep(500L * (index+1));
-                } catch (InterruptedException ie) {
-                    log.error("Retry interrupted", ie);
-                }
-            }
-        }
-        throw new RuntimeException("Exhausted retries performing " + opName);
-    }
+    throw new RuntimeException("Exhausted retries performing " + opName);
+  }
 }

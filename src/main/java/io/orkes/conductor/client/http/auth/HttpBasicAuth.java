@@ -20,33 +20,32 @@ import io.orkes.conductor.client.http.Pair;
 import com.squareup.okhttp.Credentials;
 
 public class HttpBasicAuth implements Authentication {
-    private String username;
-    private String password;
+  private String username;
+  private String password;
 
-    public String getUsername() {
-        return username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    @Override
-    public void applyToParams(List<Pair> queryParams, Map<String, String> headerParams) {
-        if (username == null && password == null) {
-            return;
-        }
-        headerParams.put(
-                "Authorization",
-                Credentials.basic(
-                        username == null ? "" : username, password == null ? "" : password));
+  @Override
+  public void applyToParams(List<Pair> queryParams, Map<String, String> headerParams) {
+    if (username == null && password == null) {
+      return;
     }
+    headerParams.put(
+        "Authorization",
+        Credentials.basic(username == null ? "" : username, password == null ? "" : password));
+  }
 }

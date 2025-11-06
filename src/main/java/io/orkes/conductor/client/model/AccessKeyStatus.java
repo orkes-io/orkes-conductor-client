@@ -13,6 +13,6 @@
 package io.orkes.conductor.client.model;
 
 public enum AccessKeyStatus {
-    ACTIVE,
-    INACTIVE
+  ACTIVE,
+  INACTIVE
 }

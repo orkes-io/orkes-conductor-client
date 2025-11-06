@@ -24,42 +24,42 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SecretClientTests extends ClientTest {
-    private final String SECRET_NAME = "test-sdk-java-secret_name";
-    private final String SECRET_KEY = "test-sdk-java-secret_key";
+  private final String SECRET_NAME = "test-sdk-java-secret_name";
+  private final String SECRET_KEY = "test-sdk-java-secret_key";
 
-    private final SecretClient secretClient;
+  private final SecretClient secretClient;
 
-    public SecretClientTests() {
-        secretClient = super.orkesClients.getSecretClient();
+  public SecretClientTests() {
+    secretClient = super.orkesClients.getSecretClient();
+  }
+
+  @Test
+  void testMethods() {
+    try {
+      secretClient.deleteSecret(SECRET_KEY);
+    } catch (ApiException e) {
+      if (e.getStatusCode() != 500) {
+        throw e;
+      }
     }
+    secretClient.putSecret(SECRET_NAME, SECRET_KEY);
+    secretClient.setSecretTags(List.of(getTagObject()), SECRET_KEY);
+    List<TagObject> tags = secretClient.getSecretTags(SECRET_KEY);
+    assertEquals(tags.size(), 1);
+    assertEquals(tags.get(0), getTagObject());
+    secretClient.deleteSecretTags(List.of(getTagObject()), SECRET_KEY);
+    assertEquals(secretClient.getSecretTags(SECRET_KEY).size(), 0);
+    assertTrue(secretClient.listSecretsThatUserCanGrantAccessTo().contains(SECRET_KEY));
+    assertTrue(secretClient.listAllSecretNames().contains(SECRET_KEY));
+    assertEquals(SECRET_NAME, secretClient.getSecret(SECRET_KEY));
+    assertTrue(secretClient.secretExists(SECRET_KEY));
+    secretClient.deleteSecret(SECRET_KEY);
+  }
 
-    @Test
-    void testMethods() {
-        try {
-            secretClient.deleteSecret(SECRET_KEY);
-        } catch (ApiException e) {
-            if (e.getStatusCode() != 500) {
-                throw e;
-            }
-        }
-        secretClient.putSecret(SECRET_NAME, SECRET_KEY);
-        secretClient.setSecretTags(List.of(getTagObject()), SECRET_KEY);
-        List<TagObject> tags = secretClient.getSecretTags(SECRET_KEY);
-        assertEquals(tags.size(), 1);
-        assertEquals(tags.get(0), getTagObject());
-        secretClient.deleteSecretTags(List.of(getTagObject()), SECRET_KEY);
-        assertEquals(secretClient.getSecretTags(SECRET_KEY).size(), 0);
-        assertTrue(secretClient.listSecretsThatUserCanGrantAccessTo().contains(SECRET_KEY));
-        assertTrue(secretClient.listAllSecretNames().contains(SECRET_KEY));
-        assertEquals(SECRET_NAME, secretClient.getSecret(SECRET_KEY));
-        assertTrue(secretClient.secretExists(SECRET_KEY));
-        secretClient.deleteSecret(SECRET_KEY);
-    }
-
-    private TagObject getTagObject() {
-        TagObject tagObject = new TagObject();
-        tagObject.setKey("department");
-        tagObject.setValue("accounts");
-        return tagObject;
-    }
+  private TagObject getTagObject() {
+    TagObject tagObject = new TagObject();
+    tagObject.setKey("department");
+    tagObject.setValue("accounts");
+    return tagObject;
+  }
 }

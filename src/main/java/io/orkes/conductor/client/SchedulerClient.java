@@ -21,35 +21,37 @@ import io.orkes.conductor.client.model.TagObject;
 import io.orkes.conductor.client.model.WorkflowSchedule;
 
 public interface SchedulerClient {
-    void deleteSchedule(String name);
+  void deleteSchedule(String name);
 
-    List<WorkflowSchedule> getAllSchedules(String workflowName);
+  List<WorkflowSchedule> getAllSchedules(String workflowName);
 
-    List<Long> getNextFewSchedules(
-            String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit);
+  List<Long> getNextFewSchedules(
+      String cronExpression, Long scheduleStartTime, Long scheduleEndTime, Integer limit);
 
-    WorkflowSchedule getSchedule(String name);
+  WorkflowSchedule getSchedule(String name);
 
-    void pauseAllSchedules();
+  void pauseAllSchedules();
 
-    void pauseSchedule(String name);
+  void pauseSchedule(String name);
 
-    void requeueAllExecutionRecords();
+  void requeueAllExecutionRecords();
 
-    void resumeAllSchedules();
+  void resumeAllSchedules();
 
-    void resumeSchedule(String name);
+  void resumeSchedule(String name);
 
-    void saveSchedule(SaveScheduleRequest saveScheduleRequest);
+  void saveSchedule(SaveScheduleRequest saveScheduleRequest);
 
-    @Deprecated
-    SearchResultWorkflowScheduleExecutionModel searchV22(Integer start, Integer size, String sort, String freeText, String query);
-    SearchResultWorkflowScheduleExecution search(Integer start, Integer size, String sort, String freeText, String query);
+  @Deprecated
+  SearchResultWorkflowScheduleExecutionModel searchV22(
+      Integer start, Integer size, String sort, String freeText, String query);
 
-    void setSchedulerTags(List<TagObject> body, String name);
+  SearchResultWorkflowScheduleExecution search(
+      Integer start, Integer size, String sort, String freeText, String query);
 
-    void deleteSchedulerTags(List<TagObject> body, String name);
+  void setSchedulerTags(List<TagObject> body, String name);
 
-    List<TagObject> getSchedulerTags(String name);
+  void deleteSchedulerTags(List<TagObject> body, String name);
 
-    }
+  List<TagObject> getSchedulerTags(String name);
+}

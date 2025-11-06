@@ -18,49 +18,49 @@ import io.orkes.conductor.client.http.*;
 
 public class OrkesClients {
 
-    private final ApiClient apiClient;
+  private final ApiClient apiClient;
 
-    public OrkesClients(ApiClient apiClient) {
-        this.apiClient = apiClient;
-    }
+  public OrkesClients(ApiClient apiClient) {
+    this.apiClient = apiClient;
+  }
 
-    public WorkflowClient getWorkflowClient() {
-        return new OrkesWorkflowClient(apiClient);
-    }
+  public WorkflowClient getWorkflowClient() {
+    return new OrkesWorkflowClient(apiClient);
+  }
 
-    public AuthorizationClient getAuthorizationClient() {
-        return new OrkesAuthorizationClient(apiClient);
-    }
+  public AuthorizationClient getAuthorizationClient() {
+    return new OrkesAuthorizationClient(apiClient);
+  }
 
-    public EventClient getEventClient() {
-        return new OrkesEventClient(apiClient);
-    }
+  public EventClient getEventClient() {
+    return new OrkesEventClient(apiClient);
+  }
 
-    public MetadataClient getMetadataClient() {
-        return new OrkesMetadataClient(apiClient);
-    }
+  public MetadataClient getMetadataClient() {
+    return new OrkesMetadataClient(apiClient);
+  }
 
-    public SchedulerClient getSchedulerClient() {
-        return new OrkesSchedulerClient(apiClient);
-    }
+  public SchedulerClient getSchedulerClient() {
+    return new OrkesSchedulerClient(apiClient);
+  }
 
-    public SecretClient getSecretClient() {
-        return new OrkesSecretClient(apiClient);
-    }
+  public SecretClient getSecretClient() {
+    return new OrkesSecretClient(apiClient);
+  }
 
-    public TaskClient getTaskClient() {
-        return new OrkesTaskClient(apiClient);
-    }
+  public TaskClient getTaskClient() {
+    return new OrkesTaskClient(apiClient);
+  }
 
-    public IntegrationClient getIntegrationClient() {
-        return new OrkesIntegrationClient(apiClient);
-    }
+  public IntegrationClient getIntegrationClient() {
+    return new OrkesIntegrationClient(apiClient);
+  }
 
-    public PromptClient getPromptClient() {
-        return new OrkesPromptClient(apiClient);
-    }
+  public PromptClient getPromptClient() {
+    return new OrkesPromptClient(apiClient);
+  }
 
-    public WorkflowExecutor getWorkflowExecutor() {
-        return new WorkflowExecutor(getTaskClient(), getWorkflowClient(), getMetadataClient(), 100);
-    }
+  public WorkflowExecutor getWorkflowExecutor() {
+    return new WorkflowExecutor(getTaskClient(), getWorkflowClient(), getMetadataClient(), 100);
+  }
 }

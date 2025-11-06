@@ -21,10 +21,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatMessage {
 
-    public enum Actor {
-        user, assistant, system, human, chatbot
-    }
+  public enum Actor {
+    user,
+    assistant,
+    system,
+    human,
+    chatbot
+  }
 
-    String role;
-    String message;
+  String role;
+  String message;
 }

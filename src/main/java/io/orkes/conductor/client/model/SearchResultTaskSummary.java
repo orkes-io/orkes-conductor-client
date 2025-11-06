@@ -17,10 +17,8 @@ import java.util.List;
 import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-/**
- * SearchResultTaskSummary
- */
 
+/** SearchResultTaskSummary */
 public class SearchResultTaskSummary {
   private List<TaskSummary> results = null;
 
@@ -39,10 +37,11 @@ public class SearchResultTaskSummary {
     return this;
   }
 
-   /**
+  /**
    * Get results
+   *
    * @return results
-  **/
+   */
   @Schema(description = "")
   public List<TaskSummary> getResults() {
     return results;
@@ -57,10 +56,11 @@ public class SearchResultTaskSummary {
     return this;
   }
 
-   /**
+  /**
    * Get totalHits
+   *
    * @return totalHits
-  **/
+   */
   @Schema(description = "")
   public Long getTotalHits() {
     return totalHits;
@@ -69,7 +69,6 @@ public class SearchResultTaskSummary {
   public void setTotalHits(Long totalHits) {
     this.totalHits = totalHits;
   }
-
 
   @Override
   public boolean equals(Object o) {
@@ -80,8 +79,8 @@ public class SearchResultTaskSummary {
       return false;
     }
     SearchResultTaskSummary searchResultTaskSummary = (SearchResultTaskSummary) o;
-    return Objects.equals(this.results, searchResultTaskSummary.results) &&
-        Objects.equals(this.totalHits, searchResultTaskSummary.totalHits);
+    return Objects.equals(this.results, searchResultTaskSummary.results)
+        && Objects.equals(this.totalHits, searchResultTaskSummary.totalHits);
   }
 
   @Override
@@ -89,12 +88,11 @@ public class SearchResultTaskSummary {
     return Objects.hash(results, totalHits);
   }
 
-
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class SearchResultTaskSummary {\n");
-    
+
     sb.append("    results: ").append(toIndentedString(results)).append("\n");
     sb.append("    totalHits: ").append(toIndentedString(totalHits)).append("\n");
     sb.append("}");
@@ -102,8 +100,7 @@ public class SearchResultTaskSummary {
   }
 
   /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
    */
   private String toIndentedString(Object o) {
     if (o == null) {
@@ -111,5 +108,4 @@ public class SearchResultTaskSummary {
     }
     return o.toString().replace("\n", "\n    ");
   }
-
 }

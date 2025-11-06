@@ -17,8 +17,8 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import io.orkes.conductor.client.model.event.QueueWorkerConfiguration;
 
 public class KafkaProducer extends QueueWorkerConfiguration {
-    public KafkaProducer(String bootstrapServersConfig) throws Exception {
-        super(ProducerConfig.configNames());
-        withConfiguration(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServersConfig);
-    }
+  public KafkaProducer(String bootstrapServersConfig) throws Exception {
+    super(ProducerConfig.configNames());
+    withConfiguration(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServersConfig);
+  }
 }

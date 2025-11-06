@@ -35,109 +35,113 @@ import static io.orkes.conductor.client.grpc.ChannelManager.getChannel;
 @Slf4j
 public class GrpcWorkflowClient {
 
-    private WorkflowServiceStreamGrpc.WorkflowServiceStreamStub stub;
+  private WorkflowServiceStreamGrpc.WorkflowServiceStreamStub stub;
 
-    private StreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream;
+  private StreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream;
 
-    private StartWorkflowResponseStream responseStream;
+  private StartWorkflowResponseStream responseStream;
 
-    private final ProtoMappingHelper protoMappingHelper = ProtoMappingHelper.INSTANCE;
+  private final ProtoMappingHelper protoMappingHelper = ProtoMappingHelper.INSTANCE;
 
-    private final WorkflowExecutionMonitor executionMonitor;
+  private final WorkflowExecutionMonitor executionMonitor;
 
-    private final ManagedChannel channel;
+  private final ManagedChannel channel;
 
-    public GrpcWorkflowClient(ApiClient apiClient) {
-        this.executionMonitor = new WorkflowExecutionMonitor();
-        this.channel = getChannel(apiClient);
+  public GrpcWorkflowClient(ApiClient apiClient) {
+    this.executionMonitor = new WorkflowExecutionMonitor();
+    this.channel = getChannel(apiClient);
 
-        stub =
-                WorkflowServiceStreamGrpc.newStub(channel)
-                        .withInterceptors(new HeaderClientInterceptor(apiClient));
-        this.responseStream = new StartWorkflowResponseStream(executionMonitor);
-        requestStream = stub.startWorkflow(responseStream);
+    stub =
+        WorkflowServiceStreamGrpc.newStub(channel)
+            .withInterceptors(new HeaderClientInterceptor(apiClient));
+    this.responseStream = new StartWorkflowResponseStream(executionMonitor);
+    requestStream = stub.startWorkflow(responseStream);
+  }
+
+  private synchronized boolean reConnect() {
+    try {
+      requestStream = stub.startWorkflow(this.responseStream);
+      return true;
+    } catch (Exception connectException) {
+      log.error("Server not ready {}", connectException.getMessage(), connectException);
+      return false;
     }
+  }
 
-    private synchronized boolean reConnect() {
-        try {
-            requestStream = stub.startWorkflow(this.responseStream);
-            return true;
-        } catch (Exception connectException) {
-            log.error("Server not ready {}", connectException.getMessage(), connectException);
-            return false;
+  public CompletableFuture<WorkflowRun> executeWorkflow(
+      StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
+    if (!responseStream.isReady()) {
+      int connectAttempts = 3;
+      int sleepTime = 200;
+
+      while (connectAttempts > 0) {
+        reConnect();
+        log.info("Connection attempt {} backoff for {} millis", connectAttempts, sleepTime);
+        Uninterruptibles.sleepUninterruptibly(sleepTime, TimeUnit.MILLISECONDS);
+        if (responseStream.isReady()) {
+          break;
         }
+        connectAttempts--;
+        sleepTime = sleepTime * 2;
+      }
+      if (!responseStream.isReady()) {
+        throw new RuntimeException("Server is not yet ready to accept the requests");
+      }
     }
+    String requestId = UUID.randomUUID().toString();
 
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String waitUntilTask) {
-        if (!responseStream.isReady()) {
-            int connectAttempts = 3;
-            int sleepTime = 200;
-
-            while (connectAttempts > 0) {
-                reConnect();
-                log.info("Connection attempt {} backoff for {} millis", connectAttempts, sleepTime);
-                Uninterruptibles.sleepUninterruptibly(sleepTime, TimeUnit.MILLISECONDS);
-                if(responseStream.isReady()) {
-                    break;
-                }
-                connectAttempts--;
-                sleepTime = sleepTime * 2;
-            }
-            if(!responseStream.isReady()) {
-                throw new RuntimeException("Server is not yet ready to accept the requests");
-            }
-        }
-        String requestId = UUID.randomUUID().toString();
-
-        OrkesWorkflowService.StartWorkflowRequest.Builder requestBuilder = OrkesWorkflowService.StartWorkflowRequest.newBuilder();
-        requestBuilder.setRequestId(requestId).setIdempotencyKey(requestId).setMonitor(true);
-        if (waitUntilTask != null) {
-            requestBuilder.setWaitUntilTask(waitUntilTask);
-        }
-        requestBuilder.setRequest(protoMappingHelper.toProto(startWorkflowRequest));
-        CompletableFuture<WorkflowRun> future = executionMonitor.monitorRequest(requestId);
-        synchronized (requestStream) {
-            requestStream.onNext(requestBuilder.build());
-        }
-        return future;
+    OrkesWorkflowService.StartWorkflowRequest.Builder requestBuilder =
+        OrkesWorkflowService.StartWorkflowRequest.newBuilder();
+    requestBuilder.setRequestId(requestId).setIdempotencyKey(requestId).setMonitor(true);
+    if (waitUntilTask != null) {
+      requestBuilder.setWaitUntilTask(waitUntilTask);
     }
-
-    public CompletableFuture<WorkflowRun> executeWorkflow(StartWorkflowRequest startWorkflowRequest, String waitUntilTask, Integer waitForSeconds) {
-        if (!responseStream.isReady()) {
-            int connectAttempts = 3;
-            int sleepTime = 200;
-
-            while (connectAttempts > 0) {
-                reConnect();
-                log.info("Connection attempt {} backoff for {} millis", connectAttempts, sleepTime);
-                Uninterruptibles.sleepUninterruptibly(sleepTime, TimeUnit.MILLISECONDS);
-                if(responseStream.isReady()) {
-                    break;
-                }
-                connectAttempts--;
-                sleepTime = sleepTime * 2;
-            }
-            if(!responseStream.isReady()) {
-                throw new RuntimeException("Server is not yet ready to accept the requests");
-            }
-        }
-        String requestId = UUID.randomUUID().toString();
-
-        OrkesWorkflowService.StartWorkflowRequest.Builder requestBuilder = OrkesWorkflowService.StartWorkflowRequest.newBuilder();
-        requestBuilder.setRequestId(requestId).setIdempotencyKey(requestId).setMonitor(true);
-        if (waitUntilTask != null) {
-            requestBuilder.setWaitUntilTask(waitUntilTask);
-        }
-        requestBuilder.setRequest(protoMappingHelper.toProto(startWorkflowRequest));
-        CompletableFuture<WorkflowRun> future = executionMonitor.monitorRequest(requestId);
-        future.orTimeout(waitForSeconds, TimeUnit.SECONDS);
-        synchronized (requestStream) {
-            requestStream.onNext(requestBuilder.build());
-        }
-        return future;
+    requestBuilder.setRequest(protoMappingHelper.toProto(startWorkflowRequest));
+    CompletableFuture<WorkflowRun> future = executionMonitor.monitorRequest(requestId);
+    synchronized (requestStream) {
+      requestStream.onNext(requestBuilder.build());
     }
+    return future;
+  }
 
-    public void shutdown() {
-        channel.shutdown();
+  public CompletableFuture<WorkflowRun> executeWorkflow(
+      StartWorkflowRequest startWorkflowRequest, String waitUntilTask, Integer waitForSeconds) {
+    if (!responseStream.isReady()) {
+      int connectAttempts = 3;
+      int sleepTime = 200;
+
+      while (connectAttempts > 0) {
+        reConnect();
+        log.info("Connection attempt {} backoff for {} millis", connectAttempts, sleepTime);
+        Uninterruptibles.sleepUninterruptibly(sleepTime, TimeUnit.MILLISECONDS);
+        if (responseStream.isReady()) {
+          break;
+        }
+        connectAttempts--;
+        sleepTime = sleepTime * 2;
+      }
+      if (!responseStream.isReady()) {
+        throw new RuntimeException("Server is not yet ready to accept the requests");
+      }
     }
+    String requestId = UUID.randomUUID().toString();
+
+    OrkesWorkflowService.StartWorkflowRequest.Builder requestBuilder =
+        OrkesWorkflowService.StartWorkflowRequest.newBuilder();
+    requestBuilder.setRequestId(requestId).setIdempotencyKey(requestId).setMonitor(true);
+    if (waitUntilTask != null) {
+      requestBuilder.setWaitUntilTask(waitUntilTask);
+    }
+    requestBuilder.setRequest(protoMappingHelper.toProto(startWorkflowRequest));
+    CompletableFuture<WorkflowRun> future = executionMonitor.monitorRequest(requestId);
+    future.orTimeout(waitForSeconds, TimeUnit.SECONDS);
+    synchronized (requestStream) {
+      requestStream.onNext(requestBuilder.build());
+    }
+    return future;
+  }
+
+  public void shutdown() {
+    channel.shutdown();
+  }
 }

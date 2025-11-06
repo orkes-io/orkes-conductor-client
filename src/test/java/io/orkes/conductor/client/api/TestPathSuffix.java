@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPathSuffix {
 
-    @Test
-    public void test() {
-        ApiClient apiClient = new ApiClient("https://play.orkes.io/api");
-        ApiClient apiClient2 = new ApiClient("https://play.orkes.io/api/");
+  @Test
+  public void test() {
+    ApiClient apiClient = new ApiClient("https://play.orkes.io/api");
+    ApiClient apiClient2 = new ApiClient("https://play.orkes.io/api/");
 
-        assertEquals(apiClient2.getBasePath(), apiClient.getBasePath());
-    }
+    assertEquals(apiClient2.getBasePath(), apiClient.getBasePath());
+  }
 }

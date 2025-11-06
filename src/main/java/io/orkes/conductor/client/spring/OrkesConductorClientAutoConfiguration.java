@@ -12,8 +12,6 @@
  */
 package io.orkes.conductor.client.spring;
 
-
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,61 +27,61 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrkesConductorClientAutoConfiguration {
 
-    @Bean
-    public TaskClient taskClient(OrkesClients clients) {
-        return clients.getTaskClient();
-    }
+  @Bean
+  public TaskClient taskClient(OrkesClients clients) {
+    return clients.getTaskClient();
+  }
 
-    @Bean
-    public MetadataClient metadataClient(OrkesClients clients) {
-        return clients.getMetadataClient();
-    }
+  @Bean
+  public MetadataClient metadataClient(OrkesClients clients) {
+    return clients.getMetadataClient();
+  }
 
-    @Bean
-    public WorkflowClient workflowClient(OrkesClients clients) {
-        return clients.getWorkflowClient();
-    }
+  @Bean
+  public WorkflowClient workflowClient(OrkesClients clients) {
+    return clients.getWorkflowClient();
+  }
 
-    @Bean
-    public AuthorizationClient authorizationClient(OrkesClients clients) {
-        return clients.getAuthorizationClient();
-    }
+  @Bean
+  public AuthorizationClient authorizationClient(OrkesClients clients) {
+    return clients.getAuthorizationClient();
+  }
 
-    @Bean
-    public EventClient eventClient(OrkesClients clients) {
-        return clients.getEventClient();
-    }
+  @Bean
+  public EventClient eventClient(OrkesClients clients) {
+    return clients.getEventClient();
+  }
 
-    @Bean
-    public SchedulerClient schedulerClient(OrkesClients clients) {
-        return clients.getSchedulerClient();
-    }
+  @Bean
+  public SchedulerClient schedulerClient(OrkesClients clients) {
+    return clients.getSchedulerClient();
+  }
 
-    @Bean
-    public SecretClient secretClient(OrkesClients clients) {
-        return clients.getSecretClient();
-    }
+  @Bean
+  public SecretClient secretClient(OrkesClients clients) {
+    return clients.getSecretClient();
+  }
 
-    @Bean
-    public OrkesClients orkesClients(ApiClient apiClient) {
-        OrkesClients clients = new OrkesClients(apiClient);
-        return clients;
-    }
+  @Bean
+  public OrkesClients orkesClients(ApiClient apiClient) {
+    OrkesClients clients = new OrkesClients(apiClient);
+    return clients;
+  }
 
-    @Bean
-    public WorkflowExecutor workflowExecutor(ApiClient apiClient, AnnotatedWorkerExecutor annotatedWorkerExecutor) {
-        OrkesClients clients = new OrkesClients(apiClient);
-        return new WorkflowExecutor(
-                clients.getTaskClient(),
-                clients.getWorkflowClient(),
-                clients.getMetadataClient(),
-                annotatedWorkerExecutor
-                );
-    }
+  @Bean
+  public WorkflowExecutor workflowExecutor(
+      ApiClient apiClient, AnnotatedWorkerExecutor annotatedWorkerExecutor) {
+    OrkesClients clients = new OrkesClients(apiClient);
+    return new WorkflowExecutor(
+        clients.getTaskClient(),
+        clients.getWorkflowClient(),
+        clients.getMetadataClient(),
+        annotatedWorkerExecutor);
+  }
 
-    @Bean
-    public AnnotatedWorkerExecutor annotatedWorkerExecutor(
-            TaskClient taskClient, WorkerConfiguration workerConfiguration) {
-        return new OrkesAnnotatedWorkerExecutor(taskClient, workerConfiguration);
-    }
+  @Bean
+  public AnnotatedWorkerExecutor annotatedWorkerExecutor(
+      TaskClient taskClient, WorkerConfiguration workerConfiguration) {
+    return new OrkesAnnotatedWorkerExecutor(taskClient, workerConfiguration);
+  }
 }

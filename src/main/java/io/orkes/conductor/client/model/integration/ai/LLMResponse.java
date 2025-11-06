@@ -18,9 +18,7 @@ import lombok.Data;
 @Data
 @Builder
 public class LLMResponse {
-    private Object result;
-    private String finishReason;
-    private int tokenUsed;
-
-
+  private Object result;
+  private String finishReason;
+  private int tokenUsed;
 }

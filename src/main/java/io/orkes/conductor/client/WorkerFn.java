@@ -17,5 +17,5 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
 @FunctionalInterface
 public interface WorkerFn {
-    TaskResult execute(Task task);
+  TaskResult execute(Task task);
 }

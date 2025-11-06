@@ -21,119 +21,118 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /** UpdateWorkflowVariables */
 public class UpdateWorkflowVariables {
-    @SerializedName("appendArray")
-    private Boolean appendArray = null;
+  @SerializedName("appendArray")
+  private Boolean appendArray = null;
 
-    @SerializedName("variables")
-    private Map<String, Object> variables = null;
+  @SerializedName("variables")
+  private Map<String, Object> variables = null;
 
-    @SerializedName("workflowId")
-    private String workflowId = null;
+  @SerializedName("workflowId")
+  private String workflowId = null;
 
-    public UpdateWorkflowVariables appendArray(Boolean appendArray) {
-        this.appendArray = appendArray;
-        return this;
+  public UpdateWorkflowVariables appendArray(Boolean appendArray) {
+    this.appendArray = appendArray;
+    return this;
+  }
+
+  /**
+   * Get appendArray
+   *
+   * @return appendArray
+   */
+  @Schema(description = "")
+  public Boolean isAppendArray() {
+    return appendArray;
+  }
+
+  public void setAppendArray(Boolean appendArray) {
+    this.appendArray = appendArray;
+  }
+
+  public UpdateWorkflowVariables variables(Map<String, Object> variables) {
+    this.variables = variables;
+    return this;
+  }
+
+  public UpdateWorkflowVariables putVariablesItem(String key, Object variablesItem) {
+    if (this.variables == null) {
+      this.variables = new HashMap<String, Object>();
     }
+    this.variables.put(key, variablesItem);
+    return this;
+  }
 
-    /**
-     * Get appendArray
-     *
-     * @return appendArray
-     */
-    @Schema(description = "")
-    public Boolean isAppendArray() {
-        return appendArray;
+  /**
+   * Get variables
+   *
+   * @return variables
+   */
+  @Schema(description = "")
+  public Map<String, Object> getVariables() {
+    return variables;
+  }
+
+  public void setVariables(Map<String, Object> variables) {
+    this.variables = variables;
+  }
+
+  public UpdateWorkflowVariables workflowId(String workflowId) {
+    this.workflowId = workflowId;
+    return this;
+  }
+
+  /**
+   * Get workflowId
+   *
+   * @return workflowId
+   */
+  @Schema(description = "")
+  public String getWorkflowId() {
+    return workflowId;
+  }
+
+  public void setWorkflowId(String workflowId) {
+    this.workflowId = workflowId;
+  }
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public void setAppendArray(Boolean appendArray) {
-        this.appendArray = appendArray;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    UpdateWorkflowVariables updateWorkflowVariables = (UpdateWorkflowVariables) o;
+    return Objects.equals(this.appendArray, updateWorkflowVariables.appendArray)
+        && Objects.equals(this.variables, updateWorkflowVariables.variables)
+        && Objects.equals(this.workflowId, updateWorkflowVariables.workflowId);
+  }
 
-    public UpdateWorkflowVariables variables(Map<String, Object> variables) {
-        this.variables = variables;
-        return this;
+  @Override
+  public int hashCode() {
+    return Objects.hash(appendArray, variables, workflowId);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class UpdateWorkflowVariables {\n");
+
+    sb.append("    appendArray: ").append(toIndentedString(appendArray)).append("\n");
+    sb.append("    variables: ").append(toIndentedString(variables)).append("\n");
+    sb.append("    workflowId: ").append(toIndentedString(workflowId)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
     }
-
-    public UpdateWorkflowVariables putVariablesItem(String key, Object variablesItem) {
-        if (this.variables == null) {
-            this.variables = new HashMap<String, Object>();
-        }
-        this.variables.put(key, variablesItem);
-        return this;
-    }
-
-    /**
-     * Get variables
-     *
-     * @return variables
-     */
-    @Schema(description = "")
-    public Map<String, Object> getVariables() {
-        return variables;
-    }
-
-    public void setVariables(Map<String, Object> variables) {
-        this.variables = variables;
-    }
-
-    public UpdateWorkflowVariables workflowId(String workflowId) {
-        this.workflowId = workflowId;
-        return this;
-    }
-
-    /**
-     * Get workflowId
-     *
-     * @return workflowId
-     */
-    @Schema(description = "")
-    public String getWorkflowId() {
-        return workflowId;
-    }
-
-    public void setWorkflowId(String workflowId) {
-        this.workflowId = workflowId;
-    }
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        UpdateWorkflowVariables updateWorkflowVariables = (UpdateWorkflowVariables) o;
-        return Objects.equals(this.appendArray, updateWorkflowVariables.appendArray)
-                && Objects.equals(this.variables, updateWorkflowVariables.variables)
-                && Objects.equals(this.workflowId, updateWorkflowVariables.workflowId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(appendArray, variables, workflowId);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class UpdateWorkflowVariables {\n");
-
-        sb.append("    appendArray: ").append(toIndentedString(appendArray)).append("\n");
-        sb.append("    variables: ").append(toIndentedString(variables)).append("\n");
-        sb.append("    workflowId: ").append(toIndentedString(workflowId)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }

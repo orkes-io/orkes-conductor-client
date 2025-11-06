@@ -16,28 +16,28 @@ import java.util.List;
 
 public interface SecretsManager {
 
-    String getSecret(String key);
+  String getSecret(String key);
 
-    void storeSecret(String key, String secret);
+  void storeSecret(String key, String secret);
 
-    default String getProperty(String propertyName) {
-        String property = null;
-        List<String> tentativeList =
-                List.of(
-                        propertyName,
-                        propertyName.toUpperCase(),
-                        propertyName.replace('.', '_'),
-                        propertyName.toUpperCase().replace('.', '_'),
-                        propertyName.replace('_', '.'),
-                        propertyName.toUpperCase().replace('_', '.'));
-        for (String name : tentativeList) {
-            if (property == null) {
-                property = System.getenv(name);
-            }
-            if (property == null) {
-                property = System.getProperty(name);
-            }
-        }
-        return property;
+  default String getProperty(String propertyName) {
+    String property = null;
+    List<String> tentativeList =
+        List.of(
+            propertyName,
+            propertyName.toUpperCase(),
+            propertyName.replace('.', '_'),
+            propertyName.toUpperCase().replace('.', '_'),
+            propertyName.replace('_', '.'),
+            propertyName.toUpperCase().replace('_', '.'));
+    for (String name : tentativeList) {
+      if (property == null) {
+        property = System.getenv(name);
+      }
+      if (property == null) {
+        property = System.getProperty(name);
+      }
     }
+    return property;
+  }
 }

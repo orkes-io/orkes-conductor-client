@@ -22,10 +22,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class StoreEmbeddingsInput extends LLMWorkerInput {
 
-    private String vectorDB;
-    private String index;
-    private String namespace;
-    private List<Float> embeddings;
-    private String id;
-    private Map<String, Object> metadata;
+  private String vectorDB;
+  private String index;
+  private String namespace;
+  private List<Float> embeddings;
+  private String id;
+  private Map<String, Object> metadata;
 }

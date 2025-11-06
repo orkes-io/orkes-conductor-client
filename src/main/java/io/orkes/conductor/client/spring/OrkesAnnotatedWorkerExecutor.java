@@ -23,40 +23,40 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrkesAnnotatedWorkerExecutor extends AnnotatedWorkerExecutor {
 
-    private TaskClient taskClient;
+  private TaskClient taskClient;
 
-    private TaskRunnerConfigurer taskRunner;
+  private TaskRunnerConfigurer taskRunner;
 
-    public OrkesAnnotatedWorkerExecutor(TaskClient taskClient, WorkerConfiguration workerConfiguration) {
-        super(taskClient, workerConfiguration);
-        this.taskClient = taskClient;
+  public OrkesAnnotatedWorkerExecutor(
+      TaskClient taskClient, WorkerConfiguration workerConfiguration) {
+    super(taskClient, workerConfiguration);
+    this.taskClient = taskClient;
+  }
+
+  @Override
+  public void shutdown() {
+    if (this.taskRunner != null) {
+      this.taskRunner.shutdown();
+    }
+  }
+
+  @Override
+  public void startPolling() {
+
+    if (executors.isEmpty()) {
+      return;
     }
 
+    log.info("Starting workers with threadCount {}", workerToThreadCount);
+    log.info("Worker domains {}", workerDomains);
 
-    @Override
-    public void shutdown() {
-        if(this.taskRunner != null) {
-            this.taskRunner.shutdown();
-        }
-    }
+    this.taskRunner =
+        new TaskRunnerConfigurer.Builder(this.taskClient, executors)
+            .withTaskThreadCount(workerToThreadCount)
+            .withTaskToDomain(workerDomains)
+            .withTaskPollTimeout(5)
+            .build();
 
-    @Override
-    public void startPolling() {
-
-        if (executors.isEmpty()) {
-            return;
-        }
-
-        log.info("Starting workers with threadCount {}", workerToThreadCount);
-        log.info("Worker domains {}", workerDomains);
-
-        this.taskRunner = new TaskRunnerConfigurer.Builder(this.taskClient, executors)
-                .withTaskThreadCount(workerToThreadCount)
-                .withTaskToDomain(workerDomains)
-                .withTaskPollTimeout(5)
-                .build();
-
-        taskRunner.init();
-
-    }
+    taskRunner.init();
+  }
 }

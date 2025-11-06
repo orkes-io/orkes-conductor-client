@@ -12,7 +12,6 @@
  */
 package io.orkes.conductor.client.spring;
 
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -27,25 +26,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExampleClient {
 
-    public static void main(String[] args) {
-        SpringApplication.run(ExampleClient.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(ExampleClient.class, args);
+  }
 
-    @Bean
-    public Worker worker() {
-        return new Worker() {
-            @Override
-            public String getTaskDefName() {
-                return "xyz";
-            }
+  @Bean
+  public Worker worker() {
+    return new Worker() {
+      @Override
+      public String getTaskDefName() {
+        return "xyz";
+      }
 
-            @Override
-            public TaskResult execute(Task task) {
-                log.info("Execute...");
-                TaskResult result = new TaskResult(task);
-                result.setStatus(TaskResult.Status.COMPLETED);
-                return result;
-            }
-        };
-    }
+      @Override
+      public TaskResult execute(Task task) {
+        log.info("Execute...");
+        TaskResult result = new TaskResult(task);
+        result.setStatus(TaskResult.Status.COMPLETED);
+        return result;
+      }
+    };
+  }
 }

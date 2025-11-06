@@ -18,8 +18,7 @@ import lombok.Data;
 
 @Data
 public class SearchResultWorkflowScheduleExecution {
-    private List<WorkflowScheduleExecutionModel> results;
+  private List<WorkflowScheduleExecutionModel> results;
 
-    private Long totalHits;
-
+  private Long totalHits;
 }

@@ -17,28 +17,28 @@ import java.util.Objects;
 /** Response */
 public class Response {
 
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        return true;
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash();
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    return true;
+  }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Response {\n");
+  @Override
+  public int hashCode() {
+    return Objects.hash();
+  }
 
-        sb.append("}");
-        return sb.toString();
-    }
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class Response {\n");
+
+    sb.append("}");
+    return sb.toString();
+  }
 }

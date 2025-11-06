@@ -24,40 +24,33 @@ import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 @Component
 public class MyWorkers {
 
-    @WorkerTask("hello")
-    /**
-     * for the below method, the workflow task input should be like:
-     * {
-     *     "name": "orkes",
-     *     "age": 23
-     * }
-     * output:
-     * {
-     *     "greetings": "hello, Orkes"
-     * }
-     */
-    public @OutputParam("greetings") String helloWorld(String name) {
-        TaskContext context = TaskContext.get();
-        System.out.println(new Date() + ":: Poll count: " + context.getPollCount());
-        if (context.getPollCount() < 5) {
-            context.addLog("Not ready yet, poll count is only " + context.getPollCount());
-            context.setCallbackAfter(1);
-        }
-
-        return "Hello, " + name;
+  @WorkerTask("hello")
+  /**
+   * for the below method, the workflow task input should be like: { "name": "orkes", "age": 23 }
+   * output: { "greetings": "hello, Orkes" }
+   */
+  public @OutputParam("greetings") String helloWorld(String name) {
+    TaskContext context = TaskContext.get();
+    System.out.println(new Date() + ":: Poll count: " + context.getPollCount());
+    if (context.getPollCount() < 5) {
+      context.addLog("Not ready yet, poll count is only " + context.getPollCount());
+      context.setCallbackAfter(1);
     }
 
-    @WorkerTask(value = "hello_again", pollingInterval = 333)
-    public String helloAgain(@InputParam("name") String name) {
+    return "Hello, " + name;
+  }
 
-        TaskContext context = TaskContext.get();
+  @WorkerTask(value = "hello_again", pollingInterval = 333)
+  public String helloAgain(@InputParam("name") String name) {
 
-        System.out.println(new Date() + ":: Poll count: " + context.getPollCount());
-        if (context.getPollCount() < 5) {
-            context.addLog("Not ready yet, poll count is only " + context.getPollCount());
-            context.setCallbackAfter(1);
-        }
+    TaskContext context = TaskContext.get();
 
-        return "Hello (again), " + name;
+    System.out.println(new Date() + ":: Poll count: " + context.getPollCount());
+    if (context.getPollCount() < 5) {
+      context.addLog("Not ready yet, poll count is only " + context.getPollCount());
+      context.setCallbackAfter(1);
     }
+
+    return "Hello (again), " + name;
+  }
 }

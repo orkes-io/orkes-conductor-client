@@ -13,8 +13,8 @@
 package io.orkes.conductor.client.http.auth;
 
 public enum OAuthFlow {
-    accessCode,
-    implicit,
-    password,
-    application
+  accessCode,
+  implicit,
+  password,
+  application
 }

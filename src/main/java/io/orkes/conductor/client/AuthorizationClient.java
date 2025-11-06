@@ -19,72 +19,74 @@ import io.orkes.conductor.client.model.*;
 
 public interface AuthorizationClient {
 
-    // Permissions
+  // Permissions
 
-    Map<String, List<Subject>> getPermissions(String type, String id);
+  Map<String, List<Subject>> getPermissions(String type, String id);
 
-    void grantPermissions(AuthorizationRequest authorizationRequest);
+  void grantPermissions(AuthorizationRequest authorizationRequest);
 
-    void removePermissions(AuthorizationRequest authorizationRequest);
+  void removePermissions(AuthorizationRequest authorizationRequest);
 
-    // Users
-    void deleteUser(String id);
+  // Users
+  void deleteUser(String id);
 
-    GrantedAccessResponse getGrantedPermissionsForUser(String userId);
+  GrantedAccessResponse getGrantedPermissionsForUser(String userId);
 
-    ConductorUser getUser(String id);
+  ConductorUser getUser(String id);
 
-    List<ConductorUser> listUsers(Boolean apps);
+  List<ConductorUser> listUsers(Boolean apps);
 
-    void sendInviteEmail(String id, ConductorUser conductorUser);
+  void sendInviteEmail(String id, ConductorUser conductorUser);
 
-    ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id);
+  ConductorUser upsertUser(UpsertUserRequest upsertUserRequest, String id);
 
-    // Groups
-    void addUserToGroup(String groupId, String userId);
+  // Groups
+  void addUserToGroup(String groupId, String userId);
 
-    void deleteGroup(String id);
+  void deleteGroup(String id);
 
-    GrantedAccessResponse getGrantedPermissionsForGroup(String groupId);
+  GrantedAccessResponse getGrantedPermissionsForGroup(String groupId);
 
-    Group getGroup(String id);
+  Group getGroup(String id);
 
-    List<ConductorUser> getUsersInGroup(String id);
+  List<ConductorUser> getUsersInGroup(String id);
 
-    List<Group> listGroups();
+  List<Group> listGroups();
 
-    void removeUserFromGroup(String groupId, String userId);
+  void removeUserFromGroup(String groupId, String userId);
 
-    Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id);
+  Group upsertGroup(UpsertGroupRequest upsertGroupRequest, String id);
 
-    // Applications
-    void addRoleToApplicationUser(String applicationId, String role);
+  // Applications
+  void addRoleToApplicationUser(String applicationId, String role);
 
-    CreateAccessKeyResponse createAccessKey(String id);
+  CreateAccessKeyResponse createAccessKey(String id);
 
-    void createAccessKey(String id, SecretsManager secretsManager, String secretPath);
+  void createAccessKey(String id, SecretsManager secretsManager, String secretPath);
 
-    ConductorApplication createApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
+  ConductorApplication createApplication(
+      CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest);
 
-    void deleteAccessKey(String applicationId, String keyId);
+  void deleteAccessKey(String applicationId, String keyId);
 
-    void deleteApplication(String id);
+  void deleteApplication(String id);
 
-    List<AccessKeyResponse> getAccessKeys(String id);
+  List<AccessKeyResponse> getAccessKeys(String id);
 
-    ConductorApplication getApplication(String id);
+  ConductorApplication getApplication(String id);
 
-    List<ConductorApplication> listApplications();
+  List<ConductorApplication> listApplications();
 
-    void removeRoleFromApplicationUser(String applicationId, String role);
+  void removeRoleFromApplicationUser(String applicationId, String role);
 
-    AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId);
+  AccessKeyResponse toggleAccessKeyStatus(String applicationId, String keyId);
 
-    ConductorApplication updateApplication(CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id);
+  ConductorApplication updateApplication(
+      CreateOrUpdateApplicationRequest createOrUpdateApplicationRequest, String id);
 
-    void setApplicationTags(List<TagObject> body, String applicationId);
+  void setApplicationTags(List<TagObject> body, String applicationId);
 
-    List<TagObject> getApplicationTags(String applicationId);
+  List<TagObject> getApplicationTags(String applicationId);
 
-    void deleteApplicationTags(List<TagObject> body, String applicationId);
+  void deleteApplicationTags(List<TagObject> body, String applicationId);
 }

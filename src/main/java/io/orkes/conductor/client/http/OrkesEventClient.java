@@ -24,76 +24,81 @@ import io.orkes.conductor.client.model.event.QueueConfiguration;
 
 public class OrkesEventClient extends EventClient {
 
-    private EventResourceApi eventResourceApi;
+  private EventResourceApi eventResourceApi;
 
-    protected ApiClient apiClient;
+  protected ApiClient apiClient;
 
-    public OrkesEventClient(ApiClient apiClient) {
-        this.apiClient = apiClient;
-        this.eventResourceApi = new EventResourceApi(apiClient);
-    }
+  public OrkesEventClient(ApiClient apiClient) {
+    this.apiClient = apiClient;
+    this.eventResourceApi = new EventResourceApi(apiClient);
+  }
 
-    public EventClient withReadTimeout(int readTimeout) {
-        apiClient.setReadTimeout(readTimeout);
-        return this;
-    }
+  public EventClient withReadTimeout(int readTimeout) {
+    apiClient.setReadTimeout(readTimeout);
+    return this;
+  }
 
-    public EventClient setWriteTimeout(int writeTimeout) {
-        apiClient.setWriteTimeout(writeTimeout);
-        return this;
-    }
+  public EventClient setWriteTimeout(int writeTimeout) {
+    apiClient.setWriteTimeout(writeTimeout);
+    return this;
+  }
 
-    public EventClient withConnectTimeout(int connectTimeout) {
-        apiClient.setConnectTimeout(connectTimeout);
-        return this;
-    }
+  public EventClient withConnectTimeout(int connectTimeout) {
+    apiClient.setConnectTimeout(connectTimeout);
+    return this;
+  }
 
-    public ApiClient getApiClient() {
-        return apiClient;
-    }
+  public ApiClient getApiClient() {
+    return apiClient;
+  }
 
-    @Override
-    public void registerEventHandler(EventHandler eventHandler) {
-        this.eventResourceApi.addEventHandler(eventHandler);
-    }
+  @Override
+  public void registerEventHandler(EventHandler eventHandler) {
+    this.eventResourceApi.addEventHandler(eventHandler);
+  }
 
-    @Override
-    public void updateEventHandler(EventHandler eventHandler) {
-        this.eventResourceApi.updateEventHandler(eventHandler);
-    }
+  @Override
+  public void updateEventHandler(EventHandler eventHandler) {
+    this.eventResourceApi.updateEventHandler(eventHandler);
+  }
 
-    @Override
-    public List<EventHandler> getEventHandlers(String event, boolean activeOnly) {
-        return eventResourceApi.getEventHandlersForEvent(event, activeOnly);
-    }
+  @Override
+  public List<EventHandler> getEventHandlers(String event, boolean activeOnly) {
+    return eventResourceApi.getEventHandlersForEvent(event, activeOnly);
+  }
 
-    @Override
-    public List<EventHandler> getEventHandlers() {
-        return eventResourceApi.getEventHandlers();
-    }
+  @Override
+  public List<EventHandler> getEventHandlers() {
+    return eventResourceApi.getEventHandlers();
+  }
 
-    @Override
-    public void handleIncomingEvent(Map<String, Object> payload) {
-        eventResourceApi.handleIncomingEvent(payload);
-    }
+  @Override
+  public void handleIncomingEvent(Map<String, Object> payload) {
+    eventResourceApi.handleIncomingEvent(payload);
+  }
 
-    @Override
-    public void unregisterEventHandler(String name) {
-        eventResourceApi.removeEventHandlerStatus(name);
-    }
+  @Override
+  public void unregisterEventHandler(String name) {
+    eventResourceApi.removeEventHandlerStatus(name);
+  }
 
-    @Override
-    public Map<String, Object> getQueueConfig(QueueConfiguration queueConfiguration) {
-        return eventResourceApi.getQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
-    }
+  @Override
+  public Map<String, Object> getQueueConfig(QueueConfiguration queueConfiguration) {
+    return eventResourceApi.getQueueConfig(
+        queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+  }
 
-    @Override
-    public void deleteQueueConfig(QueueConfiguration queueConfiguration) {
-        eventResourceApi.deleteQueueConfig(queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
-    }
+  @Override
+  public void deleteQueueConfig(QueueConfiguration queueConfiguration) {
+    eventResourceApi.deleteQueueConfig(
+        queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
+  }
 
-    @Override
-    public void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception {
-        eventResourceApi.putQueueConfig(queueConfiguration.getConfiguration(), queueConfiguration.getQueueType(), queueConfiguration.getQueueName());
-    }
+  @Override
+  public void putQueueConfig(QueueConfiguration queueConfiguration) throws Exception {
+    eventResourceApi.putQueueConfig(
+        queueConfiguration.getConfiguration(),
+        queueConfiguration.getQueueType(),
+        queueConfiguration.getQueueName());
+  }
 }

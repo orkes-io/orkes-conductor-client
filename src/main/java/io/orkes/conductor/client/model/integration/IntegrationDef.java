@@ -19,12 +19,12 @@ import lombok.Data;
 @Data
 public class IntegrationDef {
 
-    private Category category;
-    private String categoryLabel;
-    private String description;
-    private Boolean enabled;
-    private String iconName;
-    private String name;
-    private List<String> tags;
-    private String type;
+  private Category category;
+  private String categoryLabel;
+  private String description;
+  private Boolean enabled;
+  private String iconName;
+  private String name;
+  private List<String> tags;
+  private String type;
 }

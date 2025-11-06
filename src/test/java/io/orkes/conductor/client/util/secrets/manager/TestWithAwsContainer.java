@@ -15,10 +15,10 @@ package io.orkes.conductor.client.util.secrets.manager;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 
 public abstract class TestWithAwsContainer {
-    protected static AWSContainer awsContainer;
+  protected static AWSContainer awsContainer;
 
-    static {
-        awsContainer = new AWSContainer(null, LocalStackContainer.Service.SSM);
-        awsContainer.start();
-    }
+  static {
+    awsContainer = new AWSContainer(null, LocalStackContainer.Service.SSM);
+    awsContainer.start();
+  }
 }

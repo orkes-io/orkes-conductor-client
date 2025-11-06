@@ -27,73 +27,76 @@ import io.grpc.stub.ClientResponseObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StartWorkflowResponseStream  implements ClientResponseObserver<OrkesWorkflowService.StartWorkflowRequest, OrkesWorkflowService.StartWorkflowResponse> {
+public class StartWorkflowResponseStream
+    implements ClientResponseObserver<
+        OrkesWorkflowService.StartWorkflowRequest, OrkesWorkflowService.StartWorkflowResponse> {
 
-    private final WorkflowExecutionMonitor executionMonitor;
+  private final WorkflowExecutionMonitor executionMonitor;
 
-    private final WorkflowRunProtoMapper protoMapper;
+  private final WorkflowRunProtoMapper protoMapper;
 
-    private ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream;
+  private ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream;
 
-    public StartWorkflowResponseStream(WorkflowExecutionMonitor executionMonitor) {
-        this.executionMonitor = executionMonitor;
-        this.protoMapper = new WorkflowRunProtoMapper(new ObjectMapperProvider().getObjectMapper());
+  public StartWorkflowResponseStream(WorkflowExecutionMonitor executionMonitor) {
+    this.executionMonitor = executionMonitor;
+    this.protoMapper = new WorkflowRunProtoMapper(new ObjectMapperProvider().getObjectMapper());
+  }
+
+  @Override
+  public void onNext(OrkesWorkflowService.StartWorkflowResponse response) {
+
+    try {
+
+      CompletableFuture<WorkflowRun> future =
+          this.executionMonitor.getFuture(response.getRequestId());
+      if (future == null) {
+        log.warn("No waiting client for the request {}", response.getRequestId());
+        return;
+      }
+      if (response.hasError()) {
+        String message = response.getError().getMessage();
+        int code = response.getError().getCode();
+        future.completeExceptionally(new ApiException(code, message));
+      } else {
+        WorkflowRun workflowRun = protoMapper.fromProto(response.getWorkflow());
+        future.complete(workflowRun);
+      }
+
+    } catch (Throwable t) {
+      log.error("Error while trying to notify the client {}", t.getMessage(), t);
     }
+  }
 
-    @Override
-    public void onNext(OrkesWorkflowService.StartWorkflowResponse response) {
-
-        try {
-
-            CompletableFuture<WorkflowRun> future =
-                    this.executionMonitor.getFuture(response.getRequestId());
-            if (future == null) {
-                log.warn("No waiting client for the request {}", response.getRequestId());
-                return;
-            }
-            if (response.hasError()) {
-                String message = response.getError().getMessage();
-                int code = response.getError().getCode();
-                future.completeExceptionally(new ApiException(code, message));
-            } else {
-                WorkflowRun workflowRun = protoMapper.fromProto(response.getWorkflow());
-                future.complete(workflowRun);
-            }
-
-        } catch (Throwable t) {
-            log.error("Error while trying to notify the client {}", t.getMessage(), t);
-        }
+  @Override
+  public void onError(Throwable t) {
+    Status status = Status.fromThrowable(t);
+    Status.Code code = status.getCode();
+    switch (code) {
+      case UNAVAILABLE:
+      case ABORTED:
+      case INTERNAL:
+      case UNKNOWN:
+        log.error("Received an error from the server {}-{}", code, t.getMessage());
+        break;
+      case CANCELLED:
+        log.info("Server cancelled"); // TODO: move this to trace
+      default:
+        log.warn("Server Error {} - {}", code, t.getMessage(), t);
     }
+  }
 
-    @Override
-    public void onError(Throwable t) {
-        Status status = Status.fromThrowable(t);
-        Status.Code code = status.getCode();
-        switch (code) {
-            case UNAVAILABLE:
-            case ABORTED:
-            case INTERNAL:
-            case UNKNOWN:
-                log.error("Received an error from the server {}-{}", code, t.getMessage());
-                break;
-            case CANCELLED:
-                log.info("Server cancelled");       //TODO: move this to trace
-            default:
-                log.warn("Server Error {} - {}", code, t.getMessage(), t);
-        }
-    }
+  public boolean isReady() {
+    return requestStream.isReady();
+  }
 
-    public boolean isReady() {
-        return requestStream.isReady();
-    }
+  @Override
+  public void onCompleted() {
+    log.info("Completed....");
+  }
 
-    @Override
-    public void onCompleted() {
-        log.info("Completed....");
-    }
-
-    @Override
-    public void beforeStart(ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream) {
-        this.requestStream = requestStream;
-    }
+  @Override
+  public void beforeStart(
+      ClientCallStreamObserver<OrkesWorkflowService.StartWorkflowRequest> requestStream) {
+    this.requestStream = requestStream;
+  }
 }

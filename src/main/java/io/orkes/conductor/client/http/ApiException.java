@@ -20,114 +20,104 @@ import org.apache.commons.lang3.StringUtils;
 import io.orkes.conductor.client.OrkesClientException;
 
 public class ApiException extends OrkesClientException {
-    private int code = 0;
-    private Map<String, List<String>> responseHeaders = null;
-    private String responseBody = null;
+  private int code = 0;
+  private Map<String, List<String>> responseHeaders = null;
+  private String responseBody = null;
 
-    public ApiException() {}
+  public ApiException() {}
 
-    public ApiException(Throwable throwable) {
-        super(throwable.getMessage(), throwable);
-    }
+  public ApiException(Throwable throwable) {
+    super(throwable.getMessage(), throwable);
+  }
 
-    public ApiException(String message) {
-        super(message);
-    }
+  public ApiException(String message) {
+    super(message);
+  }
 
-    public ApiException(
-            String message,
-            Throwable throwable,
-            int code,
-            Map<String, List<String>> responseHeaders,
-            String responseBody) {
-        super(message, throwable);
-        super.setCode(String.valueOf(code));
-        super.setStatus(code);
-        this.code = code;
-        this.responseHeaders = responseHeaders;
-        this.responseBody = responseBody;
-    }
+  public ApiException(
+      String message,
+      Throwable throwable,
+      int code,
+      Map<String, List<String>> responseHeaders,
+      String responseBody) {
+    super(message, throwable);
+    super.setCode(String.valueOf(code));
+    super.setStatus(code);
+    this.code = code;
+    this.responseHeaders = responseHeaders;
+    this.responseBody = responseBody;
+  }
 
-    public ApiException(
-            String message,
-            int code,
-            Map<String, List<String>> responseHeaders,
-            String responseBody) {
-        this(message, (Throwable) null, code, responseHeaders, responseBody);
-        super.setCode(String.valueOf(code));
-        super.setStatus(code);
-    }
+  public ApiException(
+      String message, int code, Map<String, List<String>> responseHeaders, String responseBody) {
+    this(message, (Throwable) null, code, responseHeaders, responseBody);
+    super.setCode(String.valueOf(code));
+    super.setStatus(code);
+  }
 
-    public ApiException(
-            String message,
-            Throwable throwable,
-            int code,
-            Map<String, List<String>> responseHeaders) {
-        this(message, throwable, code, responseHeaders, null);
-        super.setCode(String.valueOf(code));
-        super.setStatus(code);
-    }
+  public ApiException(
+      String message, Throwable throwable, int code, Map<String, List<String>> responseHeaders) {
+    this(message, throwable, code, responseHeaders, null);
+    super.setCode(String.valueOf(code));
+    super.setStatus(code);
+  }
 
-    public ApiException(int code, Map<String, List<String>> responseHeaders, String responseBody) {
-        this((String) null, (Throwable) null, code, responseHeaders, responseBody);
-        super.setCode(String.valueOf(code));
-        super.setStatus(code);
-    }
+  public ApiException(int code, Map<String, List<String>> responseHeaders, String responseBody) {
+    this((String) null, (Throwable) null, code, responseHeaders, responseBody);
+    super.setCode(String.valueOf(code));
+    super.setStatus(code);
+  }
 
-    public ApiException(int code, String message) {
-        super(message);
-        this.code = code;
-        super.setCode(String.valueOf(code));
-        super.setStatus(code);
-    }
+  public ApiException(int code, String message) {
+    super(message);
+    this.code = code;
+    super.setCode(String.valueOf(code));
+    super.setStatus(code);
+  }
 
-    public ApiException(
-            int code,
-            String message,
-            Map<String, List<String>> responseHeaders,
-            String responseBody) {
-        this(code, message);
-        this.responseHeaders = responseHeaders;
-        this.responseBody = responseBody;
-        super.setCode(String.valueOf(code));
-        super.setStatus(code);
-    }
+  public ApiException(
+      int code, String message, Map<String, List<String>> responseHeaders, String responseBody) {
+    this(code, message);
+    this.responseHeaders = responseHeaders;
+    this.responseBody = responseBody;
+    super.setCode(String.valueOf(code));
+    super.setStatus(code);
+  }
 
-    @Override
-    public boolean isClientError() {
-        return code > 399 && code < 499;
-    }
+  @Override
+  public boolean isClientError() {
+    return code > 399 && code < 499;
+  }
 
-    /**
-     *
-     * @return HTTP status code
-     */
-    public int getStatusCode() {
-        return code;
-    }
+  /**
+   * @return HTTP status code
+   */
+  public int getStatusCode() {
+    return code;
+  }
 
-    /**
-     * Get the HTTP response headers.
-     *
-     * @return A map of list of string
-     */
-    public Map<String, List<String>> getResponseHeaders() {
-        return responseHeaders;
-    }
+  /**
+   * Get the HTTP response headers.
+   *
+   * @return A map of list of string
+   */
+  public Map<String, List<String>> getResponseHeaders() {
+    return responseHeaders;
+  }
 
-    /**
-     * Get the HTTP response body.
-     *
-     * @return Response body in the form of string
-     */
-    public String getResponseBody() {
-        return responseBody;
-    }
+  /**
+   * Get the HTTP response body.
+   *
+   * @return Response body in the form of string
+   */
+  public String getResponseBody() {
+    return responseBody;
+  }
 
-    @Override
-    public String getMessage() {
-        return getStatusCode()
-                + ":"
-                + (StringUtils.isBlank(responseBody) ? super.getMessage() : responseBody);
-    }
+  @Override
+  public String getMessage() {
+    return getStatusCode()
+        + ":"
+        + (StringUtils.isBlank(responseBody) ? super.getMessage() : responseBody);
+  }
 }

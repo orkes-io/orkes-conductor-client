@@ -20,34 +20,34 @@ import com.netflix.conductor.sdk.workflow.executor.task.WorkerConfiguration;
 @Component
 public class OrkesSpringWorkerConfiguration extends WorkerConfiguration {
 
-    private final Environment environment;
+  private final Environment environment;
 
-    public OrkesSpringWorkerConfiguration(Environment environment) {
-        this.environment = environment;
-    }
+  public OrkesSpringWorkerConfiguration(Environment environment) {
+    this.environment = environment;
+  }
 
-    @Override
-    public int getPollingInterval(String taskName) {
-        return getProperty(taskName, "pollingInterval", Integer.class, 0);
-    }
+  @Override
+  public int getPollingInterval(String taskName) {
+    return getProperty(taskName, "pollingInterval", Integer.class, 0);
+  }
 
-    @Override
-    public int getThreadCount(String taskName) {
-        return getProperty(taskName, "threadCount", Integer.class, 0);
-    }
+  @Override
+  public int getThreadCount(String taskName) {
+    return getProperty(taskName, "threadCount", Integer.class, 0);
+  }
 
-    @Override
-    public String getDomain(String taskName) {
-        return getProperty(taskName, "domain", String.class, null);
-    }
+  @Override
+  public String getDomain(String taskName) {
+    return getProperty(taskName, "domain", String.class, null);
+  }
 
-    private <T>T getProperty(String taskName, String property, Class<T> type, T defaultValue) {
-        String key = "conductor.worker." + taskName + "." + property;
-        T value = environment.getProperty(key, type, defaultValue);
-        if(value == null || value == defaultValue) {
-            key = "conductor.worker.all." + property;
-            value = environment.getProperty(key, type, defaultValue);
-        }
-        return value;
+  private <T> T getProperty(String taskName, String property, Class<T> type, T defaultValue) {
+    String key = "conductor.worker." + taskName + "." + property;
+    T value = environment.getProperty(key, type, defaultValue);
+    if (value == null || value == defaultValue) {
+      key = "conductor.worker.all." + property;
+      value = environment.getProperty(key, type, defaultValue);
     }
+    return value;
+  }
 }

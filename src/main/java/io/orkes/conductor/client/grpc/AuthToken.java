@@ -24,46 +24,45 @@ import io.grpc.Status;
 
 public class AuthToken extends CallCredentials {
 
-    private final ApiClient apiClient;
+  private final ApiClient apiClient;
 
-    public AuthToken(ApiClient apiClient) {
-        this.apiClient = apiClient;
+  public AuthToken(ApiClient apiClient) {
+    this.apiClient = apiClient;
+  }
+
+  @Override
+  public void applyRequestMetadata(
+      RequestInfo requestInfo, Executor executor, MetadataApplier metadataApplier) {
+    executor.execute(
+        () -> {
+          try {
+
+            Metadata headers = new Metadata();
+            headers.put(
+                Metadata.Key.of("X-Client-Id", Metadata.ASCII_STRING_MARSHALLER), getIdentity());
+
+            if (apiClient.useSecurity()) {}
+
+            metadataApplier.apply(headers);
+          } catch (Throwable e) {
+            metadataApplier.fail(Status.UNAUTHENTICATED.withCause(e));
+          }
+        });
+  }
+
+  @Override
+  public void thisUsesUnstableApi() {}
+
+  private String getIdentity() {
+    String serverId;
+    try {
+      serverId = InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+      serverId = System.getenv("HOSTNAME");
     }
-
-    @Override
-    public void applyRequestMetadata(
-            RequestInfo requestInfo, Executor executor, MetadataApplier metadataApplier) {
-        executor.execute(
-                () -> {
-                    try {
-
-                        Metadata headers = new Metadata();
-                        headers.put(
-                                Metadata.Key.of("X-Client-Id", Metadata.ASCII_STRING_MARSHALLER),
-                                getIdentity());
-
-                        if (apiClient.useSecurity()) {}
-
-                        metadataApplier.apply(headers);
-                    } catch (Throwable e) {
-                        metadataApplier.fail(Status.UNAUTHENTICATED.withCause(e));
-                    }
-                });
+    if (serverId == null) {
+      serverId = System.getProperty("user.name");
     }
-
-    @Override
-    public void thisUsesUnstableApi() {}
-
-    private String getIdentity() {
-        String serverId;
-        try {
-            serverId = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            serverId = System.getenv("HOSTNAME");
-        }
-        if (serverId == null) {
-            serverId = System.getProperty("user.name");
-        }
-        return serverId;
-    }
+    return serverId;
+  }
 }

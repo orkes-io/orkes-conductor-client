@@ -40,89 +40,86 @@ import static org.junit.Assert.assertTrue;
 
 public class WorkflowStateUpdateTests extends ClientTest {
 
-    private static WorkflowClient workflowClient;
+  private static WorkflowClient workflowClient;
 
-    @BeforeAll
-    public static void init() {
-        workflowClient = orkesClients.getWorkflowClient();
-    }
+  @BeforeAll
+  public static void init() {
+    workflowClient = orkesClients.getWorkflowClient();
+  }
 
-    @SneakyThrows
-    public String startWorkflow() {
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName("sync_task_variable_updates");
-        startWorkflowRequest.setVersion(1);
-        var run = workflowClient.executeWorkflow(startWorkflowRequest, "wait_task_ref");
-        return run.get(10, TimeUnit.SECONDS)
-            .getWorkflowId();
-    }
+  @SneakyThrows
+  public String startWorkflow() {
+    StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+    startWorkflowRequest.setName("sync_task_variable_updates");
+    startWorkflowRequest.setVersion(1);
+    var run = workflowClient.executeWorkflow(startWorkflowRequest, "wait_task_ref");
+    return run.get(10, TimeUnit.SECONDS).getWorkflowId();
+  }
 
-    @Test
-    public void test() {
-        String workflowId = startWorkflow();
-        System.out.println(workflowId);
+  @Test
+  public void test() {
+    String workflowId = startWorkflow();
+    System.out.println(workflowId);
 
-        TaskResult taskResult = new TaskResult();
-        taskResult.setOutputData(Map.of("a", "b"));
+    TaskResult taskResult = new TaskResult();
+    taskResult.setOutputData(Map.of("a", "b"));
 
-        WorkflowStateUpdate request = new WorkflowStateUpdate();
-        request.setTaskReferenceName("wait_task_ref");
-        request.setTaskResult(taskResult);
+    WorkflowStateUpdate request = new WorkflowStateUpdate();
+    request.setTaskReferenceName("wait_task_ref");
+    request.setTaskResult(taskResult);
 
-        request.setVariables(Map.of("case", "case1"));
+    request.setVariables(Map.of("case", "case1"));
 
-        WorkflowRun workflowRun = workflowClient.updateWorkflow(workflowId, List.of("wait_task_ref_1", "wait_task_ref_2"), 10, request);
+    WorkflowRun workflowRun =
+        workflowClient.updateWorkflow(
+            workflowId, List.of("wait_task_ref_1", "wait_task_ref_2"), 10, request);
 
-        System.out.println(workflowRun);
-        System.out.println(workflowRun.getStatus());
-        System.out.println(workflowRun.getTasks()
-            .stream()
+    System.out.println(workflowRun);
+    System.out.println(workflowRun.getStatus());
+    System.out.println(
+        workflowRun.getTasks().stream()
             .map(task -> task.getReferenceTaskName() + ":" + task.getStatus())
             .collect(Collectors.toList()));
 
-        request = new WorkflowStateUpdate();
-        request.setTaskReferenceName("wait_task_ref_2");
-        request.setTaskResult(taskResult);
-        workflowRun = workflowClient.updateWorkflow(workflowId, List.of(), 10, request);
+    request = new WorkflowStateUpdate();
+    request.setTaskReferenceName("wait_task_ref_2");
+    request.setTaskResult(taskResult);
+    workflowRun = workflowClient.updateWorkflow(workflowId, List.of(), 10, request);
 
-        assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowRun.getStatus());
-        Set<Task.Status> allTaskStatus = workflowRun.getTasks()
-            .stream()
-            .map(t -> t.getStatus())
-            .collect(Collectors.toSet());
-        assertEquals(1, allTaskStatus.size());
-        assertEquals(Task.Status.COMPLETED, allTaskStatus.iterator().next());
+    assertEquals(Workflow.WorkflowStatus.COMPLETED, workflowRun.getStatus());
+    Set<Task.Status> allTaskStatus =
+        workflowRun.getTasks().stream().map(t -> t.getStatus()).collect(Collectors.toSet());
+    assertEquals(1, allTaskStatus.size());
+    assertEquals(Task.Status.COMPLETED, allTaskStatus.iterator().next());
 
-        System.out.println(workflowRun.getStatus());
-        System.out.println(workflowRun.getTasks()
-            .stream()
+    System.out.println(workflowRun.getStatus());
+    System.out.println(
+        workflowRun.getTasks().stream()
             .map(task -> task.getReferenceTaskName() + ":" + task.getStatus())
             .collect(Collectors.toList()));
+  }
 
+  @Test
+  public void testIdempotency() {
+    StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+    startWorkflowRequest.setName("sync_task_variable_updates");
+    startWorkflowRequest.setVersion(1);
+    String idempotencyKey = UUID.randomUUID().toString();
+    startWorkflowRequest.setIdempotencyKey(idempotencyKey);
+    startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.FAIL);
+    String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
+
+    startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.RETURN_EXISTING);
+    String workflowId2 = workflowClient.startWorkflow(startWorkflowRequest);
+    assertEquals(workflowId, workflowId2);
+
+    startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.FAIL);
+    boolean conflict = false;
+    try {
+      workflowClient.startWorkflow(startWorkflowRequest);
+    } catch (ConflictException ce) {
+      conflict = true;
     }
-
-    @Test
-    public void testIdempotency() {
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName("sync_task_variable_updates");
-        startWorkflowRequest.setVersion(1);
-        String idempotencyKey = UUID.randomUUID().toString();
-        startWorkflowRequest.setIdempotencyKey(idempotencyKey);
-        startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.FAIL);
-        String workflowId = workflowClient.startWorkflow(startWorkflowRequest);
-
-
-        startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.RETURN_EXISTING);
-        String workflowId2 = workflowClient.startWorkflow(startWorkflowRequest);
-        assertEquals(workflowId, workflowId2);
-
-        startWorkflowRequest.setIdempotencyStrategy(IdempotencyStrategy.FAIL);
-        boolean conflict = false;
-        try {
-            workflowClient.startWorkflow(startWorkflowRequest);
-        } catch (ConflictException ce) {
-            conflict = true;
-        }
-        assertTrue(conflict);
-    }
+    assertTrue(conflict);
+  }
 }

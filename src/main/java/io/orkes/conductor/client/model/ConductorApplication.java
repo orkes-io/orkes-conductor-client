@@ -19,111 +19,110 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /** ConductorApplication */
 public class ConductorApplication {
-    @SerializedName("createdBy")
-    private String createdBy = null;
+  @SerializedName("createdBy")
+  private String createdBy = null;
 
-    @SerializedName("id")
-    private String id = null;
+  @SerializedName("id")
+  private String id = null;
 
-    @SerializedName("name")
-    private String name = null;
+  @SerializedName("name")
+  private String name = null;
 
-    public ConductorApplication createdBy(String createdBy) {
-        this.createdBy = createdBy;
-        return this;
+  public ConductorApplication createdBy(String createdBy) {
+    this.createdBy = createdBy;
+    return this;
+  }
+
+  /**
+   * Get createdBy
+   *
+   * @return createdBy
+   */
+  @Schema(description = "")
+  public String getCreatedBy() {
+    return createdBy;
+  }
+
+  public void setCreatedBy(String createdBy) {
+    this.createdBy = createdBy;
+  }
+
+  public ConductorApplication id(String id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Get id
+   *
+   * @return id
+   */
+  @Schema(description = "")
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public ConductorApplication name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  /**
+   * Get name
+   *
+   * @return name
+   */
+  @Schema(description = "")
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
     }
-
-    /**
-     * Get createdBy
-     *
-     * @return createdBy
-     */
-    @Schema(description = "")
-    public String getCreatedBy() {
-        return createdBy;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    ConductorApplication conductorApplication = (ConductorApplication) o;
+    return Objects.equals(this.createdBy, conductorApplication.createdBy)
+        && Objects.equals(this.id, conductorApplication.id)
+        && Objects.equals(this.name, conductorApplication.name);
+  }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+  @Override
+  public int hashCode() {
+    return Objects.hash(createdBy, id, name);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class ConductorApplication {\n");
+
+    sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
     }
-
-    public ConductorApplication id(String id) {
-        this.id = id;
-        return this;
-    }
-
-    /**
-     * Get id
-     *
-     * @return id
-     */
-    @Schema(description = "")
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public ConductorApplication name(String name) {
-        this.name = name;
-        return this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return name
-     */
-    @Schema(description = "")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ConductorApplication conductorApplication = (ConductorApplication) o;
-        return Objects.equals(this.createdBy, conductorApplication.createdBy)
-                && Objects.equals(this.id, conductorApplication.id)
-                && Objects.equals(this.name, conductorApplication.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(createdBy, id, name);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class ConductorApplication {\n");
-
-        sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first
-     * line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }

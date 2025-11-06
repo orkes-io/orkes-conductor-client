@@ -33,88 +33,96 @@ import io.orkes.conductor.client.WorkflowClient;
 
 public class WorkflowManager {
 
+  private OrkesClients orkesClients;
+  private WorkflowClient workflowClient;
+  private TaskClient taskClient;
 
-    private OrkesClients orkesClients;
-    private WorkflowClient workflowClient;
-    private TaskClient taskClient;
+  public WorkflowManager() {
+    var configuration =
+        new ApiClient("http://localhost:8080/api", "api_key_user_03", "api_key_user_03");
 
-    public WorkflowManager() {
-        var configuration = new ApiClient("http://localhost:8080/api", "api_key_user_03", "api_key_user_03");
+    this.orkesClients = new OrkesClients(configuration);
+    this.workflowClient = orkesClients.getWorkflowClient();
+    this.taskClient = orkesClients.getTaskClient();
+  }
 
-        this.orkesClients = new OrkesClients(configuration);
-        this.workflowClient = orkesClients.getWorkflowClient();
-        this.taskClient = orkesClients.getTaskClient();
+  public String startWorkflow(WorkflowExecutor workflowExecutor) {
+    ConductorWorkflow<?> workflow = new ConductorWorkflow<>(workflowExecutor);
+    workflow.setName("workflow_signals_demo");
+    workflow.setVersion(1);
+    Wait waitForTwoSec = new Wait("wait_for_2_sec", Duration.ofSeconds(2));
+    Http httpCall = new Http("call_remote_api");
+    httpCall.url("https://orkes-api-tester.orkesconductor.com/api");
+
+    Wait waitForSignal = new Wait("wait_for_signal");
+
+    workflow.add(waitForTwoSec);
+    workflow.add(waitForSignal);
+    workflow.add(httpCall);
+
+    workflow.registerWorkflow(true);
+    StartWorkflowRequest request = new StartWorkflowRequest();
+    request.setVersion(1);
+    request.setName(workflow.getName());
+    request.setInput(Map.of());
+
+    return workflowClient.startWorkflow(request);
+  }
+
+  public void main() {
+    WorkflowExecutor workflowExecutor = orkesClients.getWorkflowExecutor();
+    String workflowId = startWorkflow(workflowExecutor);
+    System.out.println("Started workflow with id " + workflowId);
+
+    try {
+      Thread.sleep(3000); // Wait for 3 seconds
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
     }
 
-    public String startWorkflow(WorkflowExecutor workflowExecutor) {
-        ConductorWorkflow<?> workflow = new ConductorWorkflow<>(workflowExecutor);
-        workflow.setName("workflow_signals_demo");
-        workflow.setVersion(1);
-        Wait waitForTwoSec = new Wait("wait_for_2_sec", Duration.ofSeconds(2));
-        Http httpCall = new Http("call_remote_api");
-        httpCall.url("https://orkes-api-tester.orkesconductor.com/api");
+    Workflow workflow = workflowClient.getWorkflow(workflowId, true);
+    Task lastTask = workflow.getTasks().get(workflow.getTasks().size() - 1);
+    System.out.println(
+        "Workflow status is "
+            + workflow.getStatus()
+            + " and currently running task is "
+            + lastTask.getReferenceTaskName());
 
-        Wait waitForSignal = new Wait("wait_for_signal");
+    workflowClient.terminateWorkflow(workflowId, "testing termination");
 
-        workflow.add(waitForTwoSec);
-        workflow.add(waitForSignal);
-        workflow.add(httpCall);
+    // Other operations like retry, update tasks, etc.
 
-        workflow.registerWorkflow(true);
-        StartWorkflowRequest request = new StartWorkflowRequest();
-        request.setVersion(1);
-        request.setName(workflow.getName());
-        request.setInput(Map.of());
+    // Example of task completion
+    TaskResult taskResult = new TaskResult();
+    taskResult.setWorkflowInstanceId(workflowId);
+    taskResult.setTaskId(lastTask.getTaskId());
+    taskResult.setStatus(TaskResult.Status.COMPLETED);
+    taskResult.setOutputData(Map.of("greetings", "hello from Orkes"));
+    taskClient.updateTask(taskResult);
 
-        return workflowClient.startWorkflow(request);
+    // Handling workflow lifecycle: terminate, restart, pause, resume
+    workflowClient.terminateWorkflow(workflowId, "terminating so we can do a restart");
+    workflowClient.restart(workflowId, true);
+    workflowClient.pauseWorkflow(workflowId);
+
+    try {
+      Thread.sleep(3000); // Simulating a wait
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
     }
 
-    public void main() {
-        WorkflowExecutor workflowExecutor = orkesClients.getWorkflowExecutor();
-        String workflowId = startWorkflow(workflowExecutor);
-        System.out.println("Started workflow with id " + workflowId);
+    workflowClient.resumeWorkflow(workflowId);
 
-        try {
-            Thread.sleep(3000); // Wait for 3 seconds
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+    // Search workflow examples
+    SearchResult<WorkflowSummary> searchResults =
+        workflowClient.search(0, 100, "", "*", "correlationId = 'correlation_123'");
+    System.out.println(
+        "Found "
+            + searchResults.getTotalHits()
+            + " executions with correlation_id 'correlation_123'");
+  }
 
-        Workflow workflow = workflowClient.getWorkflow(workflowId, true);
-        Task lastTask = workflow.getTasks().get(workflow.getTasks().size() - 1);
-        System.out.println("Workflow status is " + workflow.getStatus() + " and currently running task is " + lastTask.getReferenceTaskName());
-
-        workflowClient.terminateWorkflow(workflowId, "testing termination");
-
-        // Other operations like retry, update tasks, etc.
-
-        // Example of task completion
-        TaskResult taskResult = new TaskResult();
-        taskResult.setWorkflowInstanceId(workflowId);
-        taskResult.setTaskId(lastTask.getTaskId());
-        taskResult.setStatus(TaskResult.Status.COMPLETED);
-        taskResult.setOutputData(Map.of("greetings", "hello from Orkes"));
-        taskClient.updateTask(taskResult);
-
-        // Handling workflow lifecycle: terminate, restart, pause, resume
-        workflowClient.terminateWorkflow(workflowId, "terminating so we can do a restart");
-        workflowClient.restart(workflowId, true);
-        workflowClient.pauseWorkflow(workflowId);
-
-        try {
-            Thread.sleep(3000); // Simulating a wait
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        workflowClient.resumeWorkflow(workflowId);
-
-        // Search workflow examples
-        SearchResult<WorkflowSummary> searchResults = workflowClient.search(0, 100, "", "*", "correlationId = 'correlation_123'");
-        System.out.println("Found " + searchResults.getTotalHits() + " executions with correlation_id 'correlation_123'");
-    }
-
-    public static void main(String[] args) {
-        new WorkflowManager().main();
-    }
+  public static void main(String[] args) {
+    new WorkflowManager().main();
+  }
 }

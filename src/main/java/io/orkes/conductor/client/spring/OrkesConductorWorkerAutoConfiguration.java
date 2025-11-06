@@ -23,27 +23,29 @@ import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.sdk.workflow.executor.task.AnnotatedWorkerExecutor;
 
 @Component
-public class OrkesConductorWorkerAutoConfiguration implements ApplicationListener<ContextRefreshedEvent> {
+public class OrkesConductorWorkerAutoConfiguration
+    implements ApplicationListener<ContextRefreshedEvent> {
 
-    private final TaskClient taskClient;
+  private final TaskClient taskClient;
 
-    private final AnnotatedWorkerExecutor annotatedWorkerExecutor;
+  private final AnnotatedWorkerExecutor annotatedWorkerExecutor;
 
-    public OrkesConductorWorkerAutoConfiguration(
-            TaskClient taskClient, AnnotatedWorkerExecutor annotatedWorkerExecutor) {
-        this.taskClient = taskClient;
-        this.annotatedWorkerExecutor = annotatedWorkerExecutor;
-    }
+  public OrkesConductorWorkerAutoConfiguration(
+      TaskClient taskClient, AnnotatedWorkerExecutor annotatedWorkerExecutor) {
+    this.taskClient = taskClient;
+    this.annotatedWorkerExecutor = annotatedWorkerExecutor;
+  }
 
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent refreshedEvent) {
-        ApplicationContext applicationContext = refreshedEvent.getApplicationContext();
-        Map<String, Object> beans = applicationContext.getBeansWithAnnotation(Component.class);
-        beans.values()
-                .forEach(
-                        bean -> {
-                            annotatedWorkerExecutor.addBean(bean);
-                        });
-        annotatedWorkerExecutor.startPolling();
-    }
+  @Override
+  public void onApplicationEvent(ContextRefreshedEvent refreshedEvent) {
+    ApplicationContext applicationContext = refreshedEvent.getApplicationContext();
+    Map<String, Object> beans = applicationContext.getBeansWithAnnotation(Component.class);
+    beans
+        .values()
+        .forEach(
+            bean -> {
+              annotatedWorkerExecutor.addBean(bean);
+            });
+    annotatedWorkerExecutor.startPolling();
+  }
 }

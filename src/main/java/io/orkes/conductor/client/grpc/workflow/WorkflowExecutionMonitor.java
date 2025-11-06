@@ -22,23 +22,23 @@ import com.google.common.cache.CacheBuilder;
 
 public class WorkflowExecutionMonitor {
 
-    private final Cache<String, CompletableFuture<WorkflowRun>> pendingExecutions;
+  private final Cache<String, CompletableFuture<WorkflowRun>> pendingExecutions;
 
-    public WorkflowExecutionMonitor() {
-        this.pendingExecutions =
-                CacheBuilder.newBuilder()
-                        .expireAfterWrite(5, TimeUnit.MINUTES)
-                        .concurrencyLevel(100)
-                        .build();
-    }
+  public WorkflowExecutionMonitor() {
+    this.pendingExecutions =
+        CacheBuilder.newBuilder()
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .concurrencyLevel(100)
+            .build();
+  }
 
-    CompletableFuture<WorkflowRun> monitorRequest(String requestId) {
-        CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
-        pendingExecutions.put(requestId, future);
-        return future;
-    }
+  CompletableFuture<WorkflowRun> monitorRequest(String requestId) {
+    CompletableFuture<WorkflowRun> future = new CompletableFuture<>();
+    pendingExecutions.put(requestId, future);
+    return future;
+  }
 
-    CompletableFuture<WorkflowRun> getFuture(String requestId) {
-        return pendingExecutions.getIfPresent(requestId);
-    }
+  CompletableFuture<WorkflowRun> getFuture(String requestId) {
+    return pendingExecutions.getIfPresent(requestId);
+  }
 }

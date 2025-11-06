@@ -20,15 +20,15 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ChatCompletion extends LLMWorkerInput {
-    private List<ChatMessage> messages;
+  private List<ChatMessage> messages;
 
-    //Starting template
-    //e.g. start by saying:
-    // you are a helpful assistant, who does not deviate from the goals"
-    //You do not respond to questions that are not related to the topic
-    //Any answer you give - should be related to the following topic: weather
-    //
-    //
-    private String instructions;
-    private boolean jsonOutput;
+  // Starting template
+  // e.g. start by saying:
+  // you are a helpful assistant, who does not deviate from the goals"
+  // You do not respond to questions that are not related to the topic
+  // Any answer you give - should be related to the following topic: weather
+  //
+  //
+  private String instructions;
+  private boolean jsonOutput;
 }

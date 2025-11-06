@@ -21,30 +21,29 @@ import io.orkes.conductor.client.http.ApiException;
 
 public class AsyncApiCallback<T> implements ApiCallback<T> {
 
-    private final CompletableFuture<T> future;
+  private final CompletableFuture<T> future;
 
-    public AsyncApiCallback(CompletableFuture<T> future) {
-        this.future = future;
-    }
+  public AsyncApiCallback(CompletableFuture<T> future) {
+    this.future = future;
+  }
 
-    @Override
-    public void onFailure(
-            ApiException e, int statusCode, Map<String, List<String>> responseHeaders) {
-        future.completeExceptionally(e);
-    }
+  @Override
+  public void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders) {
+    future.completeExceptionally(e);
+  }
 
-    @Override
-    public void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders) {
-        future.complete(result);
-    }
+  @Override
+  public void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders) {
+    future.complete(result);
+  }
 
-    @Override
-    public void onUploadProgress(long bytesWritten, long contentLength, boolean done) {
-        // do nothing - not supported
-    }
+  @Override
+  public void onUploadProgress(long bytesWritten, long contentLength, boolean done) {
+    // do nothing - not supported
+  }
 
-    @Override
-    public void onDownloadProgress(long bytesRead, long contentLength, boolean done) {
-        // do nothing - not supported
-    }
+  @Override
+  public void onDownloadProgress(long bytesRead, long contentLength, boolean done) {
+    // do nothing - not supported
+  }
 }

@@ -40,52 +40,52 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WorkflowExecutionTests {
-    WorkflowClient workflowResourceApi;
-    TaskRunnerConfigurer taskRunnerConfigurer;
+  WorkflowClient workflowResourceApi;
+  TaskRunnerConfigurer taskRunnerConfigurer;
 
-    @BeforeEach
-    public void init() {
-        ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
-        workflowResourceApi = new OrkesClients(apiClient).getWorkflowClient();
-        TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
-        Worker worker = new SimpleWorker();
-        this.taskRunnerConfigurer =
-                new TaskRunnerConfigurer.Builder(taskClient, Collections.singletonList(worker))
-                        .withTaskThreadCount(Map.of(Commons.TASK_NAME, 10))
-                        .build();
-    }
+  @BeforeEach
+  public void init() {
+    ApiClient apiClient = ApiUtil.getApiClientWithCredentials();
+    workflowResourceApi = new OrkesClients(apiClient).getWorkflowClient();
+    TaskClient taskClient = new OrkesClients(apiClient).getTaskClient();
+    Worker worker = new SimpleWorker();
+    this.taskRunnerConfigurer =
+        new TaskRunnerConfigurer.Builder(taskClient, Collections.singletonList(worker))
+            .withTaskThreadCount(Map.of(Commons.TASK_NAME, 10))
+            .build();
+  }
 
-    @Test
-    @DisplayName("Test workflow completion")
-    public void workflow() throws Exception {
-        List<String> workflowIds = startWorkflows(2, Commons.WORKFLOW_NAME);
-        workflowIds.add(startWorkflow(Commons.WORKFLOW_NAME));
-        this.taskRunnerConfigurer.init();
-        Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-        workflowIds.forEach(workflowId -> validateCompletedWorkflow(workflowId));
-        this.taskRunnerConfigurer.shutdown();
-    }
+  @Test
+  @DisplayName("Test workflow completion")
+  public void workflow() throws Exception {
+    List<String> workflowIds = startWorkflows(2, Commons.WORKFLOW_NAME);
+    workflowIds.add(startWorkflow(Commons.WORKFLOW_NAME));
+    this.taskRunnerConfigurer.init();
+    Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+    workflowIds.forEach(workflowId -> validateCompletedWorkflow(workflowId));
+    this.taskRunnerConfigurer.shutdown();
+  }
 
-    String startWorkflow(String workflowName) {
-        StartWorkflowRequest request = new StartWorkflowRequest();
-        request.setName(workflowName);
-        return workflowResourceApi.startWorkflow(request);
-    }
+  String startWorkflow(String workflowName) {
+    StartWorkflowRequest request = new StartWorkflowRequest();
+    request.setName(workflowName);
+    return workflowResourceApi.startWorkflow(request);
+  }
 
-    List<String> startWorkflows(int quantity, String workflowName) {
-        StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
-        startWorkflowRequest.setName(workflowName);
-        List<String> workflowIds = new ArrayList<>();
-        for (int i = 0; i < quantity; i += 1) {
-            String workflowId = workflowResourceApi.startWorkflow(startWorkflowRequest);
-            workflowIds.add(workflowId);
-        }
-        return workflowIds;
+  List<String> startWorkflows(int quantity, String workflowName) {
+    StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
+    startWorkflowRequest.setName(workflowName);
+    List<String> workflowIds = new ArrayList<>();
+    for (int i = 0; i < quantity; i += 1) {
+      String workflowId = workflowResourceApi.startWorkflow(startWorkflowRequest);
+      workflowIds.add(workflowId);
     }
+    return workflowIds;
+  }
 
-    void validateCompletedWorkflow(String workflowId) {
-        WorkflowStatus workflowStatus =
-                workflowResourceApi.getWorkflowStatusSummary(workflowId, false, false);
-        assertEquals(WorkflowStatus.StatusEnum.COMPLETED, workflowStatus.getStatus());
-    }
+  void validateCompletedWorkflow(String workflowId) {
+    WorkflowStatus workflowStatus =
+        workflowResourceApi.getWorkflowStatusSummary(workflowId, false, false);
+    assertEquals(WorkflowStatus.StatusEnum.COMPLETED, workflowStatus.getStatus());
+  }
 }

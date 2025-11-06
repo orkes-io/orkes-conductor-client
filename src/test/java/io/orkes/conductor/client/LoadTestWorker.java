@@ -26,53 +26,53 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LoadTestWorker implements Worker {
 
-    private final String name;
-    private int keyCount = 50;
-    private SecureRandom secureRandom = new SecureRandom();
+  private final String name;
+  private int keyCount = 50;
+  private SecureRandom secureRandom = new SecureRandom();
 
-    public LoadTestWorker(String name) {
-        this.name = name;
-    }
+  public LoadTestWorker(String name) {
+    this.name = name;
+  }
 
-    @Override
-    public String getTaskDefName() {
-        return name;
-    }
+  @Override
+  public String getTaskDefName() {
+    return name;
+  }
 
-    @Override
-    public TaskResult execute(Task task) {
-        log.info("Executing {} - {}", task.getTaskType(), task.getTaskId());
-        TaskResult result = new TaskResult(task);
+  @Override
+  public TaskResult execute(Task task) {
+    log.info("Executing {} - {}", task.getTaskType(), task.getTaskId());
+    TaskResult result = new TaskResult(task);
 
-        Uninterruptibles.sleepUninterruptibly(10_000, TimeUnit.MILLISECONDS);
+    Uninterruptibles.sleepUninterruptibly(10_000, TimeUnit.MILLISECONDS);
 
-        result.setStatus(TaskResult.Status.COMPLETED);
-        int resultCount = Math.max(20, secureRandom.nextInt(keyCount));
+    result.setStatus(TaskResult.Status.COMPLETED);
+    int resultCount = Math.max(20, secureRandom.nextInt(keyCount));
 
-        result.getOutputData().put("fixed", "hello");
-        result.getOutputData().put("oddEven", "odd" + secureRandom.nextInt(2));
-        result.getOutputData().put("thirds", "thirds" + secureRandom.nextInt(3));
-        result.getOutputData().put("fourths", "fourths" + secureRandom.nextInt(4));
-        result.getOutputData().put("fifths", "fifths" + secureRandom.nextInt(5));
-        result.getOutputData().put("tenths", "tenths" + secureRandom.nextInt(10));
+    result.getOutputData().put("fixed", "hello");
+    result.getOutputData().put("oddEven", "odd" + secureRandom.nextInt(2));
+    result.getOutputData().put("thirds", "thirds" + secureRandom.nextInt(3));
+    result.getOutputData().put("fourths", "fourths" + secureRandom.nextInt(4));
+    result.getOutputData().put("fifths", "fifths" + secureRandom.nextInt(5));
+    result.getOutputData().put("tenths", "tenths" + secureRandom.nextInt(10));
 
-        result.getOutputData().put("randomNumber", resultCount);
-        result.getOutputData().put("uuid1", UUID.randomUUID().toString());
-        result.getOutputData().put("uuid2", UUID.randomUUID().toString());
-        result.getOutputData().put("float", secureRandom.nextDouble());
+    result.getOutputData().put("randomNumber", resultCount);
+    result.getOutputData().put("uuid1", UUID.randomUUID().toString());
+    result.getOutputData().put("uuid2", UUID.randomUUID().toString());
+    result.getOutputData().put("float", secureRandom.nextDouble());
 
-        result.addOutputData("scheduledTime", task.getScheduledTime());
-        result.addOutputData("startTime", task.getStartTime());
-        log.info("Done executing task {} @the worker", task.getTaskId());
-        return result;
-    }
+    result.addOutputData("scheduledTime", task.getScheduledTime());
+    result.addOutputData("startTime", task.getStartTime());
+    log.info("Done executing task {} @the worker", task.getTaskId());
+    return result;
+  }
 
-    public void onErrorUpdate(Task task) {
-        log.info("I just can't update the task {}", task.getTaskId());
-    }
+  public void onErrorUpdate(Task task) {
+    log.info("I just can't update the task {}", task.getTaskId());
+  }
 
-    @Override
-    public int getPollingInterval() {
-        return 10;
-    }
+  @Override
+  public int getPollingInterval() {
+    return 10;
+  }
 }

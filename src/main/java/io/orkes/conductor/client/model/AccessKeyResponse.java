@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Data
 public class AccessKeyResponse {
-    private String id;
-    private Long createdAt;
-    private AccessKeyStatus status;
+  private String id;
+  private Long createdAt;
+  private AccessKeyStatus status;
 }
